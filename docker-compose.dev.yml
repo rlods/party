@@ -1,0 +1,24 @@
+version: "3"
+
+services:
+  app:
+    build:
+      args:
+        FIREBASE_URL: "..."
+        NODE_ENV: development
+    command: npm run start
+    tty: true
+    volumes:
+      - ./services/app:/home/node/app/services/app:delegated
+
+  proxy:
+    build:
+      context: ./docker/proxy
+    volumes:
+      - ./docker/proxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:delegated
+    ports:
+      - 80:80
+      - 1936:1936
+    depends_on:
+      - app
+    restart: on-failure

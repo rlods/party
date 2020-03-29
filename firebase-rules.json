@@ -1,0 +1,78 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "users": {
+      "$user_id": {
+        ".write": "data.exists() ? data.child('secret').val() === newData.child('secret').val() : newData.exists()",
+        ".validate": "newData.hasChildren(['info', 'secret'])",
+        "info": {
+          ".read": true,
+          ".validate": "newData.hasChildren(['name', 'online', 'room_id', 'status', 'timestamp'])",
+          "name": {
+            ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length < 20"
+          },
+          "online": { ".validate": "newData.isBoolean()" },
+          "room_id": {
+            ".validate": "newData.isString() && (newData.val().length === 0 || root.child('rooms/'+newData.val()).exists())"
+          },
+          "status": {
+            ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length < 100"
+          },
+          "timestamp": {
+            ".validate": "(!data.exists() || newData.val() > data.val()) && newData.val() <= now"
+          },
+          "$other": { ".validate": false }
+        },
+        "secret": {
+          ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length < 20"
+        },
+        "$other": { ".validate": false }
+      }
+    },
+    "rooms": {
+      "$room_id": {
+        ".write": "data.exists() ? data.child('secret').val() === newData.child('secret').val() : newData.exists()",
+        ".validate": "newData.hasChildren(['info', 'secret'])",
+        "info": {
+          ".read": true,
+          ".validate": "newData.hasChildren(['name', 'playlist_id', 'track_id', 'track_position', 'timestamp', 'type'])",
+          "name": {
+            ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length < 20"
+          },
+          "playlist_id": {
+            ".validate": "newData.isString() && newData.val().length < 20"
+          },
+          "track_id": { ".validate": "newData.isNumber()" },
+          "track_position": { ".validate": "newData.isNumber()" },
+          "timestamp": {
+            ".validate": "(!data.exists() || newData.val() > data.val()) && newData.val() <= now"
+          },
+          "type": {
+            ".validate": "newData.isString() && newData.val().length < 20"
+          },
+          "$other": { ".validate": false }
+        },
+        "secret": {
+          ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length < 20"
+        },
+        "$other": { ".validate": false }
+      }
+    },
+    "members": {
+      "$room_id": {
+        ".read": true,
+        ".validate": "root.child('rooms/'+$room_id).exists()",
+        "$user_id": {
+          ".write": true,
+          ".validate": "root.child('users/'+$user_id).exists() && root.child('users/'+$user_id).child('info').child('room_id').val() === $room_id && newData.hasChildren(['timestamp'])",
+          "timestamp": {
+            ".validate": "(!data.exists() || newData.val() > data.val()) && newData.val() <= now"
+          },
+          "$other": { ".validate": false }
+        }
+      }
+    },
+    "$other": { ".validate": false }
+  }
+}

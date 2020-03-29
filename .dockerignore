@@ -1,0 +1,7 @@
+docs/
+**/build/
+**/dist/
+**/node_modules/
+*.yml
+Makefile
+README.md
