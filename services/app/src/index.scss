@@ -1,0 +1,28 @@
+body {
+  background: #ffffff;
+  font-family: "Roboto", Arial, sans-serif;
+  font-size: 15px;
+  line-height: 20px;
+}
+
+div,
+p,
+img {
+  padding: 0;
+  margin: 0;
+}
+
+div {
+  box-sizing: border-box;
+}
+
+button,
+input[type="text"],
+textarea,
+select {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: inherit;
+  box-sizing: border-box;
+}

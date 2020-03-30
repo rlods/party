@@ -49,6 +49,7 @@
     "@types/react-redux": "^7.1.4",
     "@types/react-router-dom": "^5.1.0",
     "@types/react-transition-group": "^2.9.0",
+    "node-sass": "^4.13.1",
     "redux-devtools-extension": "^2.13.8",
     "typescript": "^3.8.3"
   }

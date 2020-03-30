@@ -1,7 +1,8 @@
 import React, { Component } from "react";
-import { withRouter, RouteComponentProps, Link } from "react-router-dom";
+import { withRouter, RouteComponentProps } from "react-router-dom";
 //
-import { MappedProps } from "../containers/Party";
+import { MappedProps } from "../../containers/Party";
+import Menu from "../../containers/Menu";
 
 // ------------------------------------------------------------------
 
@@ -15,7 +16,8 @@ class Party extends Component<Props & MappedProps> {
   public render = () => {
     return (
       <div className="Party">
-        Party {this.props.match.params.room_id} <Link to="/">Splash</Link>
+        <Menu />
+        {this.props.match.params.room_id}
       </div>
     );
   };

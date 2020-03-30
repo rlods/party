@@ -8,6 +8,7 @@ import thunk from "redux-thunk";
 //
 import { rootReducer } from "./reducers";
 import App from "./containers/App";
+import "./index.scss";
 
 // ------------------------------------------------------------------
 
