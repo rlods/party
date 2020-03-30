@@ -5,6 +5,7 @@ import { MappedProps } from "../containers/App";
 import Party from "../containers/Party";
 import Splash from "../containers/Splash";
 import Modals from "../containers/Modals";
+import Messages from "../containers/Messages";
 
 // ------------------------------------------------------------------
 
@@ -20,6 +21,7 @@ class App extends Component<MappedProps> {
           <Route exact={true} path="/" component={Splash} />
           <Redirect to="/" />
         </Switch>
+        <Messages />
       </div>
     );
   };

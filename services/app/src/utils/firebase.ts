@@ -24,10 +24,9 @@ const USERS = firebaseDatabase.ref("users");
 // ------------------------------------------------------------------
 
 export const Room = (id: string, secret?: string) => {
-  const room = ROOMS.child(id);
-  const info = room.child("info");
-  const members = MEMBERS.child(id);
-
+  const _room = ROOMS.child(id);
+  const _info = _room.child("info");
+  const _members = MEMBERS.child(id);
   let _values: RoomInfo = {
     name: "dummy",
     playlist_id: "",
@@ -36,6 +35,8 @@ export const Room = (id: string, secret?: string) => {
     track_position: 0,
     type: "dj"
   };
+
+  const getInfo = () => _values;
 
   const init = async (values: Pick<RoomInfo, "name">) => {
     subscribeInfo((snapshot: firebase.database.DataSnapshot) => {
@@ -47,22 +48,35 @@ export const Room = (id: string, secret?: string) => {
     await update(values);
   };
 
+  const wait = async (): Promise<RoomInfo> =>
+    new Promise((resolve, reject) => {
+      _info.once("value", snapshot => {
+        const newValues = snapshot.val();
+        if (newValues) {
+          _values = newValues;
+          resolve(_values);
+        } else {
+          reject(new Error("Room is invalid"));
+        }
+      });
+    });
+
   const subscribeInfo = (cb: FirebaseCB) => {
-    info.on("value", cb);
+    _info.on("value", cb);
   };
 
   const unsubscribeInfo = (cb: FirebaseCB) => {
-    info.off("value", cb);
+    _info.off("value", cb);
   };
 
   const subscribeMembers = (cbAdded: FirebaseCB, cbRemoved: FirebaseCB) => {
-    members.on("child_added", cbAdded);
-    members.on("child_removed", cbRemoved);
+    _members.on("child_added", cbAdded);
+    _members.on("child_removed", cbRemoved);
   };
 
   const unsubscribeMembers = (cbAdded: FirebaseCB, cbRemoved: FirebaseCB) => {
-    members.off("child_added", cbAdded);
-    members.off("child_removed", cbRemoved);
+    _members.off("child_added", cbAdded);
+    _members.off("child_removed", cbRemoved);
   };
 
   const update = async ({
@@ -92,7 +106,7 @@ export const Room = (id: string, secret?: string) => {
     if (type !== void 0) {
       _values.type = type;
     }
-    await room.set({
+    await _room.set({
       info: {
         ..._values,
         timestamp: firebase.database.ServerValue.TIMESTAMP
@@ -102,8 +116,10 @@ export const Room = (id: string, secret?: string) => {
   };
 
   return {
+    getInfo,
     id,
     init,
+    wait,
     subscribeInfo,
     subscribeMembers,
     unsubscribeInfo,
@@ -115,8 +131,8 @@ export const Room = (id: string, secret?: string) => {
 // ------------------------------------------------------------------
 
 export const User = (id: string, secret?: string) => {
-  const user = USERS.child(id);
-  const info = user.child("info");
+  const _user = USERS.child(id);
+  const _info = _user.child("info");
   let _membership: firebase.database.Reference | null = null;
   let _values = {
     name: "dummy",
@@ -136,12 +152,25 @@ export const User = (id: string, secret?: string) => {
     await update(values);
   };
 
+  const wait = async (): Promise<UserInfo> =>
+    new Promise((resolve, reject) => {
+      _info.once("value", snapshot => {
+        const newValues = snapshot.val();
+        if (newValues) {
+          _values = newValues;
+          resolve(_values);
+        } else {
+          reject(new Error("User is invalid"));
+        }
+      });
+    });
+
   const subscribeInfo = (cb: FirebaseCB) => {
-    info.on("value", cb);
+    _info.on("value", cb);
   };
 
   const unsubscribeInfo = (cb: FirebaseCB) => {
-    info.off("value", cb);
+    _info.off("value", cb);
   };
 
   const update = async ({
@@ -154,7 +183,7 @@ export const User = (id: string, secret?: string) => {
     if (room_id !== void 0) {
       _values.room_id = room_id;
     }
-    await user.set({
+    await _user.set({
       info: {
         ..._values,
         online: true,
@@ -167,8 +196,8 @@ export const User = (id: string, secret?: string) => {
   };
 
   const installDisconnect = () => {
-    user.onDisconnect().cancel();
-    user.onDisconnect().set({
+    _user.onDisconnect().cancel();
+    _user.onDisconnect().set({
       info: {
         ..._values,
         online: false,
@@ -210,6 +239,7 @@ export const User = (id: string, secret?: string) => {
     enter,
     exit,
     init,
+    wait,
     subscribeInfo,
     unsubscribeInfo,
     update

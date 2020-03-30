@@ -4,6 +4,7 @@ import { CSSTransition } from "react-transition-group";
 import { MappedProps } from "../../containers/Modals";
 import { ModalPrereq } from "../../actions/modals";
 import CreatePartyModal from "../../containers/Party/CreatePartyModal";
+import JoinPartyModal from "../../containers/Party/JoinPartyModal";
 import "./index.scss";
 
 // ------------------------------------------------------------------
@@ -16,6 +17,8 @@ export const getModal = (prereq: ModalPrereq) => {
   switch (prereq.type) {
     case "CreateParty":
       return <CreatePartyModal />;
+    case "JoinParty":
+      return <JoinPartyModal />;
   }
 };
 

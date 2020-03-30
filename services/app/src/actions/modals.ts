@@ -7,7 +7,9 @@ export type ModalPrereqT<T extends string, P> = {
   props: P;
 };
 
-export type ModalPrereq = ModalPrereqT<"CreateParty", null>;
+export type ModalPrereq =
+  | ModalPrereqT<"CreateParty", null>
+  | ModalPrereqT<"JoinParty", null>;
 
 // ------------------------------------------------------------------
 

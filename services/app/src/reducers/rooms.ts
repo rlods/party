@@ -6,13 +6,15 @@ import { Rooms } from "../utils/rooms";
 export type State = {
   fetching: boolean;
   error: null | AxiosError;
-  items: Rooms;
+  room_id: string;
+  rooms: Rooms;
 };
 
 const INITIAL_STATE: State = {
   fetching: false,
   error: null,
-  items: {}
+  room_id: "",
+  rooms: {}
 };
 
 export const roomsReducer: Reducer<State, RoomsAction> = (
@@ -30,8 +32,7 @@ export const roomsReducer: Reducer<State, RoomsAction> = (
       return {
         ...state,
         fetching: false,
-        error: null,
-        items: { ...state.items, ...action.payload }
+        error: null
       };
     }
     case "rooms/ERROR":
@@ -40,6 +41,18 @@ export const roomsReducer: Reducer<State, RoomsAction> = (
         fetching: false,
         error: action.payload
       };
+    case "rooms/SET_ROOM": {
+      return {
+        ...state,
+        room_id: action.payload
+      };
+    }
+    case "rooms/SET_ROOMS": {
+      return {
+        ...state,
+        rooms: { ...state.rooms, ...action.payload }
+      };
+    }
     case "rooms/RESET":
       return INITIAL_STATE;
     default:

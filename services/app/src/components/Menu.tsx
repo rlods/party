@@ -14,13 +14,17 @@ class Menu extends Component<MappedProps> {
           <Link to="/">Home</Link>
         </div>
         <div>
-          <Link to="/party/xxx">Party</Link>
+          <IconButton
+            title="Join Party"
+            icon="sign-in"
+            onClick={this.props.joinRoom}
+          />
         </div>
         <div>
           <IconButton
             title="Create Party"
             icon="plus"
-            onClick={this.props.createParty}
+            onClick={this.props.createRoom}
           />
         </div>
       </div>

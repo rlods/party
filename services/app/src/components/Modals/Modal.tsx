@@ -21,8 +21,8 @@ class Modal extends Component<Props & MappedProps> {
       className,
       title,
       renderFoot,
-      onCloseModal,
-      onPopModal,
+      onClose,
+      onPop,
       has_prev_modal
     } = this.props;
     return (
@@ -35,13 +35,13 @@ class Modal extends Component<Props & MappedProps> {
             })}
             icon="angle-left"
             title="Back"
-            onClick={onPopModal}
+            onClick={onPop}
           />
           <div className="ModalTitle">{title}</div>
           <IconButton
             kind="special"
             className="ModalHeadClose"
-            onClick={onCloseModal}
+            onClick={onClose}
             title="Cancel"
             icon="times"
           />

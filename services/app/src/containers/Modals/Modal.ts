@@ -11,8 +11,8 @@ const mapStateToProps = (state: RootState) => ({
 });
 
 const mapDispatchToProps = (dispatch: any) => ({
-  onCloseModal: () => dispatch(popModal()),
-  onPopModal: () => dispatch(popModal())
+  onClose: () => dispatch(popModal()),
+  onPop: () => dispatch(popModal())
 });
 
 export type MappedProps = ReturnType<typeof mapStateToProps> &

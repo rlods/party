@@ -6,13 +6,15 @@ import { Users } from "../utils/users";
 export type State = {
   fetching: boolean;
   error: null | AxiosError;
-  items: Users;
+  user_id: string;
+  users: Users;
 };
 
 const INITIAL_STATE: State = {
   fetching: false,
   error: null,
-  items: {}
+  user_id: "",
+  users: {}
 };
 
 export const usersReducer: Reducer<State, UsersAction> = (
@@ -30,8 +32,7 @@ export const usersReducer: Reducer<State, UsersAction> = (
       return {
         ...state,
         fetching: false,
-        error: null,
-        items: { ...state.items, ...action.payload }
+        error: null
       };
     }
     case "users/ERROR":
@@ -40,6 +41,18 @@ export const usersReducer: Reducer<State, UsersAction> = (
         fetching: false,
         error: action.payload
       };
+    case "users/SET_USER": {
+      return {
+        ...state,
+        user_id: action.payload
+      };
+    }
+    case "users/SET_USERS": {
+      return {
+        ...state,
+        users: { ...state.users, ...action.payload }
+      };
+    }
     case "users/RESET":
       return INITIAL_STATE;
     default:

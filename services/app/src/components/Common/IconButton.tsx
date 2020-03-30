@@ -43,4 +43,8 @@ class IconButton extends Component<Props> {
   };
 }
 
+export const CancelButton = ({ onClick }: { onClick: () => void }) => (
+  <IconButton onClick={onClick} title="Cancel" kind="default" icon="ban" />
+);
+
 export default IconButton;

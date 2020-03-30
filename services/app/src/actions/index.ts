@@ -1,6 +1,8 @@
-import { ActionCreator, AnyAction } from "redux";
+import { AnyAction } from "redux";
 import { ThunkAction } from "redux-thunk";
 import { RootState } from "../reducers";
+
+// ------------------------------------------------------------------
 
 export type Action<T extends string> = {
   type: T;
@@ -11,9 +13,7 @@ export type ActionWithPayload<T extends string, P> = {
   payload: P;
 };
 
-export type AsyncAction = ActionCreator<
-  Promise<ThunkAction<void, RootState, void, AnyAction>>
->;
+export type AsyncAction = ThunkAction<void, RootState, void, AnyAction>;
 
 export function createAction<T extends string>(type: T): Action<T>;
 
