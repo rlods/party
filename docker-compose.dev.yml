@@ -4,7 +4,7 @@ services:
   app:
     build:
       args:
-        FIREBASE_URL: "..."
+        FIREBASE_URL: "https://test-rl-7ffe8.firebaseio.com"
         NODE_ENV: development
     command: npm run start
     tty: true

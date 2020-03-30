@@ -3,8 +3,9 @@ import { CSSTransition } from "react-transition-group";
 //
 import { MappedProps } from "../../containers/Modals";
 import { ModalPrereq } from "../../actions/modals";
-import CreatePartyModal from "../../containers/Party/CreatePartyModal";
-import JoinPartyModal from "../../containers/Party/JoinPartyModal";
+import CreateRoomModal from "../../containers/Rooms/CreateRoomModal";
+import ConnectUserModal from "../../containers/Users/ConnectUserModal";
+import JoinRoomModal from "../../containers/Rooms/JoinRoomModal";
 import "./index.scss";
 
 // ------------------------------------------------------------------
@@ -15,10 +16,12 @@ const TransitionTimeout = 300;
 
 export const getModal = (prereq: ModalPrereq) => {
   switch (prereq.type) {
-    case "CreateParty":
-      return <CreatePartyModal />;
-    case "JoinParty":
-      return <JoinPartyModal />;
+    case "CreateRoom":
+      return <CreateRoomModal />;
+    case "JoinRoom":
+      return <JoinRoomModal />;
+    case "ConnectUser":
+      return <ConnectUserModal />;
   }
 };
 

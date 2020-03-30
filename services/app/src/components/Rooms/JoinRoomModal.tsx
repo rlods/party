@@ -1,7 +1,7 @@
 import React, { Component, Fragment, createRef, RefObject } from "react";
 //
 import FormModal from "../Modals/FormModal";
-import { MappedProps } from "../../containers/Party/JoinPartyModal";
+import { MappedProps } from "../../containers/Rooms/JoinRoomModal";
 import IconButton, { CancelButton } from "../Common/IconButton";
 
 // ------------------------------------------------------------------
@@ -10,7 +10,7 @@ type State = {
   roomId: string;
 };
 
-class JoinPartyModal extends Component<MappedProps, State> {
+class JoinRoomModal extends Component<MappedProps, State> {
   private idRef: RefObject<HTMLInputElement> = createRef();
 
   public readonly state: State = {
@@ -27,7 +27,7 @@ class JoinPartyModal extends Component<MappedProps, State> {
     const { roomId } = this.state;
     return (
       <FormModal
-        title="Join Party"
+        title="Join Room"
         onSubmit={this.onJoin}
         renderButtons={this.renderButtons}
       >
@@ -56,15 +56,15 @@ class JoinPartyModal extends Component<MappedProps, State> {
   );
 
   private onJoin = () => {
-    const { onClose, onJoin } = this.props;
+    const { onClose, onEnter } = this.props;
     const { roomId } = this.state;
     if (roomId.trim().length === 0) {
       console.log("Room ID is invalid");
       return;
     }
-    onJoin(roomId);
+    onEnter(roomId);
     onClose();
   };
 }
 
-export default JoinPartyModal;
+export default JoinRoomModal;

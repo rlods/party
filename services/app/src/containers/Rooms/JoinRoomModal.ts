@@ -2,8 +2,8 @@ import { connect } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
 //
 import { RootState } from "../../reducers";
-import CreatePartyModal from "../../components/Party/CreatePartyModal";
-import { createRoom } from "../../actions/rooms";
+import JoinRoomModal from "../../components/Rooms/JoinRoomModal";
+import { enterRoom } from "../../actions/rooms";
 import { popModal } from "../../actions/modals";
 
 // ------------------------------------------------------------------
@@ -14,10 +14,10 @@ const stateToProps = (state: RootState) => {
 
 const dispatchToProps = (dispatch: ThunkDispatch<RootState, any, any>) => ({
   onClose: () => dispatch(popModal()),
-  onCreate: (name: string, secret: string) => dispatch(createRoom(name, secret))
+  onEnter: (id: string) => dispatch(enterRoom(id))
 });
 
 export type MappedProps = ReturnType<typeof stateToProps> &
   ReturnType<typeof dispatchToProps>;
 
-export default connect(stateToProps, dispatchToProps)(CreatePartyModal);
+export default connect(stateToProps, dispatchToProps)(JoinRoomModal);

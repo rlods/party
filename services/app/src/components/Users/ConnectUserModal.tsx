@@ -2,7 +2,7 @@ import React, { Component, Fragment, RefObject, createRef } from "react";
 import { v4 } from "uuid";
 //
 import FormModal from "../Modals/FormModal";
-import { MappedProps } from "../../containers/Party/CreatePartyModal";
+import { MappedProps } from "../../containers/Users/ConnectUserModal";
 import IconButton, { CancelButton } from "../Common/IconButton";
 
 // ------------------------------------------------------------------
@@ -12,7 +12,7 @@ type State = {
   secret: string;
 };
 
-class CreatePartyModal extends Component<MappedProps, State> {
+class ConnectUserModal extends Component<MappedProps, State> {
   private nameRef: RefObject<HTMLInputElement> = createRef();
 
   public readonly state: State = {
@@ -30,16 +30,16 @@ class CreatePartyModal extends Component<MappedProps, State> {
     const { name, secret } = this.state;
     return (
       <FormModal
-        title="Create Party"
+        title="Create User"
         onSubmit={this.onCreate}
         renderButtons={this.renderButtons}
       >
         <div className="ModalField">
-          <label htmlFor="modal-name">Room Name</label>
+          <label htmlFor="modal-name">User Name</label>
           <input
             id="modal-name"
             type="text"
-            placeholder="Room Name..."
+            placeholder="User Name..."
             value={name}
             ref={this.nameRef}
             onChange={e => {
@@ -48,11 +48,11 @@ class CreatePartyModal extends Component<MappedProps, State> {
           />
         </div>
         <div className="ModalField">
-          <label htmlFor="modal-secret">Room Secret</label>
+          <label htmlFor="modal-secret">User Secret</label>
           <input
             id="modal-secret"
             type="text"
-            placeholder="Room Secret..."
+            placeholder="User Secret..."
             value={secret}
             onChange={e => {
               this.setState({ secret: e.target.value });
@@ -74,11 +74,11 @@ class CreatePartyModal extends Component<MappedProps, State> {
     const { onClose, onCreate } = this.props;
     const { name, secret } = this.state;
     if (name.trim().length === 0) {
-      console.log("Room name is invalid");
+      console.log("User name is invalid");
       return;
     }
     if (secret.trim().length === 0) {
-      console.log("Room secret is invalid");
+      console.log("User secret is invalid");
       return;
     }
     onCreate(name, secret);
@@ -86,4 +86,4 @@ class CreatePartyModal extends Component<MappedProps, State> {
   };
 }
 
-export default CreatePartyModal;
+export default ConnectUserModal;

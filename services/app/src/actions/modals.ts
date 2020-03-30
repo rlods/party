@@ -8,8 +8,9 @@ export type ModalPrereqT<T extends string, P> = {
 };
 
 export type ModalPrereq =
-  | ModalPrereqT<"CreateParty", null>
-  | ModalPrereqT<"JoinParty", null>;
+  | ModalPrereqT<"CreateRoom", null>
+  | ModalPrereqT<"JoinRoom", null>
+  | ModalPrereqT<"ConnectUser", null>;
 
 // ------------------------------------------------------------------
 

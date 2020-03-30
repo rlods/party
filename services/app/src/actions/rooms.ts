@@ -5,7 +5,7 @@ import { v4 } from "uuid";
 import { createAction, AsyncAction } from ".";
 import { displayError } from "./messages";
 import { RootState } from "../reducers";
-import { Rooms } from "../utils/rooms";
+import { Rooms, Room } from "../utils/rooms";
 import { Room as FirebaseRoom } from "../utils/firebase";
 import history from "../utils/history";
 
@@ -35,24 +35,44 @@ export const createRoom = (
   secret: string
 ): AsyncAction => async dispatch => {
   try {
+    console.log("Creating room...");
     const id = v4();
-    const room = FirebaseRoom(id, secret);
-    await room.init({ name });
-    dispatch(setRoom(id));
-    dispatch(setRooms({ [id]: room.getInfo() }));
-    history.push(`/party/${id}`);
+    await FirebaseRoom(id, secret).init({ name });
+    dispatch(enterRoom(id));
   } catch (err) {
     dispatch(displayError("Cannot create room", err));
   }
 };
 
-export const joinRoom = (id: string): AsyncAction => async dispatch => {
+// ------------------------------------------------------------------
+
+let FIREBASE_ROOM: ReturnType<typeof FirebaseRoom> | null = null;
+let FIREBASE_CB: any = null;
+
+export const enterRoom = (id: string): AsyncAction => async dispatch => {
+  dispatch(exitRoom());
   try {
-    const room = await FirebaseRoom(id).wait();
+    console.log("Entering room...", { id });
+    const room = FirebaseRoom(id);
+    dispatch(setRooms({ [id]: await room.wait() }));
     dispatch(setRoom(id));
-    dispatch(setRooms({ [id]: room }));
-    history.push(`/party/${id}`);
+    FIREBASE_CB = (snapshot: firebase.database.DataSnapshot) => {
+      dispatch(setRooms({ [id]: snapshot.val() as Room }));
+    };
+    FIREBASE_ROOM = room;
+    FIREBASE_ROOM.subscribeInfo(FIREBASE_CB);
+    history.push(`/room/${id}`);
   } catch (err) {
     dispatch(displayError("Cannot join room", err));
+  }
+};
+
+export const exitRoom = (): AsyncAction => async dispatch => {
+  if (FIREBASE_ROOM) {
+    console.log("Exiting room...", { id: FIREBASE_ROOM.id });
+    FIREBASE_ROOM.unsubscribeInfo(FIREBASE_CB);
+    FIREBASE_ROOM = null;
+    FIREBASE_CB = null;
+    dispatch(setRoom(""));
   }
 };

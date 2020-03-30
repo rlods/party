@@ -142,6 +142,8 @@ export const User = (id: string, secret?: string) => {
     timestamp: 0
   };
 
+  const getInfo = () => _values;
+
   const init = async (values: Pick<UserInfo, "name">) => {
     subscribeInfo((snapshot: firebase.database.DataSnapshot) => {
       const newValues = snapshot.val();
@@ -242,7 +244,8 @@ export const User = (id: string, secret?: string) => {
     wait,
     subscribeInfo,
     unsubscribeInfo,
-    update
+    update,
+    getInfo
   };
 };
 
