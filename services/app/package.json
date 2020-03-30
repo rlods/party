@@ -50,7 +50,6 @@
     "@types/react-router-dom": "^5.1.0",
     "@types/react-transition-group": "^2.9.0",
     "redux-devtools-extension": "^2.13.8",
-    "typescript": "^3.8.3",
-    "uninstall": "0.0.0"
+    "typescript": "^3.8.3"
   }
 }

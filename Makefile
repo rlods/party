@@ -19,8 +19,6 @@ endef
 # BUILD
 build:
 	$(compose_dev) build
-build-prod:
-	$(compose_prod) build
 
 # INSTALL
 install: install-app
@@ -47,3 +45,9 @@ logs-app:
 lint: lint-app
 lint-app:
 	$(compose_dev_run) app npm run lint
+
+# PROD
+prod:
+	rm -Rf $(shell pwd)/docs; \
+	$(compose_prod) build; \
+	$(compose_prod_run) -v $(shell pwd)/docs:/output app sh -c 'cp -R build/* /output'
