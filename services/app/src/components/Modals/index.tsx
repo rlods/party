@@ -6,6 +6,7 @@ import { ModalPrereq } from "../../actions/modals";
 import CreateRoomModal from "../../containers/Rooms/CreateRoomModal";
 import ConnectUserModal from "../../containers/Users/ConnectUserModal";
 import JoinRoomModal from "../../containers/Rooms/JoinRoomModal";
+import SearchModal from "../../containers/Rooms/SearchModal";
 import "./index.scss";
 
 // ------------------------------------------------------------------
@@ -16,12 +17,14 @@ const TransitionTimeout = 300;
 
 export const getModal = (prereq: ModalPrereq) => {
   switch (prereq.type) {
+    case "ConnectUser":
+      return <ConnectUserModal />;
     case "CreateRoom":
       return <CreateRoomModal />;
     case "JoinRoom":
       return <JoinRoomModal />;
-    case "ConnectUser":
-      return <ConnectUserModal />;
+    case "Search":
+      return <SearchModal />;
   }
 };
 

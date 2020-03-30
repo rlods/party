@@ -22,7 +22,7 @@ class Room extends Component<Props & MappedProps> {
   };
 
   public render = () => {
-    const { onPlay, onStop } = this.props;
+    const { onPlay, onSearch, onStop } = this.props;
     return (
       <div className="Room">
         <Menu />
@@ -34,6 +34,9 @@ class Room extends Component<Props & MappedProps> {
         </div>
         <div>
           <IconButton onClick={onStop} icon="stop" title="Stop" />
+        </div>
+        <div>
+          <IconButton onClick={onSearch} icon="search" title="Search" />
         </div>
       </div>
     );

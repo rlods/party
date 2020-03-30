@@ -1,0 +1,60 @@
+.SearchResult {
+  padding: 0 10px;
+
+  .SearchResultLabel {
+    font-weight: bold;
+    line-height: 50px;
+    text-transform: uppercase;
+  }
+
+  .SearchResultItems {
+    .SearchResultItem {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      margin-top: 10px;
+
+      &:first-child {
+        margin-top: 0;
+      }
+
+      .Cover {
+        height: 50px;
+        width: 50px;
+        box-shadow: 0 1px 6px rgba(25, 25, 34, 0.16);
+        border-radius: 4px;
+        &:hover {
+          box-shadow: 0 1px 6px rgba(25, 25, 34, 0.24);
+        }
+        cursor: pointer;
+      }
+
+      .Meta {
+        display: flex;
+        flex-direction: column;
+        font-size: 14px;
+        line-height: 18px;
+        margin-left: 5px;
+      }
+
+      &.Album {
+        .AlbumTitle {
+        }
+        .AlbumArtistName {
+        }
+      }
+
+      &.Playlist {
+        .PlaylistTitle {
+        }
+      }
+
+      &.Track {
+        .TrackTitle {
+        }
+        .TrackArtistName {
+        }
+      }
+    }
+  }
+}

@@ -6,6 +6,7 @@ import Room, { Props } from "../../components/Rooms/Room";
 import { enterRoom, exitRoom } from "../../actions/rooms";
 import { extractRoom } from "../../selectors/rooms";
 import { load, stop } from "../../actions/player";
+import { openModal } from "../../actions/modals";
 
 // ------------------------------------------------------------------
 
@@ -27,6 +28,7 @@ const dispatchToProps = (
         0
       )
     ),
+  onSearch: () => dispatch(openModal({ type: "Search", props: null })),
   onStop: () => dispatch(stop())
 });
 

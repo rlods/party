@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import classNames from "classnames";
 //
 import Modal from "../../containers/Modals/Modal";
+import "./FormModal.scss";
 
 // ------------------------------------------------------------------
 

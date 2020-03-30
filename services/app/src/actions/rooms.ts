@@ -8,6 +8,7 @@ import { RootState } from "../reducers";
 import { Rooms, Room } from "../utils/rooms";
 import { Room as FirebaseRoom } from "../utils/firebase";
 import history from "../utils/history";
+import { loadAlbum, loadPlaylist, loadTrack } from "../utils/api";
 
 // ------------------------------------------------------------------
 
@@ -76,5 +77,22 @@ export const exitRoom = (): AsyncAction => async dispatch => {
     FIREBASE_ROOM = null;
     FIREBASE_CB = null;
     dispatch(setRoom(""));
+  }
+};
+
+export const playInRoom = (
+  containerType: string,
+  containerId: string,
+  trackId: string
+): AsyncAction => async dispatch => {
+  console.log("TODO: PLAY IN ROOM");
+  if (containerType === "album") {
+    const album = await loadAlbum(containerId);
+  }
+  if (containerType === "playlist") {
+    const playlist = await loadPlaylist(containerId);
+  }
+  if (trackId) {
+    const track = await loadTrack(trackId);
   }
 };
