@@ -23,7 +23,8 @@ const fetching = () => createAction("users/FETCHING");
 const success = () => createAction("users/FETCHED");
 const error = (error: AxiosError) => createAction("users/ERROR", error);
 const reset = () => createAction("users/RESET");
-const setUser = (id: string) => createAction("users/SET_USER", id);
+const setUser = (id: string, secret: string) =>
+  createAction("users/SET_USER", { id, secret });
 const setUsers = (users: Users) => createAction("users/SET_USERS", users);
 
 // ------------------------------------------------------------------
@@ -36,7 +37,7 @@ export const createUser = (
     console.log("Creating user...");
     const id = v4();
     await FirebaseUser(id, secret).init({ name });
-    dispatch(connectUser(id));
+    dispatch(connectUser(id, secret));
   } catch (err) {
     dispatch(displayError("Cannot create user", err));
   }
@@ -47,13 +48,16 @@ export const createUser = (
 let FIREBASE_USER: ReturnType<typeof FirebaseUser> | null = null;
 let FIREBASE_CB: any = null;
 
-export const connectUser = (id: string): AsyncAction => async dispatch => {
+export const connectUser = (
+  id: string,
+  secret: string
+): AsyncAction => async dispatch => {
   dispatch(disconnectUser());
   try {
-    console.log("Connection user...", { id });
+    console.log("Connection user...", { id, secret });
     const user = FirebaseUser(id);
     dispatch(setUsers({ [id]: await user.wait() }));
-    dispatch(setUser(id));
+    dispatch(setUser(id, secret));
     FIREBASE_CB = (snapshot: firebase.database.DataSnapshot) => {
       dispatch(setUsers({ [id]: snapshot.val() as User }));
     };
@@ -66,10 +70,23 @@ export const connectUser = (id: string): AsyncAction => async dispatch => {
 
 export const disconnectUser = (): AsyncAction => async dispatch => {
   if (FIREBASE_USER) {
-    console.log("Disconnecting user...", { id: FIREBASE_USER.id });
+    console.log("Disconnecting user...");
     FIREBASE_USER.unsubscribeInfo(FIREBASE_CB);
     FIREBASE_USER = null;
     FIREBASE_CB = null;
-    dispatch(setUser(""));
+    dispatch(setUser("", ""));
+  }
+};
+
+export const reconnectUser = (): AsyncAction => async (dispatch, getState) => {
+  const state = getState();
+  const { id, secret } = state.users.user;
+  if (id && secret) {
+    try {
+      console.log("Loading user...");
+      dispatch(connectUser(id, secret));
+    } catch (err) {
+      dispatch(displayError("Cannot load user", err));
+    }
   }
 };

@@ -36,6 +36,7 @@ class Menu extends Component<MappedProps> {
                 icon="sign-out"
                 onClick={this.props.disconnectUser}
               />
+              {user.name}
             </div>
           </Fragment>
         ) : (

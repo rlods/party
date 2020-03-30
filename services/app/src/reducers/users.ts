@@ -1,21 +1,25 @@
 import { Reducer } from "redux";
 import { AxiosError } from "axios";
 import { UsersAction } from "../actions/users";
-import { Users } from "../utils/users";
+import { Users, save, load, XXX } from "../utils/users";
+
+// ------------------------------------------------------------------
 
 export type State = {
   fetching: boolean;
   error: null | AxiosError;
-  user_id: string;
+  user: XXX;
   users: Users;
 };
 
 const INITIAL_STATE: State = {
   fetching: false,
   error: null,
-  user_id: "",
+  user: load(),
   users: {}
 };
+
+// ------------------------------------------------------------------
 
 export const usersReducer: Reducer<State, UsersAction> = (
   state = INITIAL_STATE,
@@ -42,9 +46,10 @@ export const usersReducer: Reducer<State, UsersAction> = (
         error: action.payload
       };
     case "users/SET_USER": {
+      save(action.payload);
       return {
         ...state,
-        user_id: action.payload
+        user: { ...action.payload }
       };
     }
     case "users/SET_USERS": {

@@ -10,7 +10,9 @@ import Messages from "../containers/Messages";
 // ------------------------------------------------------------------
 
 class App extends Component<MappedProps> {
-  public componentDidMount = async () => {};
+  public componentDidMount = async () => {
+    this.props.onReconnect();
+  };
 
   public render = () => {
     return (

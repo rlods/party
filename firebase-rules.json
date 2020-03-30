@@ -36,11 +36,14 @@
         ".validate": "newData.hasChildren(['info', 'secret'])",
         "info": {
           ".read": true,
-          ".validate": "newData.hasChildren(['name', 'playlist_id', 'track_id', 'track_position', 'timestamp', 'type'])",
+          ".validate": "newData.hasChildren(['name', 'container_id', 'container_type', 'track_id', 'track_position', 'timestamp', 'type'])",
           "name": {
             ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length < 20"
           },
-          "playlist_id": {
+          "container_id": {
+            ".validate": "newData.isString() && newData.val().length < 20"
+          },
+          "container_type": {
             ".validate": "newData.isString() && newData.val().length < 20"
           },
           "track_id": { ".validate": "newData.isNumber()" },

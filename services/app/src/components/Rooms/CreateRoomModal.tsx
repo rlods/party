@@ -71,14 +71,14 @@ class CreateRoomModal extends Component<MappedProps, State> {
   );
 
   private onCreate = () => {
-    const { onClose, onCreate } = this.props;
+    const { onClose, onCreate, onError } = this.props;
     const { name, secret } = this.state;
     if (name.trim().length === 0) {
-      console.log("Room name is invalid");
+      onError("Room name is invalid");
       return;
     }
     if (secret.trim().length === 0) {
-      console.log("Room secret is invalid");
+      onError("Room secret is invalid");
       return;
     }
     onCreate(name, secret);

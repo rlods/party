@@ -10,7 +10,7 @@ import { extractUser } from "../selectors/users";
 // ------------------------------------------------------------------
 
 const stateToProps = (state: RootState) => ({
-  user: extractUser(state, state.users.user_id)
+  user: extractUser(state, state.users.user.id)
 });
 
 const dispatchToProps = (dispatch: ThunkDispatch<RootState, any, any>) => ({

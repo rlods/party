@@ -71,14 +71,14 @@ class ConnectUserModal extends Component<MappedProps, State> {
   );
 
   private onCreate = () => {
-    const { onClose, onCreate } = this.props;
+    const { onClose, onCreate, onError } = this.props;
     const { name, secret } = this.state;
     if (name.trim().length === 0) {
-      console.log("User name is invalid");
+      onError("User name is invalid");
       return;
     }
     if (secret.trim().length === 0) {
-      console.log("User secret is invalid");
+      onError("User secret is invalid");
       return;
     }
     onCreate(name, secret);

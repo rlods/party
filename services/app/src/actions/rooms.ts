@@ -50,26 +50,28 @@ let FIREBASE_ROOM: ReturnType<typeof FirebaseRoom> | null = null;
 let FIREBASE_CB: any = null;
 
 export const enterRoom = (id: string): AsyncAction => async dispatch => {
-  dispatch(exitRoom());
-  try {
-    console.log("Entering room...", { id });
-    const room = FirebaseRoom(id);
-    dispatch(setRooms({ [id]: await room.wait() }));
-    dispatch(setRoom(id));
-    FIREBASE_CB = (snapshot: firebase.database.DataSnapshot) => {
-      dispatch(setRooms({ [id]: snapshot.val() as Room }));
-    };
-    FIREBASE_ROOM = room;
-    FIREBASE_ROOM.subscribeInfo(FIREBASE_CB);
-    history.push(`/room/${id}`);
-  } catch (err) {
-    dispatch(displayError("Cannot join room", err));
+  if (!FIREBASE_ROOM || FIREBASE_ROOM.id !== id) {
+    dispatch(exitRoom());
+    try {
+      console.log("Entering room...", { id });
+      const room = FirebaseRoom(id);
+      dispatch(setRooms({ [id]: await room.wait() }));
+      dispatch(setRoom(id));
+      FIREBASE_CB = (snapshot: firebase.database.DataSnapshot) => {
+        dispatch(setRooms({ [id]: snapshot.val() as Room }));
+      };
+      FIREBASE_ROOM = room;
+      FIREBASE_ROOM.subscribeInfo(FIREBASE_CB);
+      history.push(`/room/${id}`);
+    } catch (err) {
+      dispatch(displayError("Cannot join room", err));
+    }
   }
 };
 
 export const exitRoom = (): AsyncAction => async dispatch => {
   if (FIREBASE_ROOM) {
-    console.log("Exiting room...", { id: FIREBASE_ROOM.id });
+    console.log("Exiting room...");
     FIREBASE_ROOM.unsubscribeInfo(FIREBASE_CB);
     FIREBASE_ROOM = null;
     FIREBASE_CB = null;
