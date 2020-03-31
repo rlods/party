@@ -2,7 +2,7 @@ import React from "react";
 import classNames from "classnames";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 //
-import { Message } from "../actions/messages";
+import { Message } from "../../actions/messages";
 import "./Messages.scss";
 
 // ------------------------------------------------------------------

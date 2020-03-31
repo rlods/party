@@ -10,7 +10,7 @@
           ".read": true,
           ".validate": "newData.hasChildren(['name', 'online', 'room_id', 'status', 'timestamp'])",
           "name": {
-            ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length < 20"
+            ".validate": "newData.isString() && newData.val().length >= 3 && newData.val().length <= 20"
           },
           "online": { ".validate": "newData.isBoolean()" },
           "room_id": {
@@ -25,7 +25,7 @@
           "$other": { ".validate": false }
         },
         "secret": {
-          ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length < 200"
+          ".validate": "newData.isString() && newData.val().length >= 8 && newData.val().length <= 200"
         },
         "$other": { ".validate": false }
       }
@@ -38,7 +38,7 @@
           ".read": true,
           ".validate": "newData.hasChildren(['name', 'container_id', 'container_type', 'track_id', 'track_position', 'timestamp', 'type'])",
           "name": {
-            ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length < 20"
+            ".validate": "newData.isString() && newData.val().length >= 3 && newData.val().length <= 20"
           },
           "container_id": {
             ".validate": "newData.isString() && newData.val().length < 20"
@@ -57,7 +57,7 @@
           "$other": { ".validate": false }
         },
         "secret": {
-          ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length < 200"
+          ".validate": "newData.isString() && newData.val().length >= 8 && newData.val().length <= 200"
         },
         "$other": { ".validate": false }
       }

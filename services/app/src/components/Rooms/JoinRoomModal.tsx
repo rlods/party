@@ -37,6 +37,9 @@ class JoinRoomModal extends Component<MappedProps, State> {
             id="modal-roomId"
             type="text"
             placeholder="Room ID..."
+            maxLength={36}
+            minLength={36}
+            required={true}
             value={roomId}
             ref={this.idRef}
             onChange={e => {

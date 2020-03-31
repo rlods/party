@@ -2,51 +2,51 @@ import React, { Component, Fragment, RefObject, createRef } from "react";
 import { v4 } from "uuid";
 //
 import FormModal from "../Modals/FormModal";
-import { MappedProps } from "../../containers/Users/ConnectUserModal";
+import { MappedProps } from "../../containers/Users/CreateUserModal";
 import IconButton, { CancelButton } from "../Common/IconButton";
 
 // ------------------------------------------------------------------
 
 type State = {
-  id: string;
+  name: string;
   secret: string;
 };
 
-class ConnectUserModal extends Component<MappedProps, State> {
-  private idRef: RefObject<HTMLInputElement> = createRef();
+class CreateUserModal extends Component<MappedProps, State> {
+  private nameRef: RefObject<HTMLInputElement> = createRef();
 
   public readonly state: State = {
-    id: "",
-    secret: ""
+    name: "",
+    secret: v4()
   };
 
   public componentDidMount() {
-    if (this.idRef.current) {
-      this.idRef.current.focus();
+    if (this.nameRef.current) {
+      this.nameRef.current.focus();
     }
   }
 
   public render = () => {
-    const { id, secret } = this.state;
+    const { name, secret } = this.state;
     return (
       <FormModal
-        title="Connect User"
-        onSubmit={this.onConnect}
+        title="Create User"
+        onSubmit={this.onCreate}
         renderButtons={this.renderButtons}
       >
         <div className="ModalField">
-          <label htmlFor="modal-id">User ID</label>
+          <label htmlFor="modal-name">User Name</label>
           <input
-            id="modal-id"
+            id="modal-name"
             type="text"
-            placeholder="User ID..."
-            maxLength={36}
-            minLength={36}
+            placeholder="User Name..."
+            maxLength={20}
+            minLength={2}
             required={true}
-            value={id}
-            ref={this.idRef}
+            value={name}
+            ref={this.nameRef}
             onChange={e => {
-              this.setState({ id: e.target.value });
+              this.setState({ name: e.target.value });
             }}
           />
         </div>
@@ -71,31 +71,31 @@ class ConnectUserModal extends Component<MappedProps, State> {
 
   private renderButtons = () => (
     <Fragment>
-      <IconButton title="Connect" kind="primary" icon="sign-in" type="submit" />
+      <IconButton title="Create" kind="primary" icon="plus" type="submit" />
       <CancelButton onClick={this.props.onClose} />
       <IconButton
-        title="Create"
+        title="Connect"
         kind="default"
-        icon="plus"
+        icon="sign-in"
         onClick={this.props.onToggle}
       />
     </Fragment>
   );
 
-  private onConnect = () => {
-    const { onClose, onConnect, onError } = this.props;
-    const { id, secret } = this.state;
-    if (id.trim().length === 0) {
-      onError("User ID is invalid");
+  private onCreate = () => {
+    const { onClose, onCreate, onError } = this.props;
+    const { name, secret } = this.state;
+    if (name.trim().length === 0) {
+      onError("User name is invalid");
       return;
     }
     if (secret.trim().length === 0) {
       onError("User secret is invalid");
       return;
     }
-    onConnect(id, secret);
+    onCreate(name, secret);
     onClose();
   };
 }
 
-export default ConnectUserModal;
+export default CreateUserModal;

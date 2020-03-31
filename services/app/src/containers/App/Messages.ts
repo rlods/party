@@ -1,7 +1,7 @@
 import { connect } from "react-redux";
 //
-import { RootState } from "../reducers";
-import Messages from "../components/Messages";
+import { RootState } from "../../reducers";
+import Messages from "../../components/App/Messages";
 
 // ------------------------------------------------------------------
 

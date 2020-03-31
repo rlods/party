@@ -40,6 +40,9 @@ class CreateRoomModal extends Component<MappedProps, State> {
             id="modal-name"
             type="text"
             placeholder="Room Name..."
+            maxLength={20}
+            minLength={2}
+            required={true}
             value={name}
             ref={this.nameRef}
             onChange={e => {
@@ -53,6 +56,9 @@ class CreateRoomModal extends Component<MappedProps, State> {
             id="modal-secret"
             type="text"
             placeholder="Room Secret..."
+            maxLength={200}
+            minLength={8}
+            required={true}
             value={secret}
             onChange={e => {
               this.setState({ secret: e.target.value });

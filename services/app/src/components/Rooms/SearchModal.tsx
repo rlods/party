@@ -96,6 +96,9 @@ class SearchModal extends Component<MappedProps, State> {
           id="modal-query"
           type="text"
           placeholder="Query..."
+          maxLength={100}
+          minLength={2}
+          required={true}
           value={query}
           ref={this.queryRef}
           onChange={e => {

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { withRouter, RouteComponentProps } from "react-router-dom";
 //
 import { MappedProps } from "../../containers/Rooms/Room";
-import Menu from "../../containers/Menu";
+import Menu from "../../containers/App/Menu";
 import { createSharingUrl } from "../../utils/rooms";
 import IconButton from "../Common/IconButton";
 

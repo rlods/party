@@ -1,14 +1,20 @@
 import React, { Component, Fragment } from "react";
 import { Link } from "react-router-dom";
 //
-import IconButton from "./Common/IconButton";
-import { MappedProps } from "../containers/Menu";
+import IconButton from "../Common/IconButton";
+import { MappedProps } from "../../containers/App/Menu";
 
 // ------------------------------------------------------------------
 
 class Menu extends Component<MappedProps> {
   public render = () => {
-    const { user } = this.props;
+    const {
+      user,
+      onCreateRoom,
+      onEnterRoom,
+      onDisconnectUser,
+      onConnectUser
+    } = this.props;
     return (
       <div className="Menu">
         <div>
@@ -20,23 +26,22 @@ class Menu extends Component<MappedProps> {
               <IconButton
                 title="Create Room"
                 icon="plus"
-                onClick={this.props.createRoom}
+                onClick={onCreateRoom}
               />
             </div>
             <div>
               <IconButton
                 title="Join Room"
                 icon="folder-open"
-                onClick={this.props.enterRoom}
+                onClick={onEnterRoom}
               />
             </div>
             <div>
               <IconButton
-                title="Disconnect"
+                title={`Disconnect (${user.name})`}
                 icon="sign-out"
-                onClick={this.props.disconnectUser}
+                onClick={onDisconnectUser}
               />
-              {user.name}
             </div>
           </Fragment>
         ) : (
@@ -45,7 +50,7 @@ class Menu extends Component<MappedProps> {
               <IconButton
                 title="Connect"
                 icon="sign-in"
-                onClick={this.props.connectUser}
+                onClick={onConnectUser}
               />
             </div>
           </Fragment>

@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
 //
-import { MappedProps } from "../containers/App";
-import Room from "../containers/Rooms/Room";
-import Splash from "../containers/Splash";
-import Modals from "../containers/Modals";
-import Messages from "../containers/Messages";
+import { MappedProps } from "../../containers/App";
+import Room from "../../containers/Rooms/Room";
+import Splash from "../../containers/Splash";
+import Modals from "../../containers/Modals";
+import Messages from "../../containers/App/Messages";
 
 // ------------------------------------------------------------------
 

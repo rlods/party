@@ -7,9 +7,9 @@ import { displayError } from "./messages";
 import { RootState } from "../reducers";
 import { Rooms, Room } from "../utils/rooms";
 import { Room as FirebaseRoom } from "../utils/firebase";
-import history from "../utils/history";
 import { loadTrack } from "./tracks";
 import { loadContainer } from "./containers";
+import history from "../utils/history";
 
 // ------------------------------------------------------------------
 
