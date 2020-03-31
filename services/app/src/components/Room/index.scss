@@ -1,0 +1,47 @@
+.Room {
+  .Controls {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .Queue {
+    .QueueItem {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      margin-top: 10px;
+
+      &:first-child {
+        margin-top: 0;
+      }
+
+      .Cover {
+        height: 50px;
+        width: 50px;
+        box-shadow: 0 1px 6px rgba(25, 25, 34, 0.16);
+        border-radius: 4px;
+        &:hover {
+          box-shadow: 0 1px 6px rgba(25, 25, 34, 0.24);
+        }
+        cursor: pointer;
+      }
+
+      .Meta {
+        display: flex;
+        flex-direction: column;
+        font-size: 14px;
+        line-height: 18px;
+        margin-left: 5px;
+      }
+
+      &.Track {
+        .TrackTitle {
+        }
+        .TrackArtistName {
+        }
+      }
+    }
+  }
+}

@@ -3,14 +3,14 @@ import { createAction } from ".";
 // ------------------------------------------------------------------
 
 export type QueueAction =
-  | ReturnType<typeof pushTrack>
-  | ReturnType<typeof removeTrack>
-  | ReturnType<typeof clearQueue>;
+  | ReturnType<typeof clearQueue>
+  | ReturnType<typeof pushTracks>
+  | ReturnType<typeof removeTrack>;
 
-export const pushTrack = (trackId: string) =>
-  createAction("queue/PUSH", trackId);
+export const clearQueue = () => createAction("queue/RESET");
+
+export const pushTracks = (trackIds: string[]) =>
+  createAction("queue/PUSH", trackIds);
 
 export const removeTrack = (trackId: string) =>
   createAction("queue/REMOVE", trackId);
-
-export const clearQueue = () => createAction("queue/RESET");

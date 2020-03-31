@@ -1,10 +1,12 @@
 import React, { Component } from "react";
 import { withRouter, RouteComponentProps } from "react-router-dom";
 //
-import { MappedProps } from "../../containers/Rooms/Room";
+import { MappedProps } from "../../containers/Room";
+import Controls from "../../containers/Room/Controls";
+import Queue from "../../containers/Room/Queue";
 import Menu from "../../containers/App/Menu";
 import { createSharingUrl } from "../../utils/rooms";
-import IconButton from "../Common/IconButton";
+import "./index.scss";
 
 // ------------------------------------------------------------------
 
@@ -22,22 +24,20 @@ class Room extends Component<Props & MappedProps> {
   };
 
   public render = () => {
-    const { onPlay, onSearch, onStop } = this.props;
+    const {
+      match: {
+        params: { room_id }
+      },
+      room
+    } = this.props;
     return (
       <div className="Room">
         <Menu />
-        <div>{this.props.match.params.room_id}</div>
-        <div>{this.props.room ? this.props.room.name : "?"}</div>
-        <div>{createSharingUrl(this.props.match.params.room_id)}</div>
-        <div>
-          <IconButton onClick={onPlay} icon="play" title="Play" />
-        </div>
-        <div>
-          <IconButton onClick={onStop} icon="stop" title="Stop" />
-        </div>
-        <div>
-          <IconButton onClick={onSearch} icon="search" title="Search" />
-        </div>
+        <div>{room_id}</div>
+        <div>{room ? room.name : "?"}</div>
+        <div>{createSharingUrl(room_id)}</div>
+        <Controls />
+        <Queue />
       </div>
     );
   };

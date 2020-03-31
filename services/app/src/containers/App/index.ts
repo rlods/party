@@ -4,7 +4,6 @@ import { ThunkDispatch } from "redux-thunk";
 import { RootState } from "../../reducers";
 import App from "../../components/App";
 import { reconnectUser } from "../../actions/users";
-import "./index.scss";
 
 // ------------------------------------------------------------------
 

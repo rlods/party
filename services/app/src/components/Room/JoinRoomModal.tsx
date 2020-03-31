@@ -1,7 +1,7 @@
 import React, { Component, Fragment, createRef, RefObject } from "react";
 //
 import FormModal from "../Modals/FormModal";
-import { MappedProps } from "../../containers/Rooms/JoinRoomModal";
+import { MappedProps } from "../../containers/Room/JoinRoomModal";
 import IconButton, { CancelButton } from "../Common/IconButton";
 
 // ------------------------------------------------------------------

@@ -2,11 +2,9 @@ import { connect } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
 //
 import { RootState } from "../../reducers";
-import Room, { Props } from "../../components/Rooms/Room";
+import Room, { Props } from "../../components/Room";
 import { enterRoom, exitRoom } from "../../actions/rooms";
 import { extractRoom } from "../../selectors/rooms";
-import { loadAudio, stopAudio } from "../../actions/player";
-import { openModal } from "../../actions/modals";
 
 // ------------------------------------------------------------------
 
@@ -19,17 +17,7 @@ const dispatchToProps = (
   ownProps: Props
 ) => ({
   onEnter: () => dispatch(enterRoom(ownProps.match.params.room_id)),
-  onExit: () => dispatch(exitRoom()),
-  onPlay: () =>
-    dispatch(
-      loadAudio(
-        "https://cdns-preview-d.dzcdn.net/stream/c-deda7fa9316d9e9e880d2c6207e92260-5.mp3",
-        true,
-        0
-      )
-    ),
-  onSearch: () => dispatch(openModal({ type: "Search", props: null })),
-  onStop: () => dispatch(stopAudio())
+  onExit: () => dispatch(exitRoom())
 });
 
 export type MappedProps = ReturnType<typeof stateToProps> &

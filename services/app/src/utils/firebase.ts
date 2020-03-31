@@ -29,7 +29,7 @@ export const Room = (id: string, secret?: string) => {
   const _members = MEMBERS.child(id);
   let _values: RoomInfo = {
     container_id: "",
-    container_type: "",
+    container_type: "album",
     name: "dummy",
     timestamp: 0,
     track_id: 0,
@@ -266,7 +266,7 @@ export const Party = (id: string, room: ReturnType<typeof Room>) => {
   const _users: { [id: string]: ReturnType<typeof User> } = {};
   let _info = {
     container_id: "",
-    container_type: "",
+    container_type: "album",
     name: "",
     track_id: 0,
     track_position: 0,

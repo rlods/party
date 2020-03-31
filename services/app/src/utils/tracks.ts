@@ -1,5 +1,3 @@
-import { LoadTrackItem } from "./api";
+import { ApiTrack } from "./api";
 
-export type Track = LoadTrackItem;
-
-export type Tracks = { [id: string]: Track };
+export type Tracks = { [id: string]: ApiTrack };

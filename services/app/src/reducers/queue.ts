@@ -17,7 +17,7 @@ export const queueReducer: Reducer<State, QueueAction> = (
 ): State => {
   switch (action.type) {
     case "queue/PUSH":
-      return { ...state, trackIds: [...state.trackIds, action.payload] };
+      return { ...state, trackIds: [...state.trackIds, ...action.payload] };
     case "queue/REMOVE":
       return {
         ...state,

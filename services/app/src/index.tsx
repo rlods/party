@@ -8,6 +8,8 @@ import thunk from "redux-thunk";
 //
 import { rootReducer } from "./reducers";
 import App from "./containers/App";
+import { DEFAULT_API } from "./utils/api";
+import { DEFAULT_PLAYER } from "./utils/player";
 import "./index.scss";
 
 // ------------------------------------------------------------------
@@ -17,8 +19,26 @@ const composeEnhancers =
 
 const store = createStore(
   rootReducer,
-  composeEnhancers(applyMiddleware(thunk))
+  composeEnhancers(
+    applyMiddleware(
+      thunk.withExtraArgument({ api: DEFAULT_API, player: DEFAULT_PLAYER })
+    )
+  )
 );
+
+/*
+const dispatch = store.dispatch.bind(store);
+player.attachCB({
+  onStart: () => {
+    console.log("XXX Play Started");
+  },
+  onStop: () => {
+    console.log("XXX Play Stopped");
+  }
+});
+*/
+
+// ------------------------------------------------------------------
 
 ReactDOM.render(
   <Provider store={store}>

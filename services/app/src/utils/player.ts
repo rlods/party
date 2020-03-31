@@ -31,6 +31,11 @@ export const loadAudioBuffer = (url: string): Promise<AudioBuffer> =>
 
 // ------------------------------------------------------------------
 
+export type PlayerCallbacks = {
+  onStart: () => void;
+  onStop: () => void;
+};
+
 export const Player = () => {
   let prevNode: AudioNode = AUDIO_CONTEXT.destination;
 
@@ -48,6 +53,12 @@ export const Player = () => {
 
   let buffer: AudioBuffer | null = null;
   let bufferUrl: string = "";
+
+  // TODO: should be keep or not ?
+  let _callbacks: PlayerCallbacks | null = null;
+  const attachCB = (callbacks: PlayerCallbacks) => {
+    _callbacks = callbacks;
+  };
 
   const load = async (url: string) => {
     if (bufferUrl !== url) {
@@ -85,9 +96,14 @@ export const Player = () => {
 
   return {
     analyserNode,
+    attachCB,
     gainNode,
     load,
     play,
     stop
   };
 };
+
+// ------------------------------------------------------------------
+
+export const DEFAULT_PLAYER = Player();

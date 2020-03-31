@@ -40,10 +40,11 @@ export const containersReducer: Reducer<State, ContainersAction> = (
         error: action.payload
       };
     case "containers/SET_CONTAINERS": {
-      return {
-        ...state,
-        containers: { ...state.containers, ...action.payload }
-      };
+      const copy = { ...state, containers: { ...state.containers } };
+      for (const container of action.payload) {
+        copy.containers[`${container.type}|${container.id}`] = container;
+      }
+      return copy;
     }
     case "containers/RESET":
       return INITIAL_STATE;

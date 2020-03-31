@@ -3,14 +3,10 @@ import { ThunkDispatch } from "redux-thunk";
 //
 import { createAction, AsyncAction } from ".";
 import { RootState } from "../reducers";
-import { Containers } from "../utils/containers";
-import {
-  loadAlbum as apiLoadAlbum,
-  loadPlaylist as apiLoadPlaylist
-} from "../utils/api";
+import { Container, ContainerType } from "../utils/containers";
 import { displayError } from "./messages";
-import { pushTrack } from "./queue";
-import { loadTrack } from "./tracks";
+import { pushTracks } from "./queue";
+import { loadTrack, setTracks } from "./tracks";
 
 // ------------------------------------------------------------------
 
@@ -27,17 +23,17 @@ const fetching = () => createAction("containers/FETCHING");
 const success = () => createAction("containers/FETCHED");
 const error = (error: AxiosError) => createAction("containers/ERROR", error);
 const reset = () => createAction("containers/RESET");
-const setContainers = (containers: Containers) =>
+const setContainers = (containers: Container[]) =>
   createAction("containers/SET_CONTAINERS", containers);
 
 // ------------------------------------------------------------------
 
 export const loadContainer = (
-  containerType: string,
+  containerType: ContainerType,
   containerId: string,
   enqueue: boolean,
   play: boolean
-): AsyncAction => async (dispatch, getState) => {
+): AsyncAction => async (dispatch, getState, { api }) => {
   try {
     const state = getState();
     const containerTypeId = `${containerType}|${containerId}`;
@@ -46,25 +42,25 @@ export const loadContainer = (
       console.log("Loading container...", { containerId, containerType });
       switch (containerType) {
         case "album":
-          container = await apiLoadAlbum(containerId);
-          dispatch(setContainers({ [containerTypeId]: container }));
+          container = await api.loadAlbum(containerId);
           break;
         case "playlist":
-          container = await apiLoadPlaylist(containerId);
-          dispatch(setContainers({ [containerTypeId]: container }));
+          container = await api.loadPlaylist(containerId);
           break;
       }
     }
     if (container) {
-      if (enqueue) {
-        console.log("Enqueuing container...");
-        container.tracks.data.forEach(track =>
-          dispatch(pushTrack(track.id.toString()))
-        );
-      }
-      if (play) {
-        console.log("Playing container...");
-        if (container.tracks.data.length > 0) {
+      dispatch(setContainers([container]));
+      if (container.tracks && container.tracks.data.length > 0) {
+        dispatch(setTracks(container.tracks.data));
+        if (enqueue) {
+          console.log("Enqueuing container...");
+          dispatch(
+            pushTracks(container.tracks.data.map(track => track.id.toString()))
+          );
+        }
+        if (play) {
+          console.log("Playing container...");
           dispatch(
             loadTrack(container.tracks.data[0].id.toString(), false, true)
           );

@@ -8,9 +8,10 @@ import React, {
 import classNames from "classnames";
 //
 import FormModal from "../Modals/FormModal";
-import { MappedProps } from "../../containers/Rooms/SearchModal";
+import { MappedProps } from "../../containers/Room/SearchModal";
 import IconButton, { CancelButton } from "../Common/IconButton";
-import { searchAll, SearchAllResults } from "../../utils/api";
+import { DEFAULT_API, SearchAllResults } from "../../utils/api";
+import { TrackMeta, PlaylistMeta, AlbumMeta } from "./Metas";
 import "./SearchModal.scss";
 
 // ------------------------------------------------------------------
@@ -110,7 +111,7 @@ class SearchModal extends Component<MappedProps, State> {
   };
 
   private renderResults = () => {
-    const { onSelect } = this.props;
+    const { onPreview, onSelect } = this.props;
     const { albums, playlists, tracks } = this.state.results;
     return (
       <Fragment>
@@ -120,33 +121,18 @@ class SearchModal extends Component<MappedProps, State> {
           items={albums.data}
           cb={album => (
             <Fragment>
+              <IconButton
+                title="Add"
+                icon="plus"
+                onClick={() => onSelect("album", album.id.toString(), "")}
+              />
               <img
                 className="Cover"
                 src={album.cover_small}
                 alt="Cover"
-                onClick={() => onSelect("album", album.id.toString(), "")}
+                onClick={() => onPreview("album", album.id.toString(), "")}
               />
-              <div className="Meta">
-                <div className="AlbumTitle">
-                  <a
-                    href={album.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {album.title}
-                  </a>
-                </div>
-                <div className="AlbumArtistName">
-                  by{" "}
-                  <a
-                    href={album.artist.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {album.artist.name}
-                  </a>
-                </div>
-              </div>
+              <AlbumMeta album={album} />
             </Fragment>
           )}
         />
@@ -156,23 +142,20 @@ class SearchModal extends Component<MappedProps, State> {
           items={playlists.data}
           cb={playlist => (
             <Fragment>
+              <IconButton
+                title="Add"
+                icon="plus"
+                onClick={() => onSelect("playlist", playlist.id.toString(), "")}
+              />
               <img
                 className="Cover"
                 src={playlist.picture_small}
                 alt="Cover"
-                onClick={() => onSelect("playlist", playlist.id.toString(), "")}
+                onClick={() =>
+                  onPreview("playlist", playlist.id.toString(), "")
+                }
               />
-              <div className="Meta">
-                <div className="PlaylistTitle">
-                  <a
-                    href={playlist.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {playlist.title}
-                  </a>
-                </div>
-              </div>
+              <PlaylistMeta playlist={playlist} />
             </Fragment>
           )}
         />
@@ -182,10 +165,9 @@ class SearchModal extends Component<MappedProps, State> {
           items={tracks.data}
           cb={track => (
             <Fragment>
-              <img
-                className="Cover"
-                src={track.album.cover_small}
-                alt="Cover"
+              <IconButton
+                title="Add"
+                icon="plus"
                 onClick={() =>
                   onSelect(
                     "album",
@@ -194,27 +176,19 @@ class SearchModal extends Component<MappedProps, State> {
                   )
                 }
               />
-              <div className="Meta">
-                <div className="TrackTitle">
-                  <a
-                    href={track.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {track.title}
-                  </a>
-                </div>
-                <div className="TrackArtistName">
-                  by{" "}
-                  <a
-                    href={track.artist.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {track.artist.name}
-                  </a>
-                </div>
-              </div>
+              <img
+                className="Cover"
+                src={track.album.cover_small}
+                alt="Cover"
+                onClick={() =>
+                  onPreview(
+                    "album",
+                    track.album.id.toString(),
+                    track.id.toString()
+                  )
+                }
+              />
+              <TrackMeta track={track} />
             </Fragment>
           )}
         />
@@ -225,7 +199,7 @@ class SearchModal extends Component<MappedProps, State> {
   private onSearch = async () => {
     const { query } = this.state;
     if (query.trim().length > 0) {
-      this.setState({ results: await searchAll(query) });
+      this.setState({ results: await DEFAULT_API.searchAll(query) });
     }
   };
 }

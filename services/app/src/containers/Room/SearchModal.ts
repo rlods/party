@@ -2,9 +2,10 @@ import { connect } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
 //
 import { RootState } from "../../reducers";
-import SearchModal from "../../components/Rooms/SearchModal";
+import SearchModal from "../../components/Room/SearchModal";
 import { popModal } from "../../actions/modals";
-import { playInRoom } from "../../actions/rooms";
+import { preview, queueTracks } from "../../actions/rooms";
+import { ContainerType } from "../../utils/containers";
 
 // ------------------------------------------------------------------
 
@@ -14,8 +15,16 @@ const stateToProps = (state: RootState) => {
 
 const dispatchToProps = (dispatch: ThunkDispatch<RootState, any, any>) => ({
   onClose: () => dispatch(popModal()),
-  onSelect: (containerType: string, containerId: string, trackId: string) =>
-    dispatch(playInRoom(containerType, containerId, trackId))
+  onPreview: (
+    containerType: ContainerType,
+    containerId: string,
+    trackId: string
+  ) => dispatch(preview(containerType, containerId, trackId)),
+  onSelect: (
+    containerType: ContainerType,
+    containerId: string,
+    trackId: string
+  ) => dispatch(queueTracks(containerType, containerId, trackId))
 });
 
 export type MappedProps = ReturnType<typeof stateToProps> &

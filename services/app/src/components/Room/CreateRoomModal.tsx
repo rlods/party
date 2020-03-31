@@ -2,7 +2,7 @@ import React, { Component, Fragment, RefObject, createRef } from "react";
 import { v4 } from "uuid";
 //
 import FormModal from "../Modals/FormModal";
-import { MappedProps } from "../../containers/Rooms/CreateRoomModal";
+import { MappedProps } from "../../containers/Room/CreateRoomModal";
 import IconButton, { CancelButton } from "../Common/IconButton";
 
 // ------------------------------------------------------------------

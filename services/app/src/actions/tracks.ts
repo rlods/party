@@ -3,11 +3,10 @@ import { ThunkDispatch } from "redux-thunk";
 //
 import { createAction, AsyncAction } from ".";
 import { RootState } from "../reducers";
-import { Tracks } from "../utils/tracks";
 import { displayError } from "./messages";
 import { loadAudio } from "./player";
-import { loadTrack as apiLoadTrack } from "../utils/api";
-import { pushTrack } from "./queue";
+import { pushTracks } from "./queue";
+import { ApiTrack } from "../utils/api";
 
 // ------------------------------------------------------------------
 
@@ -24,7 +23,8 @@ const fetching = () => createAction("tracks/FETCHING");
 const success = () => createAction("tracks/FETCHED");
 const error = (error: AxiosError) => createAction("tracks/ERROR", error);
 const reset = () => createAction("tracks/RESET");
-const setTracks = (tracks: Tracks) => createAction("tracks/SET_TRACKS", tracks);
+export const setTracks = (tracks: ApiTrack[]) =>
+  createAction("tracks/SET_TRACKS", tracks);
 
 // ------------------------------------------------------------------
 
@@ -32,18 +32,18 @@ export const loadTrack = (
   trackId: string,
   enqueue: boolean,
   play: boolean
-): AsyncAction => async (dispatch, getState) => {
+): AsyncAction => async (dispatch, getState, { api }) => {
   try {
     const state = getState();
     let track = state.tracks.tracks[trackId];
     if (!track) {
       console.log("Loading track...", { trackId });
-      track = await apiLoadTrack(trackId);
-      dispatch(setTracks({ [trackId]: track }));
+      track = await api.loadTrack(trackId);
+      dispatch(setTracks([track]));
     }
     if (enqueue) {
       console.log("Enqueuing track...");
-      dispatch(pushTrack(trackId));
+      dispatch(pushTracks([trackId]));
     }
     if (play) {
       console.log("Playing track...");

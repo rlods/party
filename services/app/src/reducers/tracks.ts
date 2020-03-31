@@ -40,10 +40,11 @@ export const tracksReducer: Reducer<State, TracksAction> = (
         error: action.payload
       };
     case "tracks/SET_TRACKS": {
-      return {
-        ...state,
-        tracks: { ...state.tracks, ...action.payload }
-      };
+      const copy = { ...state, tracks: { ...state.tracks } };
+      for (const track of action.payload) {
+        copy.tracks[track.id] = track;
+      }
+      return copy;
     }
     case "tracks/RESET":
       return INITIAL_STATE;

@@ -1,6 +1,8 @@
+import { ContainerType } from "./containers";
+
 export type Room = {
   container_id: string;
-  container_type: string;
+  container_type: ContainerType;
   name: string;
   timestamp: number;
   track_id: number;

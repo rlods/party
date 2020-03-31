@@ -9,6 +9,7 @@ import { Rooms, Room } from "../utils/rooms";
 import { Room as FirebaseRoom } from "../utils/firebase";
 import { loadTrack } from "./tracks";
 import { loadContainer } from "./containers";
+import { ContainerType } from "../utils/containers";
 import history from "../utils/history";
 
 // ------------------------------------------------------------------
@@ -81,12 +82,28 @@ export const exitRoom = (): AsyncAction => async dispatch => {
   }
 };
 
-export const playInRoom = (
-  containerType: string,
+export const queueTracks = (
+  containerType: ContainerType,
   containerId: string,
   trackId: string
 ): AsyncAction => async dispatch => {
-  console.log("Playing in room...", { containerType, containerId, trackId });
+  console.log("Queuing room tracks...", {
+    containerType,
+    containerId,
+    trackId
+  });
+  dispatch(loadContainer(containerType, containerId, true, false));
+  if (trackId) {
+    dispatch(loadTrack(trackId, true, false));
+  }
+};
+
+export const preview = (
+  containerType: ContainerType,
+  containerId: string,
+  trackId: string
+): AsyncAction => async dispatch => {
+  console.log("Previewing...", { containerType, containerId, trackId });
   dispatch(loadContainer(containerType, containerId, false, !trackId));
   if (trackId) {
     dispatch(loadTrack(trackId, false, true));

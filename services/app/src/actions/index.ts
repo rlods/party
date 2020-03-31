@@ -1,6 +1,8 @@
 import { AnyAction } from "redux";
 import { ThunkAction } from "redux-thunk";
 import { RootState } from "../reducers";
+import { Player } from "../utils/player";
+import { Api } from "../utils/api";
 
 // ------------------------------------------------------------------
 
@@ -13,7 +15,12 @@ export type ActionWithPayload<T extends string, P> = {
   payload: P;
 };
 
-export type AsyncAction = ThunkAction<void, RootState, void, AnyAction>;
+export type AsyncAction = ThunkAction<
+  void,
+  RootState,
+  { api: ReturnType<typeof Api>; player: ReturnType<typeof Player> },
+  AnyAction
+>;
 
 export function createAction<T extends string>(type: T): Action<T>;
 
