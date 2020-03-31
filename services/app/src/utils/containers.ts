@@ -1,6 +1,5 @@
-export type Container = {
-  cover_url: string;
-  title: string;
-};
+import { LoadPlaylistItem, LoadAlbumItem } from "./api";
+
+export type Container = LoadAlbumItem | LoadPlaylistItem;
 
 export type Containers = { [type_and_id: string]: Container };

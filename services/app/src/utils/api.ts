@@ -9,22 +9,20 @@ type SearchResult<T> = {
   total: number;
 };
 
-export const search = async <T>(type: string, query: string) => {
-  return (
+export const search = async <T>(type: string, query: string) =>
+  (
     await Axios.get(
       `${API_BASE}/search/${type}?q=${encodeURIComponent(query)}`,
       {}
     )
   ).data as SearchResult<T>;
-};
 
-export const load = async <T>(type: string, id: string) => {
-  return (await Axios.get(`${API_BASE}/${type}/${id}`, {})).data as T;
-};
+export const load = async <T>(type: string, id: string) =>
+  (await Axios.get(`${API_BASE}/${type}/${id}`, {})).data as T;
 
 // ------------------------------------------------------------------
 
-type SearchAlbumItem = {
+export type SearchAlbumItem = {
   artist: {
     id: number;
     name: string;
@@ -46,7 +44,7 @@ export const searchAlbums = (query: string) =>
 
 // ------------------------------------------------------------------
 
-type SearchPlaylistItem = {
+export type SearchPlaylistItem = {
   id: number;
   link: string;
   nb_tracks: number;
@@ -62,7 +60,7 @@ export const searchPlaylists = (query: string) =>
 
 // ------------------------------------------------------------------
 
-type SearchTrackItem = {
+export type SearchTrackItem = {
   album: { id: number; title: string; cover_big: string; cover_small: string };
   artist: {
     id: number;
@@ -101,7 +99,7 @@ export const searchAll = async (query: string): Promise<SearchAllResults> => {
 
 // ------------------------------------------------------------------
 
-type LoadAlbumItem = {
+export type LoadAlbumItem = {
   artist: {
     id: number;
     name: string;
@@ -116,13 +114,14 @@ type LoadAlbumItem = {
   nb_tracks: number;
   title: string;
   tracks: { data: LoadTrackItem[] };
+  type: "album";
 };
 
 export const loadAlbum = (id: string) => load<LoadAlbumItem>("Album", id);
 
 // ------------------------------------------------------------------
 
-type LoadPlaylistItem = {
+export type LoadPlaylistItem = {
   description: string;
   id: number;
   link: string;
@@ -132,6 +131,7 @@ type LoadPlaylistItem = {
   public: true;
   title: string;
   tracks: { data: LoadTrackItem[] };
+  type: "playlist";
 };
 
 export const loadPlaylist = (id: string) =>
@@ -139,7 +139,7 @@ export const loadPlaylist = (id: string) =>
 
 // ------------------------------------------------------------------
 
-type LoadTrackItem = {
+export type LoadTrackItem = {
   album: { id: number; title: string; cover_big: string; cover_small: string };
   artist: {
     id: number;
@@ -153,6 +153,7 @@ type LoadTrackItem = {
   link: string;
   preview: string;
   title: string;
+  type: "track";
 };
 
 export const loadTrack = (id: string) => load<LoadTrackItem>("track", id);

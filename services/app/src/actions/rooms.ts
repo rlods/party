@@ -8,7 +8,8 @@ import { RootState } from "../reducers";
 import { Rooms, Room } from "../utils/rooms";
 import { Room as FirebaseRoom } from "../utils/firebase";
 import history from "../utils/history";
-import { loadAlbum, loadPlaylist, loadTrack } from "../utils/api";
+import { loadTrack } from "./tracks";
+import { loadContainer } from "./containers";
 
 // ------------------------------------------------------------------
 
@@ -85,14 +86,7 @@ export const playInRoom = (
   containerId: string,
   trackId: string
 ): AsyncAction => async dispatch => {
-  console.log("TODO: PLAY IN ROOM");
-  if (containerType === "album") {
-    const album = await loadAlbum(containerId);
-  }
-  if (containerType === "playlist") {
-    const playlist = await loadPlaylist(containerId);
-  }
-  if (trackId) {
-    const track = await loadTrack(trackId);
-  }
+  console.log("TODO: PLAY IN ROOM", { containerType, containerId, trackId });
+  dispatch(loadContainer(containerType, containerId, false, false));
+  dispatch(loadTrack(trackId, false, true));
 };

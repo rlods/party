@@ -5,7 +5,8 @@ import { createAction, AsyncAction } from ".";
 import { RootState } from "../reducers";
 import { Tracks } from "../utils/tracks";
 import { displayError } from "./messages";
-import { searchAlbums, searchPlaylists, searchTracks } from "../utils/api";
+import { load } from "./player";
+import { loadTrack as apiLoadTrack } from "../utils/api";
 
 // ------------------------------------------------------------------
 
@@ -23,3 +24,30 @@ const success = () => createAction("tracks/FETCHED");
 const error = (error: AxiosError) => createAction("tracks/ERROR", error);
 const reset = () => createAction("tracks/RESET");
 const setTracks = (tracks: Tracks) => createAction("tracks/SET_TRACKS", tracks);
+
+// ------------------------------------------------------------------
+
+export const loadTrack = (
+  trackId: string,
+  enqueue: boolean,
+  play: boolean
+): AsyncAction => async (dispatch, getState) => {
+  try {
+    const state = getState();
+    let track = state.tracks.tracks[trackId];
+    if (!track) {
+      console.log("Loading track...", { trackId });
+      track = await apiLoadTrack(trackId);
+      dispatch(setTracks({ [trackId]: track }));
+    }
+    if (enqueue) {
+      console.log("TOTO: add track to queue");
+    }
+    if (play) {
+      console.log("TOTO: play track");
+      dispatch(load(track.preview, true, 0));
+    }
+  } catch (err) {
+    dispatch(displayError("Cannot load track", err));
+  }
+};
