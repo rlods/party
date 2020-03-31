@@ -7,7 +7,7 @@ const player = Player();
 
 // ------------------------------------------------------------------
 
-export const load = (
+export const loadAudio = (
   url: string,
   playWhenReady: boolean,
   offset: number
@@ -20,10 +20,10 @@ export const load = (
 
 // ------------------------------------------------------------------
 
-export const play = (offset: number): AsyncAction => async dispatch => {
+export const playAudio = (offset: number): AsyncAction => async dispatch => {
   player.play(offset);
 };
 
-export const stop = (): AsyncAction => async dispatch => {
+export const stopAudio = (): AsyncAction => async dispatch => {
   player.stop();
 };

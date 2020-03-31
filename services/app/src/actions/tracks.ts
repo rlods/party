@@ -5,8 +5,9 @@ import { createAction, AsyncAction } from ".";
 import { RootState } from "../reducers";
 import { Tracks } from "../utils/tracks";
 import { displayError } from "./messages";
-import { load } from "./player";
+import { loadAudio } from "./player";
 import { loadTrack as apiLoadTrack } from "../utils/api";
+import { pushTrack } from "./queue";
 
 // ------------------------------------------------------------------
 
@@ -41,11 +42,12 @@ export const loadTrack = (
       dispatch(setTracks({ [trackId]: track }));
     }
     if (enqueue) {
-      console.log("TOTO: add track to queue");
+      console.log("Enqueuing track...");
+      dispatch(pushTrack(trackId));
     }
     if (play) {
-      console.log("TOTO: play track");
-      dispatch(load(track.preview, true, 0));
+      console.log("Playing track...");
+      dispatch(loadAudio(track.preview, true, 0));
     }
   } catch (err) {
     dispatch(displayError("Cannot load track", err));

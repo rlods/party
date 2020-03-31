@@ -5,7 +5,7 @@ import { RootState } from "../../reducers";
 import Room, { Props } from "../../components/Rooms/Room";
 import { enterRoom, exitRoom } from "../../actions/rooms";
 import { extractRoom } from "../../selectors/rooms";
-import { load, stop } from "../../actions/player";
+import { loadAudio, stopAudio } from "../../actions/player";
 import { openModal } from "../../actions/modals";
 
 // ------------------------------------------------------------------
@@ -22,14 +22,14 @@ const dispatchToProps = (
   onExit: () => dispatch(exitRoom()),
   onPlay: () =>
     dispatch(
-      load(
+      loadAudio(
         "https://cdns-preview-d.dzcdn.net/stream/c-deda7fa9316d9e9e880d2c6207e92260-5.mp3",
         true,
         0
       )
     ),
   onSearch: () => dispatch(openModal({ type: "Search", props: null })),
-  onStop: () => dispatch(stop())
+  onStop: () => dispatch(stopAudio())
 });
 
 export type MappedProps = ReturnType<typeof stateToProps> &

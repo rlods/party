@@ -17,11 +17,14 @@ export type Message = {
 
 export type MessagesAction =
   | ReturnType<typeof addMessage>
+  | ReturnType<typeof clearMessages>
   | ReturnType<typeof removeMessage>;
 
 const addMessage = (message: Message) => createAction("message/ADD", message);
 
 const removeMessage = (id: number) => createAction("message/REMOVE", id);
+
+const clearMessages = () => createAction("message/RESET");
 
 export const displayMessage = (
   type: string,

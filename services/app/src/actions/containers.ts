@@ -4,8 +4,13 @@ import { ThunkDispatch } from "redux-thunk";
 import { createAction, AsyncAction } from ".";
 import { RootState } from "../reducers";
 import { Containers } from "../utils/containers";
-import { loadAlbum, loadPlaylist } from "../utils/api";
+import {
+  loadAlbum as apiLoadAlbum,
+  loadPlaylist as apiLoadPlaylist
+} from "../utils/api";
 import { displayError } from "./messages";
+import { pushTrack } from "./queue";
+import { loadTrack } from "./tracks";
 
 // ------------------------------------------------------------------
 
@@ -36,25 +41,35 @@ export const loadContainer = (
   try {
     const state = getState();
     const containerTypeId = `${containerType}|${containerId}`;
-    if (!state.containers.containers[containerTypeId]) {
-      if (containerType === "album") {
-        console.log("Loading album...");
-        dispatch(
-          setContainers({ [containerTypeId]: await loadAlbum(containerId) })
-        );
-      }
-      if (containerType === "playlist") {
-        console.log("Loading playlist...");
-        dispatch(
-          setContainers({ [containerTypeId]: await loadPlaylist(containerId) })
-        );
+    let container = state.containers.containers[containerTypeId];
+    if (!container) {
+      console.log("Loading container...", { containerId, containerType });
+      switch (containerType) {
+        case "album":
+          container = await apiLoadAlbum(containerId);
+          dispatch(setContainers({ [containerTypeId]: container }));
+          break;
+        case "playlist":
+          container = await apiLoadPlaylist(containerId);
+          dispatch(setContainers({ [containerTypeId]: container }));
+          break;
       }
     }
-    if (enqueue) {
-      console.log("TOTO: add container to queue");
-    }
-    if (play) {
-      console.log("TOTO: play container");
+    if (container) {
+      if (enqueue) {
+        console.log("Enqueuing container...");
+        container.tracks.data.forEach(track =>
+          dispatch(pushTrack(track.id.toString()))
+        );
+      }
+      if (play) {
+        console.log("Playing container...");
+        if (container.tracks.data.length > 0) {
+          dispatch(
+            loadTrack(container.tracks.data[0].id.toString(), false, true)
+          );
+        }
+      }
     }
   } catch (err) {
     dispatch(displayError("Cannot load container", err));

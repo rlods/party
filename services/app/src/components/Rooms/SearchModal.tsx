@@ -187,7 +187,7 @@ class SearchModal extends Component<MappedProps, State> {
                   onSelect(
                     "album",
                     track.album.id.toString(),
-                    track.id ? track.id.toString() : void 0
+                    track.id.toString()
                   )
                 }
               />

@@ -2,6 +2,7 @@ import { combineReducers } from "redux";
 import { containersReducer as containers } from "./containers";
 import { messagesReducer as messages } from "./messages";
 import { modalsReducer as modals } from "./modals";
+import { queueReducer as queue } from "./queue";
 import { roomsReducer as rooms } from "./rooms";
 import { tracksReducer as tracks } from "./tracks";
 import { usersReducer as users } from "./users";
@@ -12,6 +13,7 @@ export const rootReducer = combineReducers({
   containers,
   messages,
   modals,
+  queue,
   rooms,
   tracks,
   users

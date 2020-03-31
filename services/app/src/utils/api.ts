@@ -117,7 +117,7 @@ export type LoadAlbumItem = {
   type: "album";
 };
 
-export const loadAlbum = (id: string) => load<LoadAlbumItem>("Album", id);
+export const loadAlbum = (id: string) => load<LoadAlbumItem>("album", id);
 
 // ------------------------------------------------------------------
 

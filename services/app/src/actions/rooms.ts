@@ -84,10 +84,10 @@ export const exitRoom = (): AsyncAction => async dispatch => {
 export const playInRoom = (
   containerType: string,
   containerId: string,
-  trackId?: string
+  trackId: string
 ): AsyncAction => async dispatch => {
-  console.log("TODO: PLAY IN ROOM", { containerType, containerId, trackId });
-  dispatch(loadContainer(containerType, containerId, false, false));
+  console.log("Playing in room...", { containerType, containerId, trackId });
+  dispatch(loadContainer(containerType, containerId, false, !trackId));
   if (trackId) {
     dispatch(loadTrack(trackId, false, true));
   }
