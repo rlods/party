@@ -14,7 +14,7 @@ const stateToProps = (state: RootState) => {
 
 const dispatchToProps = (dispatch: ThunkDispatch<RootState, any, any>) => ({
   onClose: () => dispatch(popModal()),
-  onSelect: (containerType: string, containerId: string, trackId: string) =>
+  onSelect: (containerType: string, containerId: string, trackId?: string) =>
     dispatch(playInRoom(containerType, containerId, trackId))
 });
 
