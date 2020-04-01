@@ -1,0 +1,23 @@
+.Metas {
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+  line-height: 18px;
+
+  .Meta {
+    &.AlbumTitle {
+    }
+
+    &.AlbumArtistName {
+    }
+
+    &.PlaylistTitle {
+    }
+
+    &.TrackTitle {
+    }
+
+    &.TrackArtistName {
+    }
+  }
+}

@@ -14,6 +14,7 @@ import { DEFAULT_API, SearchAllResults } from "../../utils/api";
 import { TrackMeta, PlaylistMeta, AlbumMeta } from "./Metas";
 import "./SearchModal.scss";
 import { Cover } from "./Cover";
+import { ContainerType } from "../../utils/containers";
 
 // ------------------------------------------------------------------
 
@@ -49,6 +50,8 @@ function SearchResult<T extends { id: number }>({
 // ------------------------------------------------------------------
 
 type State = {
+  playingId: number;
+  playingType: ContainerType | "track";
   query: string;
   results: SearchAllResults;
 };
@@ -57,6 +60,8 @@ class SearchModal extends Component<MappedProps, State> {
   private queryRef: RefObject<HTMLInputElement> = createRef();
 
   public readonly state: State = {
+    playingId: 0,
+    playingType: "track",
     query: "",
     results: {
       albums: { data: [], total: 0 },
@@ -116,14 +121,12 @@ class SearchModal extends Component<MappedProps, State> {
   };
 
   private renderResults = () => {
+    const { onSelectContainer, onSelectTrack } = this.props;
     const {
-      onPreviewContainer,
-      onPreviewTrack,
-      onSelectContainer,
-      onSelectTrack,
-      onStopPreview
-    } = this.props;
-    const { albums, playlists, tracks } = this.state.results;
+      playingId,
+      playingType,
+      results: { albums, playlists, tracks }
+    } = this.state;
     return (
       <Fragment>
         <SearchResult
@@ -141,12 +144,10 @@ class SearchModal extends Component<MappedProps, State> {
                   }
                 />
                 <Cover
-                  playing={false}
+                  playing={playingType === "album" && playingId === album.id}
                   image={album.cover_small}
-                  onPlay={() =>
-                    onPreviewContainer("album", album.id.toString())
-                  }
-                  onStop={() => onStopPreview()}
+                  onPlay={() => this.onPreviewContainer("album", album.id)}
+                  onStop={() => this.onStopPreview()}
                 />
                 <AlbumMeta album={album} />
               </Fragment>
@@ -167,12 +168,12 @@ class SearchModal extends Component<MappedProps, State> {
                 }
               />
               <Cover
-                playing={false}
-                image={playlist.picture_small}
-                onPlay={() =>
-                  onPreviewContainer("playlist", playlist.id.toString())
+                playing={
+                  playingType === "playlist" && playingId === playlist.id
                 }
-                onStop={() => onStopPreview()}
+                image={playlist.picture_small}
+                onPlay={() => this.onPreviewContainer("playlist", playlist.id)}
+                onStop={() => this.onStopPreview()}
               />
               <PlaylistMeta playlist={playlist} />
             </Fragment>
@@ -190,10 +191,10 @@ class SearchModal extends Component<MappedProps, State> {
                 onClick={() => onSelectTrack(track.id.toString())}
               />
               <Cover
-                playing={false}
+                playing={playingType === "track" && playingId === track.id}
                 image={track.album.cover_small}
-                onPlay={() => onPreviewTrack(track.id.toString())}
-                onStop={() => onStopPreview()}
+                onPlay={() => this.onPreviewTrack(track.id)}
+                onStop={() => this.onStopPreview()}
               />
               <TrackMeta track={track} />
             </Fragment>
@@ -208,6 +209,33 @@ class SearchModal extends Component<MappedProps, State> {
     if (query.trim().length > 0) {
       this.setState({ results: await DEFAULT_API.searchAll(query) });
     }
+  };
+
+  private onPreviewContainer = (
+    containerType: ContainerType,
+    containerId: number
+  ) => {
+    this.props.onPreviewContainer(containerType, containerId.toString());
+    this.setState({
+      playingId: containerId,
+      playingType: containerType
+    });
+  };
+
+  private onPreviewTrack = (trackId: number) => {
+    this.props.onPreviewTrack(trackId.toString());
+    this.setState({
+      playingId: trackId,
+      playingType: "track"
+    });
+  };
+
+  private onStopPreview = () => {
+    this.props.onStopPreview();
+    this.setState({
+      playingId: 0,
+      playingType: "track"
+    });
   };
 }
 

@@ -4,8 +4,7 @@ import { withRouter, RouteComponentProps } from "react-router-dom";
 import { MappedProps } from "../../containers/Room";
 import Controls from "../../containers/Room/Controls";
 import Queue from "../../containers/Room/Queue";
-import Menu from "../../containers/App/Menu";
-import { createSharingUrl } from "../../utils/rooms";
+import Head from "./Head";
 import "./index.scss";
 
 // ------------------------------------------------------------------
@@ -28,16 +27,20 @@ class Room extends Component<Props & MappedProps> {
       match: {
         params: { room_id }
       },
-      room
+      room,
+      roomColor: { fg, bg }
     } = this.props;
     return (
-      <div className="Room">
-        <Menu />
-        <div>{room_id}</div>
-        <div>{room ? room.name : "?"}</div>
-        <div>{createSharingUrl(room_id)}</div>
-        <Controls />
+      <div
+        className="Room"
+        style={{
+          color: `rgb(${fg.r}, ${fg.g}, ${fg.b})`,
+          backgroundColor: `rgb(${bg.r}, ${bg.g}, ${bg.b})`
+        }}
+      >
+        <Head room={room} roomId={room_id} />
         <Queue />
+        <Controls />
       </div>
     );
   };

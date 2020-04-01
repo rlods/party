@@ -11,6 +11,7 @@ import { loadTrack } from "./tracks";
 import { loadContainer } from "./containers";
 import { ContainerType } from "../utils/containers";
 import history from "../utils/history";
+import { CombinedColor } from "../utils/colorpicker";
 
 // ------------------------------------------------------------------
 
@@ -20,7 +21,8 @@ export type RoomsAction =
   | ReturnType<typeof error>
   | ReturnType<typeof reset>
   | ReturnType<typeof setRoom>
-  | ReturnType<typeof setRooms>;
+  | ReturnType<typeof setRooms>
+  | ReturnType<typeof setRoomColor>;
 
 type Dispatch = ThunkDispatch<RootState, any, RoomsAction>;
 
@@ -30,6 +32,8 @@ const error = (error: AxiosError) => createAction("rooms/ERROR", error);
 const reset = () => createAction("rooms/RESET");
 const setRoom = (id: string) => createAction("rooms/SET_ROOM", id);
 const setRooms = (rooms: Rooms) => createAction("rooms/SET_ROOMS", rooms);
+export const setRoomColor = (color: CombinedColor) =>
+  createAction("rooms/SET_ROOM_COLOR", color);
 
 // ------------------------------------------------------------------
 

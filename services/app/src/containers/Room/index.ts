@@ -9,7 +9,8 @@ import { extractRoom } from "../../selectors/rooms";
 // ------------------------------------------------------------------
 
 const stateToProps = (state: RootState, ownProps: Props) => ({
-  room: extractRoom(state, ownProps.match.params.room_id)
+  room: extractRoom(state, ownProps.match.params.room_id),
+  roomColor: state.rooms.room_color
 });
 
 const dispatchToProps = (

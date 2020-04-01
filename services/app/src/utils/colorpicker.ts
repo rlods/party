@@ -2,14 +2,18 @@ import * as jimp from "jimp";
 
 // ------------------------------------------------------------------
 
-export type RGBA = {
+export type Color = {
   r: number;
   g: number;
   b: number;
-  a: number;
 };
 
-const CACHE: { [url: string]: RGBA } = {};
+export type CombinedColor = {
+  bg: Color;
+  fg: Color;
+};
+
+const CACHE: { [url: string]: CombinedColor } = {};
 
 // ------------------------------------------------------------------
 
@@ -18,7 +22,15 @@ export const pickColor = async (url: string) => {
   if (!value) {
     const image = await jimp.read(url);
     const pixel = await image.resize(1, 1).getPixelColor(0, 0);
-    CACHE[url] = value = jimp.intToRGBA(pixel);
+    const bg = jimp.intToRGBA(pixel);
+    // https://stackoverflow.com/questions/3942878/how-to-decide-font-color-in-white-or-black-depending-on-background-color
+    CACHE[url] = value = {
+      bg,
+      fg:
+        bg.r * 0.299 + bg.g * 0.587 + bg.b * 0.114 > 186
+          ? { r: 0, g: 0, b: 0 }
+          : { r: 255, g: 255, b: 255 }
+    };
   }
   return value;
 };

@@ -2,10 +2,12 @@ import { Reducer } from "redux";
 import { AxiosError } from "axios";
 import { RoomsAction } from "../actions/rooms";
 import { Rooms } from "../utils/rooms";
+import { CombinedColor } from "../utils/colorpicker";
 
 export type State = {
   fetching: boolean;
   error: null | AxiosError;
+  room_color: CombinedColor;
   room_id: string;
   rooms: Rooms;
 };
@@ -13,6 +15,7 @@ export type State = {
 const INITIAL_STATE: State = {
   fetching: false,
   error: null,
+  room_color: { fg: { r: 0, g: 0, b: 0 }, bg: { r: 255, g: 255, b: 255 } },
   room_id: "",
   rooms: {}
 };
@@ -51,6 +54,12 @@ export const roomsReducer: Reducer<State, RoomsAction> = (
       return {
         ...state,
         rooms: { ...state.rooms, ...action.payload }
+      };
+    }
+    case "rooms/SET_ROOM_COLOR": {
+      return {
+        ...state,
+        room_color: action.payload
       };
     }
     case "rooms/RESET":

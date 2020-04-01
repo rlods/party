@@ -21,6 +21,7 @@ export type ApiAlbum = {
     picture_big: string;
     picture_small: string;
   };
+  available: boolean;
   cover_big: string;
   cover_small: string;
   id: number;
@@ -62,6 +63,7 @@ export type ApiTrack = {
   id: number;
   link: string;
   preview: string;
+  readable: boolean;
   title: string;
   type: "track";
 };

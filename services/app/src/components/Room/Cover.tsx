@@ -1,6 +1,8 @@
 import React from "react";
+import classNames from "classnames";
 //
-import IconButton from "../Common/IconButton";
+import Icon from "../Common/Icon";
+import "./Cover.scss";
 
 export const Cover = ({
   playing,
@@ -13,11 +15,15 @@ export const Cover = ({
   onStop: () => void;
   playing: boolean;
 }) => (
-  <div className="Cover" style={{ backgroundImage: `url('${image}')` }}>
+  <div
+    className={classNames("Cover", { playing })}
+    style={{ backgroundImage: `url('${image}')` }}
+    onClick={!playing ? onPlay : onStop}
+  >
     {!playing ? (
-      <IconButton icon="play" title="Play" onClick={() => onPlay()} />
+      <Icon icon="play" title="Play" />
     ) : (
-      <IconButton icon="pause" title="Stop" onClick={() => onStop()} />
+      <Icon icon="pause" title="Stop" />
     )}
   </div>
 );

@@ -2,7 +2,6 @@ import React, { Component } from "react";
 //
 import { MappedProps } from "../../containers/Room/Queue";
 import { TrackMeta } from "./Metas";
-import IconButton from "../Common/IconButton";
 import { Cover } from "./Cover";
 
 // ------------------------------------------------------------------

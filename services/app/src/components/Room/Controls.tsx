@@ -10,16 +10,14 @@ class Controls extends Component<MappedProps> {
     const { onPlay, onSearch, onStop, playing } = this.props;
     return (
       <div className="Controls">
-        {!playing ? (
-          <div>
+        <div className="Control">
+          {!playing ? (
             <IconButton onClick={onPlay} icon="play" title="Play" />
-          </div>
-        ) : (
-          <div>
-            <IconButton onClick={onStop} icon="stop" title="Stop" />
-          </div>
-        )}
-        <div>
+          ) : (
+            <IconButton onClick={onStop} icon="pause" title="Stop" />
+          )}
+        </div>
+        <div className="Control">
           <IconButton onClick={onSearch} icon="search" title="Search" />
         </div>
       </div>

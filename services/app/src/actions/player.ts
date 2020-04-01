@@ -1,6 +1,8 @@
 import { AsyncAction, createAction } from ".";
 import { setTracks } from "./tracks";
 import { displayError } from "./messages";
+import { setRoomColor } from "./rooms";
+import { pickColor } from "../utils/colorpicker";
 
 // ------------------------------------------------------------------
 
@@ -39,8 +41,10 @@ export const startPlayer = (): AsyncAction => async (
       ) {
         console.log("PLAYING", { position });
         PLAYER_POSITION = position;
-        await queuePlayer.load(tracks.tracks[trackIds[position]].preview);
+        const track = tracks.tracks[trackIds[position]];
+        await queuePlayer.load(track.preview);
         queuePlayer.play(0);
+        dispatch(setRoomColor(await pickColor(track.album.cover_small)));
       }
     }, 1000);
     dispatch(start());

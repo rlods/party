@@ -23,21 +23,21 @@ class Menu extends Component<MappedProps> {
         <div className="Menu">
           {!!user ? (
             <Fragment>
-              <div>
+              <div className="MenuItem">
                 <IconButton
                   title="Create Room"
                   icon="plus"
                   onClick={onCreateRoom}
                 />
               </div>
-              <div>
+              <div className="MenuItem">
                 <IconButton
                   title="Join Room"
                   icon="folder-open"
                   onClick={onEnterRoom}
                 />
               </div>
-              <div>
+              <div className="MenuItem">
                 <IconButton
                   title={`Disconnect (${user.name})`}
                   icon="sign-out"
@@ -47,7 +47,7 @@ class Menu extends Component<MappedProps> {
             </Fragment>
           ) : (
             <Fragment>
-              <div>
+              <div className="MenuItem">
                 <IconButton
                   title="Connect"
                   icon="sign-in"

@@ -1,17 +1,18 @@
 import React from "react";
 //
 import { ApiAlbum, ApiPlaylist, ApiTrack } from "../../utils/api";
+import "./Metas.scss";
 
 // ------------------------------------------------------------------
 
 export const AlbumMeta = ({ album }: { album: ApiAlbum }) => (
-  <div className="Meta">
-    <div className="AlbumTitle">
+  <div className="Metas">
+    <div className="Meta AlbumTitle">
       <a href={album.link} target="_blank" rel="noopener noreferrer">
         {album.title}
       </a>
     </div>
-    <div className="AlbumArtistName">
+    <div className="Meta AlbumArtistName">
       by{" "}
       <a href={album.artist.link} target="_blank" rel="noopener noreferrer">
         {album.artist.name}
@@ -21,8 +22,8 @@ export const AlbumMeta = ({ album }: { album: ApiAlbum }) => (
 );
 
 export const PlaylistMeta = ({ playlist }: { playlist: ApiPlaylist }) => (
-  <div className="Meta">
-    <div className="PlaylistTitle">
+  <div className="Metas">
+    <div className="Meta PlaylistTitle">
       <a href={playlist.link} target="_blank" rel="noopener noreferrer">
         {playlist.title}
       </a>
@@ -31,13 +32,13 @@ export const PlaylistMeta = ({ playlist }: { playlist: ApiPlaylist }) => (
 );
 
 export const TrackMeta = ({ track }: { track: ApiTrack }) => (
-  <div className="Meta">
-    <div className="TrackTitle">
+  <div className="Metas">
+    <div className="Meta TrackTitle">
       <a href={track.link} target="_blank" rel="noopener noreferrer">
         {track.title}
       </a>
     </div>
-    <div className="TrackArtistName">
+    <div className="Meta TrackArtistName">
       by{" "}
       <a href={track.artist.link} target="_blank" rel="noopener noreferrer">
         {track.artist.name}
