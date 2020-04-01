@@ -19,15 +19,24 @@
       }
 
       .Cover {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+
         height: 50px;
         width: 50px;
-        box-shadow: 0 1px 6px rgba(25, 25, 34, 0.16);
+        background-position: center center;
+        background-size: cover;
+        box-shadow: 0 1px 6px rgba(25, 25, 34, 0.2);
         border-radius: 4px;
-        &:hover {
-          box-shadow: 0 1px 6px rgba(25, 25, 34, 0.24);
-        }
         cursor: pointer;
         margin-left: 10px;
+        transition: box-shadow 300ms ease-in-out;
+
+        &:hover {
+          box-shadow: 0 1px 6px rgba(25, 25, 34, 0.5);
+        }
       }
 
       .Meta {

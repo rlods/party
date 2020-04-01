@@ -13,6 +13,7 @@ import IconButton, { CancelButton } from "../Common/IconButton";
 import { DEFAULT_API, SearchAllResults } from "../../utils/api";
 import { TrackMeta, PlaylistMeta, AlbumMeta } from "./Metas";
 import "./SearchModal.scss";
+import { Cover } from "./Cover";
 
 // ------------------------------------------------------------------
 
@@ -70,6 +71,10 @@ class SearchModal extends Component<MappedProps, State> {
     }
   }
 
+  public componentWillUnmount() {
+    this.props.onStopPreview();
+  }
+
   public render = () => (
     <FormModal
       title="Search"
@@ -115,7 +120,8 @@ class SearchModal extends Component<MappedProps, State> {
       onPreviewContainer,
       onPreviewTrack,
       onSelectContainer,
-      onSelectTrack
+      onSelectTrack,
+      onStopPreview
     } = this.props;
     const { albums, playlists, tracks } = this.state.results;
     return (
@@ -134,13 +140,13 @@ class SearchModal extends Component<MappedProps, State> {
                     onSelectContainer("album", album.id.toString())
                   }
                 />
-                <img
-                  className="Cover"
-                  src={album.cover_small}
-                  alt="Cover"
-                  onClick={() =>
+                <Cover
+                  playing={false}
+                  image={album.cover_small}
+                  onPlay={() =>
                     onPreviewContainer("album", album.id.toString())
                   }
+                  onStop={() => onStopPreview()}
                 />
                 <AlbumMeta album={album} />
               </Fragment>
@@ -160,13 +166,13 @@ class SearchModal extends Component<MappedProps, State> {
                   onSelectContainer("playlist", playlist.id.toString())
                 }
               />
-              <img
-                className="Cover"
-                src={playlist.picture_small}
-                alt="Cover"
-                onClick={() =>
+              <Cover
+                playing={false}
+                image={playlist.picture_small}
+                onPlay={() =>
                   onPreviewContainer("playlist", playlist.id.toString())
                 }
+                onStop={() => onStopPreview()}
               />
               <PlaylistMeta playlist={playlist} />
             </Fragment>
@@ -183,11 +189,11 @@ class SearchModal extends Component<MappedProps, State> {
                 icon="plus"
                 onClick={() => onSelectTrack(track.id.toString())}
               />
-              <img
-                className="Cover"
-                src={track.album.cover_small}
-                alt="Cover"
-                onClick={() => onPreviewTrack(track.id.toString())}
+              <Cover
+                playing={false}
+                image={track.album.cover_small}
+                onPlay={() => onPreviewTrack(track.id.toString())}
+                onStop={() => onStopPreview()}
               />
               <TrackMeta track={track} />
             </Fragment>

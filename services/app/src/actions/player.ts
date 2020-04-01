@@ -1,4 +1,6 @@
 import { AsyncAction, createAction } from ".";
+import { setTracks } from "./tracks";
+import { displayError } from "./messages";
 
 // ------------------------------------------------------------------
 
@@ -7,15 +9,16 @@ export type PlayerAction =
   | ReturnType<typeof start>
   | ReturnType<typeof stop>;
 
-export const reset = () => createAction("player/RESET");
+const reset = () => createAction("player/RESET");
 
-export const start = () => createAction("player/START");
+const start = () => createAction("player/START");
 
-export const stop = () => createAction("player/STOP");
+const stop = () => createAction("player/STOP");
 
 // ------------------------------------------------------------------
 
 let PLAYER_TIMER: NodeJS.Timeout | null = null;
+let PLAYER_POSITION = -1;
 
 export const startPlayer = (): AsyncAction => async (
   dispatch,
@@ -24,16 +27,20 @@ export const startPlayer = (): AsyncAction => async (
 ) => {
   if (!PLAYER_TIMER) {
     PLAYER_TIMER = setInterval(async () => {
-      if (!queuePlayer.isPlaying()) {
-        const {
-          queue: { position, trackIds },
-          tracks
-        } = getState();
-        if (trackIds.length > 0) {
-          console.log("PLAYING", { position });
-          await queuePlayer.load(tracks.tracks[trackIds[position]].preview);
-          queuePlayer.play(0);
-        }
+      const {
+        queue: { position, trackIds },
+        tracks
+      } = getState();
+      // console.log("TESTING", { position, PLAYER_POSITION, COUNT: trackIds.length });
+      if (
+        position !== PLAYER_POSITION &&
+        position >= 0 &&
+        position < trackIds.length
+      ) {
+        console.log("PLAYING", { position });
+        PLAYER_POSITION = position;
+        await queuePlayer.load(tracks.tracks[trackIds[position]].preview);
+        queuePlayer.play(0);
       }
     }, 1000);
     dispatch(start());
@@ -50,8 +57,43 @@ export const stopPlayer = (): AsyncAction => async (
   if (PLAYER_TIMER) {
     clearInterval(PLAYER_TIMER);
     PLAYER_TIMER = null;
+    PLAYER_POSITION = -1;
 
     queuePlayer.stop();
     dispatch(stop());
   }
+};
+
+// ------------------------------------------------------------------
+
+export const startPreview = (trackId: string): AsyncAction => async (
+  dispatch,
+  getState,
+  { api, previewPlayer }
+) => {
+  try {
+    const state = getState();
+    let track = state.tracks.tracks[trackId];
+    if (!track) {
+      console.log("Loading track...", { trackId });
+      track = await api.loadTrack(trackId);
+      dispatch(setTracks([track]));
+    }
+    console.log("Start previewing...");
+    await previewPlayer.load(track.preview);
+    previewPlayer.play(0);
+  } catch (err) {
+    dispatch(displayError("Cannot load track", err));
+  }
+};
+
+// ------------------------------------------------------------------
+
+export const stopPreview = (): AsyncAction => async (
+  _1,
+  _2,
+  { previewPlayer }
+) => {
+  console.log("Stop previewing...");
+  previewPlayer.stop();
 };
