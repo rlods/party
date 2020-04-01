@@ -4,8 +4,7 @@ import { ThunkDispatch } from "redux-thunk";
 import { RootState } from "../../reducers";
 import Queue from "../../components/Room/Queue";
 import { extractTracks } from "../../selectors/tracks";
-import { preview } from "../../actions/rooms";
-import { ContainerType } from "../../utils/containers";
+import { previewTrack } from "../../actions/tracks";
 
 // ------------------------------------------------------------------
 
@@ -14,11 +13,7 @@ const stateToProps = (state: RootState) => ({
 });
 
 const dispatchToProps = (dispatch: ThunkDispatch<RootState, any, any>) => ({
-  onPlay: (
-    containerType: ContainerType,
-    containerId: string,
-    trackId: string
-  ) => dispatch(preview(containerType, containerId, trackId))
+  onPlay: (trackId: string) => dispatch(previewTrack(trackId))
 });
 
 export type MappedProps = ReturnType<typeof stateToProps> &

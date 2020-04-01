@@ -53,3 +53,12 @@ export const loadTrack = (
     dispatch(displayError("Cannot load track", err));
   }
 };
+
+// ------------------------------------------------------------------
+
+export const previewTrack = (
+  trackId: string
+): AsyncAction => async dispatch => {
+  console.log("Previewing track...", { trackId });
+  dispatch(loadTrack(trackId, false, true));
+};

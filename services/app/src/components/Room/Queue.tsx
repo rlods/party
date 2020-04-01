@@ -16,9 +16,7 @@ class Queue extends Component<MappedProps> {
               className="Cover"
               src={track.album.cover_small}
               alt="Cover"
-              onClick={() =>
-                onPlay("album", track.album.id.toString(), track.id.toString())
-              }
+              onClick={() => onPlay(track.id.toString())}
             />
             <TrackMeta track={track} />
           </div>

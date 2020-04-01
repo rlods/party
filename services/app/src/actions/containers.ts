@@ -71,3 +71,13 @@ export const loadContainer = (
     dispatch(displayError("Cannot load container", err));
   }
 };
+
+// ------------------------------------------------------------------
+
+export const previewContainer = (
+  containerType: ContainerType,
+  containerId: string
+): AsyncAction => async dispatch => {
+  console.log("Previewing container...", { containerType, containerId });
+  dispatch(loadContainer(containerType, containerId, false, true));
+};

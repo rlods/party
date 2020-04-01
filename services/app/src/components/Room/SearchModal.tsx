@@ -111,7 +111,12 @@ class SearchModal extends Component<MappedProps, State> {
   };
 
   private renderResults = () => {
-    const { onPreview, onSelect } = this.props;
+    const {
+      onPreviewContainer,
+      onPreviewTrack,
+      onSelectContainer,
+      onSelectTrack
+    } = this.props;
     const { albums, playlists, tracks } = this.state.results;
     return (
       <Fragment>
@@ -124,13 +129,13 @@ class SearchModal extends Component<MappedProps, State> {
               <IconButton
                 title="Add"
                 icon="plus"
-                onClick={() => onSelect("album", album.id.toString(), "")}
+                onClick={() => onSelectContainer("album", album.id.toString())}
               />
               <img
                 className="Cover"
                 src={album.cover_small}
                 alt="Cover"
-                onClick={() => onPreview("album", album.id.toString(), "")}
+                onClick={() => onPreviewContainer("album", album.id.toString())}
               />
               <AlbumMeta album={album} />
             </Fragment>
@@ -145,14 +150,16 @@ class SearchModal extends Component<MappedProps, State> {
               <IconButton
                 title="Add"
                 icon="plus"
-                onClick={() => onSelect("playlist", playlist.id.toString(), "")}
+                onClick={() =>
+                  onSelectContainer("playlist", playlist.id.toString())
+                }
               />
               <img
                 className="Cover"
                 src={playlist.picture_small}
                 alt="Cover"
                 onClick={() =>
-                  onPreview("playlist", playlist.id.toString(), "")
+                  onPreviewContainer("playlist", playlist.id.toString())
                 }
               />
               <PlaylistMeta playlist={playlist} />
@@ -168,25 +175,13 @@ class SearchModal extends Component<MappedProps, State> {
               <IconButton
                 title="Add"
                 icon="plus"
-                onClick={() =>
-                  onSelect(
-                    "album",
-                    track.album.id.toString(),
-                    track.id.toString()
-                  )
-                }
+                onClick={() => onSelectTrack(track.id.toString())}
               />
               <img
                 className="Cover"
                 src={track.album.cover_small}
                 alt="Cover"
-                onClick={() =>
-                  onPreview(
-                    "album",
-                    track.album.id.toString(),
-                    track.id.toString()
-                  )
-                }
+                onClick={() => onPreviewTrack(track.id.toString())}
               />
               <TrackMeta track={track} />
             </Fragment>

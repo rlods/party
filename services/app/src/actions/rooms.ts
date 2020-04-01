@@ -82,6 +82,8 @@ export const exitRoom = (): AsyncAction => async dispatch => {
   }
 };
 
+// ------------------------------------------------------------------
+
 export const queueTracks = (
   containerType: ContainerType,
   containerId: string,
@@ -92,20 +94,10 @@ export const queueTracks = (
     containerId,
     trackId
   });
-  dispatch(loadContainer(containerType, containerId, true, false));
+  if (containerId) {
+    dispatch(loadContainer(containerType, containerId, true, false));
+  }
   if (trackId) {
     dispatch(loadTrack(trackId, true, false));
-  }
-};
-
-export const preview = (
-  containerType: ContainerType,
-  containerId: string,
-  trackId: string
-): AsyncAction => async dispatch => {
-  console.log("Previewing...", { containerType, containerId, trackId });
-  dispatch(loadContainer(containerType, containerId, false, !trackId));
-  if (trackId) {
-    dispatch(loadTrack(trackId, false, true));
   }
 };
