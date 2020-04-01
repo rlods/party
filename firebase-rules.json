@@ -36,15 +36,9 @@
         ".validate": "newData.hasChildren(['info', 'secret'])",
         "info": {
           ".read": true,
-          ".validate": "newData.hasChildren(['name', 'container_id', 'container_type', 'track_id', 'track_position', 'timestamp', 'type'])",
+          ".validate": "newData.hasChildren(['name', 'track_id', 'track_position', 'timestamp', 'type'])",
           "name": {
             ".validate": "newData.isString() && newData.val().length >= 3 && newData.val().length <= 20"
-          },
-          "container_id": {
-            ".validate": "newData.isString() && newData.val().length < 20"
-          },
-          "container_type": {
-            ".validate": "newData.isString() && newData.val().length < 20"
           },
           "track_id": { ".validate": "newData.isNumber()" },
           "track_position": { ".validate": "newData.isNumber()" },

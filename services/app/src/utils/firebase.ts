@@ -28,8 +28,6 @@ export const Room = (id: string, secret?: string) => {
   const _info = _room.child("info");
   const _members = MEMBERS.child(id);
   let _values: RoomInfo = {
-    container_id: "",
-    container_type: "album",
     name: "dummy",
     timestamp: 0,
     track_id: 0,
@@ -81,29 +79,13 @@ export const Room = (id: string, secret?: string) => {
   };
 
   const update = async ({
-    container_id,
-    container_type,
     name,
     track_id,
     track_position,
     type
   }: Partial<
-    Pick<
-      RoomInfo,
-      | "container_id"
-      | "container_type"
-      | "name"
-      | "track_id"
-      | "track_position"
-      | "type"
-    >
+    Pick<RoomInfo, "name" | "track_id" | "track_position" | "type">
   >) => {
-    if (container_id !== void 0) {
-      _values.container_id = container_id;
-    }
-    if (container_type !== void 0) {
-      _values.container_type = container_type;
-    }
     if (name !== void 0) {
       _values.name = name;
     }
@@ -265,8 +247,6 @@ export const Party = (id: string, room: ReturnType<typeof Room>) => {
   const _members: string[] = [];
   const _users: { [id: string]: ReturnType<typeof User> } = {};
   let _info = {
-    container_id: "",
-    container_type: "album",
     name: "",
     track_id: 0,
     track_position: 0,
@@ -308,7 +288,7 @@ export const Party = (id: string, room: ReturnType<typeof Room>) => {
 
   const _log = () => {
     console.log(
-      `PARTY ${id} room=${_info.name} type=${_info.type} playlist=${_info.container_type}/${_info.container_id}/${_info.track_id}/${_info.track_position} members=${_members}`
+      `PARTY ${id} room=${_info.name} type=${_info.type} playlist=${_info.track_id}/${_info.track_position} members=${_members}`
     );
   };
 
@@ -343,8 +323,6 @@ export const testRoom = async () => {
   await room.init({ name: "R1" });
   await sleep(1000);
   await room.update({
-    container_id: "42",
-    container_type: "playlist",
     name: "R1b",
     track_id: 43,
     track_position: 44
