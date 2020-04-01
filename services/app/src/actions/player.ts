@@ -1,30 +1,57 @@
-import { AsyncAction } from ".";
+import { AsyncAction, createAction } from ".";
 
 // ------------------------------------------------------------------
 
-export const loadAudio = (
-  url: string,
-  playWhenReady: boolean,
-  offset: number
-): AsyncAction => async (dispatch, _, { player }) => {
-  await player.load(url);
-  if (playWhenReady) {
-    player.play(offset);
+export type PlayerAction =
+  | ReturnType<typeof reset>
+  | ReturnType<typeof start>
+  | ReturnType<typeof stop>;
+
+export const reset = () => createAction("player/RESET");
+
+export const start = () => createAction("player/START");
+
+export const stop = () => createAction("player/STOP");
+
+// ------------------------------------------------------------------
+
+let PLAYER_TIMER: NodeJS.Timeout | null = null;
+
+export const startPlayer = (): AsyncAction => async (
+  dispatch,
+  getState,
+  { queuePlayer }
+) => {
+  if (!PLAYER_TIMER) {
+    PLAYER_TIMER = setInterval(async () => {
+      if (!queuePlayer.isPlaying()) {
+        const {
+          queue: { position, trackIds },
+          tracks
+        } = getState();
+        if (trackIds.length > 0) {
+          console.log("PLAYING", { position });
+          await queuePlayer.load(tracks.tracks[trackIds[position]].preview);
+          queuePlayer.play(0);
+        }
+      }
+    }, 1000);
+    dispatch(start());
   }
 };
 
 // ------------------------------------------------------------------
 
-export const playAudio = (offset: number): AsyncAction => async (
+export const stopPlayer = (): AsyncAction => async (
   dispatch,
   _,
-  { player }
+  { queuePlayer }
 ) => {
-  player.play(offset);
-};
+  if (PLAYER_TIMER) {
+    clearInterval(PLAYER_TIMER);
+    PLAYER_TIMER = null;
 
-// ------------------------------------------------------------------
-
-export const stopAudio = (): AsyncAction => async (dispatch, _, { player }) => {
-  player.stop();
+    queuePlayer.stop();
+    dispatch(stop());
+  }
 };

@@ -1,33 +1,14 @@
-export const AUDIO_CONTEXT = new (window.AudioContext ||
-  (window as any).webkitAudioContext)();
-
 // ------------------------------------------------------------------
 
-export const loadAudioBuffer = (url: string): Promise<AudioBuffer> =>
-  new Promise((resolve, reject) => {
-    const req = new XMLHttpRequest();
-    req.open("GET", url, true);
-    req.responseType = "arraybuffer";
-    req.addEventListener(
-      "error",
-      () => reject(new Error("Audio buffer loading failed")),
-      false
-    );
-    req.addEventListener(
-      "load",
-      async () => {
-        try {
-          // https://github.com/WebAudio/web-audio-api/issues/1305
-          resolve(await AUDIO_CONTEXT.decodeAudioData(req.response));
-        } catch (error) {
-          // INA sometimes returns raw text 'Fichier non trouve' without any error code
-          reject(error);
-        }
-      },
-      false
-    );
-    req.send();
-  });
+let AUDIO_CONTEXT: AudioContext | null = null;
+
+const getContext = () => {
+  if (!AUDIO_CONTEXT) {
+    AUDIO_CONTEXT = new (window.AudioContext ||
+      (window as any).webkitAudioContext)();
+  }
+  return AUDIO_CONTEXT;
+};
 
 // ------------------------------------------------------------------
 
@@ -37,28 +18,31 @@ export type PlayerCallbacks = {
 };
 
 export const Player = () => {
-  let prevNode: AudioNode = AUDIO_CONTEXT.destination;
+  let analyserNode: AnalyserNode | null = null;
+  let gainNode: GainNode | null = null;
+  let node: AudioNode | null = null;
 
-  const gainNode = AUDIO_CONTEXT.createGain();
-  gainNode.gain.value = 1.0;
-  gainNode.connect(prevNode);
-  prevNode = gainNode;
+  const getNode = () => {
+    if (!node) {
+      const context = getContext();
 
-  const analyserNode = AUDIO_CONTEXT.createAnalyser();
-  analyserNode.fftSize = 128;
-  // analyserNode.minDecibels = -90;
-  // analyserNode.maxDecibels = -10;
-  analyserNode.connect(prevNode);
-  prevNode = analyserNode;
+      gainNode = context.createGain();
+      gainNode.gain.value = 1.0;
+      gainNode.connect(context.destination);
+
+      analyserNode = context.createAnalyser();
+      analyserNode.fftSize = 128;
+      // analyserNode.minDecibels = -90;
+      // analyserNode.maxDecibels = -10;
+      analyserNode.connect(gainNode);
+
+      node = analyserNode;
+    }
+    return node;
+  };
 
   let buffer: AudioBuffer | null = null;
   let bufferUrl: string = "";
-
-  // TODO: should be keep or not ?
-  let _callbacks: PlayerCallbacks | null = null;
-  const attachCB = (callbacks: PlayerCallbacks) => {
-    _callbacks = callbacks;
-  };
 
   const load = async (url: string) => {
     if (bufferUrl !== url) {
@@ -69,20 +53,51 @@ export const Player = () => {
   };
 
   let sourceNode: AudioBufferSourceNode | null = null;
+  let playCount = 0;
+
+  const isPlaying = () => playCount > 0;
+
+  const loadAudioBuffer = (url: string): Promise<AudioBuffer> =>
+    new Promise((resolve, reject) => {
+      const req = new XMLHttpRequest();
+      req.open("GET", url, true);
+      req.responseType = "arraybuffer";
+      req.addEventListener(
+        "error",
+        () => reject(new Error("Audio buffer loading failed")),
+        false
+      );
+      req.addEventListener(
+        "load",
+        async () => {
+          try {
+            // https://github.com/WebAudio/web-audio-api/issues/1305
+            resolve(await getContext().decodeAudioData(req.response));
+          } catch (error) {
+            // INA sometimes returns raw text 'Fichier non trouve' without any error code
+            reject(error);
+          }
+        },
+        false
+      );
+      req.send();
+    });
 
   const play = (offset: number) => {
     stop();
+    playCount++;
     console.log("Starting audio...");
-    sourceNode = AUDIO_CONTEXT.createBufferSource();
+    sourceNode = getContext().createBufferSource();
     sourceNode.buffer = buffer;
     sourceNode.loop = false;
     sourceNode.loopStart = 0;
     sourceNode.loopEnd = 0;
     sourceNode.onended = () => {
       console.log("Audio terminated...");
+      playCount--;
     };
     sourceNode.playbackRate.value = 1.0;
-    sourceNode.connect(prevNode);
+    sourceNode.connect(getNode());
     sourceNode.start(0, offset); // A new BufferSource must be created for each start
   };
 
@@ -96,14 +111,10 @@ export const Player = () => {
 
   return {
     analyserNode,
-    attachCB,
     gainNode,
+    isPlaying,
     load,
     play,
     stop
   };
 };
-
-// ------------------------------------------------------------------
-
-export const DEFAULT_PLAYER = Player();

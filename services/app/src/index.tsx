@@ -9,7 +9,7 @@ import thunk from "redux-thunk";
 import { rootReducer } from "./reducers";
 import App from "./containers/App";
 import { DEFAULT_API } from "./utils/api";
-import { DEFAULT_PLAYER } from "./utils/player";
+import { Player } from "./utils/player";
 import "./index.scss";
 
 // ------------------------------------------------------------------
@@ -21,22 +21,14 @@ const store = createStore(
   rootReducer,
   composeEnhancers(
     applyMiddleware(
-      thunk.withExtraArgument({ api: DEFAULT_API, player: DEFAULT_PLAYER })
+      thunk.withExtraArgument({
+        api: DEFAULT_API,
+        queuePlayer: Player(),
+        previewPlayer: Player()
+      })
     )
   )
 );
-
-/*
-const dispatch = store.dispatch.bind(store);
-player.attachCB({
-  onStart: () => {
-    console.log("XXX Play Started");
-  },
-  onStop: () => {
-    console.log("XXX Play Stopped");
-  }
-});
-*/
 
 // ------------------------------------------------------------------
 

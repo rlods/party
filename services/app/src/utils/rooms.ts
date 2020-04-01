@@ -1,5 +1,3 @@
-import { ContainerType } from "./containers";
-
 export type Room = {
   name: string;
   timestamp: number;

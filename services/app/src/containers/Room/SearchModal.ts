@@ -19,7 +19,7 @@ const dispatchToProps = (dispatch: ThunkDispatch<RootState, any, any>) => ({
   onClose: () => dispatch(popModal()),
   onPreviewContainer: (containerType: ContainerType, containerId: string) =>
     dispatch(previewContainer(containerType, containerId)),
-  onPreviewTrack: (trackId: string) => dispatch(previewTrack(trackId)),
+  onPreviewTrack: (trackId: string) => dispatch(previewTrack(trackId, true)),
   onSelectContainer: (containerType: ContainerType, containerId: string) =>
     dispatch(queueTracks(containerType, containerId, "")),
   onSelectTrack: (trackId: string) =>

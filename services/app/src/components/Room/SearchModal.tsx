@@ -124,22 +124,28 @@ class SearchModal extends Component<MappedProps, State> {
           label={`Albums`}
           type="Album"
           items={albums.data}
-          cb={album => (
-            <Fragment>
-              <IconButton
-                title="Add"
-                icon="plus"
-                onClick={() => onSelectContainer("album", album.id.toString())}
-              />
-              <img
-                className="Cover"
-                src={album.cover_small}
-                alt="Cover"
-                onClick={() => onPreviewContainer("album", album.id.toString())}
-              />
-              <AlbumMeta album={album} />
-            </Fragment>
-          )}
+          cb={album => {
+            return (
+              <Fragment>
+                <IconButton
+                  title="Add"
+                  icon="plus"
+                  onClick={() =>
+                    onSelectContainer("album", album.id.toString())
+                  }
+                />
+                <img
+                  className="Cover"
+                  src={album.cover_small}
+                  alt="Cover"
+                  onClick={() =>
+                    onPreviewContainer("album", album.id.toString())
+                  }
+                />
+                <AlbumMeta album={album} />
+              </Fragment>
+            );
+          }}
         />
         <SearchResult
           label={`Playlists`}

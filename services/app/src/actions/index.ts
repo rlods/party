@@ -18,7 +18,11 @@ export type ActionWithPayload<T extends string, P> = {
 export type AsyncAction = ThunkAction<
   void,
   RootState,
-  { api: ReturnType<typeof Api>; player: ReturnType<typeof Player> },
+  {
+    api: ReturnType<typeof Api>;
+    previewPlayer: ReturnType<typeof Player>;
+    queuePlayer: ReturnType<typeof Player>;
+  },
   AnyAction
 >;
 

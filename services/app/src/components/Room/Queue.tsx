@@ -10,13 +10,13 @@ class Queue extends Component<MappedProps> {
     const { tracks, onPlay } = this.props;
     return (
       <div className="Queue">
-        {tracks.map(track => (
+        {tracks.map((track, index) => (
           <div className="QueueItem" key={track.id}>
             <img
               className="Cover"
               src={track.album.cover_small}
               alt="Cover"
-              onClick={() => onPlay(track.id.toString())}
+              onClick={() => onPlay(index)}
             />
             <TrackMeta track={track} />
           </div>

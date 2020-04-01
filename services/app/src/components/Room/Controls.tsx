@@ -7,15 +7,18 @@ import IconButton from "../Common/IconButton";
 
 class Controls extends Component<MappedProps> {
   public render = () => {
-    const { onPlay, onSearch, onStop } = this.props;
+    const { onPlay, onSearch, onStop, playing } = this.props;
     return (
       <div className="Controls">
-        <div>
-          <IconButton onClick={onPlay} icon="play" title="Play" />
-        </div>
-        <div>
-          <IconButton onClick={onStop} icon="stop" title="Stop" />
-        </div>
+        {!playing ? (
+          <div>
+            <IconButton onClick={onPlay} icon="play" title="Play" />
+          </div>
+        ) : (
+          <div>
+            <IconButton onClick={onStop} icon="stop" title="Stop" />
+          </div>
+        )}
         <div>
           <IconButton onClick={onSearch} icon="search" title="Search" />
         </div>

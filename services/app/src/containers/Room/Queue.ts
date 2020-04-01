@@ -4,7 +4,7 @@ import { ThunkDispatch } from "redux-thunk";
 import { RootState } from "../../reducers";
 import Queue from "../../components/Room/Queue";
 import { extractTracks } from "../../selectors/tracks";
-import { previewTrack } from "../../actions/tracks";
+import { setPosition } from "../../actions/queue";
 
 // ------------------------------------------------------------------
 
@@ -13,7 +13,7 @@ const stateToProps = (state: RootState) => ({
 });
 
 const dispatchToProps = (dispatch: ThunkDispatch<RootState, any, any>) => ({
-  onPlay: (trackId: string) => dispatch(previewTrack(trackId))
+  onPlay: (index: number) => dispatch(setPosition(index))
 });
 
 export type MappedProps = ReturnType<typeof stateToProps> &
