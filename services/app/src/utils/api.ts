@@ -73,16 +73,19 @@ export type ApiTrack = {
 export const Api = () => {
   const API_BASE = "https://api.deezer.com";
 
-  const search = async <T>(type: string, query: string) =>
-    (
-      await Axios.get(
-        `${API_BASE}/search/${type}?q=${encodeURIComponent(query)}`,
-        {}
-      )
-    ).data as SearchResult<T>;
+  const _call = async <T>(path: string, qs?: string) => {
+    // We have to rely on jsonp because the Deezer api is CORS restricted
+    const fullpath = qs
+      ? `${API_BASE}/${path}?${qs}&output=jsonp&callback=`
+      : `${API_BASE}/${path}?output=jsonp&callback=`;
+    const jsonp = (await Axios.get(fullpath, {})).data as string;
+    return JSON.parse(jsonp.substring(1, jsonp.length - 1)) as T; // remove jsonp parenthesis (...)
+  };
 
-  const load = async <T>(type: string, id: string) =>
-    (await Axios.get(`${API_BASE}/${type}/${id}`, {})).data as T;
+  const search = <T>(type: string, query: string) =>
+    _call<SearchResult<T>>(`search/${type}`, `q=${encodeURIComponent(query)}`);
+
+  const load = <T>(type: string, id: string) => _call<T>(`/${type}/${id}`);
 
   const searchAlbums = (query: string) => search<ApiAlbum>("album", query);
 
