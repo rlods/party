@@ -22,6 +22,11 @@ export const Player = () => {
   let gainNode: GainNode | null = null;
   let node: AudioNode | null = null;
 
+  const decodeAudioData = (encodedBuffer: ArrayBuffer): Promise<AudioBuffer> =>
+    new Promise((resolve, reject) =>
+      getContext().decodeAudioData(encodedBuffer, resolve, reject)
+    );
+
   const getNode = () => {
     if (!node) {
       const context = getContext();
@@ -71,10 +76,9 @@ export const Player = () => {
         "load",
         async () => {
           try {
-            // https://github.com/WebAudio/web-audio-api/issues/1305
-            resolve(await getContext().decodeAudioData(req.response));
+            resolve(await decodeAudioData(req.response as ArrayBuffer));
           } catch (error) {
-            // INA sometimes returns raw text 'Fichier non trouve' without any error code
+            console.log("An error occurred while decoding audio data");
             reject(error);
           }
         },
