@@ -2,7 +2,7 @@ import { connect } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
 //
 import { RootState } from "../../reducers";
-import JoinRoomModal from "../../components/Room/JoinRoomModal";
+import UnlockRoomModal from "../../components/Room/UnlockRoomModal";
 import { unlockRoom } from "../../actions/rooms";
 import { popModal } from "../../actions/modals";
 
@@ -20,4 +20,4 @@ const dispatchToProps = (dispatch: ThunkDispatch<RootState, any, any>) => ({
 export type MappedProps = ReturnType<typeof stateToProps> &
   ReturnType<typeof dispatchToProps>;
 
-export default connect(stateToProps, dispatchToProps)(JoinRoomModal);
+export default connect(stateToProps, dispatchToProps)(UnlockRoomModal);

@@ -6,8 +6,8 @@ import { ModalPrereq } from "../../actions/modals";
 import ConnectUserModal from "../../containers/Users/ConnectUserModal";
 import CreateRoomModal from "../../containers/Room/CreateRoomModal";
 import CreateUserModal from "../../containers/Users/CreateUserModal";
-import JoinRoomModal from "../../containers/Room/JoinRoomModal";
 import SearchModal from "../../containers/Room/SearchModal";
+import UnlockRoomModal from "../../containers/Room/UnlockRoomModal";
 import "./index.scss";
 
 // ------------------------------------------------------------------
@@ -24,10 +24,10 @@ export const getModal = (prereq: ModalPrereq) => {
       return <CreateRoomModal />;
     case "CreateUser":
       return <CreateUserModal />;
-    case "JoinRoom":
-      return <JoinRoomModal />;
     case "Search":
       return <SearchModal />;
+    case "UnlockRoom":
+      return <UnlockRoomModal />;
   }
 };
 

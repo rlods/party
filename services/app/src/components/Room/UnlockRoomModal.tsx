@@ -1,7 +1,7 @@
 import React, { Component, Fragment, createRef, RefObject } from "react";
 //
 import FormModal from "../Modals/FormModal";
-import { MappedProps } from "../../containers/Room/JoinRoomModal";
+import { MappedProps } from "../../containers/Room/UnlockRoomModal";
 import IconButton, { CancelButton } from "../Common/IconButton";
 
 // ------------------------------------------------------------------
@@ -10,16 +10,16 @@ type State = {
   secret: string;
 };
 
-class JoinRoomModal extends Component<MappedProps, State> {
-  private idRef: RefObject<HTMLInputElement> = createRef();
+class UnlockRoomModal extends Component<MappedProps, State> {
+  private secretRef: RefObject<HTMLInputElement> = createRef();
 
   public readonly state: State = {
     secret: ""
   };
 
   public componentDidMount() {
-    if (this.idRef.current) {
-      this.idRef.current.focus();
+    if (this.secretRef.current) {
+      this.secretRef.current.focus();
     }
   }
 
@@ -41,7 +41,7 @@ class JoinRoomModal extends Component<MappedProps, State> {
             minLength={36}
             required={true}
             value={secret}
-            ref={this.idRef}
+            ref={this.secretRef}
             onChange={e => {
               this.setState({ secret: e.target.value });
             }}
@@ -65,4 +65,4 @@ class JoinRoomModal extends Component<MappedProps, State> {
   };
 }
 
-export default JoinRoomModal;
+export default UnlockRoomModal;
