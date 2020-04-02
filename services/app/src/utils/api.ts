@@ -1,4 +1,5 @@
-import Axios from "axios";
+// import Axios from "axios";
+import jsonp from "jsonp";
 
 // ------------------------------------------------------------------
 
@@ -73,13 +74,23 @@ export type ApiTrack = {
 export const Api = () => {
   const API_BASE = "https://api.deezer.com";
 
+  const asyncJsonp = <T>(url: string): Promise<T> =>
+    new Promise((resolve, reject) => {
+      jsonp(url, void 0, (err, data) => {
+        if (err) {
+          reject(new Error(err.message));
+        } else {
+          resolve(data);
+        }
+      });
+    });
+
   const call = async <T>(path: string, qs?: string) => {
     // We have to rely on jsonp because the Deezer api is CORS restricted
     const fullpath = qs
       ? `${API_BASE}/${path}?${qs}&output=jsonp&callback=`
       : `${API_BASE}/${path}?output=jsonp&callback=`;
-    const jsonp = (await Axios.get(fullpath, {})).data as string;
-    return JSON.parse(jsonp.substring(1, jsonp.length - 1)) as T; // remove jsonp parenthesis (...)
+    return await asyncJsonp<T>(fullpath);
   };
 
   const search = <T>(type: string, query: string) =>
