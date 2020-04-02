@@ -49,14 +49,6 @@ export const Player = () => {
   let buffer: AudioBuffer | null = null;
   let bufferUrl: string = "";
 
-  const load = async (url: string) => {
-    if (bufferUrl !== url) {
-      console.log("Loading audio...", { url });
-      buffer = await loadAudioBuffer(url);
-      bufferUrl = url;
-    }
-  };
-
   let sourceNode: AudioBufferSourceNode | null = null;
   let playCount = 0;
 
@@ -87,10 +79,15 @@ export const Player = () => {
       req.send();
     });
 
-  const play = (offset: number) => {
+  const play = async (url: string, offset: number) => {
+    if (bufferUrl !== url) {
+      console.log("Loading audio...", { url });
+      buffer = await loadAudioBuffer(url);
+      bufferUrl = url;
+    }
     stop();
     playCount++;
-    console.log("Starting audio...");
+    console.log("Starting audio...", buffer);
     sourceNode = getContext().createBufferSource();
     sourceNode.buffer = buffer;
     sourceNode.loop = false;
@@ -117,7 +114,6 @@ export const Player = () => {
     analyserNode,
     gainNode,
     isPlaying,
-    load,
     play,
     stop
   };

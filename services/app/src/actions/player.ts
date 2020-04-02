@@ -42,8 +42,7 @@ export const startPlayer = (): AsyncAction => async (
         console.log("PLAYING", { position });
         PLAYER_POSITION = position;
         const track = tracks.tracks[trackIds[position]];
-        await queuePlayer.load(track.preview);
-        queuePlayer.play(0);
+        await queuePlayer.play(track.preview, 0);
         dispatch(setRoomColor(await pickColor(track.album.cover_small)));
       }
     }, 1000);
@@ -84,8 +83,7 @@ export const startPreview = (trackId: string): AsyncAction => async (
       dispatch(setTracks([track]));
     }
     console.log("Start previewing...");
-    await previewPlayer.load(track.preview);
-    previewPlayer.play(0);
+    await previewPlayer.play(track.preview, 0);
   } catch (err) {
     dispatch(displayError("Cannot load track", err));
   }

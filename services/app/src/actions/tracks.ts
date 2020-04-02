@@ -42,8 +42,7 @@ export const loadTrack = (
     }
     if (play) {
       console.log("Previewing track...");
-      await previewPlayer.load(track.preview);
-      previewPlayer.play(0);
+      await previewPlayer.play(track.preview, 0);
     }
   } catch (err) {
     dispatch(displayError("Cannot load track", err));
