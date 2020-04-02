@@ -48,6 +48,6 @@ lint-app:
 
 # PROD
 prod:
-	rm -Rf $(shell pwd)/docs; \
+	rm -Rf $(shell pwd)/docs/*.* $(shell pwd)/docs/static/css/*.* $(shell pwd)/docs/static/js/*.*; \
 	$(compose_prod) build; \
 	$(compose_prod_run) -v $(shell pwd)/docs:/output app sh -c 'cp -R build/* /output'
