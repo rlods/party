@@ -10,6 +10,11 @@ const getContext = () => {
   return AUDIO_CONTEXT;
 };
 
+const decodeAudioData = (encodedBuffer: ArrayBuffer): Promise<AudioBuffer> =>
+  new Promise((resolve, reject) =>
+    getContext().decodeAudioData(encodedBuffer, resolve, reject)
+  );
+
 // ------------------------------------------------------------------
 
 export type PlayerCallbacks = {
@@ -22,26 +27,22 @@ export const Player = () => {
   let gainNode: GainNode | null = null;
   let node: AudioNode | null = null;
 
-  const decodeAudioData = (encodedBuffer: ArrayBuffer): Promise<AudioBuffer> =>
-    new Promise((resolve, reject) =>
-      getContext().decodeAudioData(encodedBuffer, resolve, reject)
-    );
-
   const getNode = () => {
     if (!node) {
       const context = getContext();
-
+      node = context.destination;
+      /*
       gainNode = context.createGain();
       gainNode.gain.value = 1.0;
-      gainNode.connect(context.destination);
+      gainNode.connect(node);
+      node = gainNode;
 
       analyserNode = context.createAnalyser();
       analyserNode.fftSize = 128;
       // analyserNode.minDecibels = -90;
       // analyserNode.maxDecibels = -10;
-      analyserNode.connect(gainNode);
-
-      node = analyserNode;
+      analyserNode.connect(node);
+      node = analyserNode;*/
     }
     return node;
   };
