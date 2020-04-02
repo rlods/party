@@ -1,8 +1,6 @@
 import { AxiosError } from "axios";
-import { ThunkDispatch } from "redux-thunk";
 //
 import { createAction, AsyncAction } from ".";
-import { RootState } from "../reducers";
 import { displayError } from "./messages";
 import { pushTracks } from "./queue";
 import { ApiTrack } from "../utils/api";
@@ -15,8 +13,6 @@ export type TracksAction =
   | ReturnType<typeof error>
   | ReturnType<typeof reset>
   | ReturnType<typeof setTracks>;
-
-type Dispatch = ThunkDispatch<RootState, any, TracksAction>;
 
 const fetching = () => createAction("tracks/FETCHING");
 const success = () => createAction("tracks/FETCHED");

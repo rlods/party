@@ -1,7 +1,5 @@
 import { AxiosError } from "axios";
-import { ThunkDispatch } from "redux-thunk";
 import { createAction, AsyncAction } from ".";
-import { RootState } from "../reducers";
 import { Users, User } from "../utils/users";
 import { User as FirebaseUser } from "../utils/firebase";
 import { v4 } from "uuid";
@@ -16,8 +14,6 @@ export type UsersAction =
   | ReturnType<typeof reset>
   | ReturnType<typeof setUser>
   | ReturnType<typeof setUsers>;
-
-type Dispatch = ThunkDispatch<RootState, any, UsersAction>;
 
 const fetching = () => createAction("users/FETCHING");
 const success = () => createAction("users/FETCHED");

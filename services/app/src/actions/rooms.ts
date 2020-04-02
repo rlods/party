@@ -1,10 +1,8 @@
 import { AxiosError } from "axios";
-import { ThunkDispatch } from "redux-thunk";
 import { v4 } from "uuid";
 //
 import { createAction, AsyncAction } from ".";
 import { displayError } from "./messages";
-import { RootState } from "../reducers";
 import { Rooms, Room } from "../utils/rooms";
 import { Room as FirebaseRoom } from "../utils/firebase";
 import { loadTrack } from "./tracks";
@@ -23,8 +21,6 @@ export type RoomsAction =
   | ReturnType<typeof setRoom>
   | ReturnType<typeof setRooms>
   | ReturnType<typeof setRoomColor>;
-
-type Dispatch = ThunkDispatch<RootState, any, RoomsAction>;
 
 const fetching = () => createAction("rooms/FETCHING");
 const success = () => createAction("rooms/FETCHED");
@@ -84,6 +80,10 @@ export const exitRoom = (): AsyncAction => async dispatch => {
     FIREBASE_CB = null;
     dispatch(setRoom(""));
   }
+};
+
+export const unlockRoom = (secret: string): AsyncAction => async dispatch => {
+  console.log("Unlocking room..."); // TODO
 };
 
 // ------------------------------------------------------------------

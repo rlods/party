@@ -7,14 +7,14 @@ import IconButton, { CancelButton } from "../Common/IconButton";
 // ------------------------------------------------------------------
 
 type State = {
-  roomId: string;
+  secret: string;
 };
 
 class JoinRoomModal extends Component<MappedProps, State> {
   private idRef: RefObject<HTMLInputElement> = createRef();
 
   public readonly state: State = {
-    roomId: ""
+    secret: ""
   };
 
   public componentDidMount() {
@@ -24,7 +24,7 @@ class JoinRoomModal extends Component<MappedProps, State> {
   }
 
   public render = () => {
-    const { roomId } = this.state;
+    const { secret } = this.state;
     return (
       <FormModal
         title="Join Room"
@@ -32,18 +32,18 @@ class JoinRoomModal extends Component<MappedProps, State> {
         renderButtons={this.renderButtons}
       >
         <div className="ModalField">
-          <label htmlFor="modal-roomId">Room ID</label>
+          <label htmlFor="modal-secret">Room Secret</label>
           <input
-            id="modal-roomId"
+            id="modal-secret"
             type="text"
-            placeholder="Room ID..."
+            placeholder="Room Secret..."
             maxLength={36}
             minLength={36}
             required={true}
-            value={roomId}
+            value={secret}
             ref={this.idRef}
             onChange={e => {
-              this.setState({ roomId: e.target.value });
+              this.setState({ secret: e.target.value });
             }}
           />
         </div>
@@ -59,13 +59,8 @@ class JoinRoomModal extends Component<MappedProps, State> {
   );
 
   private onJoin = () => {
-    const { onClose, onEnter } = this.props;
-    const { roomId } = this.state;
-    if (roomId.trim().length === 0) {
-      console.log("Room ID is invalid");
-      return;
-    }
-    onEnter(roomId);
+    const { onClose, onUnlock } = this.props;
+    onUnlock(this.state.secret);
     onClose();
   };
 }

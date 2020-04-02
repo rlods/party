@@ -8,13 +8,7 @@ import { MappedProps } from "../../containers/App/Menu";
 
 class Menu extends Component<MappedProps> {
   public render = () => {
-    const {
-      user,
-      onCreateRoom,
-      onEnterRoom,
-      onDisconnectUser,
-      onConnectUser
-    } = this.props;
+    const { user, onCreateRoom, onDisconnectUser, onConnectUser } = this.props;
     return (
       <Fragment>
         <div className="Logo">
@@ -28,13 +22,6 @@ class Menu extends Component<MappedProps> {
                   title="Create Room"
                   icon="plus"
                   onClick={onCreateRoom}
-                />
-              </div>
-              <div className="MenuItem">
-                <IconButton
-                  title="Join Room"
-                  icon="folder-open"
-                  onClick={onEnterRoom}
                 />
               </div>
               <div className="MenuItem">

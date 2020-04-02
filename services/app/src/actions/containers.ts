@@ -1,8 +1,6 @@
 import { AxiosError } from "axios";
-import { ThunkDispatch } from "redux-thunk";
 //
 import { createAction, AsyncAction } from ".";
-import { RootState } from "../reducers";
 import { Container, ContainerType } from "../utils/containers";
 import { displayError } from "./messages";
 import { pushTracks } from "./queue";
@@ -16,8 +14,6 @@ export type ContainersAction =
   | ReturnType<typeof error>
   | ReturnType<typeof reset>
   | ReturnType<typeof setContainers>;
-
-type Dispatch = ThunkDispatch<RootState, any, ContainersAction>;
 
 const fetching = () => createAction("containers/FETCHING");
 const success = () => createAction("containers/FETCHED");

@@ -17,8 +17,7 @@ const dispatchToProps = (dispatch: ThunkDispatch<RootState, any, any>) => ({
   onCreateRoom: () => dispatch(openModal({ type: "CreateRoom", props: null })),
   onConnectUser: () =>
     dispatch(openModal({ type: "ConnectUser", props: null })),
-  onDisconnectUser: () => dispatch(disconnectUser()),
-  onEnterRoom: () => dispatch(openModal({ type: "JoinRoom", props: null }))
+  onDisconnectUser: () => dispatch(disconnectUser())
 });
 
 export type MappedProps = ReturnType<typeof stateToProps> &
