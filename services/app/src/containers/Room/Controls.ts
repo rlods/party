@@ -5,7 +5,7 @@ import { RootState } from "../../reducers";
 import Controls from "../../components/Room/Controls";
 import { startPlayer, stopPlayer } from "../../actions/player";
 import { openModal } from "../../actions/modals";
-import { clearQueue } from "../../actions/queue";
+import { clearQueue, moveBackward, moveForward } from "../../actions/queue";
 
 // ------------------------------------------------------------------
 
@@ -19,6 +19,8 @@ const dispatchToProps = (dispatch: ThunkDispatch<RootState, any, any>) => ({
     dispatch(clearQueue());
     dispatch(stopPlayer());
   },
+  onMoveBackward: () => dispatch(moveBackward()),
+  onMoveForward: () => dispatch(moveForward()),
   onPlay: () => dispatch(startPlayer()),
   onSearch: () => dispatch(openModal({ type: "Search", props: null })),
   onStop: () => dispatch(stopPlayer())

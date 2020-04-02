@@ -1,4 +1,4 @@
-import { createAction } from ".";
+import { createAction, AsyncAction } from ".";
 
 // ------------------------------------------------------------------
 
@@ -18,3 +18,23 @@ export const removeTrack = (position: number) =>
 
 export const setPosition = (position: number) =>
   createAction("queue/SET_POSITION", position);
+
+// ------------------------------------------------------------------
+
+export const moveBackward = (): AsyncAction => async (dispatch, getState) => {
+  const {
+    queue: { position, trackIds }
+  } = getState();
+  if (trackIds.length > 0) {
+    dispatch(setPosition(position > 0 ? position - 1 : trackIds.length - 1));
+  }
+};
+
+export const moveForward = (): AsyncAction => async (dispatch, getState) => {
+  const {
+    queue: { position, trackIds }
+  } = getState();
+  if (trackIds.length > 0) {
+    dispatch(setPosition((position + 1) % trackIds.length));
+  }
+};

@@ -3,6 +3,7 @@ import { setTracks } from "./tracks";
 import { displayError } from "./messages";
 import { setRoomColor } from "./rooms";
 import { pickColor } from "../utils/colorpicker";
+import { setPosition } from "./queue";
 
 // ------------------------------------------------------------------
 
@@ -33,17 +34,29 @@ export const startPlayer = (): AsyncAction => async (
         queue: { position, trackIds },
         tracks
       } = getState();
-      // console.log("TESTING", { position, PLAYER_POSITION, COUNT: trackIds.length });
-      if (
-        position !== PLAYER_POSITION &&
-        position >= 0 &&
-        position < trackIds.length
-      ) {
-        console.log("PLAYING", { position });
-        PLAYER_POSITION = position;
-        const track = tracks.tracks[trackIds[position]];
-        await queuePlayer.play(track.preview, 0);
-        dispatch(setRoomColor(await pickColor(track.album.cover_small)));
+      if (trackIds.length > 0) {
+        if (PLAYER_POSITION !== position) {
+          // User has clicked an other track
+          PLAYER_POSITION = position;
+          console.log("Playing clicked track...", {
+            position: PLAYER_POSITION
+          });
+          const track = tracks.tracks[trackIds[PLAYER_POSITION]];
+          await queuePlayer.play(track.preview, 0);
+          dispatch(setPosition(PLAYER_POSITION));
+          dispatch(setRoomColor(await pickColor(track.album.cover_small)));
+        } else {
+          const nextPosition = (position + 1) % trackIds.length;
+          if (!queuePlayer.isPlaying() && nextPosition < trackIds.length) {
+            // Time to move to next track
+            PLAYER_POSITION = nextPosition;
+            console.log("Playing next track...", { position: PLAYER_POSITION });
+            const track = tracks.tracks[trackIds[PLAYER_POSITION]];
+            await queuePlayer.play(track.preview, 0);
+            dispatch(setPosition(PLAYER_POSITION));
+            dispatch(setRoomColor(await pickColor(track.album.cover_small)));
+          }
+        }
       }
     }, 1000);
     dispatch(start());

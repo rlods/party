@@ -9,7 +9,15 @@ import "./Controls.scss";
 
 class Controls extends Component<MappedProps> {
   public render = () => {
-    const { onPlay, onSearch, onStop, playable, playing } = this.props;
+    const {
+      onMoveBackward,
+      onMoveForward,
+      onPlay,
+      onSearch,
+      onStop,
+      playable,
+      playing
+    } = this.props;
     return (
       <div className="Controls">
         <div className="ControlsSet">
@@ -17,7 +25,7 @@ class Controls extends Component<MappedProps> {
             <IconButton
               disabled={!playable}
               icon="step-backward"
-              onClick={onPlay}
+              onClick={onMoveBackward}
               size="M"
               title="Previous"
             />
@@ -45,7 +53,7 @@ class Controls extends Component<MappedProps> {
             <IconButton
               disabled={!playable}
               icon="step-forward"
-              onClick={onPlay}
+              onClick={onMoveForward}
               size="M"
               title="Next"
             />
