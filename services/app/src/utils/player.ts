@@ -17,6 +17,26 @@ const decodeAudioData = (encodedBuffer: ArrayBuffer): Promise<AudioBuffer> =>
 
 // ------------------------------------------------------------------
 
+// Fix Safari and iOS Audio Context
+(() => {
+  const fixAudioContext = () => {
+    document.removeEventListener("click", fixAudioContext);
+    document.removeEventListener("touchstart", fixAudioContext);
+    console.log("Fixing audio context...");
+    const context = getContext();
+    // Create empty buffer, connect to output, play sound
+    var buffer = context.createBuffer(1, 1, 22050);
+    var source = context.createBufferSource();
+    source.buffer = buffer;
+    source.connect(context.destination);
+    source.start(0);
+  };
+  document.addEventListener("click", fixAudioContext);
+  document.addEventListener("touchstart", fixAudioContext);
+})();
+
+// ------------------------------------------------------------------
+
 export type PlayerCallbacks = {
   onStart: () => void;
   onStop: () => void;
@@ -31,7 +51,7 @@ export const Player = () => {
     if (!node) {
       const context = getContext();
       node = context.destination;
-      /*
+
       gainNode = context.createGain();
       gainNode.gain.value = 1.0;
       gainNode.connect(node);
@@ -42,7 +62,7 @@ export const Player = () => {
       // analyserNode.minDecibels = -90;
       // analyserNode.maxDecibels = -10;
       analyserNode.connect(node);
-      node = analyserNode;*/
+      node = analyserNode;
     }
     return node;
   };
@@ -88,7 +108,7 @@ export const Player = () => {
     }
     stop();
     playCount++;
-    console.log("Starting audio...", buffer);
+    console.log("Starting audio...");
     sourceNode = getContext().createBufferSource();
     sourceNode.buffer = buffer;
     sourceNode.loop = false;
