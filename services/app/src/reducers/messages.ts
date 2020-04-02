@@ -7,6 +7,8 @@ export type State = Message[];
 
 export const INITIAL_STATE: State = [];
 
+// ------------------------------------------------------------------
+
 export const messagesReducer: Reducer<State, MessagesAction> = (
   state = INITIAL_STATE,
   action

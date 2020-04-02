@@ -26,7 +26,8 @@ const fetching = () => createAction("rooms/FETCHING");
 const success = () => createAction("rooms/FETCHED");
 const error = (error: AxiosError) => createAction("rooms/ERROR", error);
 const reset = () => createAction("rooms/RESET");
-const setRoom = (id: string) => createAction("rooms/SET_ROOM", id);
+const setRoom = (id: string, secret: string) =>
+  createAction("rooms/SET_ROOM", { id, secret });
 const setRooms = (rooms: Rooms) => createAction("rooms/SET_ROOMS", rooms);
 export const setRoomColor = (color: CombinedColor) =>
   createAction("rooms/SET_ROOM_COLOR", color);
@@ -41,7 +42,7 @@ export const createRoom = (
     console.log("Creating room...");
     const id = v4();
     await FirebaseRoom(id, secret).init({ name });
-    dispatch(enterRoom(id));
+    dispatch(enterRoom(id, secret));
   } catch (err) {
     dispatch(displayError("Cannot create room", err));
   }
@@ -52,14 +53,17 @@ export const createRoom = (
 let FIREBASE_ROOM: ReturnType<typeof FirebaseRoom> | null = null;
 let FIREBASE_CB: any = null;
 
-export const enterRoom = (id: string): AsyncAction => async dispatch => {
+export const enterRoom = (
+  id: string,
+  secret: string
+): AsyncAction => async dispatch => {
   if (!FIREBASE_ROOM || FIREBASE_ROOM.id !== id) {
     dispatch(exitRoom());
     try {
-      console.log("Entering room...", { id });
+      console.log("Entering room...", { id, secret });
       const room = FirebaseRoom(id);
       dispatch(setRooms({ [id]: await room.wait() }));
-      dispatch(setRoom(id));
+      dispatch(setRoom(id, secret));
       FIREBASE_CB = (snapshot: firebase.database.DataSnapshot) => {
         dispatch(setRooms({ [id]: snapshot.val() as Room }));
       };
@@ -78,12 +82,33 @@ export const exitRoom = (): AsyncAction => async dispatch => {
     FIREBASE_ROOM.unsubscribeInfo(FIREBASE_CB);
     FIREBASE_ROOM = null;
     FIREBASE_CB = null;
-    dispatch(setRoom(""));
+    dispatch(setRoom("", ""));
   }
 };
 
-export const unlockRoom = (secret: string): AsyncAction => async dispatch => {
-  console.log("Unlocking room..."); // TODO
+// ------------------------------------------------------------------
+
+export const lockRoom = (): AsyncAction => async (dispatch, getState) => {
+  const {
+    rooms: {
+      room_access: { id }
+    }
+  } = getState();
+  console.log("Locking room...", { id });
+  dispatch(setRoom(id, ""));
+};
+
+export const unlockRoom = (secret: string): AsyncAction => async (
+  dispatch,
+  getState
+) => {
+  const {
+    rooms: {
+      room_access: { id }
+    }
+  } = getState();
+  console.log("Unlocking room...", { id, secret });
+  dispatch(setRoom(id, secret));
 };
 
 // ------------------------------------------------------------------

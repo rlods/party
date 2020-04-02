@@ -4,7 +4,7 @@ import { withRouter, RouteComponentProps } from "react-router-dom";
 import { MappedProps } from "../../containers/Room";
 import Controls from "../../containers/Room/Controls";
 import Queue from "../../containers/Room/Queue";
-import Head from "./Head";
+import Head from "../../containers/Room/Head";
 import "./index.scss";
 
 // ------------------------------------------------------------------
@@ -24,7 +24,6 @@ class Room extends Component<Props & MappedProps> {
 
   public render = () => {
     const {
-      room,
       roomColor: { fg, bg }
     } = this.props;
     return (
@@ -35,7 +34,7 @@ class Room extends Component<Props & MappedProps> {
           backgroundColor: `rgb(${bg.r}, ${bg.g}, ${bg.b})`
         }}
       >
-        <Head room={room} />
+        <Head />
         <Queue />
         <Controls />
       </div>

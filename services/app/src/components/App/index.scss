@@ -10,24 +10,4 @@
   flex-direction: column;
   justify-content: flex-start;
   align-items: stretch;
-
-  .Logo {
-    text-align: center;
-  }
-
-  .Menu {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    padding: 10px;
-
-    .MenuItem {
-      margin-left: 10px;
-
-      &:first-child {
-        margin-left: 0;
-      }
-    }
-  }
 }

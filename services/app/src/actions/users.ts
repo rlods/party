@@ -76,7 +76,7 @@ export const disconnectUser = (): AsyncAction => async dispatch => {
 
 export const reconnectUser = (): AsyncAction => async (dispatch, getState) => {
   const state = getState();
-  const { id, secret } = state.users.user;
+  const { id, secret } = state.users.user_access;
   if (id && secret) {
     try {
       console.log("Loading user...");

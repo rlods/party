@@ -2,25 +2,24 @@ import { connect } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
 //
 import { RootState } from "../../reducers";
+import Head from "../../components/Room/Head";
+import { extractRoom } from "../../selectors/rooms";
 import { openModal } from "../../actions/modals";
-import Menu from "../../components/App/Menu";
-import { disconnectUser } from "../../actions/users";
-import { extractUser } from "../../selectors/users";
+import { lockRoom } from "../../actions/rooms";
 
 // ------------------------------------------------------------------
 
 const stateToProps = (state: RootState) => ({
-  user: extractUser(state, state.users.user.id)
+  locked: !state.rooms.room_access.secret,
+  room: extractRoom(state, state.rooms.room_access.id)
 });
 
 const dispatchToProps = (dispatch: ThunkDispatch<RootState, any, any>) => ({
-  onCreateRoom: () => dispatch(openModal({ type: "CreateRoom", props: null })),
-  onConnectUser: () =>
-    dispatch(openModal({ type: "ConnectUser", props: null })),
-  onDisconnectUser: () => dispatch(disconnectUser())
+  onLock: () => dispatch(lockRoom()),
+  onUnlock: () => dispatch(openModal({ type: "UnlockRoom", props: null }))
 });
 
 export type MappedProps = ReturnType<typeof stateToProps> &
   ReturnType<typeof dispatchToProps>;
 
-export default connect(stateToProps, dispatchToProps)(Menu);
+export default connect(stateToProps, dispatchToProps)(Head);

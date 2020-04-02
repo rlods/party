@@ -1,24 +1,28 @@
 import { Reducer } from "redux";
 import { AxiosError } from "axios";
 import { RoomsAction } from "../actions/rooms";
-import { Rooms } from "../utils/rooms";
+import { Rooms, saveRoomAccess, RoomAccess } from "../utils/rooms";
 import { CombinedColor } from "../utils/colorpicker";
+
+// ------------------------------------------------------------------
 
 export type State = {
   fetching: boolean;
   error: null | AxiosError;
+  room_access: RoomAccess;
   room_color: CombinedColor;
-  room_id: string;
   rooms: Rooms;
 };
 
 const INITIAL_STATE: State = {
   fetching: false,
   error: null,
+  room_access: { id: "", secret: "" },
   room_color: { fg: { r: 0, g: 0, b: 0 }, bg: { r: 255, g: 255, b: 255 } },
-  room_id: "",
   rooms: {}
 };
+
+// ------------------------------------------------------------------
 
 export const roomsReducer: Reducer<State, RoomsAction> = (
   state = INITIAL_STATE,
@@ -45,9 +49,10 @@ export const roomsReducer: Reducer<State, RoomsAction> = (
         error: action.payload
       };
     case "rooms/SET_ROOM": {
+      saveRoomAccess(action.payload);
       return {
         ...state,
-        room_id: action.payload
+        room_access: action.payload
       };
     }
     case "rooms/SET_ROOMS": {

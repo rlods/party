@@ -8,15 +8,15 @@ export type User = {
 
 export type Users = { [id: string]: User };
 
-// ------------------------------------------------------------------
-
-export type XXX = {
+export type UserAccess = {
   id: string;
   secret: string;
 };
 
-export const load = (): XXX => {
-  const res: XXX = {
+// ------------------------------------------------------------------
+
+export const loadUserAccess = (): UserAccess => {
+  const res: UserAccess = {
     id: "",
     secret: ""
   };
@@ -27,14 +27,14 @@ export const load = (): XXX => {
       if (typeof d.i === "string" && typeof d.s === "string") {
         res.id = d.i;
         res.secret = d.s;
-        console.log("LOADED: ", res);
+        console.log("Loaded user access: ", res);
       }
     } catch (err) {}
   }
   return res;
 };
 
-export const save = ({ id, secret }: XXX) => {
+export const saveUserAccess = ({ id, secret }: UserAccess) => {
   localStorage.setItem(
     "U",
     btoa(

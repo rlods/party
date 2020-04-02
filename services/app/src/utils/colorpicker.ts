@@ -18,6 +18,12 @@ const CACHE: { [url: string]: CombinedColor } = {};
 // ------------------------------------------------------------------
 
 export const pickColor = async (url: string) => {
+  if (!url) {
+    return {
+      bg: { r: 255, g: 255, b: 255 },
+      fg: { r: 0, g: 0, b: 0 }
+    };
+  }
   let value = CACHE[url];
   if (!value) {
     const image = await jimp.read(url);

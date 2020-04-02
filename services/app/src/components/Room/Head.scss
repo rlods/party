@@ -1,0 +1,19 @@
+.Head {
+  display: flex;
+  flex-direction: row;
+  flex-shrink: 0;
+  align-self: stretch;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem;
+
+  .RoomStatus {
+  }
+
+  .RoomName {
+    text-transform: uppercase;
+  }
+
+  .RoomLink {
+  }
+}

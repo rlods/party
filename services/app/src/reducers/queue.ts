@@ -13,6 +13,8 @@ export const INITIAL_STATE: State = {
   trackIds: []
 };
 
+// ------------------------------------------------------------------
+
 export const queueReducer: Reducer<State, QueueAction> = (
   state = INITIAL_STATE,
   action

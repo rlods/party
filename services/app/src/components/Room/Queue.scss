@@ -3,9 +3,17 @@
   overflow-y: auto;
   overflow-x: hidden;
   width: 50%;
-  min-width: 400px;
+  min-width: 500px;
   max-width: 600px;
   flex-grow: 1;
+
+  @media screen and (max-width: 500px) {
+    & {
+      width: 100%;
+      min-width: auto;
+      max-width: auto;
+    }
+  }
 
   &::-webkit-scrollbar {
     width: 0.25rem;

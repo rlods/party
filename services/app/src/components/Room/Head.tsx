@@ -1,16 +1,50 @@
 import React, { Component } from "react";
-import { Room } from "../../utils/rooms";
+//
+import IconButton from "../Common/IconButton";
+import { MappedProps } from "../../containers/Room/Head";
+import "./Head.scss";
+import { copyToClipboard } from "../../utils/clipboard";
 
 // ------------------------------------------------------------------
 
-export type Props = {
-  room: Room | null;
-};
-
-class Head extends Component<Props> {
+class Head extends Component<MappedProps> {
   public render = () => {
-    const { room } = this.props;
-    return <div className="Head">{room ? room.name : "?"}</div>;
+    const { locked, room, onLock, onUnlock } = this.props;
+    return (
+      <div className="Head">
+        <div className="RoomStatus">
+          {locked ? (
+            <IconButton
+              icon="lock"
+              onClick={onUnlock}
+              size="M"
+              title="Locked (click to unlock)"
+            />
+          ) : (
+            <IconButton
+              icon="unlock"
+              onClick={onLock}
+              size="M"
+              title="Unlocked (click to lock)"
+            />
+          )}
+        </div>
+        <div className="RoomName">{room ? room.name : "?"}</div>
+        <div className="RoomLink">
+          <IconButton
+            icon="link"
+            onClick={this.onCopyLink}
+            size="M"
+            title="Copy Room Link to Clipboard"
+          />
+        </div>
+      </div>
+    );
+  };
+
+  private onCopyLink = async () => {
+    await copyToClipboard(document.location.href);
+    window.alert("Room link has been copied to clipboard");
   };
 }
 

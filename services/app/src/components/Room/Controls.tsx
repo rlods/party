@@ -4,7 +4,6 @@ import { MappedProps } from "../../containers/Room/Controls";
 import IconButton from "../Common/IconButton";
 import history from "../../utils/history";
 import "./Controls.scss";
-import { copyToClipboard } from "../../utils/clipboard";
 
 // ------------------------------------------------------------------
 
@@ -55,9 +54,9 @@ class Controls extends Component<MappedProps> {
         <div className="ControlsSet">
           <div className="Control">
             <IconButton
-              onClick={this.onCopyLink}
-              icon="link"
-              title="Copy Room Link to Clipboard"
+              onClick={this.onClear}
+              icon="trash"
+              title="Clear Room"
             />
           </div>
           <div className="Control">
@@ -75,9 +74,10 @@ class Controls extends Component<MappedProps> {
     );
   };
 
-  onCopyLink = async () => {
-    await copyToClipboard(document.location.href);
-    window.alert("Room link has been copied to clipboard");
+  onClear = () => {
+    if (window.confirm("Are you sure you want to clear Room")) {
+      this.props.onClear();
+    }
   };
 
   onExit = () => {

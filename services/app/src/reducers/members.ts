@@ -3,6 +3,8 @@ import { AxiosError } from "axios";
 import { MembersAction } from "../actions/members";
 import { Member } from "../utils/members";
 
+// ------------------------------------------------------------------
+
 export type State = {
   fetching: boolean;
   error: null | AxiosError;
@@ -14,6 +16,8 @@ const INITIAL_STATE: State = {
   error: null,
   items: []
 };
+
+// ------------------------------------------------------------------
 
 export const membersReducer: Reducer<State, MembersAction> = (
   state = INITIAL_STATE,

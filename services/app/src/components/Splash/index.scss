@@ -1,2 +1,25 @@
 .Splash {
+  display: flex;
+  flex-direction: column;
+
+  .Logo {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+
+    font-weight: bold;
+    text-align: center;
+    text-transform: uppercase;
+    padding: 10px;
+    height: 50vh;
+  }
+
+  .Menu {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    height: 50vh;
+    padding: 10px;
+  }
 }

@@ -1,6 +1,7 @@
 .Controls {
   display: flex;
   flex-direction: column;
+  flex-shrink: 0;
   align-items: center;
   align-self: stretch;
   justify-content: center;

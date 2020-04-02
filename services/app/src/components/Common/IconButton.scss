@@ -24,6 +24,10 @@
     opacity: 1;
   }
 
+  &:focus {
+    background-color: #f00;
+  }
+
   &.default {
     background-color: transparent;
   }

@@ -11,6 +11,8 @@ export const INITIAL_STATE: State = {
   playing: false
 };
 
+// ------------------------------------------------------------------
+
 export const playerReducer: Reducer<State, PlayerAction> = (
   state = INITIAL_STATE,
   action

@@ -3,6 +3,8 @@ import { AxiosError } from "axios";
 import { TracksAction } from "../actions/tracks";
 import { Tracks } from "../utils/tracks";
 
+// ------------------------------------------------------------------
+
 export type State = {
   fetching: boolean;
   error: null | AxiosError;
@@ -14,6 +16,8 @@ const INITIAL_STATE: State = {
   error: null,
   tracks: {}
 };
+
+// ------------------------------------------------------------------
 
 export const tracksReducer: Reducer<State, TracksAction> = (
   state = INITIAL_STATE,

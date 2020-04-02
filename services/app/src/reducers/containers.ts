@@ -3,6 +3,8 @@ import { AxiosError } from "axios";
 import { ContainersAction } from "../actions/containers";
 import { Containers } from "../utils/containers";
 
+// ------------------------------------------------------------------
+
 export type State = {
   fetching: boolean;
   error: null | AxiosError;
@@ -14,6 +16,8 @@ const INITIAL_STATE: State = {
   error: null,
   containers: {}
 };
+
+// ------------------------------------------------------------------
 
 export const containersReducer: Reducer<State, ContainersAction> = (
   state = INITIAL_STATE,

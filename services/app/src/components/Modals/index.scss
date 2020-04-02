@@ -39,7 +39,7 @@
     justify-content: flex-start;
     max-height: 80%;
     max-width: 90vw;
-    min-width: 400px;
+    min-width: 350px;
 
     .Modal {
       display: flex;
@@ -59,8 +59,8 @@
         align-items: center;
         justify-content: center;
         padding: 0.5rem;
-        border-top-left-radius: 0.5rem;
-        border-top-right-radius: 0.5rem;
+        border-top-left-radius: 0.25rem;
+        border-top-right-radius: 0.25rem;
 
         .ModalTitle {
           text-align: center;
@@ -123,7 +123,7 @@
           select.ModalInput {
             height: 30px;
             padding: 0 0.5rem;
-            border-radius: 0.5rem;
+            border-radius: 0.25rem;
           }
 
           input:read-only {
@@ -196,13 +196,13 @@
         justify-content: center;
         min-height: 1rem;
         padding: 0.25rem;
-        border-bottom-left-radius: 0.5rem;
-        border-bottom-right-radius: 0.5rem;
+        border-bottom-left-radius: 0.25rem;
+        border-bottom-right-radius: 0.25rem;
 
         .IconButton {
           margin-left: 1rem;
           padding: 0.5rem;
-          border-radius: 20px;
+          border-radius: 0.25rem;
 
           &:first-child {
             margin-left: 0;

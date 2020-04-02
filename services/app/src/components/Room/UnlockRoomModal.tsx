@@ -27,8 +27,8 @@ class UnlockRoomModal extends Component<MappedProps, State> {
     const { secret } = this.state;
     return (
       <FormModal
-        title="Join Room"
-        onSubmit={this.onJoin}
+        title="Unlock Room"
+        onSubmit={this.onUnlock}
         renderButtons={this.renderButtons}
       >
         <div className="ModalField">
@@ -37,8 +37,8 @@ class UnlockRoomModal extends Component<MappedProps, State> {
             id="modal-secret"
             type="text"
             placeholder="Room Secret..."
-            maxLength={36}
-            minLength={36}
+            maxLength={200}
+            minLength={8}
             required={true}
             value={secret}
             ref={this.secretRef}
@@ -58,7 +58,7 @@ class UnlockRoomModal extends Component<MappedProps, State> {
     </Fragment>
   );
 
-  private onJoin = () => {
+  private onUnlock = () => {
     const { onClose, onUnlock } = this.props;
     onUnlock(this.state.secret);
     onClose();
