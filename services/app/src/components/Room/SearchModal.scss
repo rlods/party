@@ -1,30 +1,18 @@
-.SearchResult {
-  padding: 0 10px;
+.SearchModal {
+  display: flex;
+  flex-direction: column;
 
-  .SearchResultLabel {
-    font-weight: bold;
-    line-height: 50px;
-    text-transform: uppercase;
-  }
+  .SearchResultItem {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 
-  .SearchResultItems {
-    .SearchResultItem {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      margin-top: 10px;
+    .Cover {
+      margin-left: 10px;
+    }
 
-      &:first-child {
-        margin-top: 0;
-      }
-
-      .Cover {
-        margin-left: 10px;
-      }
-
-      .Metas {
-        margin-left: 10px;
-      }
+    .Metas {
+      margin-left: 10px;
     }
   }
 }

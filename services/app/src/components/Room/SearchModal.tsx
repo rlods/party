@@ -5,44 +5,42 @@ import React, {
   RefObject,
   ReactNode
 } from "react";
-import classNames from "classnames";
 //
 import FormModal from "../Modals/FormModal";
 import { MappedProps } from "../../containers/Room/SearchModal";
 import IconButton, { CancelButton } from "../Common/IconButton";
 import { DEFAULT_API, SearchAllResults } from "../../utils/api";
 import { TrackMeta, PlaylistMeta, AlbumMeta } from "./Metas";
-import "./SearchModal.scss";
+import { MediaType } from "../../utils/containers";
 import { Cover } from "./Cover";
-import { ContainerType } from "../../utils/containers";
+import "./SearchModal.scss";
 
 // ------------------------------------------------------------------
 
 const MAX_RESULTS_COUNT = 5;
 
-function SearchResult<T extends { id: number }>({
+// ------------------------------------------------------------------
+
+function SearchResultCategory<T extends { id: number }>({
   items,
   label,
-  type,
   cb
 }: {
   items: T[];
   label: string;
-  type: string;
+  type: MediaType;
   cb: (item: T) => ReactNode;
 }) {
   return items.length > 0 ? (
     <Fragment>
-      <div className="SearchResult">
-        <div className="SearchResultLabel">{label}</div>
-        <div className="SearchResultItems">
-          {items.slice(0, MAX_RESULTS_COUNT).map(item => (
-            <div key={item.id} className={classNames("SearchResultItem", type)}>
-              {cb(item)}
-            </div>
-          ))}
-        </div>
+      <div className="ModalField">
+        <label>{label}</label>
       </div>
+      {items.slice(0, MAX_RESULTS_COUNT).map(item => (
+        <div key={item.id} className="ModalField">
+          <div className="SearchResultItem">{cb(item)}</div>
+        </div>
+      ))}
     </Fragment>
   ) : null;
 }
@@ -50,8 +48,8 @@ function SearchResult<T extends { id: number }>({
 // ------------------------------------------------------------------
 
 type State = {
-  playingId: number;
-  playingType: ContainerType | "track";
+  mediaId: number;
+  mediaType: MediaType;
   query: string;
   results: SearchAllResults;
 };
@@ -60,8 +58,8 @@ class SearchModal extends Component<MappedProps, State> {
   private queryRef: RefObject<HTMLInputElement> = createRef();
 
   public readonly state: State = {
-    playingId: 0,
-    playingType: "track",
+    mediaId: 0,
+    mediaType: "track",
     query: "",
     results: {
       albums: { data: [], total: 0 },
@@ -82,6 +80,7 @@ class SearchModal extends Component<MappedProps, State> {
 
   public render = () => (
     <FormModal
+      className="SearchModal"
       title="Search"
       onSubmit={this.onSearch}
       renderButtons={this.renderButtons}
@@ -121,79 +120,70 @@ class SearchModal extends Component<MappedProps, State> {
   };
 
   private renderResults = () => {
-    const { onSelectContainer, onSelectTrack } = this.props;
     const {
-      playingId,
-      playingType,
+      mediaId,
+      mediaType,
       results: { albums, playlists, tracks }
     } = this.state;
     return (
       <Fragment>
-        <SearchResult
-          label={`Albums`}
-          type="Album"
+        <SearchResultCategory
+          label="Albums"
+          type="album"
           items={albums.data}
-          cb={album => {
-            return (
-              <Fragment>
-                <IconButton
-                  title="Add"
-                  icon="plus"
-                  onClick={() =>
-                    onSelectContainer("album", album.id.toString())
-                  }
-                />
-                <Cover
-                  playing={playingType === "album" && playingId === album.id}
-                  image={album.cover_small}
-                  onPlay={() => this.onPreviewContainer("album", album.id)}
-                  onStop={() => this.onStopPreview()}
-                />
-                <AlbumMeta album={album} />
-              </Fragment>
-            );
-          }}
+          cb={album => (
+            <Fragment>
+              <IconButton
+                title="Add"
+                icon="plus"
+                onClick={() => this.onSelect("album", album.id)}
+              />
+              <Cover
+                playing={mediaType === "album" && mediaId === album.id}
+                image={album.cover_small}
+                onPlay={() => this.onStartPreview("album", album.id)}
+                onStop={() => this.onStopPreview()}
+              />
+              <AlbumMeta album={album} />
+            </Fragment>
+          )}
         />
-        <SearchResult
-          label={`Playlists`}
-          type="Playlist"
+        <SearchResultCategory
+          label="Playlists"
+          type="playlist"
           items={playlists.data}
           cb={playlist => (
             <Fragment>
               <IconButton
                 title="Add"
                 icon="plus"
-                onClick={() =>
-                  onSelectContainer("playlist", playlist.id.toString())
-                }
+                onClick={() => this.onSelect("playlist", playlist.id)}
               />
               <Cover
-                playing={
-                  playingType === "playlist" && playingId === playlist.id
-                }
+                playing={mediaType === "playlist" && mediaId === playlist.id}
                 image={playlist.picture_small}
-                onPlay={() => this.onPreviewContainer("playlist", playlist.id)}
+                onPlay={() => this.onStartPreview("playlist", playlist.id)}
                 onStop={() => this.onStopPreview()}
               />
               <PlaylistMeta playlist={playlist} />
             </Fragment>
           )}
         />
-        <SearchResult
-          label={`Tracks`}
-          type="Track"
+        <SearchResultCategory
+          label="Tracks"
+          type="track"
           items={tracks.data}
           cb={track => (
             <Fragment>
               <IconButton
                 title="Add"
                 icon="plus"
-                onClick={() => onSelectTrack(track.id.toString())}
+                onClick={() => this.onSelect("track", track.id)}
               />
               <Cover
-                playing={playingType === "track" && playingId === track.id}
+                playing={mediaType === "track" && mediaId === track.id}
                 image={track.album.cover_small}
-                onPlay={() => this.onPreviewTrack(track.id)}
+                onPlay={() => this.onStartPreview("track", track.id)}
                 onStop={() => this.onStopPreview()}
               />
               <TrackMeta track={track} />
@@ -211,30 +201,22 @@ class SearchModal extends Component<MappedProps, State> {
     }
   };
 
-  private onPreviewContainer = (
-    containerType: ContainerType,
-    containerId: number
-  ) => {
-    this.props.onPreviewContainer(containerType, containerId.toString());
-    this.setState({
-      playingId: containerId,
-      playingType: containerType
-    });
-  };
+  private onSelect = (mediaType: MediaType, mediaId: number) =>
+    this.props.onSelect(mediaType, mediaId.toString());
 
-  private onPreviewTrack = (trackId: number) => {
-    this.props.onPreviewTrack(trackId.toString());
+  private onStartPreview = (mediaType: MediaType, mediaId: number) => {
+    this.props.onStartPreview(mediaType, mediaId.toString());
     this.setState({
-      playingId: trackId,
-      playingType: "track"
+      mediaId,
+      mediaType
     });
   };
 
   private onStopPreview = () => {
     this.props.onStopPreview();
     this.setState({
-      playingId: 0,
-      playingType: "track"
+      mediaId: 0,
+      mediaType: "track"
     });
   };
 }

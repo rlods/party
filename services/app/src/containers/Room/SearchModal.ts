@@ -7,7 +7,7 @@ import { popModal } from "../../actions/modals";
 import { previewContainer } from "../../actions/containers";
 import { queueTracks } from "../../actions/rooms";
 import { startPreview, stopPreview } from "../../actions/player";
-import { ContainerType } from "../../utils/containers";
+import { MediaType } from "../../utils/containers";
 
 // ------------------------------------------------------------------
 
@@ -17,14 +17,20 @@ const stateToProps = (state: RootState) => {
 
 const dispatchToProps = (dispatch: ThunkDispatch<RootState, any, any>) => ({
   onClose: () => dispatch(popModal()),
-  onPreviewContainer: (containerType: ContainerType, containerId: string) =>
-    dispatch(previewContainer(containerType, containerId)),
-  onPreviewTrack: (trackId: string) => dispatch(startPreview(trackId)),
-  onStopPreview: () => dispatch(stopPreview()),
-  onSelectContainer: (containerType: ContainerType, containerId: string) =>
-    dispatch(queueTracks(containerType, containerId, "")),
-  onSelectTrack: (trackId: string) =>
-    dispatch(queueTracks("album", "", trackId))
+  onSelect: (mediaType: MediaType, mediaId: string) =>
+    dispatch(
+      "track" === mediaType
+        ? queueTracks("album", "", mediaId)
+        : queueTracks(mediaType, mediaId, "")
+    ),
+  onStartPreview: (mediaType: MediaType, mediaId: string) => {
+    dispatch(
+      "track" === mediaType
+        ? startPreview(mediaId)
+        : previewContainer(mediaType, mediaId)
+    );
+  },
+  onStopPreview: () => dispatch(stopPreview())
 });
 
 export type MappedProps = ReturnType<typeof stateToProps> &
