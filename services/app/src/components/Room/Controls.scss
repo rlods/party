@@ -1,0 +1,32 @@
+.Controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-self: stretch;
+  justify-content: center;
+  padding: 10px;
+
+  .ControlsSet {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1rem;
+
+    &:first-child {
+      margin-top: 0;
+    }
+
+    &:last-child {
+      align-self: stretch;
+    }
+
+    .Control {
+      margin-left: 2rem;
+
+      &:first-child {
+        margin-left: 0;
+      }
+    }
+  }
+}

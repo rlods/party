@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 //
 import { MappedProps } from "../../containers/Room/Queue";
-import { TrackMeta } from "./Metas";
-import { Cover } from "./Cover";
+import { Track } from "./Medias";
+import "./Queue.scss";
 
 // ------------------------------------------------------------------
 
@@ -13,13 +13,12 @@ class Queue extends Component<MappedProps> {
       <div className="Queue">
         {tracks.map((track, index) => (
           <div className="QueueItem" key={track.id}>
-            <Cover
-              image={track.album.cover_small}
+            <Track
+              track={track}
               playing={playing && playingPosition === index}
               onPlay={() => onPlay(index)}
               onStop={onStop}
             />
-            <TrackMeta track={track} />
           </div>
         ))}
       </div>

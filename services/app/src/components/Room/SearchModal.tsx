@@ -1,49 +1,13 @@
-import React, {
-  Component,
-  Fragment,
-  createRef,
-  RefObject,
-  ReactNode
-} from "react";
+import React, { Component, Fragment, createRef, RefObject } from "react";
 //
 import FormModal from "../Modals/FormModal";
 import { MappedProps } from "../../containers/Room/SearchModal";
 import IconButton, { CancelButton } from "../Common/IconButton";
 import { DEFAULT_API, SearchAllResults } from "../../utils/api";
-import { TrackMeta, PlaylistMeta, AlbumMeta } from "./Metas";
+import { Album, Playlist, Track } from "./Medias";
 import { MediaType } from "../../utils/containers";
-import { Cover } from "./Cover";
+import SearchResultCategory from "./SearchResultCategory";
 import "./SearchModal.scss";
-
-// ------------------------------------------------------------------
-
-const MAX_RESULTS_COUNT = 5;
-
-// ------------------------------------------------------------------
-
-function SearchResultCategory<T extends { id: number }>({
-  items,
-  label,
-  cb
-}: {
-  items: T[];
-  label: string;
-  type: MediaType;
-  cb: (item: T) => ReactNode;
-}) {
-  return items.length > 0 ? (
-    <Fragment>
-      <div className="ModalField">
-        <label>{label}</label>
-      </div>
-      {items.slice(0, MAX_RESULTS_COUNT).map(item => (
-        <div key={item.id} className="ModalField">
-          <div className="SearchResultItem">{cb(item)}</div>
-        </div>
-      ))}
-    </Fragment>
-  ) : null;
-}
 
 // ------------------------------------------------------------------
 
@@ -138,13 +102,12 @@ class SearchModal extends Component<MappedProps, State> {
                 icon="plus"
                 onClick={() => this.onSelect("album", album.id)}
               />
-              <Cover
+              <Album
+                album={album}
                 playing={mediaType === "album" && mediaId === album.id}
-                image={album.cover_small}
                 onPlay={() => this.onStartPreview("album", album.id)}
                 onStop={() => this.onStopPreview()}
               />
-              <AlbumMeta album={album} />
             </Fragment>
           )}
         />
@@ -159,13 +122,12 @@ class SearchModal extends Component<MappedProps, State> {
                 icon="plus"
                 onClick={() => this.onSelect("playlist", playlist.id)}
               />
-              <Cover
+              <Playlist
+                playlist={playlist}
                 playing={mediaType === "playlist" && mediaId === playlist.id}
-                image={playlist.picture_small}
                 onPlay={() => this.onStartPreview("playlist", playlist.id)}
                 onStop={() => this.onStopPreview()}
               />
-              <PlaylistMeta playlist={playlist} />
             </Fragment>
           )}
         />
@@ -180,13 +142,12 @@ class SearchModal extends Component<MappedProps, State> {
                 icon="plus"
                 onClick={() => this.onSelect("track", track.id)}
               />
-              <Cover
+              <Track
+                track={track}
                 playing={mediaType === "track" && mediaId === track.id}
-                image={track.album.cover_small}
                 onPlay={() => this.onStartPreview("track", track.id)}
                 onStop={() => this.onStopPreview()}
               />
-              <TrackMeta track={track} />
             </Fragment>
           )}
         />

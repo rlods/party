@@ -9,6 +9,7 @@ import { openModal } from "../../actions/modals";
 // ------------------------------------------------------------------
 
 const stateToProps = (state: RootState) => ({
+  playable: state.queue.trackIds.length > 0,
   playing: state.player.playing
 });
 

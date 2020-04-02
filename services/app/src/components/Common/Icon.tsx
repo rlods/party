@@ -9,15 +9,16 @@ import "./Icon.scss";
 export type Props = {
   className?: string;
   icon: string;
+  size?: "S" | "M" | "L";
   title?: string;
 };
 
 class Icon extends Component<Props> {
   public render = () => {
-    const { className, icon, title } = this.props;
+    const { className, icon, size = "M", title } = this.props;
     return (
       <FontAwesome
-        className={classNames("Icon", className)}
+        className={classNames("Icon", className, size)}
         name={icon}
         title={title}
       />

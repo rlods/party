@@ -116,7 +116,10 @@ export const Api = () => {
 
   const loadAlbum = async (id: string) => {
     const album = await load<ApiAlbum>("album", id);
-    album.tracks!.data.forEach(track => (track.album = album));
+    album.tracks!.data.forEach(track => {
+      track.album = album;
+      track.artist.link = `https://www.deezer.com/artist/${track.artist.id}`;
+    });
     return album;
   };
 

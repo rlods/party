@@ -1,9 +1,30 @@
 .Icon {
-  min-height: 16px;
-  min-width: 16px;
-  height: 16px;
-  width: 16px;
   text-align: center;
-  font-size: 16px;
-  line-height: 16px;
+
+  &.S {
+    min-height: 12px;
+    min-width: 12px;
+    height: 12px;
+    width: 12px;
+    font-size: 12px;
+    line-height: 12px;
+  }
+
+  &.M {
+    min-height: 20px;
+    min-width: 20px;
+    height: 20px;
+    width: 20px;
+    font-size: 20px;
+    line-height: 20px;
+  }
+
+  &.L {
+    min-height: 32px;
+    min-width: 32px;
+    height: 32px;
+    width: 32px;
+    font-size: 32px;
+    line-height: 32px;
+  }
 }

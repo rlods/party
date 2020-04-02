@@ -1,0 +1,31 @@
+.Media {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+
+  .Metas {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    font-size: 14px;
+    line-height: 18px;
+
+    .Meta {
+      &.AlbumTitle {
+      }
+
+      &.AlbumArtistName {
+      }
+
+      &.PlaylistTitle {
+      }
+
+      &.TrackTitle {
+      }
+
+      &.TrackArtistName {
+      }
+    }
+  }
+}

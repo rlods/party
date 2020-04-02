@@ -8,8 +8,8 @@ import { Room as FirebaseRoom } from "../utils/firebase";
 import { loadTrack } from "./tracks";
 import { loadContainer } from "./containers";
 import { ContainerType } from "../utils/containers";
-import history from "../utils/history";
 import { CombinedColor } from "../utils/colorpicker";
+import history from "../utils/history";
 
 // ------------------------------------------------------------------
 

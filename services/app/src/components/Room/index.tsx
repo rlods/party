@@ -24,9 +24,6 @@ class Room extends Component<Props & MappedProps> {
 
   public render = () => {
     const {
-      match: {
-        params: { room_id }
-      },
       room,
       roomColor: { fg, bg }
     } = this.props;
@@ -38,7 +35,7 @@ class Room extends Component<Props & MappedProps> {
           backgroundColor: `rgb(${bg.r}, ${bg.g}, ${bg.b})`
         }}
       >
-        <Head room={room} roomId={room_id} />
+        <Head room={room} />
         <Queue />
         <Controls />
       </div>

@@ -1,0 +1,36 @@
+.Queue {
+  padding: 10px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  width: 50%;
+  min-width: 400px;
+  max-width: 600px;
+  flex-grow: 1;
+
+  &::-webkit-scrollbar {
+    width: 0.25rem;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.3);
+  }
+
+  .QueueItem {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-top: 10px;
+
+    &:first-child {
+      margin-top: 0;
+    }
+
+    .Meta {
+      margin-left: 10px;
+    }
+  }
+}

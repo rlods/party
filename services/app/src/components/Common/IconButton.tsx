@@ -10,9 +10,11 @@ type ButtonType = "button" | "submit";
 
 export type Props = {
   className?: string;
+  disabled?: boolean;
   icon: string;
   kind?: "default" | "primary" | "danger" | "special";
   onClick?: () => void;
+  size?: "S" | "M" | "L";
   title: string;
   type?: ButtonType;
 };
@@ -21,9 +23,11 @@ class IconButton extends Component<Props> {
   public render = () => {
     const {
       className,
+      disabled = false,
       icon,
       kind = "default",
       onClick,
+      size,
       title,
       type = "button"
     } = this.props;
@@ -31,13 +35,13 @@ class IconButton extends Component<Props> {
       <button
         type={type}
         aria-label={title}
-        className={classNames("IconButton", className, kind, {
-          clickable: !!onClick || type === "submit"
+        className={classNames("IconButton", className, kind, size, {
+          clickable: !disabled && (!!onClick || type === "submit")
         })}
-        onClick={onClick}
+        onClick={disabled ? void 0 : onClick}
         title={title}
       >
-        <Icon icon={icon} />
+        <Icon icon={icon} size={size} />
       </button>
     );
   };
