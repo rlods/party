@@ -36,17 +36,24 @@
         ".validate": "newData.hasChildren(['info', 'secret'])",
         "info": {
           ".read": true,
-          ".validate": "newData.hasChildren(['name', 'track_id', 'track_position', 'timestamp', 'type'])",
+          ".validate": "newData.hasChildren(['name', 'queue_position', 'timestamp'])",
           "name": {
             ".validate": "newData.isString() && newData.val().length >= 3 && newData.val().length <= 20"
           },
-          "track_id": { ".validate": "newData.isNumber()" },
-          "track_position": { ".validate": "newData.isNumber()" },
+          "queue": {
+            "$track_index": {
+              ".validate": "$track_index.matches(/^[0-9]+$/) && newData.hasChildren(['id', 'type'])",
+              "id": {
+                ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length < 20"
+              },
+              "type": {
+                ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length < 20"
+              }
+            }
+          },
+          "queue_position": { ".validate": "newData.isNumber()" },
           "timestamp": {
             ".validate": "(!data.exists() || newData.val() > data.val()) && newData.val() <= now"
-          },
-          "type": {
-            ".validate": "newData.isString() && newData.val().length < 20"
           },
           "$other": { ".validate": false }
         },
