@@ -12,6 +12,7 @@ export type Props = {
   className?: string;
   color?: string;
   disabled?: boolean;
+  displayTitle?: boolean;
   icon: string;
   kind?: "default" | "primary" | "danger" | "special";
   onClick?: () => void;
@@ -26,6 +27,7 @@ class IconButton extends Component<Props> {
       className,
       color,
       disabled = false,
+      displayTitle = false,
       icon,
       kind = "default",
       onClick,
@@ -44,6 +46,9 @@ class IconButton extends Component<Props> {
         title={title}
       >
         <Icon color={color} icon={icon} size={size} />
+        {displayTitle && (
+          <div className={classNames("IconButtonTitle", size)}>{title}</div>
+        )}
       </button>
     );
   };

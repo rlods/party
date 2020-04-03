@@ -39,4 +39,21 @@
   &.danger {
     background-color: rgb(255, 168, 168);
   }
+
+  .IconButtonTitle {
+    &.S {
+      font-size: 12px;
+      line-height: 16px;
+    }
+
+    &.M {
+      font-size: 15px;
+      line-height: 20px;
+    }
+
+    &.L {
+      font-size: 20px;
+      line-height: 32px;
+    }
+  }
 }

@@ -29,7 +29,7 @@ class Head extends Component<MappedProps> {
             />
           )}
         </div>
-        <div className="RoomName">{room ? room.name : "?"}</div>
+        <div className="RoomName">{room ? room.name : ""}</div>
         <div className="RoomLink">
           <IconButton
             icon="link"
