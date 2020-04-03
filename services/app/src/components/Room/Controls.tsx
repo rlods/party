@@ -16,6 +16,7 @@ class Controls extends Component<MappedProps> {
       onPlay,
       onSearch,
       onStop,
+      locked,
       playable,
       playing
     } = this.props;
@@ -64,6 +65,7 @@ class Controls extends Component<MappedProps> {
         <div className="ControlsSet">
           <div className="Control">
             <IconButton
+              disabled={locked}
               onClick={this.onClear}
               icon="trash"
               title="Clear Room"

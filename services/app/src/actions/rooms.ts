@@ -73,7 +73,7 @@ export const enterRoom = (
       };
       setCurrentRoom(room);
       room.subscribeInfo(FIREBASE_CB);
-      history.push(`/room/${id}`);
+      history.push(`/room/${id}?key=${secret}`); // TODO: should push only if we're not already in it
     } catch (err) {
       dispatch(displayError("Cannot join room", err));
     }

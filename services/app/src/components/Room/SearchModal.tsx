@@ -84,6 +84,7 @@ class SearchModal extends Component<MappedProps, State> {
   };
 
   private renderResults = () => {
+    const { locked } = this.props;
     const {
       mediaId,
       mediaType,
@@ -98,11 +99,13 @@ class SearchModal extends Component<MappedProps, State> {
           cb={album => (
             <Album
               actions={
-                <IconButton
-                  title="Add"
-                  icon="plus"
-                  onClick={() => this.onSelect("album", album.id)}
-                />
+                !locked ? (
+                  <IconButton
+                    title="Add"
+                    icon="plus"
+                    onClick={() => this.onSelect("album", album.id)}
+                  />
+                ) : null
               }
               album={album}
               playing={mediaType === "album" && mediaId === album.id}
@@ -118,11 +121,13 @@ class SearchModal extends Component<MappedProps, State> {
           cb={playlist => (
             <Playlist
               actions={
-                <IconButton
-                  title="Add"
-                  icon="plus"
-                  onClick={() => this.onSelect("playlist", playlist.id)}
-                />
+                !locked ? (
+                  <IconButton
+                    title="Add"
+                    icon="plus"
+                    onClick={() => this.onSelect("playlist", playlist.id)}
+                  />
+                ) : null
               }
               playlist={playlist}
               playing={mediaType === "playlist" && mediaId === playlist.id}
@@ -138,11 +143,13 @@ class SearchModal extends Component<MappedProps, State> {
           cb={track => (
             <Track
               actions={
-                <IconButton
-                  title="Add"
-                  icon="plus"
-                  onClick={() => this.onSelect("track", track.id)}
-                />
+                !locked ? (
+                  <IconButton
+                    title="Add"
+                    icon="plus"
+                    onClick={() => this.onSelect("track", track.id)}
+                  />
+                ) : null
               }
               track={track}
               playing={mediaType === "track" && mediaId === track.id}

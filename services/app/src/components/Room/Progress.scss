@@ -3,7 +3,7 @@
   flex-direction: column;
   flex-shrink: 0;
   align-self: stretch;
-  padding: 1rem;
+  padding: 1rem 0;
 
   &:not(.playing) {
     progress::-webkit-progress-bar {

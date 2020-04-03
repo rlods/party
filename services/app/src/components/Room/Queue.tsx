@@ -10,6 +10,7 @@ import "./Queue.scss";
 class Queue extends Component<MappedProps> {
   public render = () => {
     const {
+      locked,
       playing,
       playingPosition,
       tracks,
@@ -27,11 +28,13 @@ class Queue extends Component<MappedProps> {
               onPlay={() => onPlay(index)}
               onStop={onStop}
               actions={
-                <IconButton
-                  title="Remove"
-                  icon="trash"
-                  onClick={() => onRemove(index)}
-                />
+                !locked ? (
+                  <IconButton
+                    title="Remove"
+                    icon="trash"
+                    onClick={() => onRemove(index)}
+                  />
+                ) : null
               }
             />
           </div>

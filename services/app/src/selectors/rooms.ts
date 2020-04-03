@@ -8,3 +8,6 @@ export const extractRoom = (state: RootState, id: string): Room | null => {
   }
   return room;
 };
+
+export const isRoomLocked = (state: RootState) =>
+  !state.rooms.room_access.secret;

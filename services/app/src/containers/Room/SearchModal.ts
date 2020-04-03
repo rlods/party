@@ -8,12 +8,13 @@ import { previewContainer } from "../../actions/containers";
 import { queueTracks } from "../../actions/rooms";
 import { startPreview, stopPreview } from "../../actions/player";
 import { MediaType } from "../../utils/containers";
+import { isRoomLocked } from "../../selectors/rooms";
 
 // ------------------------------------------------------------------
 
-const stateToProps = (state: RootState) => {
-  return {};
-};
+const stateToProps = (state: RootState) => ({
+  locked: isRoomLocked(state)
+});
 
 const dispatchToProps = (dispatch: ThunkDispatch<RootState, any, any>) => ({
   onClose: () => dispatch(popModal()),

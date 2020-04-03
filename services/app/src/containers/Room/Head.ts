@@ -3,7 +3,7 @@ import { ThunkDispatch } from "redux-thunk";
 //
 import { RootState } from "../../reducers";
 import Head from "../../components/Room/Head";
-import { extractRoom } from "../../selectors/rooms";
+import { extractRoom, isRoomLocked } from "../../selectors/rooms";
 import { openModal } from "../../actions/modals";
 import { lockRoom } from "../../actions/rooms";
 import { displayMessage } from "../../actions/messages";
@@ -11,7 +11,7 @@ import { displayMessage } from "../../actions/messages";
 // ------------------------------------------------------------------
 
 const stateToProps = (state: RootState) => ({
-  locked: !state.rooms.room_access.secret,
+  locked: isRoomLocked(state),
   room: extractRoom(state, state.rooms.room_access.id)
 });
 

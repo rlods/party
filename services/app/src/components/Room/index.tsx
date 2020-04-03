@@ -24,7 +24,7 @@ class Room extends Component<Props & MappedProps> {
 
   public render = () => {
     const {
-      roomColor: { fg, bg }
+      color: { fg, bg }
     } = this.props;
     return (
       <div
