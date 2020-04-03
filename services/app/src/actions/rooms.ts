@@ -4,7 +4,11 @@ import { v4 } from "uuid";
 import { createAction, AsyncAction } from ".";
 import { displayError } from "./messages";
 import { Rooms, Room } from "../utils/rooms";
-import { Room as FirebaseRoom } from "../utils/firebase";
+import {
+  Room as FirebaseRoom,
+  getCurrentRoom,
+  setCurrentRoom
+} from "../utils/firebase";
 import { loadTrack } from "./tracks";
 import { loadContainer } from "./containers";
 import { ContainerType } from "../utils/containers";
@@ -39,8 +43,8 @@ export const createRoom = (
   secret: string
 ): AsyncAction => async dispatch => {
   try {
-    console.log("Creating room...");
     const id = v4();
+    console.log("Creating room...", { id, secret });
     await FirebaseRoom(id, secret).init({ name });
     dispatch(enterRoom(id, secret));
   } catch (err) {
@@ -50,25 +54,25 @@ export const createRoom = (
 
 // ------------------------------------------------------------------
 
-let FIREBASE_ROOM: ReturnType<typeof FirebaseRoom> | null = null;
 let FIREBASE_CB: any = null;
 
 export const enterRoom = (
   id: string,
   secret: string
 ): AsyncAction => async dispatch => {
-  if (!FIREBASE_ROOM || FIREBASE_ROOM.id !== id) {
+  let room = getCurrentRoom();
+  if (!room || room.id !== id) {
     dispatch(exitRoom());
     try {
       console.log("Entering room...", { id, secret });
-      const room = FirebaseRoom(id);
+      room = FirebaseRoom(id, secret);
       dispatch(setRooms({ [id]: await room.wait() }));
       dispatch(setRoomAccess(id, secret));
       FIREBASE_CB = (snapshot: firebase.database.DataSnapshot) => {
         dispatch(setRooms({ [id]: snapshot.val() as Room }));
       };
-      FIREBASE_ROOM = room;
-      FIREBASE_ROOM.subscribeInfo(FIREBASE_CB);
+      setCurrentRoom(room);
+      room.subscribeInfo(FIREBASE_CB);
       history.push(`/room/${id}`);
     } catch (err) {
       dispatch(displayError("Cannot join room", err));
@@ -77,10 +81,11 @@ export const enterRoom = (
 };
 
 export const exitRoom = (): AsyncAction => async dispatch => {
-  if (FIREBASE_ROOM) {
+  const room = getCurrentRoom();
+  if (room) {
     console.log("Exiting room...");
-    FIREBASE_ROOM.unsubscribeInfo(FIREBASE_CB);
-    FIREBASE_ROOM = null;
+    room.unsubscribeInfo(FIREBASE_CB);
+    setCurrentRoom(null);
     FIREBASE_CB = null;
     dispatch(setRoomAccess("", ""));
   }
@@ -94,8 +99,12 @@ export const lockRoom = (): AsyncAction => async (dispatch, getState) => {
       room_access: { id }
     }
   } = getState();
-  console.log("Locking room...", { id });
-  dispatch(setRoomAccess(id, ""));
+  const room = getCurrentRoom();
+  if (room && room.id === id) {
+    console.log("Locking room...", { id });
+    room.setSecret("");
+    dispatch(setRoomAccess(id, ""));
+  }
 };
 
 export const unlockRoom = (secret: string): AsyncAction => async (
@@ -107,8 +116,12 @@ export const unlockRoom = (secret: string): AsyncAction => async (
       room_access: { id }
     }
   } = getState();
-  console.log("Unlocking room...", { id, secret });
-  dispatch(setRoomAccess(id, secret));
+  const room = getCurrentRoom();
+  if (room && room.id === id) {
+    console.log("Unlocking room...", { id, secret });
+    room.setSecret(secret);
+    dispatch(setRoomAccess(id, secret));
+  }
 };
 
 // ------------------------------------------------------------------

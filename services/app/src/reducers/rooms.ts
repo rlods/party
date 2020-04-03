@@ -1,7 +1,7 @@
 import { Reducer } from "redux";
 import { AxiosError } from "axios";
 import { RoomsAction } from "../actions/rooms";
-import { Rooms, saveRoomAccess, RoomAccess } from "../utils/rooms";
+import { Rooms, RoomAccess } from "../utils/rooms";
 import { CombinedColor } from "../utils/colorpicker";
 
 // ------------------------------------------------------------------
@@ -49,7 +49,6 @@ export const roomsReducer: Reducer<State, RoomsAction> = (
         error: action.payload
       };
     case "rooms/SET_ROOM_ACCESS": {
-      saveRoomAccess(action.payload);
       return {
         ...state,
         room_access: action.payload

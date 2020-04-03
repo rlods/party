@@ -2,8 +2,8 @@ import React, { Component } from "react";
 //
 import { MappedProps } from "../../containers/Room/Queue";
 import { Track } from "./Medias";
-import "./Queue.scss";
 import IconButton from "../Common/IconButton";
+import "./Queue.scss";
 
 // ------------------------------------------------------------------
 

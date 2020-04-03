@@ -51,7 +51,9 @@
               }
             }
           },
-          "queue_position": { ".validate": "newData.isNumber()" },
+          "queue_position": {
+            ".validate": "newData.isNumber() && newData.val() >= -1"
+          },
           "timestamp": {
             ".validate": "(!data.exists() || newData.val() > data.val()) && newData.val() <= now"
           },

@@ -38,6 +38,14 @@ export const startPlayer = (): AsyncAction => async (
         tracks
       } = getState();
       if (trackIds.length > 0) {
+        /*
+        console.log(
+          "TOTO",
+          PLAYER_PLAYING_TRACK_INDEX,
+          position,
+          trackIds.length
+        );
+        */
         if (
           PLAYER_PLAYING_TRACK_INDEX !== position ||
           (position >= 0 &&
@@ -51,13 +59,13 @@ export const startPlayer = (): AsyncAction => async (
             id: PLAYER_PLAYING_TRACK.id,
             index: PLAYER_PLAYING_TRACK_INDEX
           });
-          await queuePlayer.play(PLAYER_PLAYING_TRACK.preview, 0);
           dispatch(setQueuePosition(PLAYER_PLAYING_TRACK_INDEX));
           dispatch(
             setRoomColor(
               await pickColor(PLAYER_PLAYING_TRACK.album.cover_small)
             )
           );
+          await queuePlayer.play(PLAYER_PLAYING_TRACK.preview, 0);
         } else if (!queuePlayer.isPlaying()) {
           // Not playing which means previous track has terminated
           const nextPosition = (position + 1) % trackIds.length;
@@ -70,13 +78,13 @@ export const startPlayer = (): AsyncAction => async (
               id: PLAYER_PLAYING_TRACK.id,
               index: PLAYER_PLAYING_TRACK_INDEX
             });
-            await queuePlayer.play(PLAYER_PLAYING_TRACK.preview, 0);
             dispatch(setQueuePosition(PLAYER_PLAYING_TRACK_INDEX));
             dispatch(
               setRoomColor(
                 await pickColor(PLAYER_PLAYING_TRACK.album.cover_small)
               )
             );
+            await queuePlayer.play(PLAYER_PLAYING_TRACK.preview, 0);
           }
         }
         dispatch(setPlayerPosition(queuePlayer.getPosition()));

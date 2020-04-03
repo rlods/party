@@ -1,11 +1,6 @@
 export type Room = {
   name: string;
-  queue: {
-    [index: string]: {
-      id: string;
-      type: string;
-    };
-  };
+  queue: RoomQueue;
   queue_position: number;
   timestamp: number;
 };
@@ -17,40 +12,14 @@ export type RoomAccess = {
   secret: string;
 };
 
+export type RoomQueue = {
+  [index: string]: {
+    id: string;
+    type: string;
+  };
+};
+
 // ------------------------------------------------------------------
 
 export const createSharingUrl = (id: string) =>
   `${window.location.origin}/#/room/${id}`;
-
-// ------------------------------------------------------------------
-
-export const loadRoomAccess = (): RoomAccess => {
-  const res: RoomAccess = {
-    id: "",
-    secret: ""
-  };
-  const s = localStorage.getItem("R");
-  if (s) {
-    try {
-      const d = JSON.parse(atob(s));
-      if (typeof d.i === "string" && typeof d.s === "string") {
-        res.id = d.i;
-        res.secret = d.s;
-        console.log("Loaded room access: ", res);
-      }
-    } catch (err) {}
-  }
-  return res;
-};
-
-export const saveRoomAccess = ({ id, secret }: RoomAccess) => {
-  localStorage.setItem(
-    "R",
-    btoa(
-      JSON.stringify({
-        i: id,
-        s: secret
-      })
-    )
-  );
-};

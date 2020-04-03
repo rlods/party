@@ -23,18 +23,33 @@ const USERS = firebaseDatabase.ref("users");
 
 // ------------------------------------------------------------------
 
+let CURRENT_ROOM: ReturnType<typeof Room> | null = null;
+export const getCurrentRoom = () => CURRENT_ROOM;
+export const setCurrentRoom = (room: ReturnType<typeof Room> | null) => {
+  CURRENT_ROOM = room;
+};
+
 export const Room = (id: string, secret?: string) => {
   const _room = ROOMS.child(id);
   const _info = _room.child("info");
   const _members = MEMBERS.child(id);
+  let _secret = secret || "";
+  console.log("INIT SECRET", _secret);
   let _values: RoomInfo = {
     name: "dummy",
     queue: {},
-    queue_position: 0,
+    queue_position: -1,
     timestamp: 0
   };
 
   const getInfo = () => _values;
+
+  const isLocked = () => !_secret;
+
+  const setSecret = (newSecret: string) => {
+    console.log("SETTING SECRET", newSecret);
+    _secret = newSecret;
+  };
 
   const init = async (values: Pick<RoomInfo, "name">) => {
     subscribeInfo((snapshot: firebase.database.DataSnapshot) => {
@@ -96,7 +111,7 @@ export const Room = (id: string, secret?: string) => {
         ..._values,
         timestamp: firebase.database.ServerValue.TIMESTAMP
       },
-      secret
+      secret: _secret
     });
   };
 
@@ -104,6 +119,8 @@ export const Room = (id: string, secret?: string) => {
     getInfo,
     id,
     init,
+    isLocked,
+    setSecret,
     wait,
     subscribeInfo,
     subscribeMembers,
@@ -119,6 +136,7 @@ export const User = (id: string, secret?: string) => {
   const _user = USERS.child(id);
   const _info = _user.child("info");
   let _membership: firebase.database.Reference | null = null;
+  let _secret = secret || "";
   let _values = {
     name: "dummy",
     online: false,
@@ -128,6 +146,12 @@ export const User = (id: string, secret?: string) => {
   };
 
   const getInfo = () => _values;
+
+  const isLocked = () => !_secret;
+
+  const setSecret = (newSecret: string) => {
+    _secret = newSecret;
+  };
 
   const init = async (values: Pick<UserInfo, "name">) => {
     subscribeInfo((snapshot: firebase.database.DataSnapshot) => {
@@ -177,7 +201,7 @@ export const User = (id: string, secret?: string) => {
         status: "online",
         timestamp: firebase.database.ServerValue.TIMESTAMP
       },
-      secret
+      secret: _secret
     });
     installDisconnect();
   };
@@ -192,7 +216,7 @@ export const User = (id: string, secret?: string) => {
         status: "disconnected",
         timestamp: firebase.database.ServerValue.TIMESTAMP
       },
-      secret
+      secret: _secret
     });
   };
 
@@ -226,6 +250,8 @@ export const User = (id: string, secret?: string) => {
     enter,
     exit,
     init,
+    isLocked,
+    setSecret,
     wait,
     subscribeInfo,
     unsubscribeInfo,
@@ -242,7 +268,7 @@ export const Party = (id: string, room: ReturnType<typeof Room>) => {
   let _info = {
     name: "",
     queue: {},
-    queue_position: 0,
+    queue_position: -1,
     timestamp: 0
   };
 
@@ -318,7 +344,7 @@ export const testRoom = async () => {
   await room.update({
     name: "R1b",
     queue: {},
-    queue_position: 0
+    queue_position: -1
   });
 };
 

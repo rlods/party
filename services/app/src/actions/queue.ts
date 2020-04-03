@@ -1,23 +1,109 @@
 import { createAction, AsyncAction } from ".";
+import { getCurrentRoom } from "../utils/firebase";
+import { RoomQueue } from "../utils/rooms";
+import { displayError } from "./messages";
 
 // ------------------------------------------------------------------
 
 export type QueueAction =
-  | ReturnType<typeof clearQueue>
-  | ReturnType<typeof appendInQueue>
-  | ReturnType<typeof removeFromQueue>
-  | ReturnType<typeof setQueuePosition>;
+  | ReturnType<typeof _clearQueue>
+  | ReturnType<typeof _appendInQueue>
+  | ReturnType<typeof _removeFromQueue>
+  | ReturnType<typeof _setQueuePosition>;
 
-export const clearQueue = () => createAction("queue/RESET");
+const _clearQueue = () => createAction("queue/RESET");
 
-export const appendInQueue = (trackIds: string[]) =>
+const _appendInQueue = (trackIds: string[]) =>
   createAction("queue/PUSH", trackIds);
 
-export const removeFromQueue = (position: number) =>
+const _removeFromQueue = (position: number) =>
   createAction("queue/REMOVE", position);
 
-export const setQueuePosition = (position: number) =>
+const _setQueuePosition = (position: number) =>
   createAction("queue/SET_POSITION", position);
+
+// ------------------------------------------------------------------
+
+export const clearQueue = (): AsyncAction => async (dispatch, getState) => {
+  const room = getCurrentRoom();
+  if (room && !room.isLocked()) {
+    try {
+      await room.update({ queue: {}, queue_position: -1 });
+      dispatch(_clearQueue());
+    } catch (err) {
+      dispatch(displayError("Cannot clear queue", err));
+    }
+  } else {
+    dispatch(displayError("Room is locked"));
+  }
+};
+
+export const appendInQueue = (trackIds: string[]): AsyncAction => async (
+  dispatch,
+  getState
+) => {
+  const room = getCurrentRoom();
+  if (room && !room.isLocked()) {
+    try {
+      const queue: RoomQueue = {};
+      [...getState().queue.trackIds, ...trackIds].forEach((id, index) => {
+        queue[index] = {
+          id,
+          type: "deezer"
+        };
+      });
+      await room.update({ queue });
+      dispatch(_appendInQueue(trackIds));
+    } catch (err) {
+      dispatch(displayError("Cannot append in queue", err));
+    }
+  } else {
+    dispatch(displayError("Room is locked"));
+  }
+};
+
+export const removeFromQueue = (position: number): AsyncAction => async (
+  dispatch,
+  getState
+) => {
+  const room = getCurrentRoom();
+  if (room && !room.isLocked()) {
+    try {
+      const queue: RoomQueue = {};
+      const copy = [...getState().queue.trackIds];
+      copy.splice(position, 1);
+      copy.forEach((id, index) => {
+        queue[index] = {
+          id,
+          type: "deezer"
+        };
+      });
+      await room.update({ queue });
+      dispatch(_removeFromQueue(position));
+    } catch (err) {
+      dispatch(displayError("Cannot remove from queue", err));
+    }
+  } else {
+    dispatch(displayError("Room is locked"));
+  }
+};
+
+export const setQueuePosition = (position: number): AsyncAction => async (
+  dispatch,
+  getState
+) => {
+  const room = getCurrentRoom();
+  if (room && !room.isLocked()) {
+    try {
+      await room.update({ queue_position: position });
+      dispatch(_setQueuePosition(position));
+    } catch (err) {
+      dispatch(displayError("Cannot remove from queue", err));
+    }
+  } else {
+    dispatch(displayError("Room is locked"));
+  }
+};
 
 // ------------------------------------------------------------------
 
