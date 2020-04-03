@@ -2,6 +2,7 @@ import { createAction, AsyncAction } from ".";
 import { getCurrentRoom } from "../utils/firebase";
 import { RoomQueue } from "../utils/rooms";
 import { displayError } from "./messages";
+import { lockRoom } from "./rooms";
 
 // ------------------------------------------------------------------
 
@@ -31,7 +32,8 @@ export const clearQueue = (): AsyncAction => async (dispatch, getState) => {
       await room.update({ queue: {}, queue_position: -1 });
       dispatch(_clearQueue());
     } catch (err) {
-      dispatch(displayError("Cannot clear queue", err));
+      dispatch(displayError("Cannot clear queue"));
+      dispatch(lockRoom());
     }
   } else {
     dispatch(displayError("Room is locked"));
@@ -55,7 +57,8 @@ export const appendInQueue = (trackIds: string[]): AsyncAction => async (
       await room.update({ queue });
       dispatch(_appendInQueue(trackIds));
     } catch (err) {
-      dispatch(displayError("Cannot append in queue", err));
+      dispatch(displayError("Cannot append in queue"));
+      dispatch(lockRoom());
     }
   } else {
     dispatch(displayError("Room is locked"));
@@ -81,7 +84,8 @@ export const removeFromQueue = (position: number): AsyncAction => async (
       await room.update({ queue });
       dispatch(_removeFromQueue(position));
     } catch (err) {
-      dispatch(displayError("Cannot remove from queue", err));
+      dispatch(displayError("Cannot remove from queue"));
+      dispatch(lockRoom());
     }
   } else {
     dispatch(displayError("Room is locked"));
@@ -98,7 +102,8 @@ export const setQueuePosition = (position: number): AsyncAction => async (
       await room.update({ queue_position: position });
       dispatch(_setQueuePosition(position));
     } catch (err) {
-      dispatch(displayError("Cannot remove from queue", err));
+      dispatch(displayError("Cannot remove from queue"));
+      dispatch(lockRoom());
     }
   } else {
     dispatch(displayError("Room is locked"));
