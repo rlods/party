@@ -24,6 +24,7 @@ class Queue extends Component<MappedProps> {
           <div className="QueueItem" key={track.id}>
             <Track
               track={track}
+              playable={!locked}
               playing={playing && playingPosition === index}
               onPlay={() => onPlay(index)}
               onStop={onStop}

@@ -9,12 +9,14 @@ import "./Medias.scss";
 export const Album = ({
   actions,
   album,
+  playable,
   playing,
   onPlay,
   onStop
 }: {
   actions?: ReactNode;
   album: ApiAlbum;
+  playable: boolean;
   playing: boolean;
   onPlay: () => void;
   onStop: () => void;
@@ -22,6 +24,7 @@ export const Album = ({
   <div className="Media Album">
     {actions}
     <Cover
+      playable={playable}
       playing={playing}
       image={album.cover_small}
       onPlay={onPlay}
@@ -48,12 +51,14 @@ export const Album = ({
 export const Playlist = ({
   actions,
   playlist,
+  playable,
   playing,
   onPlay,
   onStop
 }: {
   actions?: ReactNode;
   playlist: ApiPlaylist;
+  playable: boolean;
   playing: boolean;
   onPlay: () => void;
   onStop: () => void;
@@ -61,6 +66,7 @@ export const Playlist = ({
   <div className="Media Playlist">
     {actions}
     <Cover
+      playable={playable}
       playing={playing}
       image={playlist.picture_small}
       onPlay={onPlay}
@@ -81,12 +87,14 @@ export const Playlist = ({
 export const Track = ({
   actions,
   track,
+  playable,
   playing,
   onPlay,
   onStop
 }: {
   actions?: ReactNode;
   track: ApiTrack;
+  playable: boolean;
   playing: boolean;
   onPlay: () => void;
   onStop: () => void;
@@ -94,6 +102,7 @@ export const Track = ({
   <div className="Media Track">
     {actions}
     <Cover
+      playable={playable}
       playing={playing}
       image={track.album.cover_small}
       onPlay={onPlay}

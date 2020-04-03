@@ -65,11 +65,10 @@ class SearchModal extends Component<MappedProps, State> {
     const { query } = this.state;
     return (
       <div className="ModalField">
-        <label htmlFor="modal-query">Query</label>
         <input
           id="modal-query"
           type="text"
-          placeholder="Query..."
+          placeholder="Search..."
           maxLength={100}
           minLength={2}
           required={true}
@@ -108,6 +107,7 @@ class SearchModal extends Component<MappedProps, State> {
                 ) : null
               }
               album={album}
+              playable={true}
               playing={mediaType === "album" && mediaId === album.id}
               onPlay={() => this.onStartPreview("album", album.id)}
               onStop={() => this.onStopPreview()}
@@ -130,6 +130,7 @@ class SearchModal extends Component<MappedProps, State> {
                 ) : null
               }
               playlist={playlist}
+              playable={true}
               playing={mediaType === "playlist" && mediaId === playlist.id}
               onPlay={() => this.onStartPreview("playlist", playlist.id)}
               onStop={() => this.onStopPreview()}
@@ -152,6 +153,7 @@ class SearchModal extends Component<MappedProps, State> {
                 ) : null
               }
               track={track}
+              playable={true}
               playing={mediaType === "track" && mediaId === track.id}
               onPlay={() => this.onStartPreview("track", track.id)}
               onStop={() => this.onStopPreview()}
