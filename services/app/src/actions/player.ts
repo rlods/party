@@ -38,27 +38,25 @@ export const startPlayer = (): AsyncAction => async (
         tracks
       } = getState();
       if (trackIds.length > 0) {
-        /*
-        console.log(
-          "TOTO",
-          PLAYER_PLAYING_TRACK_INDEX,
-          position,
-          trackIds.length
-        );
-        */
+        let nextPosition = PLAYER_PLAYING_TRACK_INDEX;
         if (
           PLAYER_PLAYING_TRACK_INDEX !== position ||
           (position >= 0 &&
             PLAYER_PLAYING_TRACK !== tracks.tracks[trackIds[position]])
         ) {
           // User has clicked an other track or added/removed a track in queue
-          PLAYER_PLAYING_TRACK_INDEX = position;
+          nextPosition = position;
+          console.log("Playing clicked...", { nextPosition });
+        } else if (!queuePlayer.isPlaying()) {
+          // Not playing which means previous track has terminated
+          nextPosition = (position + 1) % trackIds.length;
+          console.log("Playing next...", { nextPosition });
+        }
+
+        if (PLAYER_PLAYING_TRACK_INDEX !== nextPosition) {
+          PLAYER_PLAYING_TRACK_INDEX = nextPosition;
           PLAYER_PLAYING_TRACK =
             tracks.tracks[trackIds[PLAYER_PLAYING_TRACK_INDEX]];
-          console.log("Playing clicked...", {
-            id: PLAYER_PLAYING_TRACK.id,
-            index: PLAYER_PLAYING_TRACK_INDEX
-          });
           dispatch(setQueuePosition(PLAYER_PLAYING_TRACK_INDEX));
           dispatch(
             setRoomColor(
@@ -66,27 +64,8 @@ export const startPlayer = (): AsyncAction => async (
             )
           );
           await queuePlayer.play(PLAYER_PLAYING_TRACK.preview, 0);
-        } else if (!queuePlayer.isPlaying()) {
-          // Not playing which means previous track has terminated
-          const nextPosition = (position + 1) % trackIds.length;
-          if (nextPosition < trackIds.length) {
-            // Time to move to next track
-            PLAYER_PLAYING_TRACK_INDEX = nextPosition;
-            PLAYER_PLAYING_TRACK =
-              tracks.tracks[trackIds[PLAYER_PLAYING_TRACK_INDEX]];
-            console.log("Playing next...", {
-              id: PLAYER_PLAYING_TRACK.id,
-              index: PLAYER_PLAYING_TRACK_INDEX
-            });
-            dispatch(setQueuePosition(PLAYER_PLAYING_TRACK_INDEX));
-            dispatch(
-              setRoomColor(
-                await pickColor(PLAYER_PLAYING_TRACK.album.cover_small)
-              )
-            );
-            await queuePlayer.play(PLAYER_PLAYING_TRACK.preview, 0);
-          }
         }
+
         dispatch(setPlayerPosition(queuePlayer.getPosition()));
       } else {
         // Last track has been removed from queue by user
