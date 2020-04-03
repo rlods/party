@@ -12,15 +12,15 @@ export type UsersAction =
   | ReturnType<typeof success>
   | ReturnType<typeof error>
   | ReturnType<typeof reset>
-  | ReturnType<typeof setUser>
+  | ReturnType<typeof setUserAccess>
   | ReturnType<typeof setUsers>;
 
 const fetching = () => createAction("users/FETCHING");
 const success = () => createAction("users/FETCHED");
 const error = (error: AxiosError) => createAction("users/ERROR", error);
 const reset = () => createAction("users/RESET");
-const setUser = (id: string, secret: string) =>
-  createAction("users/SET_USER", { id, secret });
+const setUserAccess = (id: string, secret: string) =>
+  createAction("users/SET_USER_ACCESS", { id, secret });
 const setUsers = (users: Users) => createAction("users/SET_USERS", users);
 
 // ------------------------------------------------------------------
@@ -53,7 +53,7 @@ export const connectUser = (
     console.log("Connection user...", { id, secret });
     const user = FirebaseUser(id);
     dispatch(setUsers({ [id]: await user.wait() }));
-    dispatch(setUser(id, secret));
+    dispatch(setUserAccess(id, secret));
     FIREBASE_CB = (snapshot: firebase.database.DataSnapshot) => {
       dispatch(setUsers({ [id]: snapshot.val() as User }));
     };
@@ -61,7 +61,7 @@ export const connectUser = (
     FIREBASE_USER.subscribeInfo(FIREBASE_CB);
   } catch (err) {
     dispatch(displayError("Cannot connect user", err));
-    dispatch(setUser("", ""));
+    dispatch(setUserAccess("", ""));
   }
 };
 
@@ -71,7 +71,7 @@ export const disconnectUser = (): AsyncAction => async dispatch => {
     FIREBASE_USER.unsubscribeInfo(FIREBASE_CB);
     FIREBASE_USER = null;
     FIREBASE_CB = null;
-    dispatch(setUser("", ""));
+    dispatch(setUserAccess("", ""));
   }
 };
 

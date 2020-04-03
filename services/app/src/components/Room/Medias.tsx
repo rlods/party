@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactNode } from "react";
 //
 import { ApiAlbum, ApiPlaylist, ApiTrack } from "../../utils/api";
 import { Cover } from "./Cover";
@@ -7,17 +7,20 @@ import "./Medias.scss";
 // ------------------------------------------------------------------
 
 export const Album = ({
+  actions,
   album,
   playing,
   onPlay,
   onStop
 }: {
+  actions?: ReactNode;
   album: ApiAlbum;
   playing: boolean;
   onPlay: () => void;
   onStop: () => void;
 }) => (
   <div className="Media Album">
+    {actions}
     <Cover
       playing={playing}
       image={album.cover_small}
@@ -43,17 +46,20 @@ export const Album = ({
 // ------------------------------------------------------------------
 
 export const Playlist = ({
+  actions,
   playlist,
   playing,
   onPlay,
   onStop
 }: {
+  actions?: ReactNode;
   playlist: ApiPlaylist;
   playing: boolean;
   onPlay: () => void;
   onStop: () => void;
 }) => (
   <div className="Media Playlist">
+    {actions}
     <Cover
       playing={playing}
       image={playlist.picture_small}
@@ -73,17 +79,20 @@ export const Playlist = ({
 // ------------------------------------------------------------------
 
 export const Track = ({
+  actions,
   track,
   playing,
   onPlay,
   onStop
 }: {
+  actions?: ReactNode;
   track: ApiTrack;
   playing: boolean;
   onPlay: () => void;
   onStop: () => void;
 }) => (
   <div className="Media Track">
+    {actions}
     <Cover
       playing={playing}
       image={track.album.cover_small}

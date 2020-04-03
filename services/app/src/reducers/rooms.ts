@@ -48,7 +48,7 @@ export const roomsReducer: Reducer<State, RoomsAction> = (
         fetching: false,
         error: action.payload
       };
-    case "rooms/SET_ROOM": {
+    case "rooms/SET_ROOM_ACCESS": {
       saveRoomAccess(action.payload);
       return {
         ...state,

@@ -3,7 +3,7 @@ import { AxiosError } from "axios";
 import { createAction, AsyncAction } from ".";
 import { Container, ContainerType } from "../utils/containers";
 import { displayError } from "./messages";
-import { pushTracks } from "./queue";
+import { appendInQueue } from "./queue";
 import { loadTrack, setTracks } from "./tracks";
 
 // ------------------------------------------------------------------
@@ -52,7 +52,9 @@ export const loadContainer = (
         if (enqueue) {
           console.log("Enqueuing container...");
           dispatch(
-            pushTracks(container.tracks.data.map(track => track.id.toString()))
+            appendInQueue(
+              container.tracks.data.map(track => track.id.toString())
+            )
           );
         }
         if (play) {

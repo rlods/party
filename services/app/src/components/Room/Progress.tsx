@@ -11,9 +11,7 @@ class Progress extends Component<MappedProps> {
     const { playing, value } = this.props;
     return (
       <div className={classNames("Progress", { playing })}>
-        <progress max={100} value={value}>
-          {value}
-        </progress>
+        <progress max={100} value={value * 100} />
       </div>
     );
   };

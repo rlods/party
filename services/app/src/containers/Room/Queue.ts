@@ -4,7 +4,7 @@ import { ThunkDispatch } from "redux-thunk";
 import { RootState } from "../../reducers";
 import Queue from "../../components/Room/Queue";
 import { extractTracks } from "../../selectors/tracks";
-import { setQueuePosition } from "../../actions/queue";
+import { setQueuePosition, removeFromQueue } from "../../actions/queue";
 import { stopPlayer, startPlayer } from "../../actions/player";
 
 // ------------------------------------------------------------------
@@ -20,6 +20,7 @@ const dispatchToProps = (dispatch: ThunkDispatch<RootState, any, any>) => ({
     dispatch(startPlayer());
     dispatch(setQueuePosition(index));
   },
+  onRemove: (index: number) => dispatch(removeFromQueue(index)),
   onStop: () => dispatch(stopPlayer())
 });
 

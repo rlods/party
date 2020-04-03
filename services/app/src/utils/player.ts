@@ -76,11 +76,11 @@ export const Player = () => {
 
   const isPlaying = () => playCount > 0;
 
+  // Percentage [0, 1]
   const getPosition = () => {
     if (buffer && sourceNode) {
-      return Math.floor(
-        ((getContext().currentTime - sourceNodeStartTime) / buffer?.duration) *
-          100
+      return (
+        (getContext().currentTime - sourceNodeStartTime) / buffer?.duration
       );
     }
     return 0;

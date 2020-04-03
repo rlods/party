@@ -4,16 +4,16 @@ import { createAction, AsyncAction } from ".";
 
 export type QueueAction =
   | ReturnType<typeof clearQueue>
-  | ReturnType<typeof pushTracks>
-  | ReturnType<typeof removeTrack>
+  | ReturnType<typeof appendInQueue>
+  | ReturnType<typeof removeFromQueue>
   | ReturnType<typeof setQueuePosition>;
 
 export const clearQueue = () => createAction("queue/RESET");
 
-export const pushTracks = (trackIds: string[]) =>
+export const appendInQueue = (trackIds: string[]) =>
   createAction("queue/PUSH", trackIds);
 
-export const removeTrack = (position: number) =>
+export const removeFromQueue = (position: number) =>
   createAction("queue/REMOVE", position);
 
 export const setQueuePosition = (position: number) =>

@@ -18,7 +18,7 @@ export type RoomsAction =
   | ReturnType<typeof success>
   | ReturnType<typeof error>
   | ReturnType<typeof reset>
-  | ReturnType<typeof setRoom>
+  | ReturnType<typeof setRoomAccess>
   | ReturnType<typeof setRooms>
   | ReturnType<typeof setRoomColor>;
 
@@ -26,8 +26,8 @@ const fetching = () => createAction("rooms/FETCHING");
 const success = () => createAction("rooms/FETCHED");
 const error = (error: AxiosError) => createAction("rooms/ERROR", error);
 const reset = () => createAction("rooms/RESET");
-const setRoom = (id: string, secret: string) =>
-  createAction("rooms/SET_ROOM", { id, secret });
+const setRoomAccess = (id: string, secret: string) =>
+  createAction("rooms/SET_ROOM_ACCESS", { id, secret });
 const setRooms = (rooms: Rooms) => createAction("rooms/SET_ROOMS", rooms);
 export const setRoomColor = (color: CombinedColor) =>
   createAction("rooms/SET_ROOM_COLOR", color);
@@ -63,7 +63,7 @@ export const enterRoom = (
       console.log("Entering room...", { id, secret });
       const room = FirebaseRoom(id);
       dispatch(setRooms({ [id]: await room.wait() }));
-      dispatch(setRoom(id, secret));
+      dispatch(setRoomAccess(id, secret));
       FIREBASE_CB = (snapshot: firebase.database.DataSnapshot) => {
         dispatch(setRooms({ [id]: snapshot.val() as Room }));
       };
@@ -82,7 +82,7 @@ export const exitRoom = (): AsyncAction => async dispatch => {
     FIREBASE_ROOM.unsubscribeInfo(FIREBASE_CB);
     FIREBASE_ROOM = null;
     FIREBASE_CB = null;
-    dispatch(setRoom("", ""));
+    dispatch(setRoomAccess("", ""));
   }
 };
 
@@ -95,7 +95,7 @@ export const lockRoom = (): AsyncAction => async (dispatch, getState) => {
     }
   } = getState();
   console.log("Locking room...", { id });
-  dispatch(setRoom(id, ""));
+  dispatch(setRoomAccess(id, ""));
 };
 
 export const unlockRoom = (secret: string): AsyncAction => async (
@@ -108,7 +108,7 @@ export const unlockRoom = (secret: string): AsyncAction => async (
     }
   } = getState();
   console.log("Unlocking room...", { id, secret });
-  dispatch(setRoom(id, secret));
+  dispatch(setRoomAccess(id, secret));
 };
 
 // ------------------------------------------------------------------

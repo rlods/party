@@ -4,6 +4,7 @@ import { displayError } from "./messages";
 import { setRoomColor } from "./rooms";
 import { pickColor } from "../utils/colorpicker";
 import { setQueuePosition } from "./queue";
+import { ApiTrack } from "../utils/api";
 
 // ------------------------------------------------------------------
 
@@ -14,18 +15,16 @@ export type PlayerAction =
   | ReturnType<typeof stop>;
 
 const reset = () => createAction("player/RESET");
-
 const setPlayerPosition = (position: number) =>
   createAction("player/SET_POSITION", position);
-
 const start = () => createAction("player/START");
-
 const stop = () => createAction("player/STOP");
 
 // ------------------------------------------------------------------
 
 let PLAYER_TIMER: NodeJS.Timeout | null = null;
-let PLAYER_POSITION = -1;
+let PLAYER_PLAYING_TRACK: ApiTrack | null = null;
+let PLAYER_PLAYING_TRACK_INDEX = -1;
 
 export const startPlayer = (): AsyncAction => async (
   dispatch,
@@ -39,29 +38,52 @@ export const startPlayer = (): AsyncAction => async (
         tracks
       } = getState();
       if (trackIds.length > 0) {
-        if (PLAYER_POSITION !== position) {
-          // User has clicked an other track
-          PLAYER_POSITION = position;
-          console.log("Playing clicked track...", {
-            position: PLAYER_POSITION
+        if (
+          PLAYER_PLAYING_TRACK_INDEX !== position ||
+          (position >= 0 &&
+            PLAYER_PLAYING_TRACK !== tracks.tracks[trackIds[position]])
+        ) {
+          // User has clicked an other track or added/removed a track in queue
+          PLAYER_PLAYING_TRACK_INDEX = position;
+          PLAYER_PLAYING_TRACK =
+            tracks.tracks[trackIds[PLAYER_PLAYING_TRACK_INDEX]];
+          console.log("Playing clicked...", {
+            id: PLAYER_PLAYING_TRACK.id,
+            index: PLAYER_PLAYING_TRACK_INDEX
           });
-          const track = tracks.tracks[trackIds[PLAYER_POSITION]];
-          await queuePlayer.play(track.preview, 0);
-          dispatch(setQueuePosition(PLAYER_POSITION));
-          dispatch(setRoomColor(await pickColor(track.album.cover_small)));
-        } else {
+          await queuePlayer.play(PLAYER_PLAYING_TRACK.preview, 0);
+          dispatch(setQueuePosition(PLAYER_PLAYING_TRACK_INDEX));
+          dispatch(
+            setRoomColor(
+              await pickColor(PLAYER_PLAYING_TRACK.album.cover_small)
+            )
+          );
+        } else if (!queuePlayer.isPlaying()) {
+          // Not playing which means previous track has terminated
           const nextPosition = (position + 1) % trackIds.length;
-          if (!queuePlayer.isPlaying() && nextPosition < trackIds.length) {
+          if (nextPosition < trackIds.length) {
             // Time to move to next track
-            PLAYER_POSITION = nextPosition;
-            console.log("Playing next track...", { position: PLAYER_POSITION });
-            const track = tracks.tracks[trackIds[PLAYER_POSITION]];
-            await queuePlayer.play(track.preview, 0);
-            dispatch(setQueuePosition(PLAYER_POSITION));
-            dispatch(setRoomColor(await pickColor(track.album.cover_small)));
+            PLAYER_PLAYING_TRACK_INDEX = nextPosition;
+            PLAYER_PLAYING_TRACK =
+              tracks.tracks[trackIds[PLAYER_PLAYING_TRACK_INDEX]];
+            console.log("Playing next...", {
+              id: PLAYER_PLAYING_TRACK.id,
+              index: PLAYER_PLAYING_TRACK_INDEX
+            });
+            await queuePlayer.play(PLAYER_PLAYING_TRACK.preview, 0);
+            dispatch(setQueuePosition(PLAYER_PLAYING_TRACK_INDEX));
+            dispatch(
+              setRoomColor(
+                await pickColor(PLAYER_PLAYING_TRACK.album.cover_small)
+              )
+            );
           }
         }
         dispatch(setPlayerPosition(queuePlayer.getPosition()));
+      } else {
+        // Last track has been removed from queue by user
+        console.log("No more tracks in queue...");
+        dispatch(stopPlayer());
       }
     }, 250);
     dispatch(start());
@@ -78,7 +100,8 @@ export const stopPlayer = (): AsyncAction => async (
   if (PLAYER_TIMER) {
     clearInterval(PLAYER_TIMER);
     PLAYER_TIMER = null;
-    PLAYER_POSITION = -1;
+    PLAYER_PLAYING_TRACK = null;
+    PLAYER_PLAYING_TRACK_INDEX = -1;
 
     queuePlayer.stop();
     dispatch(stop());

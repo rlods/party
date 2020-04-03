@@ -1,14 +1,7 @@
 import { createAction, AsyncAction } from ".";
-import { Message, MessageType } from "../utils/messages";
+import { Message, MessageType, extractErrorMessage } from "../utils/messages";
 
 // ------------------------------------------------------------------
-
-let MESSAGE_ID_GENERATOR: number = 0;
-
-export const extractErrorMessage = (err: any) =>
-  err.response && err.response.data && err.response.data.message
-    ? err.response.data.message
-    : err.message;
 
 export type MessagesAction =
   | ReturnType<typeof addMessage>
@@ -20,6 +13,10 @@ const addMessage = (message: Message) => createAction("message/ADD", message);
 const removeMessage = (id: number) => createAction("message/REMOVE", id);
 
 const clearMessages = () => createAction("message/RESET");
+
+// ------------------------------------------------------------------
+
+let MESSAGE_ID_GENERATOR: number = 0;
 
 export const displayMessage = (
   type: MessageType,

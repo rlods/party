@@ -96,19 +96,19 @@ class SearchModal extends Component<MappedProps, State> {
           type="album"
           items={albums.data}
           cb={album => (
-            <Fragment>
-              <IconButton
-                title="Add"
-                icon="plus"
-                onClick={() => this.onSelect("album", album.id)}
-              />
-              <Album
-                album={album}
-                playing={mediaType === "album" && mediaId === album.id}
-                onPlay={() => this.onStartPreview("album", album.id)}
-                onStop={() => this.onStopPreview()}
-              />
-            </Fragment>
+            <Album
+              actions={
+                <IconButton
+                  title="Add"
+                  icon="plus"
+                  onClick={() => this.onSelect("album", album.id)}
+                />
+              }
+              album={album}
+              playing={mediaType === "album" && mediaId === album.id}
+              onPlay={() => this.onStartPreview("album", album.id)}
+              onStop={() => this.onStopPreview()}
+            />
           )}
         />
         <SearchResultCategory
@@ -116,19 +116,19 @@ class SearchModal extends Component<MappedProps, State> {
           type="playlist"
           items={playlists.data}
           cb={playlist => (
-            <Fragment>
-              <IconButton
-                title="Add"
-                icon="plus"
-                onClick={() => this.onSelect("playlist", playlist.id)}
-              />
-              <Playlist
-                playlist={playlist}
-                playing={mediaType === "playlist" && mediaId === playlist.id}
-                onPlay={() => this.onStartPreview("playlist", playlist.id)}
-                onStop={() => this.onStopPreview()}
-              />
-            </Fragment>
+            <Playlist
+              actions={
+                <IconButton
+                  title="Add"
+                  icon="plus"
+                  onClick={() => this.onSelect("playlist", playlist.id)}
+                />
+              }
+              playlist={playlist}
+              playing={mediaType === "playlist" && mediaId === playlist.id}
+              onPlay={() => this.onStartPreview("playlist", playlist.id)}
+              onStop={() => this.onStopPreview()}
+            />
           )}
         />
         <SearchResultCategory
@@ -136,19 +136,19 @@ class SearchModal extends Component<MappedProps, State> {
           type="track"
           items={tracks.data}
           cb={track => (
-            <Fragment>
-              <IconButton
-                title="Add"
-                icon="plus"
-                onClick={() => this.onSelect("track", track.id)}
-              />
-              <Track
-                track={track}
-                playing={mediaType === "track" && mediaId === track.id}
-                onPlay={() => this.onStartPreview("track", track.id)}
-                onStop={() => this.onStopPreview()}
-              />
-            </Fragment>
+            <Track
+              actions={
+                <IconButton
+                  title="Add"
+                  icon="plus"
+                  onClick={() => this.onSelect("track", track.id)}
+                />
+              }
+              track={track}
+              playing={mediaType === "track" && mediaId === track.id}
+              onPlay={() => this.onStartPreview("track", track.id)}
+              onStop={() => this.onStopPreview()}
+            />
           )}
         />
       </Fragment>

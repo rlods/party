@@ -2,7 +2,7 @@ import { AxiosError } from "axios";
 //
 import { createAction, AsyncAction } from ".";
 import { displayError } from "./messages";
-import { pushTracks } from "./queue";
+import { appendInQueue } from "./queue";
 import { ApiTrack } from "../utils/api";
 
 // ------------------------------------------------------------------
@@ -38,7 +38,7 @@ export const loadTrack = (
     }
     if (enqueue) {
       console.log("Enqueuing track...");
-      dispatch(pushTracks([trackId]));
+      dispatch(appendInQueue([trackId]));
     }
     if (play) {
       console.log("Previewing track...");
