@@ -23,28 +23,38 @@ export const setTracks = (tracks: ApiTrack[]) =>
 
 // ------------------------------------------------------------------
 
-export const loadTrack = (
-  trackId: string,
+export const loadTracks = (
+  trackIds: string[],
   enqueue: boolean,
   play: boolean
 ): AsyncAction => async (dispatch, getState, { api, previewPlayer }) => {
-  try {
-    const state = getState();
-    let track = state.tracks.tracks[trackId];
-    if (!track) {
-      console.log("Loading track...", { trackId });
-      track = await api.loadTrack(trackId);
-      dispatch(setTracks([track]));
+  if (trackIds.length > 0) {
+    try {
+      const state = getState();
+      const notLoadedTrackIds: string[] = trackIds.filter(
+        trackId => !state.tracks.tracks[trackId]
+      );
+      if (notLoadedTrackIds.length > 0) {
+        // TODO: clear duplicates which can exists
+        console.log("Loading track...", { trackIds: notLoadedTrackIds });
+        dispatch(
+          setTracks(
+            await Promise.all(
+              notLoadedTrackIds.map(trackId => api.loadTrack(trackId))
+            )
+          )
+        );
+      }
+      if (enqueue) {
+        console.log("Enqueuing track...", { trackIds });
+        dispatch(appendInQueue(trackIds));
+      }
+      if (play) {
+        console.log("Previewing track...", { trackId: trackIds[0] });
+        await previewPlayer.play(state.tracks.tracks[trackIds[0]].preview, 0);
+      }
+    } catch (err) {
+      dispatch(displayError("Cannot load track", err));
     }
-    if (enqueue) {
-      console.log("Enqueuing track...");
-      dispatch(appendInQueue([trackId]));
-    }
-    if (play) {
-      console.log("Previewing track...");
-      await previewPlayer.play(track.preview, 0);
-    }
-  } catch (err) {
-    dispatch(displayError("Cannot load track", err));
   }
 };

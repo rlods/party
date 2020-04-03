@@ -10,6 +10,7 @@ export type QueueAction =
   | ReturnType<typeof _clearQueue>
   | ReturnType<typeof _appendInQueue>
   | ReturnType<typeof _removeFromQueue>
+  | ReturnType<typeof setQueue>
   | ReturnType<typeof _setQueuePosition>;
 
 const _clearQueue = () => createAction("queue/RESET");
@@ -19,6 +20,9 @@ const _appendInQueue = (trackIds: string[]) =>
 
 const _removeFromQueue = (position: number) =>
   createAction("queue/REMOVE", position);
+
+export const setQueue = (trackIds: string[]) =>
+  createAction("queue/SET", trackIds);
 
 const _setQueuePosition = (position: number) =>
   createAction("queue/SET_POSITION", position);

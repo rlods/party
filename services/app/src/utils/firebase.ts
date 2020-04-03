@@ -265,7 +265,7 @@ export const User = (id: string, secret?: string) => {
 export const Party = (id: string, room: ReturnType<typeof Room>) => {
   const _members: string[] = [];
   const _users: { [id: string]: ReturnType<typeof User> } = {};
-  let _info = {
+  let _info: RoomInfo = {
     name: "",
     queue: {},
     queue_position: -1,

@@ -3,17 +3,18 @@ import { v4 } from "uuid";
 //
 import { createAction, AsyncAction } from ".";
 import { displayError } from "./messages";
-import { Rooms, Room } from "../utils/rooms";
+import { Room } from "../utils/rooms";
 import {
   Room as FirebaseRoom,
   getCurrentRoom,
   setCurrentRoom
 } from "../utils/firebase";
-import { loadTrack } from "./tracks";
+import { loadTracks } from "./tracks";
 import { loadContainer } from "./containers";
 import { ContainerType } from "../utils/containers";
 import { CombinedColor } from "../utils/colorpicker";
 import history from "../utils/history";
+import { setQueue } from "./queue";
 
 // ------------------------------------------------------------------
 
@@ -22,17 +23,17 @@ export type RoomsAction =
   | ReturnType<typeof success>
   | ReturnType<typeof error>
   | ReturnType<typeof reset>
+  | ReturnType<typeof setRoom>
   | ReturnType<typeof setRoomAccess>
-  | ReturnType<typeof setRooms>
   | ReturnType<typeof setRoomColor>;
 
 const fetching = () => createAction("rooms/FETCHING");
 const success = () => createAction("rooms/FETCHED");
 const error = (error: AxiosError) => createAction("rooms/ERROR", error);
 const reset = () => createAction("rooms/RESET");
+const setRoom = (room: Room | null) => createAction("rooms/SET_ROOM", room);
 const setRoomAccess = (id: string, secret: string) =>
   createAction("rooms/SET_ROOM_ACCESS", { id, secret });
-const setRooms = (rooms: Rooms) => createAction("rooms/SET_ROOMS", rooms);
 export const setRoomColor = (color: CombinedColor) =>
   createAction("rooms/SET_ROOM_COLOR", color);
 
@@ -66,10 +67,19 @@ export const enterRoom = (
     try {
       console.log("Entering room...", { id, secret });
       room = FirebaseRoom(id, secret);
-      dispatch(setRooms({ [id]: await room.wait() }));
+      dispatch(setRoom(await room.wait()));
       dispatch(setRoomAccess(id, secret));
       FIREBASE_CB = (snapshot: firebase.database.DataSnapshot) => {
-        dispatch(setRooms({ [id]: snapshot.val() as Room }));
+        const newRoom = snapshot.val() as Room;
+        let trackIds: string[] = [];
+        if (newRoom.queue) {
+          trackIds = Object.entries(newRoom.queue)
+            .sort((track1, track2) => Number(track1[0]) - Number(track2[0]))
+            .map(track => track[1].id);
+          dispatch(loadTracks(trackIds, false, false));
+        }
+        dispatch(setQueue(trackIds));
+        dispatch(setRoom(newRoom));
       };
       setCurrentRoom(room);
       room.subscribeInfo(FIREBASE_CB);
@@ -140,6 +150,6 @@ export const queueTracks = (
     dispatch(loadContainer(containerType, containerId, true, false));
   }
   if (trackId) {
-    dispatch(loadTrack(trackId, true, false));
+    dispatch(loadTracks([trackId], true, false));
   }
 };

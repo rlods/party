@@ -21,7 +21,7 @@ class Queue extends Component<MappedProps> {
     return (
       <div className="Queue">
         {tracks.map((track, index) => (
-          <div className="QueueItem" key={track.id}>
+          <div className="QueueItem" key={index}>
             <Track
               track={track}
               playable={!locked}

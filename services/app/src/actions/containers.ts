@@ -4,7 +4,7 @@ import { createAction, AsyncAction } from ".";
 import { Container, ContainerType } from "../utils/containers";
 import { displayError } from "./messages";
 import { appendInQueue } from "./queue";
-import { loadTrack, setTracks } from "./tracks";
+import { loadTracks, setTracks } from "./tracks";
 
 // ------------------------------------------------------------------
 
@@ -60,7 +60,7 @@ export const loadContainer = (
         if (play) {
           console.log("Playing container...");
           dispatch(
-            loadTrack(container.tracks.data[0].id.toString(), false, true)
+            loadTracks([container.tracks.data[0].id.toString()], false, true)
           );
         }
       }

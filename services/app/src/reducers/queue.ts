@@ -31,6 +31,8 @@ export const queueReducer: Reducer<State, QueueAction> = (
           action.payload < state.position ? state.position - 1 : state.position,
         trackIds: copy
       };
+    case "queue/SET":
+      return { ...state, trackIds: action.payload };
     case "queue/SET_POSITION":
       return {
         ...state,

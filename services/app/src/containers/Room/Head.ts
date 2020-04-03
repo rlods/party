@@ -12,7 +12,7 @@ import { displayMessage } from "../../actions/messages";
 
 const stateToProps = (state: RootState) => ({
   locked: isRoomLocked(state),
-  room: extractRoom(state, state.rooms.room_access.id)
+  room: extractRoom(state)
 });
 
 const dispatchToProps = (dispatch: ThunkDispatch<RootState, any, any>) => ({

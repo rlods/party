@@ -1,6 +1,6 @@
 export type Room = {
   name: string;
-  queue: RoomQueue;
+  queue?: RoomQueue;
   queue_position: number;
   timestamp: number;
 };
