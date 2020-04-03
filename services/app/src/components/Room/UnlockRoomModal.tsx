@@ -35,7 +35,7 @@ class UnlockRoomModal extends Component<MappedProps, State> {
           <label htmlFor="modal-secret">Room Key</label>
           <input
             id="modal-secret"
-            type="text"
+            type="password"
             placeholder="Room Key..."
             maxLength={36}
             minLength={36}

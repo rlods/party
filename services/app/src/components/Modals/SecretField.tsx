@@ -33,7 +33,7 @@ class SecretField extends Component<Props & MappedProps> {
               marginRight: "0.5rem"
             }}
             id={id}
-            type="text"
+            type="password"
             placeholder={placeholder}
             maxLength={36}
             minLength={36}

@@ -53,7 +53,7 @@ class ConnectUserModal extends Component<MappedProps, State> {
           <label htmlFor="modal-secret">User Secret</label>
           <input
             id="modal-secret"
-            type="text"
+            type="password"
             placeholder="User Secret..."
             maxLength={36}
             minLength={36}
