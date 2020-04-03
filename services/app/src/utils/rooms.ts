@@ -1,9 +1,13 @@
 export type Room = {
   name: string;
+  queue: {
+    [index: string]: {
+      id: string;
+      type: string;
+    };
+  };
+  queue_position: number;
   timestamp: number;
-  track_id: number;
-  track_position: number;
-  type: string;
 };
 
 export type Rooms = { [id: string]: Room };

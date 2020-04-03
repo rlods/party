@@ -25,7 +25,7 @@
           "$other": { ".validate": false }
         },
         "secret": {
-          ".validate": "newData.isString() && newData.val().length >= 8 && newData.val().length <= 200"
+          ".validate": "newData.isString() && newData.val().length === 36"
         },
         "$other": { ".validate": false }
       }
@@ -58,7 +58,7 @@
           "$other": { ".validate": false }
         },
         "secret": {
-          ".validate": "newData.isString() && newData.val().length >= 8 && newData.val().length <= 200"
+          ".validate": "newData.isString() && newData.val().length === 36"
         },
         "$other": { ".validate": false }
       }

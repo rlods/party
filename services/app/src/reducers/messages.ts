@@ -1,5 +1,6 @@
 import { Reducer } from "redux";
-import { Message, MessagesAction } from "../actions/messages";
+import { MessagesAction } from "../actions/messages";
+import { Message } from "../utils/messages";
 
 // ------------------------------------------------------------------
 

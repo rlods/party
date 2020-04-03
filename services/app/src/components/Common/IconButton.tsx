@@ -10,6 +10,7 @@ type ButtonType = "button" | "submit";
 
 export type Props = {
   className?: string;
+  color?: string;
   disabled?: boolean;
   icon: string;
   kind?: "default" | "primary" | "danger" | "special";
@@ -23,6 +24,7 @@ class IconButton extends Component<Props> {
   public render = () => {
     const {
       className,
+      color,
       disabled = false,
       icon,
       kind = "default",
@@ -41,7 +43,7 @@ class IconButton extends Component<Props> {
         onClick={disabled ? void 0 : onClick}
         title={title}
       >
-        <Icon icon={icon} size={size} />
+        <Icon color={color} icon={icon} size={size} />
       </button>
     );
   };

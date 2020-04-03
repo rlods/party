@@ -29,10 +29,9 @@ export const Room = (id: string, secret?: string) => {
   const _members = MEMBERS.child(id);
   let _values: RoomInfo = {
     name: "dummy",
-    timestamp: 0,
-    track_id: 0,
-    track_position: 0,
-    type: "dj"
+    queue: {},
+    queue_position: 0,
+    timestamp: 0
   };
 
   const getInfo = () => _values;
@@ -80,23 +79,17 @@ export const Room = (id: string, secret?: string) => {
 
   const update = async ({
     name,
-    track_id,
-    track_position,
-    type
-  }: Partial<
-    Pick<RoomInfo, "name" | "track_id" | "track_position" | "type">
-  >) => {
+    queue,
+    queue_position
+  }: Partial<Pick<RoomInfo, "name" | "queue" | "queue_position">>) => {
     if (name !== void 0) {
       _values.name = name;
     }
-    if (track_id !== void 0) {
-      _values.track_id = track_id;
+    if (queue !== void 0) {
+      _values.queue = queue;
     }
-    if (track_position !== void 0) {
-      _values.track_position = track_position;
-    }
-    if (type !== void 0) {
-      _values.type = type;
+    if (queue_position !== void 0) {
+      _values.queue_position = queue_position;
     }
     await _room.set({
       info: {
@@ -248,10 +241,9 @@ export const Party = (id: string, room: ReturnType<typeof Room>) => {
   const _users: { [id: string]: ReturnType<typeof User> } = {};
   let _info = {
     name: "",
-    track_id: 0,
-    track_position: 0,
-    timestamp: 0,
-    type: "dj"
+    queue: {},
+    queue_position: 0,
+    timestamp: 0
   };
 
   const _onAdded = (added: firebase.database.DataSnapshot) => {
@@ -287,9 +279,10 @@ export const Party = (id: string, room: ReturnType<typeof Room>) => {
   };
 
   const _log = () => {
-    console.log(
-      `PARTY ${id} room=${_info.name} type=${_info.type} playlist=${_info.track_id}/${_info.track_position} members=${_members}`
-    );
+    console.log("PARTY", {
+      _info,
+      _members
+    });
   };
 
   const init = () => {
@@ -324,8 +317,8 @@ export const testRoom = async () => {
   await sleep(1000);
   await room.update({
     name: "R1b",
-    track_id: 43,
-    track_position: 44
+    queue: {},
+    queue_position: 0
   });
 };
 

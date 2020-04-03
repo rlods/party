@@ -2,8 +2,8 @@ import React, { Component } from "react";
 //
 import IconButton from "../Common/IconButton";
 import { MappedProps } from "../../containers/Room/Head";
-import "./Head.scss";
 import { copyToClipboard } from "../../utils/clipboard";
+import "./Head.scss";
 
 // ------------------------------------------------------------------
 
@@ -44,7 +44,7 @@ class Head extends Component<MappedProps> {
 
   private onCopyLink = async () => {
     await copyToClipboard(document.location.href);
-    window.alert("Room link has been copied to clipboard");
+    this.props.onMessage("Room link has been copied to clipboard");
   };
 }
 

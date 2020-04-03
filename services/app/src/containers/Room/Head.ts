@@ -6,6 +6,7 @@ import Head from "../../components/Room/Head";
 import { extractRoom } from "../../selectors/rooms";
 import { openModal } from "../../actions/modals";
 import { lockRoom } from "../../actions/rooms";
+import { displayMessage } from "../../actions/messages";
 
 // ------------------------------------------------------------------
 
@@ -16,6 +17,7 @@ const stateToProps = (state: RootState) => ({
 
 const dispatchToProps = (dispatch: ThunkDispatch<RootState, any, any>) => ({
   onLock: () => dispatch(lockRoom()),
+  onMessage: (message: string) => dispatch(displayMessage("info", message)),
   onUnlock: () => dispatch(openModal({ type: "UnlockRoom", props: null }))
 });
 

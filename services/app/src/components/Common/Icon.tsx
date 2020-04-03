@@ -8,6 +8,7 @@ import "./Icon.scss";
 
 export type Props = {
   className?: string;
+  color?: string;
   icon: string;
   size?: "S" | "M" | "L";
   title?: string;
@@ -15,11 +16,12 @@ export type Props = {
 
 class Icon extends Component<Props> {
   public render = () => {
-    const { className, icon, size = "M", title } = this.props;
+    const { className, color, icon, size = "M", title } = this.props;
     return (
       <FontAwesome
         className={classNames("Icon", className, size)}
         name={icon}
+        style={{ color }}
         title={title}
       />
     );

@@ -61,6 +61,7 @@ export const connectUser = (
     FIREBASE_USER.subscribeInfo(FIREBASE_CB);
   } catch (err) {
     dispatch(displayError("Cannot connect user", err));
+    dispatch(setUser("", ""));
   }
 };
 

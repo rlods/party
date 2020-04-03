@@ -55,8 +55,8 @@ class ConnectUserModal extends Component<MappedProps, State> {
             id="modal-secret"
             type="text"
             placeholder="User Secret..."
-            maxLength={200}
-            minLength={8}
+            maxLength={36}
+            minLength={36}
             required={true}
             value={secret}
             onChange={e => {

@@ -32,13 +32,13 @@ class UnlockRoomModal extends Component<MappedProps, State> {
         renderButtons={this.renderButtons}
       >
         <div className="ModalField">
-          <label htmlFor="modal-secret">Room Secret</label>
+          <label htmlFor="modal-secret">Room Key</label>
           <input
             id="modal-secret"
             type="text"
-            placeholder="Room Secret..."
-            maxLength={200}
-            minLength={8}
+            placeholder="Room Key..."
+            maxLength={36}
+            minLength={36}
             required={true}
             value={secret}
             ref={this.secretRef}

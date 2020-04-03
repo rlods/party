@@ -1,4 +1,5 @@
 import { createAction, AsyncAction } from ".";
+import { Message, MessageType } from "../utils/messages";
 
 // ------------------------------------------------------------------
 
@@ -8,12 +9,6 @@ export const extractErrorMessage = (err: any) =>
   err.response && err.response.data && err.response.data.message
     ? err.response.data.message
     : err.message;
-
-export type Message = {
-  id: number;
-  text: string;
-  type: string;
-};
 
 export type MessagesAction =
   | ReturnType<typeof addMessage>
@@ -27,7 +22,7 @@ const removeMessage = (id: number) => createAction("message/REMOVE", id);
 const clearMessages = () => createAction("message/RESET");
 
 export const displayMessage = (
-  type: string,
+  type: MessageType,
   text: string,
   duration: number = 5000
 ): AsyncAction => (dispatch): any => {

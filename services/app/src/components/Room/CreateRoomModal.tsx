@@ -4,6 +4,7 @@ import { v4 } from "uuid";
 import FormModal from "../Modals/FormModal";
 import { MappedProps } from "../../containers/Room/CreateRoomModal";
 import IconButton, { CancelButton } from "../Common/IconButton";
+import SecretField from "../../containers/Modals/SecretField";
 
 // ------------------------------------------------------------------
 
@@ -45,26 +46,16 @@ class CreateRoomModal extends Component<MappedProps, State> {
             required={true}
             value={name}
             ref={this.nameRef}
-            onChange={e => {
-              this.setState({ name: e.target.value });
-            }}
+            onChange={e => this.setState({ name: e.target.value })}
           />
         </div>
-        <div className="ModalField">
-          <label htmlFor="modal-secret">Room Secret</label>
-          <input
-            id="modal-secret"
-            type="text"
-            placeholder="Room Secret..."
-            maxLength={200}
-            minLength={8}
-            required={true}
-            value={secret}
-            onChange={e => {
-              this.setState({ secret: e.target.value });
-            }}
-          />
-        </div>
+        <SecretField
+          id="modal-secret"
+          label="Room Key"
+          placeholder="Room Key..."
+          value={secret}
+          onChange={newSecret => this.setState({ secret: newSecret })}
+        />
       </FormModal>
     );
   };
