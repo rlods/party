@@ -2,6 +2,7 @@ export type MessageType = "error" | "info";
 
 export type Message = {
   id: number;
+  stamp: number;
   text: string;
   type: MessageType;
 };

@@ -2,16 +2,13 @@ import React from "react";
 import classNames from "classnames";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 //
+import { MappedProps } from "../../containers/App/Messages";
 import { Message } from "../../utils/messages";
 import "./Messages.scss";
 
 // ------------------------------------------------------------------
 
-type Props = {
-  messages: Message[];
-};
-
-class Messages extends React.Component<Props> {
+class Messages extends React.Component<MappedProps> {
   public render = () => (
     <div className="Messages">
       <TransitionGroup>

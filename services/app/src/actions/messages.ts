@@ -24,7 +24,7 @@ export const displayMessage = (
   duration: number = 5000
 ): AsyncAction => (dispatch): any => {
   const id = MESSAGE_ID_GENERATOR++;
-  dispatch(addMessage({ id, text, type }));
+  dispatch(addMessage({ id, stamp: new Date().getTime(), text, type }));
   setTimeout(() => dispatch(removeMessage(id)), duration);
 };
 
