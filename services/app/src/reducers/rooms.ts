@@ -1,17 +1,19 @@
 import { Reducer } from "redux";
 import { AxiosError } from "axios";
 import { RoomsAction } from "../actions/rooms";
-import { Room, RoomAccess } from "../utils/rooms";
+import { RoomAccess, RoomInfo } from "../utils/rooms";
 import { CombinedColor } from "../utils/colorpicker";
+import { FirebaseRoom } from "../utils/firebase";
 
 // ------------------------------------------------------------------
 
 export type State = {
   fetching: boolean;
   error: null | AxiosError;
-  room: Room | null;
+  room: ReturnType<typeof FirebaseRoom> | null;
   room_access: RoomAccess;
   room_color: CombinedColor;
+  room_info: RoomInfo | null;
 };
 
 const INITIAL_STATE: State = {
@@ -19,7 +21,8 @@ const INITIAL_STATE: State = {
   error: null,
   room: null,
   room_access: { id: "", secret: "" },
-  room_color: { fg: { r: 0, g: 0, b: 0 }, bg: { r: 255, g: 255, b: 255 } }
+  room_color: { fg: { r: 0, g: 0, b: 0 }, bg: { r: 255, g: 255, b: 255 } },
+  room_info: null
 };
 
 // ------------------------------------------------------------------
@@ -51,7 +54,8 @@ export const roomsReducer: Reducer<State, RoomsAction> = (
     case "rooms/SET_ROOM": {
       return {
         ...state,
-        room: action.payload
+        room: action.payload.room,
+        room_info: action.payload.info
       };
     }
     case "rooms/SET_ROOM_ACCESS": {

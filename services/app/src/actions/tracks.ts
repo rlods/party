@@ -23,6 +23,9 @@ export const setTracks = (tracks: ApiTrack[]) =>
 
 // ------------------------------------------------------------------
 
+const onlyUnique = (value: string, index: number, self: string[]) =>
+  self.indexOf(value) === index;
+
 export const loadTracks = (
   trackIds: string[],
   enqueue: boolean,
@@ -30,28 +33,31 @@ export const loadTracks = (
 ): AsyncAction => async (dispatch, getState, { api, previewPlayer }) => {
   if (trackIds.length > 0) {
     try {
-      const state = getState();
-      const notLoadedTrackIds: string[] = trackIds.filter(
-        trackId => !state.tracks.tracks[trackId]
-      );
-      if (notLoadedTrackIds.length > 0) {
-        // TODO: clear duplicates which can exists
-        console.log("Loading track...", { trackIds: notLoadedTrackIds });
-        dispatch(
-          setTracks(
-            await Promise.all(
-              notLoadedTrackIds.map(trackId => api.loadTrack(trackId))
-            )
-          )
+      const {
+        tracks: { tracks: oldTracks }
+      } = getState();
+      const newTrackIds: string[] = trackIds
+        .filter(trackId => !oldTracks[trackId])
+        .filter(onlyUnique);
+      let newTracks: ApiTrack[] = [];
+      if (newTrackIds.length > 0) {
+        console.log("Loading track...", { trackIds: newTrackIds });
+        newTracks = await Promise.all(
+          newTrackIds.map(trackId => api.loadTrack(trackId))
         );
+        dispatch(setTracks(newTracks));
       }
       if (enqueue) {
         console.log("Enqueuing track...", { trackIds });
         dispatch(appendInQueue(trackIds));
       }
       if (play) {
-        console.log("Previewing track...", { trackId: trackIds[0] });
-        await previewPlayer.play(state.tracks.tracks[trackIds[0]].preview, 0);
+        const trackId = trackIds[0];
+        const track =
+          oldTracks[trackId] ||
+          newTracks.find(track => track.id.toString() === trackId);
+        console.log("Previewing track...", { track, trackId });
+        await previewPlayer.play(track.preview, 0);
       }
     } catch (err) {
       dispatch(displayError("Cannot load track", err));

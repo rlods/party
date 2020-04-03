@@ -37,7 +37,6 @@ class SecretField extends Component<Props & MappedProps> {
             placeholder={placeholder}
             maxLength={36}
             minLength={36}
-            readOnly={true}
             required={true}
             value={value}
             onChange={e => onChange(e.target.value)}

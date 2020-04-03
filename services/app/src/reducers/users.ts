@@ -2,26 +2,29 @@ import { Reducer } from "redux";
 import { AxiosError } from "axios";
 import { UsersAction } from "../actions/users";
 import {
-  Users,
   saveUserAccess,
   loadUserAccess,
-  UserAccess
+  UserAccess,
+  UserInfo
 } from "../utils/users";
+import { FirebaseUser } from "../utils/firebase";
 
 // ------------------------------------------------------------------
 
 export type State = {
   fetching: boolean;
   error: null | AxiosError;
+  user: ReturnType<typeof FirebaseUser> | null;
   user_access: UserAccess;
-  users: Users;
+  user_info: UserInfo | null;
 };
 
 const INITIAL_STATE: State = {
   fetching: false,
   error: null,
+  user: null,
   user_access: loadUserAccess(),
-  users: {}
+  user_info: null
 };
 
 // ------------------------------------------------------------------
@@ -50,17 +53,18 @@ export const usersReducer: Reducer<State, UsersAction> = (
         fetching: false,
         error: action.payload
       };
+    case "users/SET_USER": {
+      return {
+        ...state,
+        user: action.payload.user,
+        user_info: action.payload.info
+      };
+    }
     case "users/SET_USER_ACCESS": {
       saveUserAccess(action.payload);
       return {
         ...state,
         user_access: { ...action.payload }
-      };
-    }
-    case "users/SET_USERS": {
-      return {
-        ...state,
-        users: { ...state.users, ...action.payload }
       };
     }
     case "users/RESET":

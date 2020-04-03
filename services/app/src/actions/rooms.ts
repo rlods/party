@@ -3,12 +3,8 @@ import { v4 } from "uuid";
 //
 import { createAction, AsyncAction } from ".";
 import { displayError } from "./messages";
-import { Room } from "../utils/rooms";
-import {
-  Room as FirebaseRoom,
-  getCurrentRoom,
-  setCurrentRoom
-} from "../utils/firebase";
+import { RoomInfo } from "../utils/rooms";
+import { FirebaseRoom } from "../utils/firebase";
 import { loadTracks } from "./tracks";
 import { loadContainer } from "./containers";
 import { ContainerType } from "../utils/containers";
@@ -31,7 +27,10 @@ const fetching = () => createAction("rooms/FETCHING");
 const success = () => createAction("rooms/FETCHED");
 const error = (error: AxiosError) => createAction("rooms/ERROR", error);
 const reset = () => createAction("rooms/RESET");
-const setRoom = (room: Room | null) => createAction("rooms/SET_ROOM", room);
+const setRoom = (
+  room: ReturnType<typeof FirebaseRoom> | null,
+  info: RoomInfo | null
+) => createAction("rooms/SET_ROOM", { info, room });
 const setRoomAccess = (id: string, secret: string) =>
   createAction("rooms/SET_ROOM_ACCESS", { id, secret });
 export const setRoomColor = (color: CombinedColor) =>
@@ -46,7 +45,7 @@ export const createRoom = (
   try {
     const id = v4();
     console.log("Creating room...", { id, secret });
-    await FirebaseRoom(id, secret).init({ name });
+    await FirebaseRoom(id, secret).update({ name });
     dispatch(enterRoom(id, secret));
   } catch (err) {
     dispatch(displayError("Cannot create room", err));
@@ -57,32 +56,33 @@ export const createRoom = (
 
 let FIREBASE_CB: any = null;
 
-export const enterRoom = (
-  id: string,
-  secret: string
-): AsyncAction => async dispatch => {
-  let room = getCurrentRoom();
+export const enterRoom = (id: string, secret: string): AsyncAction => async (
+  dispatch,
+  getState
+) => {
+  const {
+    rooms: { room }
+  } = getState();
   if (!room || room.id !== id) {
     dispatch(exitRoom());
     try {
       console.log("Entering room...", { id, secret });
-      room = FirebaseRoom(id, secret);
-      dispatch(setRoom(await room.wait()));
+      const newRoom = FirebaseRoom(id, secret);
+      dispatch(setRoom(newRoom, await newRoom.wait()));
       dispatch(setRoomAccess(id, secret));
       FIREBASE_CB = (snapshot: firebase.database.DataSnapshot) => {
-        const newRoom = snapshot.val() as Room;
+        const newInfo = snapshot.val() as RoomInfo;
         let trackIds: string[] = [];
-        if (newRoom.queue) {
-          trackIds = Object.entries(newRoom.queue)
+        if (newInfo.queue) {
+          trackIds = Object.entries(newInfo.queue)
             .sort((track1, track2) => Number(track1[0]) - Number(track2[0]))
             .map(track => track[1].id);
           dispatch(loadTracks(trackIds, false, false));
         }
-        dispatch(setQueue(trackIds));
-        dispatch(setRoom(newRoom));
+        dispatch(setQueue(trackIds, newInfo.queue_position));
+        dispatch(setRoom(newRoom, newInfo));
       };
-      setCurrentRoom(room);
-      room.subscribeInfo(FIREBASE_CB);
+      newRoom.subscribeInfo(FIREBASE_CB);
       history.push(`/room/${id}?key=${secret}`); // TODO: should push only if we're not already in it
     } catch (err) {
       dispatch(displayError("Cannot join room", err));
@@ -90,13 +90,15 @@ export const enterRoom = (
   }
 };
 
-export const exitRoom = (): AsyncAction => async dispatch => {
-  const room = getCurrentRoom();
+export const exitRoom = (): AsyncAction => async (dispatch, getState) => {
+  const {
+    rooms: { room }
+  } = getState();
   if (room) {
     console.log("Exiting room...");
     room.unsubscribeInfo(FIREBASE_CB);
-    setCurrentRoom(null);
     FIREBASE_CB = null;
+    dispatch(setRoom(null, null));
     dispatch(setRoomAccess("", ""));
   }
 };
@@ -106,10 +108,10 @@ export const exitRoom = (): AsyncAction => async dispatch => {
 export const lockRoom = (): AsyncAction => async (dispatch, getState) => {
   const {
     rooms: {
+      room,
       room_access: { id }
     }
   } = getState();
-  const room = getCurrentRoom();
   if (room && room.id === id) {
     console.log("Locking room...", { id });
     room.setSecret("");
@@ -123,10 +125,10 @@ export const unlockRoom = (secret: string): AsyncAction => async (
 ) => {
   const {
     rooms: {
+      room,
       room_access: { id }
     }
   } = getState();
-  const room = getCurrentRoom();
   if (room && room.id === id) {
     console.log("Unlocking room...", { id, secret });
     room.setSecret(secret);
@@ -141,11 +143,6 @@ export const queueTracks = (
   containerId: string,
   trackId: string
 ): AsyncAction => async dispatch => {
-  console.log("Queuing room tracks...", {
-    containerType,
-    containerId,
-    trackId
-  });
   if (containerId) {
     dispatch(loadContainer(containerType, containerId, true, false));
   }

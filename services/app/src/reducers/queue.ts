@@ -20,26 +20,12 @@ export const queueReducer: Reducer<State, QueueAction> = (
   action
 ): State => {
   switch (action.type) {
-    case "queue/PUSH":
-      return { ...state, trackIds: [...state.trackIds, ...action.payload] };
-    case "queue/REMOVE":
-      const copy = [...state.trackIds];
-      copy.splice(action.payload, 1);
-      return {
-        ...state,
-        position:
-          action.payload < state.position ? state.position - 1 : state.position,
-        trackIds: copy
-      };
     case "queue/SET":
-      return { ...state, trackIds: action.payload };
-    case "queue/SET_POSITION":
       return {
         ...state,
-        position: action.payload
+        position: action.payload.position,
+        trackIds: action.payload.trackIds
       };
-    case "queue/RESET":
-      return INITIAL_STATE;
     default:
       return state;
   }

@@ -2,8 +2,8 @@ import * as firebase from "firebase/app";
 import "firebase/database";
 //
 import firebaseConfig from "../config/firebase";
-import { Room as RoomInfo } from "./rooms";
-import { User as UserInfo } from "./users";
+import { RoomInfo } from "./rooms";
+import { UserInfo } from "./users";
 import { sleep } from ".";
 
 // ------------------------------------------------------------------
@@ -23,13 +23,7 @@ const USERS = firebaseDatabase.ref("users");
 
 // ------------------------------------------------------------------
 
-let CURRENT_ROOM: ReturnType<typeof Room> | null = null;
-export const getCurrentRoom = () => CURRENT_ROOM;
-export const setCurrentRoom = (room: ReturnType<typeof Room> | null) => {
-  CURRENT_ROOM = room;
-};
-
-export const Room = (id: string, secret?: string) => {
+export const FirebaseRoom = (id: string, secret?: string) => {
   const _room = ROOMS.child(id);
   const _info = _room.child("info");
   const _members = MEMBERS.child(id);
@@ -49,16 +43,6 @@ export const Room = (id: string, secret?: string) => {
   const setSecret = (newSecret: string) => {
     console.log("SETTING SECRET", newSecret);
     _secret = newSecret;
-  };
-
-  const init = async (values: Pick<RoomInfo, "name">) => {
-    subscribeInfo((snapshot: firebase.database.DataSnapshot) => {
-      const newValues = snapshot.val();
-      if (newValues) {
-        _values = newValues;
-      }
-    });
-    await update(values);
   };
 
   const wait = async (): Promise<RoomInfo> =>
@@ -118,7 +102,6 @@ export const Room = (id: string, secret?: string) => {
   return {
     getInfo,
     id,
-    init,
     isLocked,
     setSecret,
     wait,
@@ -132,7 +115,7 @@ export const Room = (id: string, secret?: string) => {
 
 // ------------------------------------------------------------------
 
-export const User = (id: string, secret?: string) => {
+export const FirebaseUser = (id: string, secret?: string) => {
   const _user = USERS.child(id);
   const _info = _user.child("info");
   let _membership: firebase.database.Reference | null = null;
@@ -151,16 +134,6 @@ export const User = (id: string, secret?: string) => {
 
   const setSecret = (newSecret: string) => {
     _secret = newSecret;
-  };
-
-  const init = async (values: Pick<UserInfo, "name">) => {
-    subscribeInfo((snapshot: firebase.database.DataSnapshot) => {
-      const newValues = snapshot.val();
-      if (newValues) {
-        _values = newValues;
-      }
-    });
-    await update(values);
   };
 
   const wait = async (): Promise<UserInfo> =>
@@ -220,7 +193,7 @@ export const User = (id: string, secret?: string) => {
     });
   };
 
-  const enter = async (room: ReturnType<typeof Room>) => {
+  const enter = async (room: ReturnType<typeof FirebaseRoom>) => {
     if (_membership) {
       await _membership.remove();
       _membership = null;
@@ -249,7 +222,6 @@ export const User = (id: string, secret?: string) => {
     id,
     enter,
     exit,
-    init,
     isLocked,
     setSecret,
     wait,
@@ -262,9 +234,12 @@ export const User = (id: string, secret?: string) => {
 
 // ------------------------------------------------------------------
 
-export const Party = (id: string, room: ReturnType<typeof Room>) => {
+export const FirebaseParty = (
+  id: string,
+  room: ReturnType<typeof FirebaseRoom>
+) => {
   const _members: string[] = [];
-  const _users: { [id: string]: ReturnType<typeof User> } = {};
+  const _users: { [id: string]: ReturnType<typeof FirebaseUser> } = {};
   let _info: RoomInfo = {
     name: "",
     queue: {},
@@ -278,7 +253,7 @@ export const Party = (id: string, room: ReturnType<typeof Room>) => {
       const index = _members.indexOf(userId);
       if (index === -1) {
         _members.push(userId);
-        _users[userId] = User(userId);
+        _users[userId] = FirebaseUser(userId);
         _log();
       }
     }
@@ -332,14 +307,14 @@ export const Party = (id: string, room: ReturnType<typeof Room>) => {
 // ------------------------------------------------------------------
 
 export const testRoom = async () => {
-  const room = Room("r1", "rs1");
-  await room.init({ name: "R1" });
+  const room = FirebaseRoom("r1", "rs1");
+  await room.update({ name: "R1" });
   room.subscribeInfo(info => console.log("ROOM", info.val()));
   room.subscribeMembers(
     members => console.log("ADDED", members.key),
     members => console.log("REMOVED", members.key)
   );
-  await room.init({ name: "R1" });
+  await room.update({ name: "R1" });
   await sleep(1000);
   await room.update({
     name: "R1b",
@@ -349,29 +324,29 @@ export const testRoom = async () => {
 };
 
 export const testUser = async () => {
-  const user = User("u1", "us1");
+  const user = FirebaseUser("u1", "us1");
   user.subscribeInfo(info => console.log("USER", info.val()));
-  await user.init({ name: "U1" });
+  await user.update({ name: "U1" });
   await sleep(1000);
   await user.update({ name: "U1b" });
 };
 
 export const testParty = async () => {
-  const room1 = Room("r1", "rs1");
-  room1.init({ name: "R1" });
-  const room2 = Room("r2", "rs2");
-  room2.init({ name: "R2" });
-  const user1 = User("u1", "us1");
-  user1.init({ name: "U1" });
-  const user2 = User("u2", "us2");
-  user2.init({ name: "U2" });
+  const room1 = FirebaseRoom("r1", "rs1");
+  await room1.update({ name: "R1" });
+  const room2 = FirebaseRoom("r2", "rs2");
+  await room2.update({ name: "R2" });
+  const user1 = FirebaseUser("u1", "us1");
+  await user1.update({ name: "U1" });
+  const user2 = FirebaseUser("u2", "us2");
+  await user2.update({ name: "U2" });
 
   await sleep(2000);
 
-  const party1 = Party("P1", room1);
-  party1.init();
-  const party2 = Party("P2", room2);
-  party2.init();
+  const party1 = FirebaseParty("P1", room1);
+  await party1.init();
+  const party2 = FirebaseParty("P2", room2);
+  await party2.init();
 
   await sleep(1000);
   user1.enter(room1);

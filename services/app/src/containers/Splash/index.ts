@@ -11,7 +11,7 @@ import { disconnectUser } from "../../actions/users";
 
 const stateToProps = (state: RootState) => ({
   loggedIn: !!state.users.user_access.id,
-  user: extractUser(state, state.users.user_access.id)
+  user: extractUser(state)
 });
 
 const dispatchToProps = (dispatch: ThunkDispatch<RootState, any, any>) => ({

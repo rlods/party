@@ -1,11 +1,9 @@
-export type Room = {
+export type RoomInfo = {
   name: string;
   queue?: RoomQueue;
   queue_position: number;
   timestamp: number;
 };
-
-export type Rooms = { [id: string]: Room };
 
 export type RoomAccess = {
   id: string;
