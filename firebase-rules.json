@@ -10,7 +10,7 @@
           ".read": true,
           ".validate": "newData.hasChildren(['name', 'online', 'room_id', 'status', 'timestamp'])",
           "name": {
-            ".validate": "newData.isString() && newData.val().length >= 3 && newData.val().length <= 20"
+            ".validate": "newData.isString() && newData.val().length >= 2 && newData.val().length <= 100"
           },
           "online": { ".validate": "newData.isBoolean()" },
           "room_id": {
@@ -38,7 +38,7 @@
           ".read": true,
           ".validate": "newData.hasChildren(['name', 'queue_position', 'timestamp'])",
           "name": {
-            ".validate": "newData.isString() && newData.val().length >= 3 && newData.val().length <= 20"
+            ".validate": "newData.isString() && newData.val().length >= 2 && newData.val().length <= 100"
           },
           "queue": {
             "$track_index": {

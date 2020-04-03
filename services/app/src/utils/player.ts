@@ -71,9 +71,20 @@ export const Player = () => {
   let bufferUrl: string = "";
 
   let sourceNode: AudioBufferSourceNode | null = null;
+  let sourceNodeStartTime = 0;
   let playCount = 0;
 
   const isPlaying = () => playCount > 0;
+
+  const getPosition = () => {
+    if (buffer && sourceNode) {
+      return Math.floor(
+        ((getContext().currentTime - sourceNodeStartTime) / buffer?.duration) *
+          100
+      );
+    }
+    return 0;
+  };
 
   const loadAudioBuffer = (url: string): Promise<AudioBuffer> =>
     new Promise((resolve, reject) => {
@@ -121,6 +132,7 @@ export const Player = () => {
     sourceNode.playbackRate.value = 1.0;
     sourceNode.connect(getNode());
     sourceNode.start(0, offset); // A new BufferSource must be created for each start
+    sourceNodeStartTime = getContext().currentTime;
   };
 
   const stop = () => {
@@ -128,12 +140,14 @@ export const Player = () => {
       console.log("Stopping audio...");
       sourceNode.stop();
       sourceNode = null;
+      sourceNodeStartTime = 0;
     }
   };
 
   return {
     analyserNode,
     gainNode,
+    getPosition,
     isPlaying,
     play,
     stop

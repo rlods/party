@@ -2,9 +2,9 @@ import React, { Component } from "react";
 import { withRouter, RouteComponentProps } from "react-router-dom";
 //
 import { MappedProps } from "../../containers/Room";
-import Controls from "../../containers/Room/Controls";
-import Queue from "../../containers/Room/Queue";
 import Head from "../../containers/Room/Head";
+import Queue from "../../containers/Room/Queue";
+import Controls from "../../containers/Room/Controls";
 import "./index.scss";
 
 // ------------------------------------------------------------------

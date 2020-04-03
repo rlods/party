@@ -41,7 +41,7 @@ class CreateRoomModal extends Component<MappedProps, State> {
             id="modal-name"
             type="text"
             placeholder="Room Name..."
-            maxLength={20}
+            maxLength={100}
             minLength={2}
             required={true}
             value={name}

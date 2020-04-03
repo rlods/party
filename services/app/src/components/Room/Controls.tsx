@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import { MappedProps } from "../../containers/Room/Controls";
 import IconButton from "../Common/IconButton";
 import history from "../../utils/history";
+import Progress from "../../containers/Room/Progress";
 import "./Controls.scss";
 
 // ------------------------------------------------------------------
@@ -59,6 +60,7 @@ class Controls extends Component<MappedProps> {
             />
           </div>
         </div>
+        <Progress />
         <div className="ControlsSet">
           <div className="Control">
             <IconButton

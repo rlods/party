@@ -12,11 +12,6 @@
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    margin-top: 1rem;
-
-    &:first-child {
-      margin-top: 0;
-    }
 
     &:last-child {
       align-self: stretch;

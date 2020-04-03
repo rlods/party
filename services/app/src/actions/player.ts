@@ -3,16 +3,20 @@ import { setTracks } from "./tracks";
 import { displayError } from "./messages";
 import { setRoomColor } from "./rooms";
 import { pickColor } from "../utils/colorpicker";
-import { setPosition } from "./queue";
+import { setQueuePosition } from "./queue";
 
 // ------------------------------------------------------------------
 
 export type PlayerAction =
   | ReturnType<typeof reset>
+  | ReturnType<typeof setPlayerPosition>
   | ReturnType<typeof start>
   | ReturnType<typeof stop>;
 
 const reset = () => createAction("player/RESET");
+
+const setPlayerPosition = (position: number) =>
+  createAction("player/SET_POSITION", position);
 
 const start = () => createAction("player/START");
 
@@ -43,7 +47,7 @@ export const startPlayer = (): AsyncAction => async (
           });
           const track = tracks.tracks[trackIds[PLAYER_POSITION]];
           await queuePlayer.play(track.preview, 0);
-          dispatch(setPosition(PLAYER_POSITION));
+          dispatch(setQueuePosition(PLAYER_POSITION));
           dispatch(setRoomColor(await pickColor(track.album.cover_small)));
         } else {
           const nextPosition = (position + 1) % trackIds.length;
@@ -53,12 +57,13 @@ export const startPlayer = (): AsyncAction => async (
             console.log("Playing next track...", { position: PLAYER_POSITION });
             const track = tracks.tracks[trackIds[PLAYER_POSITION]];
             await queuePlayer.play(track.preview, 0);
-            dispatch(setPosition(PLAYER_POSITION));
+            dispatch(setQueuePosition(PLAYER_POSITION));
             dispatch(setRoomColor(await pickColor(track.album.cover_small)));
           }
         }
+        dispatch(setPlayerPosition(queuePlayer.getPosition()));
       }
-    }, 1000);
+    }, 250);
     dispatch(start());
   }
 };
@@ -77,6 +82,7 @@ export const stopPlayer = (): AsyncAction => async (
 
     queuePlayer.stop();
     dispatch(stop());
+    dispatch(setPlayerPosition(0));
   }
 };
 
