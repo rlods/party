@@ -42,7 +42,7 @@ class Splash extends Component<MappedProps & WithTranslation> {
                   icon="plus"
                   onClick={onCreateRoom}
                   size="L"
-                  title={t("rooms.create_room")}
+                  title={t("rooms.create")}
                 />
               </div>
             ) : (

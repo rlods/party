@@ -40,7 +40,7 @@ class ConnectUserModal extends Component<MappedProps & WithTranslation, State> {
           <input
             id="modal-id"
             type="text"
-            placeholder={t("users.user_id_placeholder")}
+            placeholder={t("users.id_placeholder")}
             maxLength={36}
             minLength={36}
             required={true}
@@ -52,11 +52,11 @@ class ConnectUserModal extends Component<MappedProps & WithTranslation, State> {
           />
         </div>
         <div className="ModalField">
-          <label htmlFor="modal-secret">{t("users.user_secret")}</label>
+          <label htmlFor="modal-secret">{t("users.secret")}</label>
           <input
             id="modal-secret"
             type="password"
-            placeholder={t("users.user_secret_placeholder")}
+            placeholder={t("users.secret_placeholder")}
             maxLength={36}
             minLength={36}
             required={true}
@@ -82,7 +82,7 @@ class ConnectUserModal extends Component<MappedProps & WithTranslation, State> {
         />
         <CancelButton onClick={this.props.onClose} />
         <IconButton
-          title={t("users.create_user")}
+          title={t("users.create")}
           kind="default"
           icon="plus"
           onClick={this.props.onToggle}
@@ -95,11 +95,11 @@ class ConnectUserModal extends Component<MappedProps & WithTranslation, State> {
     const { onClose, onConnect, onError, t } = this.props;
     const { id, secret } = this.state;
     if (id.trim().length === 0) {
-      onError(t("users.user_id_is_invalid"));
+      onError(t("users.id_is_invalid"));
       return;
     }
     if (secret.trim().length === 0) {
-      onError(t("users.user_secret_is_invalid"));
+      onError(t("users.secret_is_invalid"));
       return;
     }
     onConnect(id, secret);

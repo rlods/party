@@ -29,16 +29,16 @@ class UnlockRoomModal extends Component<MappedProps & WithTranslation, State> {
     const { secret } = this.state;
     return (
       <FormModal
-        title={t("rooms.room_unlock")}
+        title={t("rooms.room_unlocking")}
         onSubmit={this.onUnlock}
         renderButtons={this.renderButtons}
       >
         <div className="ModalField">
-          <label htmlFor="modal-secret">{t("rooms.room_key")}</label>
+          <label htmlFor="modal-secret">{t("rooms.key")}</label>
           <input
             id="modal-secret"
             type="password"
-            placeholder={t("rooms.room_key_placeholder")}
+            placeholder={t("rooms.key_placeholder")}
             maxLength={36}
             minLength={36}
             required={true}
@@ -60,7 +60,7 @@ class UnlockRoomModal extends Component<MappedProps & WithTranslation, State> {
         <IconButton
           title={t("rooms.unlock")}
           kind="primary"
-          icon="key"
+          icon="unlock"
           type="submit"
         />
         <CancelButton onClick={this.props.onClose} />

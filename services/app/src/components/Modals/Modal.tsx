@@ -25,6 +25,7 @@ class Modal extends Component<Props & MappedProps & WithTranslation> {
       onClose,
       onPop,
       has_prev_modal,
+      t,
     } = this.props;
     return (
       <form className={classNames("Modal", className)} onSubmit={this.onSubmit}>
@@ -43,7 +44,7 @@ class Modal extends Component<Props & MappedProps & WithTranslation> {
             kind="special"
             className="ModalHeadClose"
             onClick={onClose}
-            title="Cancel"
+            title={t("cancel")}
             icon="times"
           />
         </div>

@@ -10,7 +10,7 @@ import "./Head.scss";
 
 class Head extends Component<MappedProps & WithTranslation> {
   public render = () => {
-    const { locked, room, onLock, onUnlock, t } = this.props;
+    const { locked, room, onUnlock, t } = this.props;
     return (
       <div className="Head">
         <div className="RoomStatus">
@@ -24,7 +24,7 @@ class Head extends Component<MappedProps & WithTranslation> {
           ) : (
             <IconButton
               icon="unlock"
-              onClick={onLock}
+              onClick={this.onLock}
               size="M"
               title={t("rooms.unlocked")}
             />
@@ -47,6 +47,13 @@ class Head extends Component<MappedProps & WithTranslation> {
     const { t } = this.props;
     await copyToClipboard(document.location.href.split("?")[0]);
     this.props.onMessage(t("rooms.link_copied_to_clipboard"));
+  };
+
+  private onLock = () => {
+    const { t } = this.props;
+    if (window.confirm(t("rooms.confirm_lock"))) {
+      this.props.onLock();
+    }
   };
 }
 

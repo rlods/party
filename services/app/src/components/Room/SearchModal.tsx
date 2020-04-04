@@ -105,7 +105,7 @@ class SearchModal extends Component<MappedProps & WithTranslation, State> {
     return (
       <Fragment>
         <SearchResultCategory
-          label="Albums"
+          label={t("medias.albums")}
           type="album"
           items={albums.data}
           cb={(album) => (
@@ -128,7 +128,7 @@ class SearchModal extends Component<MappedProps & WithTranslation, State> {
           )}
         />
         <SearchResultCategory
-          label="Playlists"
+          label={t("medias.playlists")}
           type="playlist"
           items={playlists.data}
           cb={(playlist) => (
@@ -151,7 +151,7 @@ class SearchModal extends Component<MappedProps & WithTranslation, State> {
           )}
         />
         <SearchResultCategory
-          label="Tracks"
+          label={t("medias.tracks")}
           type="track"
           items={tracks.data}
           cb={(track) => (

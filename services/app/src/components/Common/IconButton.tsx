@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { withTranslation, WithTranslation } from "react-i18next";
 import classNames from "classnames";
 //
 import Icon from "./Icon";
@@ -33,14 +34,14 @@ class IconButton extends Component<Props> {
       onClick,
       size,
       title,
-      type = "button"
+      type = "button",
     } = this.props;
     return (
       <button
         type={type}
         aria-label={title}
         className={classNames("IconButton", className, kind, size, {
-          clickable: !disabled && (!!onClick || type === "submit")
+          clickable: !disabled && (!!onClick || type === "submit"),
         })}
         onClick={disabled ? void 0 : onClick}
         title={title}
@@ -54,8 +55,26 @@ class IconButton extends Component<Props> {
   };
 }
 
-export const CancelButton = ({ onClick }: { onClick: () => void }) => (
-  <IconButton onClick={onClick} title="Cancel" kind="default" icon="ban" />
-);
-
 export default IconButton;
+
+// ------------------------------------------------------------------
+
+type CancelButtonProps = {
+  onClick: () => void;
+};
+
+class _CancelButton extends Component<CancelButtonProps & WithTranslation> {
+  public render = () => {
+    const { onClick, t } = this.props;
+    return (
+      <IconButton
+        onClick={onClick}
+        title={t("cancel")}
+        kind="default"
+        icon="ban"
+      />
+    );
+  };
+}
+
+export const CancelButton = withTranslation()(_CancelButton);

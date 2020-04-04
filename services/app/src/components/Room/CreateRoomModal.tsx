@@ -45,11 +45,11 @@ class CreateRoomModal extends Component<MappedProps & WithTranslation, State> {
         renderButtons={this.renderButtons}
       >
         <div className="ModalField">
-          <label htmlFor="modal-name">{t("rooms.room_name")}</label>
+          <label htmlFor="modal-name">{t("rooms.name")}</label>
           <input
             id="modal-name"
             type="text"
-            placeholder={t("rooms.room_name_placeholder")}
+            placeholder={t("rooms.name_placeholder")}
             maxLength={100}
             minLength={2}
             required={true}
@@ -60,8 +60,8 @@ class CreateRoomModal extends Component<MappedProps & WithTranslation, State> {
         </div>
         <SecretField
           id="modal-secret"
-          label={t("rooms.room_key")}
-          placeholder={t("rooms.room_key_placeholder")}
+          label={t("rooms.key")}
+          placeholder={t("rooms.key_placeholder")}
           value={secret}
           onChange={(newSecret) => this.setState({ secret: newSecret })}
         />
@@ -74,7 +74,7 @@ class CreateRoomModal extends Component<MappedProps & WithTranslation, State> {
     return (
       <Fragment>
         <IconButton
-          title={t("rooms.create_room")}
+          title={t("rooms.create")}
           kind="primary"
           icon="plus"
           type="submit"
@@ -88,11 +88,11 @@ class CreateRoomModal extends Component<MappedProps & WithTranslation, State> {
     const { onClose, onCreate, onError, t } = this.props;
     const { name, secret } = this.state;
     if (name.trim().length === 0) {
-      onError(t("rooms.room_name_is_invalid"));
+      onError(t("rooms.name_is_invalid"));
       return;
     }
     if (secret.trim().length === 0) {
-      onError(t("rooms.room_secret_is_invalid"));
+      onError(t("rooms.secret_is_invalid"));
       return;
     }
     onCreate(name, secret);

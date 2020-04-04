@@ -45,11 +45,11 @@ class CreateUserModal extends Component<MappedProps & WithTranslation, State> {
         renderButtons={this.renderButtons}
       >
         <div className="ModalField">
-          <label htmlFor="modal-name">{t("users.user_name")}</label>
+          <label htmlFor="modal-name">{t("users.name")}</label>
           <input
             id="modal-name"
             type="text"
-            placeholder={t("users.user_name_placeholder")}
+            placeholder={t("users.name_placeholder")}
             maxLength={100}
             minLength={2}
             required={true}
@@ -60,8 +60,8 @@ class CreateUserModal extends Component<MappedProps & WithTranslation, State> {
         </div>
         <SecretField
           id="modal-secret"
-          label={t("users.user_secret")}
-          placeholder={t("users.user_secret_placeholder")}
+          label={t("users.secret")}
+          placeholder={t("users.secret_placeholder")}
           value={secret}
           onChange={(newSecret) => this.setState({ secret: newSecret })}
         />
@@ -74,7 +74,7 @@ class CreateUserModal extends Component<MappedProps & WithTranslation, State> {
     return (
       <Fragment>
         <IconButton
-          title={t("users.create_user")}
+          title={t("users.create")}
           kind="primary"
           icon="plus"
           type="submit"
@@ -94,11 +94,11 @@ class CreateUserModal extends Component<MappedProps & WithTranslation, State> {
     const { onClose, onCreate, onError, t } = this.props;
     const { name, secret } = this.state;
     if (name.trim().length === 0) {
-      onError(t("users.user_name_is_invalid"));
+      onError(t("users.name_is_invalid"));
       return;
     }
     if (secret.trim().length === 0) {
-      onError(t("users.user_secret_is_invalid"));
+      onError(t("users.secret_is_invalid"));
       return;
     }
     onCreate(name, secret);
