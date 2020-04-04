@@ -38,10 +38,9 @@ export const setRoomColor = (color: CombinedColor) =>
 
 // ------------------------------------------------------------------
 
-export const createRoom = (
-  name: string,
-  secret: string
-): AsyncAction => async dispatch => {
+export const createRoom = (name: string, secret: string): AsyncAction => async (
+  dispatch
+) => {
   try {
     const id = v4();
     console.debug("Creating room...", { id, secret });
@@ -61,7 +60,7 @@ export const enterRoom = (id: string, secret: string): AsyncAction => async (
   getState
 ) => {
   const {
-    rooms: { room }
+    rooms: { room },
   } = getState();
   if (!room || room.id !== id) {
     dispatch(exitRoom());
@@ -76,9 +75,10 @@ export const enterRoom = (id: string, secret: string): AsyncAction => async (
         if (newInfo.queue) {
           trackIds = Object.entries(newInfo.queue)
             .sort((track1, track2) => Number(track1[0]) - Number(track2[0]))
-            .map(track => track[1].id);
+            .map((track) => track[1].id);
           dispatch(loadTracks(trackIds, false, false));
         }
+        console.log("TOTO", newInfo);
         dispatch(setQueue(trackIds, newInfo.queue_position));
         dispatch(setRoom(newRoom, newInfo));
       };
@@ -92,7 +92,7 @@ export const enterRoom = (id: string, secret: string): AsyncAction => async (
 
 export const exitRoom = (): AsyncAction => async (dispatch, getState) => {
   const {
-    rooms: { room }
+    rooms: { room },
   } = getState();
   if (room) {
     console.debug("Exiting room...");
@@ -109,8 +109,8 @@ export const lockRoom = (): AsyncAction => async (dispatch, getState) => {
   const {
     rooms: {
       room,
-      room_access: { id }
-    }
+      room_access: { id },
+    },
   } = getState();
   if (room && room.id === id) {
     console.debug("Locking room...", { id });
@@ -126,8 +126,8 @@ export const unlockRoom = (secret: string): AsyncAction => async (
   const {
     rooms: {
       room,
-      room_access: { id }
-    }
+      room_access: { id },
+    },
   } = getState();
   if (room && room.id === id) {
     console.debug("Unlocking room...", { id, secret });
@@ -142,7 +142,7 @@ export const queueTracks = (
   containerType: ContainerType,
   containerId: string,
   trackId: string
-): AsyncAction => async dispatch => {
+): AsyncAction => async (dispatch) => {
   if (containerId) {
     dispatch(loadContainer(containerType, containerId, true, false));
   }

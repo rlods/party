@@ -14,7 +14,7 @@ export const setQueue = (trackIds: string[], position: number) =>
 
 export const clearQueue = (): AsyncAction => async (dispatch, getState) => {
   const {
-    rooms: { room }
+    rooms: { room },
   } = getState();
   if (room && !room.isLocked()) {
     try {
@@ -34,22 +34,24 @@ export const appendInQueue = (trackIds: string[]): AsyncAction => async (
   getState
 ) => {
   const {
-    rooms: { room }
+    rooms: { room },
   } = getState();
-  if (room && !room.isLocked() && trackIds.length > 0) {
-    try {
-      console.debug("Appending queue...", { trackIds });
-      const queue: RoomQueue = {};
-      [...getState().queue.trackIds, ...trackIds].forEach((id, index) => {
-        queue[index] = {
-          id,
-          type: "deezer"
-        };
-      });
-      await room.update({ queue });
-    } catch (err) {
-      dispatch(displayError("Cannot append in queue"));
-      dispatch(lockRoom());
+  if (room && !room.isLocked()) {
+    if (trackIds.length > 0) {
+      try {
+        console.debug("Appending queue...", { trackIds });
+        const queue: RoomQueue = {};
+        [...getState().queue.trackIds, ...trackIds].forEach((id, index) => {
+          queue[index] = {
+            id,
+            type: "deezer",
+          };
+        });
+        await room.update({ queue });
+      } catch (err) {
+        dispatch(displayError("Cannot append in queue"));
+        dispatch(lockRoom());
+      }
     }
   } else {
     dispatch(displayError("Room is locked"));
@@ -62,7 +64,7 @@ export const removeFromQueue = (index: number): AsyncAction => async (
 ) => {
   const {
     queue: { trackIds, position },
-    rooms: { room }
+    rooms: { room },
   } = getState();
   if (room && !room.isLocked()) {
     if (index < trackIds.length) {
@@ -75,12 +77,12 @@ export const removeFromQueue = (index: number): AsyncAction => async (
         copy.forEach((id, index) => {
           queue[index] = {
             id,
-            type: "deezer"
+            type: "deezer",
           };
         });
         await room.update({
           queue,
-          queue_position: index < oldIndex ? position - 1 : position
+          queue_position: index < oldIndex ? position - 1 : position,
         });
       } catch (err) {
         dispatch(displayError("Cannot remove from queue"));
@@ -92,20 +94,26 @@ export const removeFromQueue = (index: number): AsyncAction => async (
   }
 };
 
-export const setQueuePosition = (position: number): AsyncAction => async (
+export const setQueuePosition = (newPosition: number): AsyncAction => async (
   dispatch,
   getState
 ) => {
   const {
-    rooms: { room }
+    queue: { position: oldPosition },
+    rooms: { room },
   } = getState();
   if (room && !room.isLocked()) {
-    try {
-      console.debug("Set queue position...", { position });
-      await room.update({ queue_position: position });
-    } catch (err) {
-      dispatch(displayError("Cannot set queue position"));
-      dispatch(lockRoom());
+    if (oldPosition !== newPosition) {
+      try {
+        console.debug("Set queue position...", {
+          oldPosition,
+          newPosition,
+        });
+        await room.update({ queue_position: newPosition });
+      } catch (err) {
+        dispatch(displayError("Cannot set queue position"));
+        dispatch(lockRoom());
+      }
     }
   } else {
     dispatch(displayError("Room is locked"));
@@ -116,7 +124,7 @@ export const setQueuePosition = (position: number): AsyncAction => async (
 
 export const moveBackward = (): AsyncAction => async (dispatch, getState) => {
   const {
-    queue: { position, trackIds }
+    queue: { position, trackIds },
   } = getState();
   if (trackIds.length > 0) {
     console.debug("Moving backward...");
@@ -128,7 +136,7 @@ export const moveBackward = (): AsyncAction => async (dispatch, getState) => {
 
 export const moveForward = (): AsyncAction => async (dispatch, getState) => {
   const {
-    queue: { position, trackIds }
+    queue: { position, trackIds },
   } = getState();
   if (trackIds.length > 0) {
     console.debug("Moving forward...");
