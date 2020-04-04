@@ -17,31 +17,39 @@ class Queue extends Component<MappedProps & WithTranslation> {
       tracks,
       onPlay,
       onRemove,
+      onSearch,
       onStop,
       t,
     } = this.props;
     return (
       <div className="Queue">
-        {tracks.map((track, index) => (
-          <div className="QueueItem" key={index}>
-            <Track
-              track={track}
-              playable={!locked}
-              playing={playing && trackIndex === index}
-              onPlay={() => onPlay(index)}
-              onStop={onStop}
-              actions={
-                !locked ? (
-                  <IconButton
-                    title={t("medias.remove")}
-                    icon="trash"
-                    onClick={() => onRemove(index)}
-                  />
-                ) : null
-              }
-            />
+        {tracks.length > 0 ? (
+          tracks.map((track, index) => (
+            <div className="QueueItem" key={index}>
+              <Track
+                track={track}
+                playable={!locked}
+                playing={playing && trackIndex === index}
+                onPlay={() => onPlay(index)}
+                onStop={onStop}
+                actions={
+                  !locked ? (
+                    <IconButton
+                      title={t("medias.remove")}
+                      icon="trash"
+                      onClick={() => onRemove(index)}
+                    />
+                  ) : null
+                }
+              />
+            </div>
+          ))
+        ) : (
+          <div className="QueueEmpty">
+            <IconButton title="..." icon="shower" onClick={onSearch} size="L" />
+            <span onClick={onSearch}>{t("rooms.empty")}</span>
           </div>
-        ))}
+        )}
       </div>
     );
   };

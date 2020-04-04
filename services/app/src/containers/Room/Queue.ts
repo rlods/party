@@ -7,6 +7,7 @@ import { extractTracks } from "../../selectors/tracks";
 import { setQueuePosition, removeFromQueue } from "../../actions/queue";
 import { stopPlayer, startPlayer } from "../../actions/player";
 import { isRoomLocked } from "../../selectors/rooms";
+import { openModal } from "../../actions/modals";
 
 // ------------------------------------------------------------------
 
@@ -14,7 +15,7 @@ const stateToProps = (state: RootState) => ({
   locked: isRoomLocked(state),
   playing: state.player.playing,
   trackIndex: state.queue.position % state.queue.trackIds.length,
-  tracks: extractTracks(state, state.queue.trackIds)
+  tracks: extractTracks(state, state.queue.trackIds),
 });
 
 const dispatchToProps = (dispatch: ThunkDispatch<RootState, any, any>) => ({
@@ -23,7 +24,8 @@ const dispatchToProps = (dispatch: ThunkDispatch<RootState, any, any>) => ({
     dispatch(setQueuePosition(index));
   },
   onRemove: (index: number) => dispatch(removeFromQueue(index)),
-  onStop: () => dispatch(stopPlayer())
+  onSearch: () => dispatch(openModal({ type: "Search", props: null })),
+  onStop: () => dispatch(stopPlayer()),
 });
 
 export type MappedProps = ReturnType<typeof stateToProps> &

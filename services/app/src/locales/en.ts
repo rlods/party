@@ -4,6 +4,7 @@ export default {
     powered_with: "Powered with",
   },
   users: {
+    user: "User",
     confirm_disconnect: "Are you sure you want to disconnect?",
     connect: "Connect",
     connection: "Connection",
@@ -21,6 +22,8 @@ export default {
     user_secret: "User Secret",
   },
   rooms: {
+    room: "Room",
+    empty: "It's empty here, you should add some tracks...",
     copy_link: "Copy Room Link to Clipboard",
     link_copied_to_clipboard: "Room link has been copied to clipboard",
     locked: "Locked (click to unlock)",

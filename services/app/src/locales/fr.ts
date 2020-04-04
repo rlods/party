@@ -4,6 +4,7 @@ export default {
     powered_with: "boosté avec",
   },
   users: {
+    user: "Utilisateur",
     confirm_disconnect: "Êtes-vous sûr(e) de vouloir vous déconnecter ?",
     connect: "Se connecter",
     connection: "Connexion",
@@ -21,6 +22,8 @@ export default {
     user_secret: "Secret",
   },
   rooms: {
+    room: "Pièce",
+    empty: "Cette pièce est vide, vous devriez ajouter quelques pistes...",
     copy_link: "Copier le lien de la pièce dans le presse-papier",
     link_copied_to_clipboard:
       "Le lien de la pièce a été copié dans le presse-papier",

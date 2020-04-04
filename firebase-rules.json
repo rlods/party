@@ -57,6 +57,9 @@
           "timestamp": {
             ".validate": "(!data.exists() || newData.val() > data.val()) && newData.val() <= now"
           },
+          "type": {
+            ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length < 20"
+          },
           "$other": { ".validate": false }
         },
         "secret": {

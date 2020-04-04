@@ -1,8 +1,11 @@
+export type RoomType = "blind" | "dj";
+
 export type RoomInfo = {
   name: string;
   queue?: RoomQueue;
   queue_position: number;
   timestamp: number;
+  type: RoomType;
 };
 
 export type RoomAccess = {

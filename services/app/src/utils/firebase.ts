@@ -33,7 +33,8 @@ export const FirebaseRoom = (id: string, secret?: string) => {
     name: "dummy",
     queue: {},
     queue_position: 0,
-    timestamp: 0
+    timestamp: 0,
+    type: "dj",
   };
 
   const getInfo = () => _values;
@@ -47,7 +48,7 @@ export const FirebaseRoom = (id: string, secret?: string) => {
 
   const wait = async (): Promise<RoomInfo> =>
     new Promise((resolve, reject) => {
-      _info.once("value", snapshot => {
+      _info.once("value", (snapshot) => {
         const newValues = snapshot.val();
         if (newValues) {
           _values = newValues;
@@ -79,7 +80,7 @@ export const FirebaseRoom = (id: string, secret?: string) => {
   const update = async ({
     name,
     queue,
-    queue_position
+    queue_position,
   }: Partial<Pick<RoomInfo, "name" | "queue" | "queue_position">>) => {
     if (name !== void 0) {
       _values.name = name;
@@ -93,9 +94,9 @@ export const FirebaseRoom = (id: string, secret?: string) => {
     await _room.set({
       info: {
         ..._values,
-        timestamp: firebase.database.ServerValue.TIMESTAMP
+        timestamp: firebase.database.ServerValue.TIMESTAMP,
       },
-      secret: _secret
+      secret: _secret,
     });
   };
 
@@ -109,7 +110,7 @@ export const FirebaseRoom = (id: string, secret?: string) => {
     subscribeMembers,
     unsubscribeInfo,
     unsubscribeMembers,
-    update
+    update,
   };
 };
 
@@ -120,12 +121,12 @@ export const FirebaseUser = (id: string, secret?: string) => {
   const _info = _user.child("info");
   let _membership: firebase.database.Reference | null = null;
   let _secret = secret || "";
-  let _values = {
+  let _values: UserInfo = {
     name: "dummy",
     online: false,
     room_id: "",
     status: "",
-    timestamp: 0
+    timestamp: 0,
   };
 
   const getInfo = () => _values;
@@ -138,7 +139,7 @@ export const FirebaseUser = (id: string, secret?: string) => {
 
   const wait = async (): Promise<UserInfo> =>
     new Promise((resolve, reject) => {
-      _info.once("value", snapshot => {
+      _info.once("value", (snapshot) => {
         const newValues = snapshot.val();
         if (newValues) {
           _values = newValues;
@@ -159,7 +160,7 @@ export const FirebaseUser = (id: string, secret?: string) => {
 
   const update = async ({
     name,
-    room_id
+    room_id,
   }: Partial<Pick<UserInfo, "name" | "room_id">>) => {
     if (name !== void 0) {
       _values.name = name;
@@ -172,9 +173,9 @@ export const FirebaseUser = (id: string, secret?: string) => {
         ..._values,
         online: true,
         status: "online",
-        timestamp: firebase.database.ServerValue.TIMESTAMP
+        timestamp: firebase.database.ServerValue.TIMESTAMP,
       },
-      secret: _secret
+      secret: _secret,
     });
     installDisconnect();
   };
@@ -187,9 +188,9 @@ export const FirebaseUser = (id: string, secret?: string) => {
         online: false,
         room_id: "",
         status: "disconnected",
-        timestamp: firebase.database.ServerValue.TIMESTAMP
+        timestamp: firebase.database.ServerValue.TIMESTAMP,
       },
-      secret: _secret
+      secret: _secret,
     });
   };
 
@@ -199,12 +200,12 @@ export const FirebaseUser = (id: string, secret?: string) => {
       _membership = null;
     }
     await update({
-      room_id: room.id
+      room_id: room.id,
     });
     _membership = MEMBERS.child(room.id).child(id);
     _membership.onDisconnect().remove();
     await _membership.set({
-      timestamp: firebase.database.ServerValue.TIMESTAMP
+      timestamp: firebase.database.ServerValue.TIMESTAMP,
     });
   };
 
@@ -214,7 +215,7 @@ export const FirebaseUser = (id: string, secret?: string) => {
       _membership = null;
     }
     await update({
-      room_id: ""
+      room_id: "",
     });
   };
 
@@ -228,7 +229,7 @@ export const FirebaseUser = (id: string, secret?: string) => {
     subscribeInfo,
     unsubscribeInfo,
     update,
-    getInfo
+    getInfo,
   };
 };
 
@@ -244,7 +245,8 @@ export const FirebaseParty = (
     name: "",
     queue: {},
     queue_position: 0,
-    timestamp: 0
+    timestamp: 0,
+    type: "dj",
   };
 
   const _onAdded = (added: firebase.database.DataSnapshot) => {
@@ -282,7 +284,7 @@ export const FirebaseParty = (
   const _log = () => {
     console.debug("PARTY", {
       _info,
-      _members
+      _members,
     });
   };
 
@@ -298,7 +300,7 @@ export const FirebaseParty = (
 
   return {
     init,
-    terminate
+    terminate,
   };
 };
 
@@ -309,23 +311,23 @@ export const FirebaseParty = (
 export const testRoom = async () => {
   const room = FirebaseRoom("r1", "rs1");
   await room.update({ name: "R1" });
-  room.subscribeInfo(info => console.debug("ROOM", info.val()));
+  room.subscribeInfo((info) => console.debug("ROOM", info.val()));
   room.subscribeMembers(
-    members => console.debug("ADDED", members.key),
-    members => console.debug("REMOVED", members.key)
+    (members) => console.debug("ADDED", members.key),
+    (members) => console.debug("REMOVED", members.key)
   );
   await room.update({ name: "R1" });
   await sleep(1000);
   await room.update({
     name: "R1b",
     queue: {},
-    queue_position: 0
+    queue_position: 0,
   });
 };
 
 export const testUser = async () => {
   const user = FirebaseUser("u1", "us1");
-  user.subscribeInfo(info => console.debug("USER", info.val()));
+  user.subscribeInfo((info) => console.debug("USER", info.val()));
   await user.update({ name: "U1" });
   await sleep(1000);
   await user.update({ name: "U1b" });

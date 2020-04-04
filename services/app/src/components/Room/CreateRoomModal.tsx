@@ -22,11 +22,14 @@ class CreateRoomModal extends Component<MappedProps & WithTranslation, State> {
   private nameRef: RefObject<HTMLInputElement> = createRef();
 
   public readonly state: State = {
-    name: `Room ${ROOM_COUNTER}`,
+    name: "",
     secret: v4(),
   };
 
   public componentDidMount() {
+    this.setState({
+      name: `${this.props.t("rooms.room")} ${ROOM_COUNTER}`,
+    });
     if (this.nameRef.current) {
       this.nameRef.current.focus();
     }

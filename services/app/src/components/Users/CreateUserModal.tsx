@@ -22,11 +22,14 @@ class CreateUserModal extends Component<MappedProps & WithTranslation, State> {
   private nameRef: RefObject<HTMLInputElement> = createRef();
 
   public readonly state: State = {
-    name: `Guest ${USER_COUNTER}`,
+    name: "",
     secret: v4(),
   };
 
   public componentDidMount() {
+    this.setState({
+      name: `${this.props.t("users.user")} ${USER_COUNTER}`,
+    });
     if (this.nameRef.current) {
       this.nameRef.current.focus();
     }
