@@ -28,23 +28,26 @@ let PLAYER_TIMER2: NodeJS.Timeout | null = null;
 
 const _computeNextPosition = (
   queuePlayer: ReturnType<typeof Player>,
-  playingPosition: number,
-  queuePosition: number
+  queueTrackPosition: number,
+  trackIds: string[]
 ) => {
   let nextPosition = -1;
-  if (playingPosition !== queuePosition) {
-    console.debug("Detected play change...", {
-      playingPosition,
-      queuePosition,
-      isPlaying: queuePlayer.isPlaying(),
-    });
+  const playingTrackID = queuePlayer.getPlayingTrackID();
+  const playingTrackPosition = queuePlayer.getPlayingTrackPosition();
+  if (playingTrackPosition !== queueTrackPosition) {
     if (queuePlayer.isPlaying()) {
       // User has clicked an other track or added/removed a track in queue
-      nextPosition = queuePosition;
+      nextPosition = queueTrackPosition;
     } else {
       // Not playing which means previous track has terminated
-      nextPosition = playingPosition >= 0 ? playingPosition : queuePosition;
+      nextPosition =
+        playingTrackPosition >= 0 ? playingTrackPosition : queueTrackPosition;
     }
+  } else if (
+    playingTrackID !== trackIds[queueTrackPosition % trackIds.length]
+  ) {
+    // User has deleted playing track
+    nextPosition = queueTrackPosition;
   }
   return nextPosition;
 };
@@ -57,32 +60,33 @@ const _installTimer1 = (
   // Don't use setInterval because a step could be triggered before previous one terminated
   PLAYER_TIMER1 = setTimeout(async () => {
     const {
-      queue: { position: queuePosition, trackIds },
+      queue: { position, trackIds },
       tracks: { tracks },
     } = getState();
     if (trackIds.length > 0) {
-      const playingPosition = queuePlayer.getPlayingPosition();
-
-      // Detect change
-      const nextPosition = _computeNextPosition(
+      // Detect and apply change to queue and player
+      const nextTrackPosition = _computeNextPosition(
         queuePlayer,
-        playingPosition,
-        queuePosition
+        position,
+        trackIds
       );
-
-      // Apply change to queue and player
-      if (nextPosition >= 0) {
-        const nextIndex = nextPosition % trackIds.length;
+      if (nextTrackPosition >= 0) {
+        const nextIndex = nextTrackPosition % trackIds.length;
         const nextTrack = tracks[trackIds[nextIndex]];
-        console.debug("Applying play change...", {
-          nextPosition,
+        console.debug("Detected play change...", {
           nextIndex,
           nextTrack,
+          nextTrackPosition,
         });
-        dispatch(setQueuePosition(nextPosition));
+        dispatch(setQueuePosition(nextTrackPosition));
         const [color] = await Promise.all([
           pickColor(nextTrack.album.cover_small),
-          queuePlayer.play(nextPosition, nextTrack.preview, 0),
+          queuePlayer.play(
+            nextTrackPosition,
+            nextTrack.id.toString(),
+            nextTrack.preview,
+            0
+          ),
         ]);
         dispatch(setRoomColor(color));
       }
@@ -103,18 +107,18 @@ const _installTimer2 = (
   queuePlayer: ReturnType<typeof Player>
 ) => {
   // Don't use setInterval because a step could be triggered before previous one terminated
-  PLAYER_TIMER2 = setTimeout(async () => {
+  PLAYER_TIMER2 = setTimeout(() => {
     const {
       queue: { trackIds },
     } = getState();
     if (trackIds.length > 0) {
       // Refresh player track percent
-      dispatch(setPlayerTrackPercent(queuePlayer.getTrackPercent()));
+      dispatch(setPlayerTrackPercent(queuePlayer.getPlayingTrackPercent()));
 
       // Reschedule time
       _installTimer2(dispatch, getState, queuePlayer);
     }
-  }, 200); // Must do very few operation because called very often (if we put less it creates blink on mobile when playing & scrolling)
+  }, 250); // Must do very few operation because called very often (if we put less it creates blink on mobile when playing & scrolling)
 };
 
 export const startPlayer = (): AsyncAction => async (
@@ -163,7 +167,7 @@ export const startPreview = (trackId: string): AsyncAction => async (
       dispatch(setTracks([track]));
     }
     console.debug("Start previewing...");
-    await previewPlayer.play(0, track.preview, 0);
+    await previewPlayer.play(0, track.id.toString(), track.preview, 0);
   } catch (err) {
     dispatch(displayError("Cannot load track", err));
   }

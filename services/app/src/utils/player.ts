@@ -75,7 +75,8 @@ export const Player = (chainPlay: boolean) => {
   let _bufferUrl: string = "";
   let _sourceNode: AudioBufferSourceNode | null = null;
   let _sourceNodeStartTime = 0;
-  let _position = -1;
+  let _trackId = "";
+  let _trackPosition = -1;
 
   const getOrCreateNode = () => {
     if (!_node) {
@@ -99,13 +100,15 @@ export const Player = (chainPlay: boolean) => {
 
   const isPlaying = () => !!_sourceNode;
 
-  const getPlayingPosition = () => _position;
+  const getPlayingTrackID = () => _trackId;
+
+  const getPlayingTrackPosition = () => _trackPosition;
 
   // Percentage [0, 1]
-  const getTrackPercent = () => {
+  const getPlayingTrackPercent = () => {
     if (_buffer && _sourceNode) {
       return (
-        (getContext().currentTime - _sourceNodeStartTime) / _buffer?.duration
+        (getContext().currentTime - _sourceNodeStartTime) / _buffer.duration
       );
     }
     return 0;
@@ -120,11 +123,17 @@ export const Player = (chainPlay: boolean) => {
     }
   };
 
-  const play = async (position: number, url: string, offset: number) => {
+  const play = async (
+    trackPosition: number,
+    trackId: string,
+    trackUrl: string,
+    offset: number
+  ) => {
     await stop();
-    await _loadBuffer(url); // TODO: warning if loadBuffer takes long for some reason and user clicks stop before end, next part of this function will continue after stop have been requested
-    console.debug("Starting audio...", { position, url });
-    _position = position;
+    await _loadBuffer(trackUrl); // TODO: warning if loadBuffer takes long for some reason and user clicks stop before end, next part of this function will continue after stop have been requested
+    console.debug("Starting audio...", { trackPosition, trackId, trackUrl });
+    _trackId = trackId;
+    _trackPosition = trackPosition;
     _sourceNode = getContext().createBufferSource();
     _sourceNode.buffer = _buffer;
     _sourceNode.loop = false;
@@ -134,7 +143,7 @@ export const Player = (chainPlay: boolean) => {
       console.debug("Audio terminated...");
       _sourceNode = null;
       if (chainPlay) {
-        _position++;
+        _trackPosition++;
       }
     };
     _sourceNode.playbackRate.value = 1.0;
@@ -154,7 +163,7 @@ export const Player = (chainPlay: boolean) => {
         _sourceNode.stop();
         _sourceNode = null;
         _sourceNodeStartTime = 0;
-        _position = -1;
+        _trackPosition = -1;
       } else {
         resolve();
       }
@@ -163,8 +172,9 @@ export const Player = (chainPlay: boolean) => {
   return {
     analyserNode,
     gainNode,
-    getPlayingPosition,
-    getTrackPercent,
+    getPlayingTrackID,
+    getPlayingTrackPercent,
+    getPlayingTrackPosition,
     isPlaying,
     play,
     stop,

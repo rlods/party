@@ -34,16 +34,16 @@ export const loadTracks = (
   if (trackIds.length > 0) {
     try {
       const {
-        tracks: { tracks: oldTracks }
+        tracks: { tracks: oldTracks },
       } = getState();
       const newTrackIds: string[] = trackIds
-        .filter(trackId => !oldTracks[trackId])
+        .filter((trackId) => !oldTracks[trackId])
         .filter(onlyUnique);
       let newTracks: ApiTrack[] = [];
       if (newTrackIds.length > 0) {
         console.debug("Loading track...", { trackIds: newTrackIds });
         newTracks = await Promise.all(
-          newTrackIds.map(trackId => deezer.loadTrack(trackId))
+          newTrackIds.map((trackId) => deezer.loadTrack(trackId))
         );
         dispatch(setTracks(newTracks));
       }
@@ -55,9 +55,9 @@ export const loadTracks = (
         const trackId = trackIds[0];
         const track =
           oldTracks[trackId] ||
-          newTracks.find(track => track.id.toString() === trackId);
+          newTracks.find((track) => track.id.toString() === trackId);
         console.debug("Previewing track...", { track, trackId });
-        await previewPlayer.play(0, track.preview, 0);
+        await previewPlayer.play(0, track.id.toString(), track.preview, 0);
       }
     } catch (err) {
       dispatch(displayError("Cannot load track", err));
