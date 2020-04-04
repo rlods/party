@@ -4,20 +4,23 @@ import { ThunkDispatch } from "redux-thunk";
 import { RootState } from "../../reducers";
 import Splash from "../../components/Splash";
 import { extractUser } from "../../selectors/users";
-import { openModal } from "../../actions/modals";
+import { openModal, confirmModal } from "../../actions/modals";
 import { disconnectUser } from "../../actions/users";
 
 // ------------------------------------------------------------------
 
 const stateToProps = (state: RootState) => ({
   loggedIn: !!state.users.user_access.id,
-  user: extractUser(state)
+  user: extractUser(state),
 });
 
 const dispatchToProps = (dispatch: ThunkDispatch<RootState, any, any>) => ({
+  onConfirm: (question: string, onConfirmed: () => void) => {
+    dispatch(confirmModal(question, onConfirmed));
+  },
   onCreateRoom: () => dispatch(openModal({ type: "CreateRoom", props: null })),
   onConnectUser: () => dispatch(openModal({ type: "CreateUser", props: null })),
-  onDisconnectUser: () => dispatch(disconnectUser())
+  onDisconnectUser: () => dispatch(disconnectUser()),
 });
 
 export type MappedProps = ReturnType<typeof stateToProps> &

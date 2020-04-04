@@ -44,16 +44,14 @@ class Head extends Component<MappedProps & WithTranslation> {
   };
 
   private onCopyLink = async () => {
-    const { t } = this.props;
+    const { onMessage, t } = this.props;
     await copyToClipboard(document.location.href.split("?")[0]);
-    this.props.onMessage(t("rooms.link_copied_to_clipboard"));
+    onMessage(t("rooms.link_copied_to_clipboard"));
   };
 
   private onLock = () => {
-    const { t } = this.props;
-    if (window.confirm(t("rooms.confirm_lock"))) {
-      this.props.onLock();
-    }
+    const { onConfirm, t } = this.props;
+    onConfirm(t("rooms.confirm_lock"), this.props.onLock);
   };
 }
 

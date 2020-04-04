@@ -93,17 +93,15 @@ class Controls extends Component<MappedProps & WithTranslation> {
   };
 
   onClear = () => {
-    const { t } = this.props;
-    if (window.confirm(t("rooms.confirm_clear"))) {
-      this.props.onClear();
-    }
+    const { onConfirm, t } = this.props;
+    onConfirm(t("rooms.confirm_clear"), this.props.onClear);
   };
 
   onExit = () => {
-    const { t } = this.props;
-    if (window.confirm(t("rooms.confirm_exit"))) {
+    const { onConfirm, t } = this.props;
+    onConfirm(t("rooms.confirm_exit"), () => {
       history.push("/");
-    }
+    });
   };
 }
 

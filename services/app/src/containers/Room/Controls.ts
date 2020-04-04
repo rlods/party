@@ -4,7 +4,7 @@ import { ThunkDispatch } from "redux-thunk";
 import { RootState } from "../../reducers";
 import Controls from "../../components/Room/Controls";
 import { startPlayer, stopPlayer } from "../../actions/player";
-import { openModal } from "../../actions/modals";
+import { openModal, confirmModal } from "../../actions/modals";
 import { clearQueue, moveBackward, moveForward } from "../../actions/queue";
 import { isRoomLocked } from "../../selectors/rooms";
 
@@ -20,6 +20,9 @@ const dispatchToProps = (dispatch: ThunkDispatch<RootState, any, any>) => ({
   onClear: () => {
     dispatch(clearQueue());
     dispatch(stopPlayer());
+  },
+  onConfirm: (question: string, onConfirmed: () => void) => {
+    dispatch(confirmModal(question, onConfirmed));
   },
   onMoveBackward: () => dispatch(moveBackward()),
   onMoveForward: () => dispatch(moveForward()),

@@ -3,6 +3,7 @@ import { CSSTransition } from "react-transition-group";
 //
 import { MappedProps } from "../../containers/Modals";
 import { ModalPrereq } from "../../actions/modals";
+import ConfirmModal from "../../containers/Modals/ConfirmModal";
 import ConnectUserModal from "../../containers/Users/ConnectUserModal";
 import CreateRoomModal from "../../containers/Room/CreateRoomModal";
 import CreateUserModal from "../../containers/Users/CreateUserModal";
@@ -18,6 +19,8 @@ const TransitionTimeout = 300;
 
 export const getModal = (prereq: ModalPrereq) => {
   switch (prereq.type) {
+    case "Confirm":
+      return <ConfirmModal {...prereq.props} />;
     case "ConnectUser":
       return <ConnectUserModal />;
     case "CreateRoom":
@@ -41,7 +44,7 @@ type State = {
 class Modals extends Component<MappedProps, State> {
   public readonly state: State = {
     curr_prereq: void 0,
-    prev_prereq: void 0
+    prev_prereq: void 0,
   };
 
   public componentDidMount = () => {
@@ -60,13 +63,13 @@ class Modals extends Component<MappedProps, State> {
       this.setState(
         {
           curr_prereq: void 0,
-          prev_prereq: oldPrereq
+          prev_prereq: oldPrereq,
         },
         () => {
           if (newPrereq) {
             setTimeout(() => {
               this.setState({
-                curr_prereq: newPrereq
+                curr_prereq: newPrereq,
               });
             }, TransitionTimeout);
           }

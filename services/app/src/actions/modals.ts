@@ -1,4 +1,5 @@
-import { createAction } from ".";
+import { createAction, AsyncAction } from ".";
+import { ConfirmModalProps } from "../components/Modals/ConfirmModal";
 
 // ------------------------------------------------------------------
 
@@ -8,6 +9,7 @@ export type ModalPrereqT<T extends string, P> = {
 };
 
 export type ModalPrereq =
+  | ModalPrereqT<"Confirm", ConfirmModalProps>
   | ModalPrereqT<"ConnectUser", null>
   | ModalPrereqT<"CreateRoom", null>
   | ModalPrereqT<"CreateUser", null>
@@ -35,3 +37,18 @@ export const pushModal = (prereq: ModalPrereq) =>
   createAction("modals/PUSH", prereq);
 
 export const popModal = () => createAction("modals/POP");
+
+// ------------------------------------------------------------------
+
+export const confirmModal = (
+  question: string,
+  onConfirmed: () => void,
+  onCanceled?: () => void
+): AsyncAction => async () => {
+  // TODO: open custom ConfirmModal instead of system popup
+  if (window.confirm(question)) {
+    onConfirmed();
+  } else if (onCanceled) {
+    onCanceled();
+  }
+};

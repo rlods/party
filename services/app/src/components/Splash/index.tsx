@@ -90,9 +90,8 @@ class Splash extends Component<MappedProps & WithTranslation> {
   };
 
   onDisconnect = () => {
-    if (window.confirm(this.props.t("users.confirm_disconnect"))) {
-      this.props.onDisconnectUser();
-    }
+    const { onConfirm, onDisconnectUser, t } = this.props;
+    onConfirm(t("users.confirm_disconnect"), onDisconnectUser);
   };
 }
 
