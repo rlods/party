@@ -78,7 +78,7 @@ export const enterRoom = (id: string, secret: string): AsyncAction => async (
             .map((track) => track[1].id);
           dispatch(loadTracks(trackIds, false, false));
         }
-        console.log("TOTO", newInfo);
+        // console.log("TOTO", newInfo);
         dispatch(setQueue(trackIds, newInfo.queue_position));
         dispatch(setRoom(newRoom, newInfo));
       };
