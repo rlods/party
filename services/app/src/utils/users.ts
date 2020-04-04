@@ -25,7 +25,7 @@ export const loadUserAccess = (): UserAccess => {
       if (typeof d.i === "string" && typeof d.s === "string") {
         res.id = d.i;
         res.secret = d.s;
-        console.log("Loaded user access: ", res);
+        console.debug("Loaded user access: ", res);
       }
     } catch (err) {}
   }

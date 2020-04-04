@@ -18,8 +18,8 @@ export const clearQueue = (): AsyncAction => async (dispatch, getState) => {
   } = getState();
   if (room && !room.isLocked()) {
     try {
-      console.log("Clearing queue...");
-      await room.update({ queue: {}, queue_position: -1 });
+      console.debug("Clearing queue...");
+      await room.update({ queue: {}, queue_position: 0 });
     } catch (err) {
       dispatch(displayError("Cannot clear queue"));
       dispatch(lockRoom());
@@ -38,7 +38,7 @@ export const appendInQueue = (trackIds: string[]): AsyncAction => async (
   } = getState();
   if (room && !room.isLocked() && trackIds.length > 0) {
     try {
-      console.log("Appending queue...", { trackIds });
+      console.debug("Appending queue...", { trackIds });
       const queue: RoomQueue = {};
       [...getState().queue.trackIds, ...trackIds].forEach((id, index) => {
         queue[index] = {
@@ -56,33 +56,36 @@ export const appendInQueue = (trackIds: string[]): AsyncAction => async (
   }
 };
 
-export const removeFromQueue = (position: number): AsyncAction => async (
+export const removeFromQueue = (index: number): AsyncAction => async (
   dispatch,
   getState
 ) => {
   const {
-    queue: { position: oldPosition },
+    queue: { trackIds, position },
     rooms: { room }
   } = getState();
   if (room && !room.isLocked()) {
-    try {
-      console.log("Removing from queue...", { position });
-      const queue: RoomQueue = {};
-      const copy = [...getState().queue.trackIds];
-      copy.splice(position, 1);
-      copy.forEach((id, index) => {
-        queue[index] = {
-          id,
-          type: "deezer"
-        };
-      });
-      await room.update({
-        queue,
-        queue_position: position < oldPosition ? oldPosition - 1 : oldPosition
-      });
-    } catch (err) {
-      dispatch(displayError("Cannot remove from queue"));
-      dispatch(lockRoom());
+    if (index < trackIds.length) {
+      try {
+        console.debug("Removing from queue...", { index });
+        const oldIndex = position % trackIds.length;
+        const queue: RoomQueue = {};
+        const copy = [...getState().queue.trackIds];
+        copy.splice(index, 1);
+        copy.forEach((id, index) => {
+          queue[index] = {
+            id,
+            type: "deezer"
+          };
+        });
+        await room.update({
+          queue,
+          queue_position: index < oldIndex ? position - 1 : position
+        });
+      } catch (err) {
+        dispatch(displayError("Cannot remove from queue"));
+        dispatch(lockRoom());
+      }
     }
   } else {
     dispatch(displayError("Room is locked"));
@@ -98,10 +101,10 @@ export const setQueuePosition = (position: number): AsyncAction => async (
   } = getState();
   if (room && !room.isLocked()) {
     try {
-      console.log("Set queue position...", { position });
+      console.debug("Set queue position...", { position });
       await room.update({ queue_position: position });
     } catch (err) {
-      dispatch(displayError("Cannot remove from queue"));
+      dispatch(displayError("Cannot set queue position"));
       dispatch(lockRoom());
     }
   } else {
@@ -116,6 +119,7 @@ export const moveBackward = (): AsyncAction => async (dispatch, getState) => {
     queue: { position, trackIds }
   } = getState();
   if (trackIds.length > 0) {
+    console.debug("Moving backward...");
     dispatch(
       setQueuePosition(position > 0 ? position - 1 : trackIds.length - 1)
     );
@@ -127,6 +131,7 @@ export const moveForward = (): AsyncAction => async (dispatch, getState) => {
     queue: { position, trackIds }
   } = getState();
   if (trackIds.length > 0) {
-    dispatch(setQueuePosition((position + 1) % trackIds.length));
+    console.debug("Moving forward...");
+    dispatch(setQueuePosition(position + 1));
   }
 };

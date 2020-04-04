@@ -5,12 +5,12 @@ import { PlayerAction } from "../actions/player";
 
 export type State = {
   playing: boolean;
-  position: number;
+  track_percent: number;
 };
 
 export const INITIAL_STATE: State = {
   playing: false,
-  position: 0
+  track_percent: 0
 };
 
 // ------------------------------------------------------------------
@@ -24,8 +24,8 @@ export const playerReducer: Reducer<State, PlayerAction> = (
       return { ...state, playing: true };
     case "player/STOP":
       return { ...state, playing: false };
-    case "player/SET_POSITION":
-      return { ...state, position: action.payload };
+    case "player/SET_TRACK_PERCENT":
+      return { ...state, track_percent: action.payload };
     case "player/RESET":
       return INITIAL_STATE;
     default:

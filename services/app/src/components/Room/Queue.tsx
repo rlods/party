@@ -12,7 +12,7 @@ class Queue extends Component<MappedProps> {
     const {
       locked,
       playing,
-      playingPosition,
+      trackIndex,
       tracks,
       onPlay,
       onRemove,
@@ -25,7 +25,7 @@ class Queue extends Component<MappedProps> {
             <Track
               track={track}
               playable={!locked}
-              playing={playing && playingPosition === index}
+              playing={playing && trackIndex === index}
               onPlay={() => onPlay(index)}
               onStop={onStop}
               actions={

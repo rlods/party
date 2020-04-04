@@ -1,30 +1,101 @@
-import { AsyncAction, createAction } from ".";
+import { AsyncAction, createAction, Dispatch } from ".";
 import { setTracks } from "./tracks";
 import { displayError } from "./messages";
 import { setRoomColor } from "./rooms";
 import { pickColor } from "../utils/colorpicker";
 import { setQueuePosition } from "./queue";
-import { ApiTrack } from "../utils/api";
+import { Player } from "../utils/player";
+import { RootState } from "../reducers";
 
 // ------------------------------------------------------------------
 
 export type PlayerAction =
   | ReturnType<typeof reset>
-  | ReturnType<typeof setPlayerPosition>
+  | ReturnType<typeof setPlayerTrackPercent>
   | ReturnType<typeof start>
   | ReturnType<typeof stop>;
 
 const reset = () => createAction("player/RESET");
-const setPlayerPosition = (position: number) =>
-  createAction("player/SET_POSITION", position);
+const setPlayerTrackPercent = (percent: number) =>
+  createAction("player/SET_TRACK_PERCENT", percent);
 const start = () => createAction("player/START");
 const stop = () => createAction("player/STOP");
 
 // ------------------------------------------------------------------
 
 let PLAYER_TIMER: NodeJS.Timeout | null = null;
-let PLAYER_PLAYING_TRACK: ApiTrack | null = null;
-let PLAYER_PLAYING_TRACK_INDEX = -1;
+
+const _computeNextPosition = (
+  queuePlayer: ReturnType<typeof Player>,
+  playingPosition: number,
+  queuePosition: number
+) => {
+  let nextPosition = -1;
+  if (playingPosition !== queuePosition) {
+    console.debug("Detected play change...", {
+      playingPosition,
+      queuePosition,
+      isPlaying: queuePlayer.isPlaying()
+    });
+    if (queuePlayer.isPlaying()) {
+      // User has clicked an other track or added/removed a track in queue
+      nextPosition = queuePosition;
+    } else {
+      // Not playing which means previous track has terminated
+      nextPosition = playingPosition >= 0 ? playingPosition : queuePosition;
+    }
+  }
+  return nextPosition;
+};
+
+const _installTimer = (
+  dispatch: Dispatch,
+  getState: () => RootState,
+  queuePlayer: ReturnType<typeof Player>
+) => {
+  // Don't use setInterval because a step could be triggered before previous one terminated
+  PLAYER_TIMER = setTimeout(async () => {
+    const {
+      queue: { position: queuePosition, trackIds },
+      tracks: { tracks }
+    } = getState();
+    if (trackIds.length > 0) {
+      const playingPosition = queuePlayer.getPlayingPosition();
+
+      // Detect change
+      const nextPosition = _computeNextPosition(
+        queuePlayer,
+        playingPosition,
+        queuePosition
+      );
+
+      // Apply change to queue and player
+      if (nextPosition >= 0) {
+        const nextIndex = nextPosition % trackIds.length;
+        const nextTrack = tracks[trackIds[nextIndex]];
+        console.debug("Applying play change...", {
+          nextPosition,
+          nextIndex,
+          nextTrack
+        });
+        dispatch(setQueuePosition(nextPosition));
+        const [color] = await Promise.all([
+          pickColor(nextTrack.album.cover_small),
+          queuePlayer.play(nextPosition, nextTrack.preview, 0)
+        ]);
+        dispatch(setRoomColor(color));
+      }
+
+      // Refresh player track percent
+      dispatch(setPlayerTrackPercent(queuePlayer.getTrackPercent()));
+      _installTimer(dispatch, getState, queuePlayer);
+    } else {
+      // Last track has been removed from queue by user
+      console.debug("No more tracks in queue...");
+      dispatch(stopPlayer());
+    }
+  }, 250);
+};
 
 export const startPlayer = (): AsyncAction => async (
   dispatch,
@@ -32,47 +103,7 @@ export const startPlayer = (): AsyncAction => async (
   { queuePlayer }
 ) => {
   if (!PLAYER_TIMER) {
-    PLAYER_TIMER = setInterval(async () => {
-      const {
-        queue: { position, trackIds },
-        tracks
-      } = getState();
-      if (trackIds.length > 0) {
-        let nextPosition = PLAYER_PLAYING_TRACK_INDEX;
-        if (
-          PLAYER_PLAYING_TRACK_INDEX !== position ||
-          (position >= 0 &&
-            PLAYER_PLAYING_TRACK !== tracks.tracks[trackIds[position]])
-        ) {
-          // User has clicked an other track or added/removed a track in queue
-          nextPosition = position;
-          console.log("Playing clicked...", { nextPosition });
-        } else if (!queuePlayer.isPlaying()) {
-          // Not playing which means previous track has terminated
-          nextPosition = (position + 1) % trackIds.length;
-          console.log("Playing next...", { nextPosition });
-        }
-
-        if (PLAYER_PLAYING_TRACK_INDEX !== nextPosition) {
-          PLAYER_PLAYING_TRACK_INDEX = nextPosition;
-          PLAYER_PLAYING_TRACK =
-            tracks.tracks[trackIds[PLAYER_PLAYING_TRACK_INDEX]];
-          dispatch(setQueuePosition(PLAYER_PLAYING_TRACK_INDEX));
-          dispatch(
-            setRoomColor(
-              await pickColor(PLAYER_PLAYING_TRACK.album.cover_small)
-            )
-          );
-          await queuePlayer.play(PLAYER_PLAYING_TRACK.preview, 0);
-        }
-
-        dispatch(setPlayerPosition(queuePlayer.getPosition()));
-      } else {
-        // Last track has been removed from queue by user
-        console.log("No more tracks in queue...");
-        dispatch(stopPlayer());
-      }
-    }, 250);
+    _installTimer(dispatch, getState, queuePlayer);
     dispatch(start());
   }
 };
@@ -85,14 +116,11 @@ export const stopPlayer = (): AsyncAction => async (
   { queuePlayer }
 ) => {
   if (PLAYER_TIMER) {
-    clearInterval(PLAYER_TIMER);
+    clearTimeout(PLAYER_TIMER);
     PLAYER_TIMER = null;
-    PLAYER_PLAYING_TRACK = null;
-    PLAYER_PLAYING_TRACK_INDEX = -1;
-
-    queuePlayer.stop();
+    await queuePlayer.stop();
     dispatch(stop());
-    dispatch(setPlayerPosition(0));
+    dispatch(setPlayerTrackPercent(0));
   }
 };
 
@@ -101,18 +129,18 @@ export const stopPlayer = (): AsyncAction => async (
 export const startPreview = (trackId: string): AsyncAction => async (
   dispatch,
   getState,
-  { api, previewPlayer }
+  { deezer, previewPlayer }
 ) => {
   try {
     const state = getState();
     let track = state.tracks.tracks[trackId];
     if (!track) {
-      console.log("Loading track...", { trackId });
-      track = await api.loadTrack(trackId);
+      console.debug("Loading track...", { trackId });
+      track = await deezer.loadTrack(trackId);
       dispatch(setTracks([track]));
     }
-    console.log("Start previewing...");
-    await previewPlayer.play(track.preview, 0);
+    console.debug("Start previewing...");
+    await previewPlayer.play(0, track.preview, 0);
   } catch (err) {
     dispatch(displayError("Cannot load track", err));
   }
@@ -125,6 +153,6 @@ export const stopPreview = (): AsyncAction => async (
   _2,
   { previewPlayer }
 ) => {
-  console.log("Stop previewing...");
-  previewPlayer.stop();
+  console.debug("Stop previewing...");
+  await previewPlayer.stop();
 };

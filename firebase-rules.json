@@ -52,7 +52,7 @@
             }
           },
           "queue_position": {
-            ".validate": "newData.isNumber() && newData.val() >= -1"
+            ".validate": "newData.isNumber() && newData.val() >= 0"
           },
           "timestamp": {
             ".validate": "(!data.exists() || newData.val() > data.val()) && newData.val() <= now"

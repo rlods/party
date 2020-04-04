@@ -3,7 +3,7 @@ import { AxiosError } from "axios";
 import { createAction, AsyncAction } from ".";
 import { displayError } from "./messages";
 import { appendInQueue } from "./queue";
-import { ApiTrack } from "../utils/api";
+import { ApiTrack } from "../utils/deezer";
 
 // ------------------------------------------------------------------
 
@@ -29,8 +29,8 @@ const onlyUnique = (value: string, index: number, self: string[]) =>
 export const loadTracks = (
   trackIds: string[],
   enqueue: boolean,
-  play: boolean
-): AsyncAction => async (dispatch, getState, { api, previewPlayer }) => {
+  preview: boolean
+): AsyncAction => async (dispatch, getState, { deezer, previewPlayer }) => {
   if (trackIds.length > 0) {
     try {
       const {
@@ -41,23 +41,23 @@ export const loadTracks = (
         .filter(onlyUnique);
       let newTracks: ApiTrack[] = [];
       if (newTrackIds.length > 0) {
-        console.log("Loading track...", { trackIds: newTrackIds });
+        console.debug("Loading track...", { trackIds: newTrackIds });
         newTracks = await Promise.all(
-          newTrackIds.map(trackId => api.loadTrack(trackId))
+          newTrackIds.map(trackId => deezer.loadTrack(trackId))
         );
         dispatch(setTracks(newTracks));
       }
       if (enqueue) {
-        console.log("Enqueuing track...", { trackIds });
+        console.debug("Enqueuing track...", { trackIds });
         dispatch(appendInQueue(trackIds));
       }
-      if (play) {
+      if (preview) {
         const trackId = trackIds[0];
         const track =
           oldTracks[trackId] ||
           newTracks.find(track => track.id.toString() === trackId);
-        console.log("Previewing track...", { track, trackId });
-        await previewPlayer.play(track.preview, 0);
+        console.debug("Previewing track...", { track, trackId });
+        await previewPlayer.play(0, track.preview, 0);
       }
     } catch (err) {
       dispatch(displayError("Cannot load track", err));

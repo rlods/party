@@ -3,7 +3,7 @@ import React, { Component, Fragment, createRef, RefObject } from "react";
 import FormModal from "../Modals/FormModal";
 import { MappedProps } from "../../containers/Room/SearchModal";
 import IconButton, { CancelButton } from "../Common/IconButton";
-import { DEFAULT_API, SearchAllResults } from "../../utils/api";
+import { DEFAULT_API, SearchAllResults } from "../../utils/deezer";
 import { Album, Playlist, Track } from "./Medias";
 import { MediaType } from "../../utils/containers";
 import SearchResultCategory from "./SearchResultCategory";

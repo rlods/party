@@ -28,11 +28,11 @@ export const FirebaseRoom = (id: string, secret?: string) => {
   const _info = _room.child("info");
   const _members = MEMBERS.child(id);
   let _secret = secret || "";
-  console.log("INIT SECRET", _secret);
+  console.debug("INIT SECRET", _secret);
   let _values: RoomInfo = {
     name: "dummy",
     queue: {},
-    queue_position: -1,
+    queue_position: 0,
     timestamp: 0
   };
 
@@ -41,7 +41,7 @@ export const FirebaseRoom = (id: string, secret?: string) => {
   const isLocked = () => !_secret;
 
   const setSecret = (newSecret: string) => {
-    console.log("SETTING SECRET", newSecret);
+    console.debug("SETTING SECRET", newSecret);
     _secret = newSecret;
   };
 
@@ -243,7 +243,7 @@ export const FirebaseParty = (
   let _info: RoomInfo = {
     name: "",
     queue: {},
-    queue_position: -1,
+    queue_position: 0,
     timestamp: 0
   };
 
@@ -280,7 +280,7 @@ export const FirebaseParty = (
   };
 
   const _log = () => {
-    console.log("PARTY", {
+    console.debug("PARTY", {
       _info,
       _members
     });
@@ -309,23 +309,23 @@ export const FirebaseParty = (
 export const testRoom = async () => {
   const room = FirebaseRoom("r1", "rs1");
   await room.update({ name: "R1" });
-  room.subscribeInfo(info => console.log("ROOM", info.val()));
+  room.subscribeInfo(info => console.debug("ROOM", info.val()));
   room.subscribeMembers(
-    members => console.log("ADDED", members.key),
-    members => console.log("REMOVED", members.key)
+    members => console.debug("ADDED", members.key),
+    members => console.debug("REMOVED", members.key)
   );
   await room.update({ name: "R1" });
   await sleep(1000);
   await room.update({
     name: "R1b",
     queue: {},
-    queue_position: -1
+    queue_position: 0
   });
 };
 
 export const testUser = async () => {
   const user = FirebaseUser("u1", "us1");
-  user.subscribeInfo(info => console.log("USER", info.val()));
+  user.subscribeInfo(info => console.debug("USER", info.val()));
   await user.update({ name: "U1" });
   await sleep(1000);
   await user.update({ name: "U1b" });

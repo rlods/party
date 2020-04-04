@@ -8,7 +8,7 @@ import thunk from "redux-thunk";
 //
 import { rootReducer } from "./reducers";
 import App from "./containers/App";
-import { DEFAULT_API } from "./utils/api";
+import { DEFAULT_API } from "./utils/deezer";
 import { Player } from "./utils/player";
 import "./index.scss";
 
@@ -17,18 +17,20 @@ import "./index.scss";
 const composeEnhancers =
   process.env.NODE_ENV === "development" ? composeWithDevTools({}) : compose;
 
+const deezer = DEFAULT_API;
+const queuePlayer = Player(true);
+const previewPlayer = Player(false);
+
 const store = createStore(
   rootReducer,
   composeEnhancers(
     applyMiddleware(
-      thunk.withExtraArgument({
-        api: DEFAULT_API,
-        queuePlayer: Player(),
-        previewPlayer: Player()
-      })
+      thunk.withExtraArgument({ deezer, queuePlayer, previewPlayer })
     )
   )
 );
+
+// const dispatch: Dispatch = store.dispatch.bind(store);
 
 // ------------------------------------------------------------------
 

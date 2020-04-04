@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react";
 //
-import { ApiAlbum, ApiPlaylist, ApiTrack } from "../../utils/api";
+import { ApiAlbum, ApiPlaylist, ApiTrack } from "../../utils/deezer";
 import { Cover } from "./Cover";
 import "./Medias.scss";
 

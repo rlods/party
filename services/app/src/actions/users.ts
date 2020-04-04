@@ -34,7 +34,7 @@ export const createUser = (
   secret: string
 ): AsyncAction => async dispatch => {
   try {
-    console.log("Creating user...");
+    console.debug("Creating user...");
     const id = v4();
     await FirebaseUser(id, secret).update({ name });
     dispatch(connectUser(id, secret));
@@ -57,7 +57,7 @@ export const connectUser = (id: string, secret: string): AsyncAction => async (
   if (!user || user.id !== id) {
     dispatch(disconnectUser());
     try {
-      console.log("Connection user...", { id, secret });
+      console.debug("Connection user...", { id, secret });
       const newUser = FirebaseUser(id);
       dispatch(setUser(newUser, await newUser.wait()));
       dispatch(setUserAccess(id, secret));
@@ -78,7 +78,7 @@ export const disconnectUser = (): AsyncAction => async (dispatch, getState) => {
     users: { user }
   } = getState();
   if (user) {
-    console.log("Disconnecting user...");
+    console.debug("Disconnecting user...");
     user.unsubscribeInfo(FIREBASE_CB);
     FIREBASE_CB = null;
     setUser(null, null);
@@ -93,7 +93,7 @@ export const reconnectUser = (): AsyncAction => async (dispatch, getState) => {
     }
   } = getState();
   if (id && secret) {
-    console.log("Reconnecting user...", { id, secret });
+    console.debug("Reconnecting user...", { id, secret });
     dispatch(connectUser(id, secret));
   }
 };

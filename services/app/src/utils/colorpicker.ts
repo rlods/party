@@ -40,7 +40,7 @@ export const pickColor = async (url: string) => {
               : { r: 255, g: 255, b: 255 }
         };
       } catch (err) {
-        console.log("An error prevented colorpicking", err);
+        console.debug("An error prevented colorpicking", err);
       }
     }
   }

@@ -1,5 +1,5 @@
 import { RootState } from "../reducers";
-import { ApiTrack } from "../utils/api";
+import { ApiTrack } from "../utils/deezer";
 
 export const extractTracks = (state: RootState, trackIds: string[]) => {
   const res: Array<ApiTrack> = [];

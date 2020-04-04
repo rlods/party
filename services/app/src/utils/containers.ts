@@ -1,4 +1,4 @@
-import { ApiPlaylist, ApiAlbum } from "./api";
+import { ApiPlaylist, ApiAlbum } from "./deezer";
 
 export type Container = ApiAlbum | ApiPlaylist;
 

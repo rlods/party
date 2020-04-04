@@ -13,7 +13,7 @@ import { isRoomLocked } from "../../selectors/rooms";
 const stateToProps = (state: RootState) => ({
   locked: isRoomLocked(state),
   playing: state.player.playing,
-  playingPosition: state.queue.position,
+  trackIndex: state.queue.position % state.queue.trackIds.length,
   tracks: extractTracks(state, state.queue.trackIds)
 });
 

@@ -1,8 +1,9 @@
 import { AnyAction } from "redux";
-import { ThunkAction } from "redux-thunk";
+import { ThunkAction, ThunkDispatch } from "redux-thunk";
+//
 import { RootState } from "../reducers";
 import { Player } from "../utils/player";
-import { Api } from "../utils/api";
+import { DeezerApi } from "../utils/deezer";
 
 // ------------------------------------------------------------------
 
@@ -15,16 +16,15 @@ export type ActionWithPayload<T extends string, P> = {
   payload: P;
 };
 
-export type AsyncAction = ThunkAction<
-  void,
-  RootState,
-  {
-    api: ReturnType<typeof Api>;
-    previewPlayer: ReturnType<typeof Player>;
-    queuePlayer: ReturnType<typeof Player>;
-  },
-  AnyAction
->;
+export type Extended = {
+  deezer: ReturnType<typeof DeezerApi>;
+  previewPlayer: ReturnType<typeof Player>;
+  queuePlayer: ReturnType<typeof Player>;
+};
+
+export type Dispatch = ThunkDispatch<RootState, Extended, AnyAction>;
+
+export type AsyncAction = ThunkAction<void, RootState, Extended, AnyAction>;
 
 export function createAction<T extends string>(type: T): Action<T>;
 

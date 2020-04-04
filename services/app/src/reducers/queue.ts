@@ -9,7 +9,7 @@ export type State = {
 };
 
 export const INITIAL_STATE: State = {
-  position: -1,
+  position: 0,
   trackIds: []
 };
 

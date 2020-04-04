@@ -8,7 +8,7 @@ import Progress from "../../components/Room/Progress";
 
 const stateToProps = (state: RootState) => ({
   playing: state.player.playing,
-  value: state.player.position
+  value: state.player.track_percent
 });
 
 const dispatchToProps = (dispatch: ThunkDispatch<RootState, any, any>) => ({});

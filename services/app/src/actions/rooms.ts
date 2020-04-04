@@ -44,7 +44,7 @@ export const createRoom = (
 ): AsyncAction => async dispatch => {
   try {
     const id = v4();
-    console.log("Creating room...", { id, secret });
+    console.debug("Creating room...", { id, secret });
     await FirebaseRoom(id, secret).update({ name });
     dispatch(enterRoom(id, secret));
   } catch (err) {
@@ -66,7 +66,7 @@ export const enterRoom = (id: string, secret: string): AsyncAction => async (
   if (!room || room.id !== id) {
     dispatch(exitRoom());
     try {
-      console.log("Entering room...", { id, secret });
+      console.debug("Entering room...", { id, secret });
       const newRoom = FirebaseRoom(id, secret);
       dispatch(setRoom(newRoom, await newRoom.wait()));
       dispatch(setRoomAccess(id, secret));
@@ -95,7 +95,7 @@ export const exitRoom = (): AsyncAction => async (dispatch, getState) => {
     rooms: { room }
   } = getState();
   if (room) {
-    console.log("Exiting room...");
+    console.debug("Exiting room...");
     room.unsubscribeInfo(FIREBASE_CB);
     FIREBASE_CB = null;
     dispatch(setRoom(null, null));
@@ -113,7 +113,7 @@ export const lockRoom = (): AsyncAction => async (dispatch, getState) => {
     }
   } = getState();
   if (room && room.id === id) {
-    console.log("Locking room...", { id });
+    console.debug("Locking room...", { id });
     room.setSecret("");
     dispatch(setRoomAccess(id, ""));
   }
@@ -130,7 +130,7 @@ export const unlockRoom = (secret: string): AsyncAction => async (
     }
   } = getState();
   if (room && room.id === id) {
-    console.log("Unlocking room...", { id, secret });
+    console.debug("Unlocking room...", { id, secret });
     room.setSecret(secret);
     dispatch(setRoomAccess(id, secret));
   }

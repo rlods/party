@@ -28,20 +28,20 @@ export const loadContainer = (
   containerType: ContainerType,
   containerId: string,
   enqueue: boolean,
-  play: boolean
-): AsyncAction => async (dispatch, getState, { api }) => {
+  preview: boolean
+): AsyncAction => async (dispatch, getState, { deezer }) => {
   try {
     const state = getState();
     const containerTypeId = `${containerType}|${containerId}`;
     let container = state.containers.containers[containerTypeId];
     if (!container) {
-      console.log("Loading container...", { containerId, containerType });
+      console.debug("Loading container...", { containerId, containerType });
       switch (containerType) {
         case "album":
-          container = await api.loadAlbum(containerId);
+          container = await deezer.loadAlbum(containerId);
           break;
         case "playlist":
-          container = await api.loadPlaylist(containerId);
+          container = await deezer.loadPlaylist(containerId);
           break;
       }
     }
@@ -50,15 +50,15 @@ export const loadContainer = (
       if (container.tracks && container.tracks.data.length > 0) {
         dispatch(setTracks(container.tracks.data));
         if (enqueue) {
-          console.log("Enqueuing container...");
+          console.debug("Enqueuing container...");
           dispatch(
             appendInQueue(
               container.tracks.data.map(track => track.id.toString())
             )
           );
         }
-        if (play) {
-          console.log("Playing container...");
+        if (preview) {
+          console.debug("Previewing container...");
           dispatch(
             loadTracks([container.tracks.data[0].id.toString()], false, true)
           );
@@ -76,6 +76,6 @@ export const previewContainer = (
   containerType: ContainerType,
   containerId: string
 ): AsyncAction => async dispatch => {
-  console.log("Previewing container...", { containerType, containerId });
+  console.debug("Previewing container...", { containerType, containerId });
   dispatch(loadContainer(containerType, containerId, false, true));
 };
