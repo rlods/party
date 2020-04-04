@@ -2,11 +2,10 @@ import React, { Component } from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
 //
 import { MappedProps } from "../../containers/Room/Queue";
-import { Track } from "./Medias";
 import IconButton from "../Common/IconButton";
 import { LoadingIcon } from "../Common/Icon";
-import "./Queue.scss";
 import QueueItem from "./QueueItem";
+import "./Queue.scss";
 
 // ------------------------------------------------------------------
 
@@ -16,7 +15,7 @@ class Queue extends Component<MappedProps & WithTranslation> {
       loaded,
       locked,
       playing,
-      trackIndex,
+      playingIndex,
       tracks,
       onPlay,
       onRemove,
@@ -31,7 +30,7 @@ class Queue extends Component<MappedProps & WithTranslation> {
             <QueueItem
               key={index}
               locked={locked}
-              playing={playing && trackIndex === index}
+              playing={playing && playingIndex === index}
               track={track}
               onPlay={() => onPlay(index)}
               onRemove={() => onRemove(index)}

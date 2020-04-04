@@ -15,7 +15,7 @@ const stateToProps = (state: RootState) => ({
   loaded: isRoomLoaded(state),
   locked: isRoomLocked(state),
   playing: state.player.playing,
-  trackIndex: state.queue.position % state.queue.trackIds.length,
+  playingIndex: state.queue.position % state.queue.trackIds.length,
   tracks: extractTracks(state, state.queue.trackIds),
 });
 
