@@ -1,44 +1,48 @@
-import React from "react";
+import React, { Component } from "react";
+import { withTranslation, WithTranslation } from "react-i18next";
 import classNames from "classnames";
 //
 import Icon from "../Common/Icon";
 import "./Cover.scss";
 
-export const Cover = ({
-  playable,
-  playing,
-  image,
-  onPlay,
-  onStop
-}: {
+// ------------------------------------------------------------------
+
+type Props = {
   image: string;
   onPlay: () => void;
   onStop: () => void;
   playable: boolean;
   playing: boolean;
-}) => {
-  if (playable) {
-    return (
-      <div
-        className={classNames("Cover", { playing })}
-        style={{ backgroundImage: `url('${image}')` }}
-        onClick={!playing ? onPlay : onStop}
-      >
-        {!playing ? (
-          <Icon icon="play" title="Play" />
-        ) : (
-          <Icon icon="pause" title="Stop" />
-        )}
-      </div>
-    );
-  } else {
-    return (
-      <div
-        className={classNames("Cover", { playing })}
-        style={{ backgroundImage: `url('${image}')` }}
-      >
-        {playing ? <Icon icon="music" title="Playing" /> : null}
-      </div>
-    );
-  }
 };
+
+class Cover extends Component<Props & WithTranslation> {
+  public render = () => {
+    const { playable, playing, image, onPlay, onStop, t } = this.props;
+    if (playable) {
+      return (
+        <div
+          className={classNames("Cover", { playing })}
+          style={{ backgroundImage: `url('${image}')` }}
+          onClick={!playing ? onPlay : onStop}
+        >
+          {!playing ? (
+            <Icon icon="play" title={t("player.play")} />
+          ) : (
+            <Icon icon="pause" title={t("player.stop")} />
+          )}
+        </div>
+      );
+    } else {
+      return (
+        <div
+          className={classNames("Cover", { playing })}
+          style={{ backgroundImage: `url('${image}')` }}
+        >
+          {playing ? <Icon icon="music" title={t("player.playing")} /> : null}
+        </div>
+      );
+    }
+  };
+}
+
+export default withTranslation()(Cover);

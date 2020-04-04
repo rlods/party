@@ -11,8 +11,13 @@
     flex-grow: 1;
     padding: 1rem;
 
-    .Welcome {
+    .PoweredWith {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
       line-height: 30px;
+      font-size: 10px;
     }
 
     .Logo {

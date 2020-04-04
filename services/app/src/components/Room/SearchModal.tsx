@@ -1,4 +1,5 @@
 import React, { Component, Fragment, createRef, RefObject } from "react";
+import { withTranslation, WithTranslation } from "react-i18next";
 //
 import FormModal from "../Modals/FormModal";
 import { MappedProps } from "../../containers/Room/SearchModal";
@@ -18,7 +19,7 @@ type State = {
   results: SearchAllResults;
 };
 
-class SearchModal extends Component<MappedProps, State> {
+class SearchModal extends Component<MappedProps & WithTranslation, State> {
   private queryRef: RefObject<HTMLInputElement> = createRef();
 
   public readonly state: State = {
@@ -28,8 +29,8 @@ class SearchModal extends Component<MappedProps, State> {
     results: {
       albums: { data: [], total: 0 },
       playlists: { data: [], total: 0 },
-      tracks: { data: [], total: 0 }
-    }
+      tracks: { data: [], total: 0 },
+    },
   };
 
   public componentDidMount() {
@@ -42,39 +43,51 @@ class SearchModal extends Component<MappedProps, State> {
     this.props.onStopPreview();
   }
 
-  public render = () => (
-    <FormModal
-      className="SearchModal"
-      title="Search"
-      onSubmit={this.onSearch}
-      renderButtons={this.renderButtons}
-    >
-      {this.renderInputs()}
-      {this.renderResults()}
-    </FormModal>
-  );
+  public render = () => {
+    const { t } = this.props;
+    return (
+      <FormModal
+        className="SearchModal"
+        title={t("medias.medias_search")}
+        onSubmit={this.onSearch}
+        renderButtons={this.renderButtons}
+      >
+        {this.renderInputs()}
+        {this.renderResults()}
+      </FormModal>
+    );
+  };
 
-  private renderButtons = () => (
-    <Fragment>
-      <IconButton title="Search" kind="primary" icon="search" type="submit" />
-      <CancelButton onClick={this.props.onClose} />
-    </Fragment>
-  );
+  private renderButtons = () => {
+    const { t } = this.props;
+    return (
+      <Fragment>
+        <IconButton
+          title={t("medias.search")}
+          kind="primary"
+          icon="search"
+          type="submit"
+        />
+        <CancelButton onClick={this.props.onClose} />
+      </Fragment>
+    );
+  };
 
   private renderInputs = () => {
+    const { t } = this.props;
     const { query } = this.state;
     return (
       <div className="ModalField">
         <input
           id="modal-query"
           type="text"
-          placeholder="Search..."
+          placeholder={t("medias.search_placeholder")}
           maxLength={100}
           minLength={2}
           required={true}
           value={query}
           ref={this.queryRef}
-          onChange={e => {
+          onChange={(e) => {
             this.setState({ query: e.target.value });
           }}
         />
@@ -83,11 +96,11 @@ class SearchModal extends Component<MappedProps, State> {
   };
 
   private renderResults = () => {
-    const { locked } = this.props;
+    const { locked, t } = this.props;
     const {
       mediaId,
       mediaType,
-      results: { albums, playlists, tracks }
+      results: { albums, playlists, tracks },
     } = this.state;
     return (
       <Fragment>
@@ -95,12 +108,12 @@ class SearchModal extends Component<MappedProps, State> {
           label="Albums"
           type="album"
           items={albums.data}
-          cb={album => (
+          cb={(album) => (
             <Album
               actions={
                 !locked ? (
                   <IconButton
-                    title="Add"
+                    title={t("medias.add")}
                     icon="plus"
                     onClick={() => this.onSelect("album", album.id)}
                   />
@@ -118,7 +131,7 @@ class SearchModal extends Component<MappedProps, State> {
           label="Playlists"
           type="playlist"
           items={playlists.data}
-          cb={playlist => (
+          cb={(playlist) => (
             <Playlist
               actions={
                 !locked ? (
@@ -141,7 +154,7 @@ class SearchModal extends Component<MappedProps, State> {
           label="Tracks"
           type="track"
           items={tracks.data}
-          cb={track => (
+          cb={(track) => (
             <Track
               actions={
                 !locked ? (
@@ -178,7 +191,7 @@ class SearchModal extends Component<MappedProps, State> {
     this.props.onStartPreview(mediaType, mediaId.toString());
     this.setState({
       mediaId,
-      mediaType
+      mediaType,
     });
   };
 
@@ -186,9 +199,9 @@ class SearchModal extends Component<MappedProps, State> {
     this.props.onStopPreview();
     this.setState({
       mediaId: 0,
-      mediaType: "track"
+      mediaType: "track",
     });
   };
 }
 
-export default SearchModal;
+export default withTranslation()(SearchModal);

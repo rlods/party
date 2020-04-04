@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { withTranslation, WithTranslation } from "react-i18next";
 //
 import IconButton from "../Common/IconButton";
 import { MappedProps } from "../../containers/Room/Head";
@@ -7,9 +8,9 @@ import "./Head.scss";
 
 // ------------------------------------------------------------------
 
-class Head extends Component<MappedProps> {
+class Head extends Component<MappedProps & WithTranslation> {
   public render = () => {
-    const { locked, room, onLock, onUnlock } = this.props;
+    const { locked, room, onLock, onUnlock, t } = this.props;
     return (
       <div className="Head">
         <div className="RoomStatus">
@@ -18,14 +19,14 @@ class Head extends Component<MappedProps> {
               icon="lock"
               onClick={onUnlock}
               size="M"
-              title="Locked (click to unlock)"
+              title={t("rooms.locked")}
             />
           ) : (
             <IconButton
               icon="unlock"
               onClick={onLock}
               size="M"
-              title="Unlocked (click to lock)"
+              title={t("rooms.unlocked")}
             />
           )}
         </div>
@@ -35,7 +36,7 @@ class Head extends Component<MappedProps> {
             icon="link"
             onClick={this.onCopyLink}
             size="M"
-            title="Copy Room Link to Clipboard"
+            title={t("rooms.copy_link")}
           />
         </div>
       </div>
@@ -43,9 +44,10 @@ class Head extends Component<MappedProps> {
   };
 
   private onCopyLink = async () => {
-    await copyToClipboard(document.location.href);
-    this.props.onMessage("Room link has been copied to clipboard");
+    const { t } = this.props;
+    await copyToClipboard(document.location.href.split("?")[0]);
+    this.props.onMessage(t("rooms.link_copied_to_clipboard"));
   };
 }
 
-export default Head;
+export default withTranslation()(Head);

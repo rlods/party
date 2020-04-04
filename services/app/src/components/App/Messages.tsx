@@ -12,7 +12,7 @@ class Messages extends React.Component<MappedProps> {
   public render = () => (
     <div className="Messages">
       <TransitionGroup>
-        {this.props.messages.map(message => this.renderMessage(message))}
+        {this.props.messages.map((message) => this.renderMessage(message))}
       </TransitionGroup>
     </div>
   );

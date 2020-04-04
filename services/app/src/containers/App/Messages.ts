@@ -2,13 +2,14 @@ import { connect } from "react-redux";
 //
 import { RootState } from "../../reducers";
 import Messages from "../../components/App/Messages";
+import { extractMessages } from "../../selectors/messages";
 
 // ------------------------------------------------------------------
 
 export type MappedProps = ReturnType<typeof mapStateToProps>;
 
 const mapStateToProps = (state: RootState) => ({
-  messages: state.messages.sort((m1, m2) => m1.stamp - m2.stamp)
+  messages: extractMessages(state),
 });
 
 export default connect(mapStateToProps)(Messages);

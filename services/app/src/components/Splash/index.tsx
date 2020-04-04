@@ -1,25 +1,36 @@
 import React, { Component, Fragment } from "react";
 import { Link } from "react-router-dom";
+import { withTranslation, WithTranslation } from "react-i18next";
 //
 import { MappedProps } from "../../containers/Splash";
-import "./index.scss";
 import IconButton from "../Common/IconButton";
+import "./index.scss";
 
 // ------------------------------------------------------------------
 
-class Splash extends Component<MappedProps> {
+class Splash extends Component<MappedProps & WithTranslation> {
   public render = () => {
-    const { user, loggedIn, onCreateRoom, onConnectUser } = this.props;
+    const { loggedIn, onCreateRoom, onConnectUser, t } = this.props;
     return (
       <div className="Splash">
         <div className="Top">
           <div className="Logo">
-            <Link to="/">Deezer Party</Link>
+            <Link to="/">Party</Link>
           </div>
-          <div className="Welcome">
-            {loggedIn || user
-              ? `Welcome ${user?.name || ""}`
-              : "Please connect to play"}
+          <div className="PoweredWith">
+            <span>{t("splash.powered_with")}</span>
+            <a
+              href="https://www.deezer.com"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                src="/images/deezer.svg"
+                height="20px"
+                title="Deezer"
+                alt="Deezer Logo"
+              />
+            </a>
           </div>
         </div>
         <div className="Middle">
@@ -31,7 +42,7 @@ class Splash extends Component<MappedProps> {
                   icon="plus"
                   onClick={onCreateRoom}
                   size="L"
-                  title="Create Room"
+                  title={t("rooms.create_room")}
                 />
               </div>
             ) : (
@@ -42,7 +53,7 @@ class Splash extends Component<MappedProps> {
                     onClick={onConnectUser}
                     icon="sign-in"
                     size="L"
-                    title="Connect"
+                    title={t("users.connect")}
                   />
                 </div>
               </Fragment>
@@ -58,7 +69,7 @@ class Splash extends Component<MappedProps> {
                   icon="sign-out"
                   onClick={this.onDisconnect}
                   size="M"
-                  title="Disconnect"
+                  title={t("users.disconnect")}
                 />
               </div>
             ) : (
@@ -68,7 +79,7 @@ class Splash extends Component<MappedProps> {
                   icon="info"
                   onClick={() => {}}
                   size="M"
-                  title="CGU"
+                  title={t("splash.CGU")}
                 />
               </div>
             )}
@@ -79,10 +90,10 @@ class Splash extends Component<MappedProps> {
   };
 
   onDisconnect = () => {
-    if (window.confirm("Are you sure you want to disconnect?")) {
+    if (window.confirm(this.props.t("users.confirm_disconnect"))) {
       this.props.onDisconnectUser();
     }
   };
 }
 
-export default Splash;
+export default withTranslation()(Splash);

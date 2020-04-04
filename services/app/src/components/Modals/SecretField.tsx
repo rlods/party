@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { withTranslation, WithTranslation } from "react-i18next";
 //
 import { copyToClipboard } from "../../utils/clipboard";
 import IconButton from "../Common/IconButton";
@@ -14,7 +15,7 @@ type Props = {
   value: string;
 };
 
-class SecretField extends Component<Props & MappedProps> {
+class SecretField extends Component<Props & MappedProps & WithTranslation> {
   public render = () => {
     const { id, label, onChange, placeholder, value } = this.props;
     return (
@@ -24,13 +25,13 @@ class SecretField extends Component<Props & MappedProps> {
           style={{
             display: "flex",
             flexDirection: "row",
-            justifyContent: "space-between"
+            justifyContent: "space-between",
           }}
         >
           <input
             style={{
               flexGrow: 1,
-              marginRight: "0.5rem"
+              marginRight: "0.5rem",
             }}
             id={id}
             type="password"
@@ -39,13 +40,13 @@ class SecretField extends Component<Props & MappedProps> {
             minLength={36}
             required={true}
             value={value}
-            onChange={e => onChange(e.target.value)}
+            onChange={(e) => onChange(e.target.value)}
           />
           <IconButton
             icon="clipboard"
             onClick={this.onCopyToClipboard}
             size="M"
-            title={`Copy ${label} to Clipboard`}
+            title={`Copy to Clipboard`}
           />
         </div>
       </div>
@@ -53,10 +54,10 @@ class SecretField extends Component<Props & MappedProps> {
   };
 
   private onCopyToClipboard = async () => {
-    const { onMessage, label, value } = this.props;
+    const { onMessage, value, t } = this.props;
     await copyToClipboard(value);
-    onMessage(`${label} has been copied to clipboard`);
+    onMessage(t("secret_copied_to_clipboard"));
   };
 }
 
-export default SecretField;
+export default withTranslation()(SecretField);

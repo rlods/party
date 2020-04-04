@@ -23,7 +23,8 @@ const stop = () => createAction("player/STOP");
 
 // ------------------------------------------------------------------
 
-let PLAYER_TIMER: NodeJS.Timeout | null = null;
+let PLAYER_TIMER1: NodeJS.Timeout | null = null;
+let PLAYER_TIMER2: NodeJS.Timeout | null = null;
 
 const _computeNextPosition = (
   queuePlayer: ReturnType<typeof Player>,
@@ -35,7 +36,7 @@ const _computeNextPosition = (
     console.debug("Detected play change...", {
       playingPosition,
       queuePosition,
-      isPlaying: queuePlayer.isPlaying()
+      isPlaying: queuePlayer.isPlaying(),
     });
     if (queuePlayer.isPlaying()) {
       // User has clicked an other track or added/removed a track in queue
@@ -48,16 +49,16 @@ const _computeNextPosition = (
   return nextPosition;
 };
 
-const _installTimer = (
+const _installTimer1 = (
   dispatch: Dispatch,
   getState: () => RootState,
   queuePlayer: ReturnType<typeof Player>
 ) => {
   // Don't use setInterval because a step could be triggered before previous one terminated
-  PLAYER_TIMER = setTimeout(async () => {
+  PLAYER_TIMER1 = setTimeout(async () => {
     const {
       queue: { position: queuePosition, trackIds },
-      tracks: { tracks }
+      tracks: { tracks },
     } = getState();
     if (trackIds.length > 0) {
       const playingPosition = queuePlayer.getPlayingPosition();
@@ -76,19 +77,18 @@ const _installTimer = (
         console.debug("Applying play change...", {
           nextPosition,
           nextIndex,
-          nextTrack
+          nextTrack,
         });
         dispatch(setQueuePosition(nextPosition));
         const [color] = await Promise.all([
           pickColor(nextTrack.album.cover_small),
-          queuePlayer.play(nextPosition, nextTrack.preview, 0)
+          queuePlayer.play(nextPosition, nextTrack.preview, 0),
         ]);
         dispatch(setRoomColor(color));
       }
 
-      // Refresh player track percent
-      dispatch(setPlayerTrackPercent(queuePlayer.getTrackPercent()));
-      _installTimer(dispatch, getState, queuePlayer);
+      // Reschedule time
+      _installTimer1(dispatch, getState, queuePlayer);
     } else {
       // Last track has been removed from queue by user
       console.debug("No more tracks in queue...");
@@ -97,13 +97,34 @@ const _installTimer = (
   }, 250);
 };
 
+const _installTimer2 = (
+  dispatch: Dispatch,
+  getState: () => RootState,
+  queuePlayer: ReturnType<typeof Player>
+) => {
+  // Don't use setInterval because a step could be triggered before previous one terminated
+  PLAYER_TIMER2 = setTimeout(async () => {
+    const {
+      queue: { trackIds },
+    } = getState();
+    if (trackIds.length > 0) {
+      // Refresh player track percent
+      dispatch(setPlayerTrackPercent(queuePlayer.getTrackPercent()));
+
+      // Reschedule time
+      _installTimer2(dispatch, getState, queuePlayer);
+    }
+  }, 50); // Must do very few operation because called very often
+};
+
 export const startPlayer = (): AsyncAction => async (
   dispatch,
   getState,
   { queuePlayer }
 ) => {
-  if (!PLAYER_TIMER) {
-    _installTimer(dispatch, getState, queuePlayer);
+  if (!PLAYER_TIMER1 && !PLAYER_TIMER2) {
+    _installTimer1(dispatch, getState, queuePlayer);
+    _installTimer2(dispatch, getState, queuePlayer);
     dispatch(start());
   }
 };
@@ -115,9 +136,11 @@ export const stopPlayer = (): AsyncAction => async (
   _,
   { queuePlayer }
 ) => {
-  if (PLAYER_TIMER) {
-    clearTimeout(PLAYER_TIMER);
-    PLAYER_TIMER = null;
+  if (PLAYER_TIMER1 && PLAYER_TIMER2) {
+    clearTimeout(PLAYER_TIMER1);
+    PLAYER_TIMER1 = null;
+    clearTimeout(PLAYER_TIMER2);
+    PLAYER_TIMER2 = null;
     await queuePlayer.stop();
     dispatch(stop());
     dispatch(setPlayerTrackPercent(0));

@@ -10,35 +10,43 @@ import { rootReducer } from "./reducers";
 import App from "./containers/App";
 import { DEFAULT_API } from "./utils/deezer";
 import { Player } from "./utils/player";
+import { initLocales } from "./utils/i18n";
 import "./index.scss";
 
 // ------------------------------------------------------------------
 
-const composeEnhancers =
-  process.env.NODE_ENV === "development" ? composeWithDevTools({}) : compose;
+const init = async () => {
+  const composeEnhancers =
+    process.env.NODE_ENV === "development" ? composeWithDevTools({}) : compose;
 
-const deezer = DEFAULT_API;
-const queuePlayer = Player(true);
-const previewPlayer = Player(false);
+  const deezer = DEFAULT_API;
+  const queuePlayer = Player(true);
+  const previewPlayer = Player(false);
+  initLocales();
 
-const store = createStore(
-  rootReducer,
-  composeEnhancers(
-    applyMiddleware(
-      thunk.withExtraArgument({ deezer, queuePlayer, previewPlayer })
+  const store = createStore(
+    rootReducer,
+    composeEnhancers(
+      applyMiddleware(
+        thunk.withExtraArgument({ deezer, queuePlayer, previewPlayer })
+      )
     )
-  )
-);
+  );
 
-// const dispatch: Dispatch = store.dispatch.bind(store);
+  // const dispatch: Dispatch = store.dispatch.bind(store);
+
+  return store;
+};
 
 // ------------------------------------------------------------------
 
-ReactDOM.render(
-  <Provider store={store}>
-    <HashRouter>
-      <Route path="/" component={App} />
-    </HashRouter>
-  </Provider>,
-  document.getElementById("root")
-);
+init().then((store) => {
+  ReactDOM.render(
+    <Provider store={store}>
+      <HashRouter>
+        <Route path="/" component={App} />
+      </HashRouter>
+    </Provider>,
+    document.getElementById("root")
+  );
+});

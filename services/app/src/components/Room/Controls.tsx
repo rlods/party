@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { withTranslation, WithTranslation } from "react-i18next";
 //
 import { MappedProps } from "../../containers/Room/Controls";
 import IconButton from "../Common/IconButton";
@@ -8,7 +9,7 @@ import "./Controls.scss";
 
 // ------------------------------------------------------------------
 
-class Controls extends Component<MappedProps> {
+class Controls extends Component<MappedProps & WithTranslation> {
   public render = () => {
     const {
       onMoveBackward,
@@ -16,48 +17,49 @@ class Controls extends Component<MappedProps> {
       onPlay,
       onSearch,
       onStop,
+      tracksCount,
       locked,
-      playable,
-      playing
+      playing,
+      t,
     } = this.props;
     return (
       <div className="Controls">
         <div className="ControlsSet">
           <div className="Control">
             <IconButton
-              disabled={!playable}
+              disabled={locked || tracksCount === 0}
               icon="step-backward"
               onClick={onMoveBackward}
               size="M"
-              title="Previous"
+              title={t("player.backward")}
             />
           </div>
           <div className="Control">
-            {!playable || !playing ? (
+            {!playing ? (
               <IconButton
-                disabled={!playable}
+                disabled={locked || tracksCount === 0}
                 onClick={onPlay}
                 icon="play"
                 size="L"
-                title="Play"
+                title={t("player.play")}
               />
             ) : (
               <IconButton
-                disabled={!playable}
+                disabled={locked || tracksCount === 0}
                 onClick={onStop}
                 icon="pause"
-                title="Stop"
+                title={t("player.stop")}
                 size="L"
               />
             )}
           </div>
           <div className="Control">
             <IconButton
-              disabled={!playable}
+              disabled={locked || tracksCount === 0}
               icon="step-forward"
               onClick={onMoveForward}
               size="M"
-              title="Next"
+              title={t("player.forward")}
             />
           </div>
         </div>
@@ -65,20 +67,24 @@ class Controls extends Component<MappedProps> {
         <div className="ControlsSet">
           <div className="Control">
             <IconButton
-              disabled={locked}
+              disabled={locked || tracksCount === 0}
               onClick={this.onClear}
               icon="trash"
-              title="Clear Room"
+              title={t("rooms.clear")}
             />
           </div>
           <div className="Control">
-            <IconButton onClick={onSearch} icon="search" title="Search Media" />
+            <IconButton
+              onClick={onSearch}
+              icon="search"
+              title={t("medias.search")}
+            />
           </div>
           <div className="Control">
             <IconButton
               onClick={this.onExit}
               icon="sign-out"
-              title="Exit Room"
+              title={t("rooms.exit")}
             />
           </div>
         </div>
@@ -87,16 +93,18 @@ class Controls extends Component<MappedProps> {
   };
 
   onClear = () => {
-    if (window.confirm("Are you sure you want to clear Room")) {
+    const { t } = this.props;
+    if (window.confirm(t("rooms.confirm_clear"))) {
       this.props.onClear();
     }
   };
 
   onExit = () => {
-    if (window.confirm("Are you sure you want to leave the room?")) {
+    const { t } = this.props;
+    if (window.confirm(t("rooms.confirm_exit"))) {
       history.push("/");
     }
   };
 }
 
-export default Controls;
+export default withTranslation()(Controls);

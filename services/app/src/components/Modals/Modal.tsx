@@ -1,5 +1,6 @@
 import React, { Component, FormEvent, ReactNode } from "react";
 import classNames from "classnames";
+import { withTranslation, WithTranslation } from "react-i18next";
 //
 import { MappedProps } from "../../containers/Modals/Modal";
 import IconButton from "../Common/IconButton";
@@ -14,7 +15,7 @@ type Props = {
   onSubmit?: () => void;
 };
 
-class Modal extends Component<Props & MappedProps> {
+class Modal extends Component<Props & MappedProps & WithTranslation> {
   public render = () => {
     const {
       children,
@@ -23,7 +24,7 @@ class Modal extends Component<Props & MappedProps> {
       renderFoot,
       onClose,
       onPop,
-      has_prev_modal
+      has_prev_modal,
     } = this.props;
     return (
       <form className={classNames("Modal", className)} onSubmit={this.onSubmit}>
@@ -31,7 +32,7 @@ class Modal extends Component<Props & MappedProps> {
           <IconButton
             kind="special"
             className={classNames("ModalHeadBack", {
-              hidden: !has_prev_modal
+              hidden: !has_prev_modal,
             })}
             icon="angle-left"
             title="Back"
@@ -60,4 +61,4 @@ class Modal extends Component<Props & MappedProps> {
   };
 }
 
-export default Modal;
+export default withTranslation()(Modal);

@@ -1,4 +1,5 @@
 import React, { Component, Fragment, RefObject, createRef } from "react";
+import { withTranslation, WithTranslation } from "react-i18next";
 import { v4 } from "uuid";
 //
 import FormModal from "../Modals/FormModal";
@@ -8,17 +9,21 @@ import SecretField from "../../containers/Modals/SecretField";
 
 // ------------------------------------------------------------------
 
+let USER_COUNTER = 1;
+
+// ------------------------------------------------------------------
+
 type State = {
   name: string;
   secret: string;
 };
 
-class CreateUserModal extends Component<MappedProps, State> {
+class CreateUserModal extends Component<MappedProps & WithTranslation, State> {
   private nameRef: RefObject<HTMLInputElement> = createRef();
 
   public readonly state: State = {
-    name: "",
-    secret: v4()
+    name: `Guest ${USER_COUNTER}`,
+    secret: v4(),
   };
 
   public componentDidMount() {
@@ -28,65 +33,75 @@ class CreateUserModal extends Component<MappedProps, State> {
   }
 
   public render = () => {
+    const { t } = this.props;
     const { name, secret } = this.state;
     return (
       <FormModal
-        title="Create User"
+        title={t("users.user_creation")}
         onSubmit={this.onCreate}
         renderButtons={this.renderButtons}
       >
         <div className="ModalField">
-          <label htmlFor="modal-name">User Name</label>
+          <label htmlFor="modal-name">{t("users.user_name")}</label>
           <input
             id="modal-name"
             type="text"
-            placeholder="User Name..."
+            placeholder={t("users.user_name_placeholder")}
             maxLength={100}
             minLength={2}
             required={true}
             value={name}
             ref={this.nameRef}
-            onChange={e => this.setState({ name: e.target.value })}
+            onChange={(e) => this.setState({ name: e.target.value })}
           />
         </div>
         <SecretField
           id="modal-secret"
-          label="User Secret"
-          placeholder="User Secret..."
+          label={t("users.user_secret")}
+          placeholder={t("users.user_secret_placeholder")}
           value={secret}
-          onChange={newSecret => this.setState({ secret: newSecret })}
+          onChange={(newSecret) => this.setState({ secret: newSecret })}
         />
       </FormModal>
     );
   };
 
-  private renderButtons = () => (
-    <Fragment>
-      <IconButton title="Create" kind="primary" icon="plus" type="submit" />
-      <CancelButton onClick={this.props.onClose} />
-      <IconButton
-        title="Connect"
-        kind="default"
-        icon="sign-in"
-        onClick={this.props.onToggle}
-      />
-    </Fragment>
-  );
+  private renderButtons = () => {
+    const { t } = this.props;
+    return (
+      <Fragment>
+        <IconButton
+          title={t("users.create_user")}
+          kind="primary"
+          icon="plus"
+          type="submit"
+        />
+        <CancelButton onClick={this.props.onClose} />
+        <IconButton
+          title={t("users.connect")}
+          kind="default"
+          icon="sign-in"
+          onClick={this.props.onToggle}
+        />
+      </Fragment>
+    );
+  };
 
   private onCreate = () => {
-    const { onClose, onCreate, onError } = this.props;
+    const { onClose, onCreate, onError, t } = this.props;
     const { name, secret } = this.state;
     if (name.trim().length === 0) {
-      onError("User name is invalid");
+      onError(t("users.user_name_is_invalid"));
       return;
     }
     if (secret.trim().length === 0) {
-      onError("User secret is invalid");
+      onError(t("users.user_secret_is_invalid"));
       return;
     }
     onCreate(name, secret);
     onClose();
+    USER_COUNTER++;
   };
 }
 
-export default CreateUserModal;
+export default withTranslation()(CreateUserModal);

@@ -11,9 +11,9 @@ import { isRoomLocked } from "../../selectors/rooms";
 // ------------------------------------------------------------------
 
 const stateToProps = (state: RootState) => ({
+  tracksCount: state.queue.trackIds.length,
   locked: isRoomLocked(state),
-  playable: !isRoomLocked(state) && state.queue.trackIds.length > 0,
-  playing: state.player.playing
+  playing: state.player.playing,
 });
 
 const dispatchToProps = (dispatch: ThunkDispatch<RootState, any, any>) => ({
@@ -25,7 +25,7 @@ const dispatchToProps = (dispatch: ThunkDispatch<RootState, any, any>) => ({
   onMoveForward: () => dispatch(moveForward()),
   onPlay: () => dispatch(startPlayer()),
   onSearch: () => dispatch(openModal({ type: "Search", props: null })),
-  onStop: () => dispatch(stopPlayer())
+  onStop: () => dispatch(stopPlayer()),
 });
 
 export type MappedProps = ReturnType<typeof stateToProps> &

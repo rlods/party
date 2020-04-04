@@ -1,4 +1,5 @@
 import React, { Component, Fragment, RefObject, createRef } from "react";
+import { withTranslation, WithTranslation } from "react-i18next";
 //
 import FormModal from "../Modals/FormModal";
 import { MappedProps } from "../../containers/Users/ConnectUserModal";
@@ -11,12 +12,12 @@ type State = {
   secret: string;
 };
 
-class ConnectUserModal extends Component<MappedProps, State> {
+class ConnectUserModal extends Component<MappedProps & WithTranslation, State> {
   private idRef: RefObject<HTMLInputElement> = createRef();
 
   public readonly state: State = {
     id: "",
-    secret: ""
+    secret: "",
   };
 
   public componentDidMount() {
@@ -26,40 +27,41 @@ class ConnectUserModal extends Component<MappedProps, State> {
   }
 
   public render = () => {
+    const { t } = this.props;
     const { id, secret } = this.state;
     return (
       <FormModal
-        title="Connect User"
+        title={t("users.connection")}
         onSubmit={this.onConnect}
         renderButtons={this.renderButtons}
       >
         <div className="ModalField">
-          <label htmlFor="modal-id">User ID</label>
+          <label htmlFor="modal-id">{t("users.user_id")}</label>
           <input
             id="modal-id"
             type="text"
-            placeholder="User ID..."
+            placeholder={t("users.user_id_placeholder")}
             maxLength={36}
             minLength={36}
             required={true}
             value={id}
             ref={this.idRef}
-            onChange={e => {
+            onChange={(e) => {
               this.setState({ id: e.target.value });
             }}
           />
         </div>
         <div className="ModalField">
-          <label htmlFor="modal-secret">User Secret</label>
+          <label htmlFor="modal-secret">{t("users.user_secret")}</label>
           <input
             id="modal-secret"
             type="password"
-            placeholder="User Secret..."
+            placeholder={t("users.user_secret_placeholder")}
             maxLength={36}
             minLength={36}
             required={true}
             value={secret}
-            onChange={e => {
+            onChange={(e) => {
               this.setState({ secret: e.target.value });
             }}
           />
@@ -68,28 +70,36 @@ class ConnectUserModal extends Component<MappedProps, State> {
     );
   };
 
-  private renderButtons = () => (
-    <Fragment>
-      <IconButton title="Connect" kind="primary" icon="sign-in" type="submit" />
-      <CancelButton onClick={this.props.onClose} />
-      <IconButton
-        title="Create"
-        kind="default"
-        icon="plus"
-        onClick={this.props.onToggle}
-      />
-    </Fragment>
-  );
+  private renderButtons = () => {
+    const { t } = this.props;
+    return (
+      <Fragment>
+        <IconButton
+          title={t("users.connect")}
+          kind="primary"
+          icon="sign-in"
+          type="submit"
+        />
+        <CancelButton onClick={this.props.onClose} />
+        <IconButton
+          title={t("users.create_user")}
+          kind="default"
+          icon="plus"
+          onClick={this.props.onToggle}
+        />
+      </Fragment>
+    );
+  };
 
   private onConnect = () => {
-    const { onClose, onConnect, onError } = this.props;
+    const { onClose, onConnect, onError, t } = this.props;
     const { id, secret } = this.state;
     if (id.trim().length === 0) {
-      onError("User ID is invalid");
+      onError(t("users.user_id_is_invalid"));
       return;
     }
     if (secret.trim().length === 0) {
-      onError("User secret is invalid");
+      onError(t("users.user_secret_is_invalid"));
       return;
     }
     onConnect(id, secret);
@@ -97,4 +107,4 @@ class ConnectUserModal extends Component<MappedProps, State> {
   };
 }
 
-export default ConnectUserModal;
+export default withTranslation()(ConnectUserModal);

@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { withTranslation, WithTranslation } from "react-i18next";
 //
 import { MappedProps } from "../../containers/Room/Queue";
 import { Track } from "./Medias";
@@ -7,7 +8,7 @@ import "./Queue.scss";
 
 // ------------------------------------------------------------------
 
-class Queue extends Component<MappedProps> {
+class Queue extends Component<MappedProps & WithTranslation> {
   public render = () => {
     const {
       locked,
@@ -16,7 +17,8 @@ class Queue extends Component<MappedProps> {
       tracks,
       onPlay,
       onRemove,
-      onStop
+      onStop,
+      t,
     } = this.props;
     return (
       <div className="Queue">
@@ -31,7 +33,7 @@ class Queue extends Component<MappedProps> {
               actions={
                 !locked ? (
                   <IconButton
-                    title="Remove"
+                    title={t("medias.remove")}
                     icon="trash"
                     onClick={() => onRemove(index)}
                   />
@@ -45,4 +47,4 @@ class Queue extends Component<MappedProps> {
   };
 }
 
-export default Queue;
+export default withTranslation()(Queue);

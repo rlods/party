@@ -1,4 +1,5 @@
 import React, { Component, Fragment, createRef, RefObject } from "react";
+import { withTranslation, WithTranslation } from "react-i18next";
 //
 import FormModal from "../Modals/FormModal";
 import { MappedProps } from "../../containers/Room/UnlockRoomModal";
@@ -10,11 +11,11 @@ type State = {
   secret: string;
 };
 
-class UnlockRoomModal extends Component<MappedProps, State> {
+class UnlockRoomModal extends Component<MappedProps & WithTranslation, State> {
   private secretRef: RefObject<HTMLInputElement> = createRef();
 
   public readonly state: State = {
-    secret: ""
+    secret: "",
   };
 
   public componentDidMount() {
@@ -24,25 +25,26 @@ class UnlockRoomModal extends Component<MappedProps, State> {
   }
 
   public render = () => {
+    const { t } = this.props;
     const { secret } = this.state;
     return (
       <FormModal
-        title="Unlock Room"
+        title={t("rooms.room_unlock")}
         onSubmit={this.onUnlock}
         renderButtons={this.renderButtons}
       >
         <div className="ModalField">
-          <label htmlFor="modal-secret">Room Key</label>
+          <label htmlFor="modal-secret">{t("rooms.room_key")}</label>
           <input
             id="modal-secret"
             type="password"
-            placeholder="Room Key..."
+            placeholder={t("rooms.room_key_placeholder")}
             maxLength={36}
             minLength={36}
             required={true}
             value={secret}
             ref={this.secretRef}
-            onChange={e => {
+            onChange={(e) => {
               this.setState({ secret: e.target.value });
             }}
           />
@@ -51,12 +53,20 @@ class UnlockRoomModal extends Component<MappedProps, State> {
     );
   };
 
-  private renderButtons = () => (
-    <Fragment>
-      <IconButton title="Join" kind="primary" icon="sign-in" type="submit" />
-      <CancelButton onClick={this.props.onClose} />
-    </Fragment>
-  );
+  private renderButtons = () => {
+    const { t } = this.props;
+    return (
+      <Fragment>
+        <IconButton
+          title={t("rooms.unlock")}
+          kind="primary"
+          icon="key"
+          type="submit"
+        />
+        <CancelButton onClick={this.props.onClose} />
+      </Fragment>
+    );
+  };
 
   private onUnlock = () => {
     const { onClose, onUnlock } = this.props;
@@ -65,4 +75,4 @@ class UnlockRoomModal extends Component<MappedProps, State> {
   };
 }
 
-export default UnlockRoomModal;
+export default withTranslation()(UnlockRoomModal);

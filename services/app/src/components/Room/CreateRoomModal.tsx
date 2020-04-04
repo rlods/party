@@ -1,4 +1,5 @@
 import React, { Component, Fragment, RefObject, createRef } from "react";
+import { withTranslation, WithTranslation } from "react-i18next";
 import { v4 } from "uuid";
 //
 import FormModal from "../Modals/FormModal";
@@ -8,17 +9,21 @@ import SecretField from "../../containers/Modals/SecretField";
 
 // ------------------------------------------------------------------
 
+let ROOM_COUNTER = 1;
+
+// ------------------------------------------------------------------
+
 type State = {
   name: string;
   secret: string;
 };
 
-class CreateRoomModal extends Component<MappedProps, State> {
+class CreateRoomModal extends Component<MappedProps & WithTranslation, State> {
   private nameRef: RefObject<HTMLInputElement> = createRef();
 
   public readonly state: State = {
-    name: "",
-    secret: v4()
+    name: `Room ${ROOM_COUNTER}`,
+    secret: v4(),
   };
 
   public componentDidMount() {
@@ -28,59 +33,69 @@ class CreateRoomModal extends Component<MappedProps, State> {
   }
 
   public render = () => {
+    const { t } = this.props;
     const { name, secret } = this.state;
     return (
       <FormModal
-        title="Create Room"
+        title={t("rooms.room_creation")}
         onSubmit={this.onCreate}
         renderButtons={this.renderButtons}
       >
         <div className="ModalField">
-          <label htmlFor="modal-name">Room Name</label>
+          <label htmlFor="modal-name">{t("rooms.room_name")}</label>
           <input
             id="modal-name"
             type="text"
-            placeholder="Room Name..."
+            placeholder={t("rooms.room_name_placeholder")}
             maxLength={100}
             minLength={2}
             required={true}
             value={name}
             ref={this.nameRef}
-            onChange={e => this.setState({ name: e.target.value })}
+            onChange={(e) => this.setState({ name: e.target.value })}
           />
         </div>
         <SecretField
           id="modal-secret"
-          label="Room Key"
-          placeholder="Room Key..."
+          label={t("rooms.room_key")}
+          placeholder={t("rooms.room_key_placeholder")}
           value={secret}
-          onChange={newSecret => this.setState({ secret: newSecret })}
+          onChange={(newSecret) => this.setState({ secret: newSecret })}
         />
       </FormModal>
     );
   };
 
-  private renderButtons = () => (
-    <Fragment>
-      <IconButton title="Create" kind="primary" icon="plus" type="submit" />
-      <CancelButton onClick={this.props.onClose} />
-    </Fragment>
-  );
+  private renderButtons = () => {
+    const { t } = this.props;
+    return (
+      <Fragment>
+        <IconButton
+          title={t("rooms.create_room")}
+          kind="primary"
+          icon="plus"
+          type="submit"
+        />
+        <CancelButton onClick={this.props.onClose} />
+      </Fragment>
+    );
+  };
 
   private onCreate = () => {
-    const { onClose, onCreate, onError } = this.props;
+    const { onClose, onCreate, onError, t } = this.props;
     const { name, secret } = this.state;
     if (name.trim().length === 0) {
-      onError("Room name is invalid");
+      onError(t("rooms.room_name_is_invalid"));
       return;
     }
     if (secret.trim().length === 0) {
-      onError("Room secret is invalid");
+      onError(t("rooms.room_secret_is_invalid"));
       return;
     }
     onCreate(name, secret);
     onClose();
+    ROOM_COUNTER++;
   };
 }
 
-export default CreateRoomModal;
+export default withTranslation()(CreateRoomModal);
