@@ -114,7 +114,7 @@ const _installTimer2 = (
       // Reschedule time
       _installTimer2(dispatch, getState, queuePlayer);
     }
-  }, 50); // Must do very few operation because called very often
+  }, 200); // Must do very few operation because called very often (if we put less it creates blink on mobile when playing & scrolling)
 };
 
 export const startPlayer = (): AsyncAction => async (
