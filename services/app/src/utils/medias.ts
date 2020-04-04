@@ -1,8 +1,10 @@
 import { ApiAlbum, ApiPlaylist, ApiTrack } from "./deezer";
 
-export type Container = ApiAlbum | ApiPlaylist;
+export type Album = ApiAlbum;
 
-export type Containers = { [type_and_id: string]: Container };
+export type Playlist = ApiPlaylist;
+
+export type Container = Album | Playlist;
 
 export type ContainerType = "album" | "playlist";
 

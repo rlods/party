@@ -40,6 +40,7 @@
           "name": {
             ".validate": "newData.isString() && newData.val().length >= 2 && newData.val().length <= 100"
           },
+          "playing": { ".validate": "newData.isBoolean()" },
           "queue": {
             "$track_index": {
               ".validate": "$track_index.matches(/^[0-9]+$/) && newData.hasChildren(['id', 'type'])",

@@ -74,7 +74,7 @@ export type ApiTrack = {
 export const DeezerApi = () => {
   const API_BASE = "https://api.deezer.com";
 
-  const asyncJsonp = <T>(url: string): Promise<T> =>
+  const _asyncJsonp = <T>(url: string): Promise<T> =>
     new Promise((resolve, reject) => {
       jsonp(url, void 0, (err, data) => {
         if (err) {
@@ -85,53 +85,53 @@ export const DeezerApi = () => {
       });
     });
 
-  const call = async <T>(path: string, qs?: string) => {
+  const _call = async <T>(path: string, qs?: string) => {
     // We have to rely on jsonp because the Deezer api is CORS restricted
     const fullpath = qs
       ? `${API_BASE}/${path}?${qs}&output=jsonp&callback=`
       : `${API_BASE}/${path}?output=jsonp&callback=`;
-    return await asyncJsonp<T>(fullpath);
+    return await _asyncJsonp<T>(fullpath);
   };
 
-  const search = <T>(type: string, query: string) =>
-    call<SearchResult<T>>(`search/${type}`, `q=${encodeURIComponent(query)}`);
+  const _search = <T>(type: string, query: string) =>
+    _call<SearchResult<T>>(`search/${type}`, `q=${encodeURIComponent(query)}`);
 
-  const load = <T>(type: string, id: string) => call<T>(`/${type}/${id}`);
+  const _load = <T>(type: string, id: string) => _call<T>(`/${type}/${id}`);
 
-  const searchAlbums = (query: string) => search<ApiAlbum>("album", query);
+  const searchAlbums = (query: string) => _search<ApiAlbum>("album", query);
 
   const searchPlaylists = (query: string) =>
-    search<ApiPlaylist>("playlist", query);
+    _search<ApiPlaylist>("playlist", query);
 
-  const searchTracks = (query: string) => search<ApiTrack>("track", query);
+  const searchTracks = (query: string) => _search<ApiTrack>("track", query);
 
   const searchAll = async (query: string): Promise<SearchAllResults> => {
     const [albums, playlists, tracks] = await Promise.all([
       searchAlbums(query),
       searchPlaylists(query),
-      searchTracks(query)
+      searchTracks(query),
     ]);
     return { albums, playlists, tracks };
   };
 
   const loadAlbum = async (id: string) => {
-    const album = await load<ApiAlbum>("album", id);
-    album.tracks!.data.forEach(track => {
+    const album = await _load<ApiAlbum>("album", id);
+    album.tracks!.data.forEach((track) => {
       track.album = album;
       track.artist.link = `https://www.deezer.com/artist/${track.artist.id}`;
     });
     return album;
   };
 
-  const loadPlaylist = (id: string) => load<ApiPlaylist>("playlist", id);
+  const loadPlaylist = (id: string) => _load<ApiPlaylist>("playlist", id);
 
-  const loadTrack = (id: string) => load<ApiTrack>("track", id);
+  const loadTrack = (id: string) => _load<ApiTrack>("track", id);
 
   return {
     searchAll,
     loadAlbum,
     loadPlaylist,
-    loadTrack
+    loadTrack,
   };
 };
 

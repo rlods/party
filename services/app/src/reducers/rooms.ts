@@ -22,7 +22,7 @@ const INITIAL_STATE: State = {
   room: null,
   room_access: { id: "", secret: "" },
   room_color: { fg: { r: 0, g: 0, b: 0 }, bg: { r: 255, g: 255, b: 255 } },
-  room_info: null
+  room_info: null,
 };
 
 // ------------------------------------------------------------------
@@ -36,38 +36,37 @@ export const roomsReducer: Reducer<State, RoomsAction> = (
       return {
         ...state,
         fetching: true,
-        error: null
+        error: null,
       };
     case "rooms/FETCHED": {
       return {
         ...state,
         fetching: false,
-        error: null
+        error: null,
       };
     }
     case "rooms/ERROR":
       return {
         ...state,
         fetching: false,
-        error: action.payload
+        error: action.payload,
       };
     case "rooms/SET_ROOM": {
       return {
         ...state,
-        room: action.payload.room,
-        room_info: action.payload.info
+        ...action.payload,
       };
     }
     case "rooms/SET_ROOM_ACCESS": {
       return {
         ...state,
-        room_access: action.payload
+        room_access: action.payload,
       };
     }
     case "rooms/SET_ROOM_COLOR": {
       return {
         ...state,
-        room_color: action.payload
+        room_color: action.payload,
       };
     }
     case "rooms/RESET":

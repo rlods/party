@@ -7,8 +7,11 @@ import { lockRoom } from "./rooms";
 
 export type QueueAction = ReturnType<typeof setQueue>;
 
-export const setQueue = (trackIds: string[], position: number) =>
-  createAction("queue/SET", { position, trackIds });
+export const setQueue = (
+  playing: boolean,
+  trackIds: string[],
+  position: number
+) => createAction("queue/SET", { playing, position, trackIds });
 
 // ------------------------------------------------------------------
 

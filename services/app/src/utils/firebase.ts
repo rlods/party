@@ -31,6 +31,7 @@ export const FirebaseRoom = (id: string, secret?: string) => {
   console.debug("INIT SECRET", _secret);
   let _values: RoomInfo = {
     name: "dummy",
+    playing: false,
     queue: {},
     queue_position: 0,
     timestamp: 0,
@@ -79,11 +80,17 @@ export const FirebaseRoom = (id: string, secret?: string) => {
 
   const update = async ({
     name,
+    playing,
     queue,
     queue_position,
-  }: Partial<Pick<RoomInfo, "name" | "queue" | "queue_position">>) => {
+  }: Partial<
+    Pick<RoomInfo, "name" | "playing" | "queue" | "queue_position">
+  >) => {
     if (name !== void 0) {
       _values.name = name;
+    }
+    if (playing !== void 0) {
+      _values.playing = playing;
     }
     if (queue !== void 0) {
       _values.queue = queue;
@@ -243,6 +250,7 @@ export const FirebaseParty = (
   const _users: { [id: string]: ReturnType<typeof FirebaseUser> } = {};
   let _info: RoomInfo = {
     name: "",
+    playing: false,
     queue: {},
     queue_position: 0,
     timestamp: 0,

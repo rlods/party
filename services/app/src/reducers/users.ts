@@ -5,7 +5,7 @@ import {
   saveUserAccess,
   loadUserAccess,
   UserAccess,
-  UserInfo
+  UserInfo,
 } from "../utils/users";
 import { FirebaseUser } from "../utils/firebase";
 
@@ -24,7 +24,7 @@ const INITIAL_STATE: State = {
   error: null,
   user: null,
   user_access: loadUserAccess(),
-  user_info: null
+  user_info: null,
 };
 
 // ------------------------------------------------------------------
@@ -38,33 +38,32 @@ export const usersReducer: Reducer<State, UsersAction> = (
       return {
         ...state,
         fetching: true,
-        error: null
+        error: null,
       };
     case "users/FETCHED": {
       return {
         ...state,
         fetching: false,
-        error: null
+        error: null,
       };
     }
     case "users/ERROR":
       return {
         ...state,
         fetching: false,
-        error: action.payload
+        error: action.payload,
       };
     case "users/SET_USER": {
       return {
         ...state,
-        user: action.payload.user,
-        user_info: action.payload.info
+        ...action.payload,
       };
     }
     case "users/SET_USER_ACCESS": {
       saveUserAccess(action.payload);
       return {
         ...state,
-        user_access: { ...action.payload }
+        user_access: action.payload,
       };
     }
     case "users/RESET":

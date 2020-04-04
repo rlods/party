@@ -23,16 +23,15 @@ const reset = () => createAction("users/RESET");
 const setUser = (
   user: ReturnType<typeof FirebaseUser> | null,
   info: UserInfo | null
-) => createAction("users/SET_USER", { info, user });
+) => createAction("users/SET_USER", { user, user_info: info });
 const setUserAccess = (id: string, secret: string) =>
   createAction("users/SET_USER_ACCESS", { id, secret });
 
 // ------------------------------------------------------------------
 
-export const createUser = (
-  name: string,
-  secret: string
-): AsyncAction => async dispatch => {
+export const createUser = (name: string, secret: string): AsyncAction => async (
+  dispatch
+) => {
   try {
     console.debug("Creating user...");
     const id = v4();
@@ -52,7 +51,7 @@ export const connectUser = (id: string, secret: string): AsyncAction => async (
   getState
 ) => {
   const {
-    users: { user }
+    users: { user },
   } = getState();
   if (!user || user.id !== id) {
     dispatch(disconnectUser());
@@ -75,7 +74,7 @@ export const connectUser = (id: string, secret: string): AsyncAction => async (
 
 export const disconnectUser = (): AsyncAction => async (dispatch, getState) => {
   const {
-    users: { user }
+    users: { user },
   } = getState();
   if (user) {
     console.debug("Disconnecting user...");
@@ -89,8 +88,8 @@ export const disconnectUser = (): AsyncAction => async (dispatch, getState) => {
 export const reconnectUser = (): AsyncAction => async (dispatch, getState) => {
   const {
     users: {
-      user_access: { id, secret }
-    }
+      user_access: { id, secret },
+    },
   } = getState();
   if (id && secret) {
     console.debug("Reconnecting user...", { id, secret });

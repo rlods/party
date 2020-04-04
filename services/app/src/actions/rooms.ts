@@ -30,7 +30,7 @@ const reset = () => createAction("rooms/RESET");
 const setRoom = (
   room: ReturnType<typeof FirebaseRoom> | null,
   info: RoomInfo | null
-) => createAction("rooms/SET_ROOM", { info, room });
+) => createAction("rooms/SET_ROOM", { room, room_info: info });
 const setRoomAccess = (id: string, secret: string) =>
   createAction("rooms/SET_ROOM_ACCESS", { id, secret });
 export const setRoomColor = (color: CombinedColor) =>
@@ -78,8 +78,8 @@ export const enterRoom = (id: string, secret: string): AsyncAction => async (
             .map((track) => track[1].id);
           dispatch(loadTracks("deezer", trackIds, false, false));
         }
-        // console.log("TOTO", newInfo);
-        dispatch(setQueue(trackIds, newInfo.queue_position));
+        console.log("TOTO", newInfo);
+        dispatch(setQueue(newInfo.playing, trackIds, newInfo.queue_position));
         dispatch(setRoom(newRoom, newInfo));
       };
       newRoom.subscribeInfo(FIREBASE_CB);

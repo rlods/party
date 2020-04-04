@@ -33,8 +33,15 @@ export const loadContainer = (
 ): AsyncAction => async (dispatch, getState, { deezer }) => {
   try {
     const state = getState();
-    const containerTypeId = `${containerType}|${containerId}`;
-    let container = state.containers.containers[containerTypeId];
+    let container: Container | null = null;
+    switch (containerType) {
+      case "album":
+        container = state.containers.albums[containerId];
+        break;
+      case "playlist":
+        container = state.containers.playlists[containerId];
+        break;
+    }
     if (!container) {
       console.debug("Loading container...", { containerId, containerType });
       switch (containerType) {

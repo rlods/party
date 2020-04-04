@@ -1,20 +1,22 @@
 import { Reducer } from "redux";
 import { AxiosError } from "axios";
 import { ContainersAction } from "../actions/containers";
-import { Containers } from "../utils/medias";
+import { Album, Playlist } from "../utils/medias";
 
 // ------------------------------------------------------------------
 
 export type State = {
   fetching: boolean;
   error: null | AxiosError;
-  containers: Containers;
+  albums: { [id: string]: Album };
+  playlists: { [id: string]: Playlist };
 };
 
 const INITIAL_STATE: State = {
   fetching: false,
   error: null,
-  containers: {},
+  albums: {},
+  playlists: {},
 };
 
 // ------------------------------------------------------------------
@@ -44,9 +46,20 @@ export const containersReducer: Reducer<State, ContainersAction> = (
         error: action.payload,
       };
     case "containers/SET_CONTAINERS": {
-      const copy = { ...state, containers: { ...state.containers } };
+      const copy = {
+        ...state,
+        albums: { ...state.albums },
+        playlists: { ...state.playlists },
+      };
       for (const container of action.payload) {
-        copy.containers[`${container.type}|${container.id}`] = container;
+        switch (container.type) {
+          case "album":
+            copy.albums[container.id] = container;
+            break;
+          case "playlist":
+            copy.playlists[container.id] = container;
+            break;
+        }
       }
       return copy;
     }
