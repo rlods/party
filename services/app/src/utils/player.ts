@@ -132,6 +132,7 @@ export const Player = (chainPlay: boolean) => {
     _sourceNode.loopEnd = 0;
     _sourceNode.onended = () => {
       console.debug("Audio terminated...");
+      _sourceNode = null;
       if (chainPlay) {
         _position++;
       }
@@ -143,7 +144,7 @@ export const Player = (chainPlay: boolean) => {
   };
 
   const stop = async (): Promise<void> =>
-    new Promise(resolve => {
+    new Promise((resolve) => {
       if (null !== _sourceNode) {
         console.debug("Stopping audio...");
         _sourceNode.onended = () => {
@@ -166,6 +167,6 @@ export const Player = (chainPlay: boolean) => {
     getTrackPercent,
     isPlaying,
     play,
-    stop
+    stop,
   };
 };
