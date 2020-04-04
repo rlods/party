@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react";
 //
-import { MediaType } from "../../utils/containers";
+import { MediaType } from "../../utils/medias";
 
 // ------------------------------------------------------------------
 

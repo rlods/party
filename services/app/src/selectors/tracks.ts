@@ -1,10 +1,10 @@
 import { RootState } from "../reducers";
-import { ApiTrack } from "../utils/deezer";
+import { Track } from "../utils/medias";
 
 export const extractTracks = (state: RootState, trackIds: string[]) => {
-  const res: Array<ApiTrack> = [];
+  const res: Track[] = [];
   const {
-    tracks: { tracks }
+    tracks: { tracks },
   } = state;
   for (const trackId of trackIds) {
     const track = tracks[trackId];

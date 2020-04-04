@@ -6,7 +6,7 @@ import { MappedProps } from "../../containers/Room/SearchModal";
 import IconButton, { CancelButton } from "../Common/IconButton";
 import { DEFAULT_API, SearchAllResults } from "../../utils/deezer";
 import { Album, Playlist, Track } from "./Medias";
-import { MediaType } from "../../utils/containers";
+import { MediaType } from "../../utils/medias";
 import SearchResultCategory from "./SearchResultCategory";
 import "./SearchModal.scss";
 

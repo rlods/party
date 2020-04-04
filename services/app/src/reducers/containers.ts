@@ -1,7 +1,7 @@
 import { Reducer } from "redux";
 import { AxiosError } from "axios";
 import { ContainersAction } from "../actions/containers";
-import { Containers } from "../utils/containers";
+import { Containers } from "../utils/medias";
 
 // ------------------------------------------------------------------
 
@@ -14,7 +14,7 @@ export type State = {
 const INITIAL_STATE: State = {
   fetching: false,
   error: null,
-  containers: {}
+  containers: {},
 };
 
 // ------------------------------------------------------------------
@@ -28,20 +28,20 @@ export const containersReducer: Reducer<State, ContainersAction> = (
       return {
         ...state,
         fetching: true,
-        error: null
+        error: null,
       };
     case "containers/FETCHED": {
       return {
         ...state,
         fetching: false,
-        error: null
+        error: null,
       };
     }
     case "containers/ERROR":
       return {
         ...state,
         fetching: false,
-        error: action.payload
+        error: action.payload,
       };
     case "containers/SET_CONTAINERS": {
       const copy = { ...state, containers: { ...state.containers } };

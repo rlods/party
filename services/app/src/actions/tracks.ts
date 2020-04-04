@@ -3,7 +3,7 @@ import { AxiosError } from "axios";
 import { createAction, AsyncAction } from ".";
 import { displayError } from "./messages";
 import { appendInQueue } from "./queue";
-import { ApiTrack } from "../utils/deezer";
+import { Track, TrackType, ProviderType } from "../utils/medias";
 
 // ------------------------------------------------------------------
 
@@ -18,7 +18,7 @@ const fetching = () => createAction("tracks/FETCHING");
 const success = () => createAction("tracks/FETCHED");
 const error = (error: AxiosError) => createAction("tracks/ERROR", error);
 const reset = () => createAction("tracks/RESET");
-export const setTracks = (tracks: ApiTrack[]) =>
+export const setTracks = (tracks: Track[]) =>
   createAction("tracks/SET_TRACKS", tracks);
 
 // ------------------------------------------------------------------
@@ -27,6 +27,7 @@ const onlyUnique = (value: string, index: number, self: string[]) =>
   self.indexOf(value) === index;
 
 export const loadTracks = (
+  providerType: ProviderType,
   trackIds: string[],
   enqueue: boolean,
   preview: boolean
@@ -39,7 +40,7 @@ export const loadTracks = (
       const newTrackIds: string[] = trackIds
         .filter((trackId) => !oldTracks[trackId])
         .filter(onlyUnique);
-      let newTracks: ApiTrack[] = [];
+      let newTracks: Track[] = [];
       if (newTrackIds.length > 0) {
         console.debug("Loading track...", { trackIds: newTrackIds });
         newTracks = await Promise.all(
@@ -62,5 +63,27 @@ export const loadTracks = (
     } catch (err) {
       dispatch(displayError("Cannot load track", err));
     }
+  }
+};
+
+// ------------------------------------------------------------------
+
+export const previewTrack = (
+  providerType: ProviderType,
+  trackType: TrackType,
+  trackId: string
+): AsyncAction => async (dispatch, getState, { deezer, previewPlayer }) => {
+  try {
+    const state = getState();
+    let track = state.tracks.tracks[trackId];
+    if (!track) {
+      console.debug("Loading track...", { trackId });
+      track = await deezer.loadTrack(trackId);
+      dispatch(setTracks([track]));
+    }
+    console.debug("Start previewing...");
+    await previewPlayer.play(0, track.id.toString(), track.preview, 0);
+  } catch (err) {
+    dispatch(displayError("Cannot load track", err));
   }
 };

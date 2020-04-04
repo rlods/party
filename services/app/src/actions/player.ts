@@ -1,6 +1,4 @@
 import { AsyncAction, createAction, Dispatch } from ".";
-import { setTracks } from "./tracks";
-import { displayError } from "./messages";
 import { setRoomColor } from "./rooms";
 import { pickColor } from "../utils/colorpicker";
 import { setQueuePosition } from "./queue";
@@ -20,6 +18,49 @@ const setPlayerTrackPercent = (percent: number) =>
   createAction("player/SET_TRACK_PERCENT", percent);
 const start = () => createAction("player/START");
 const stop = () => createAction("player/STOP");
+
+// ------------------------------------------------------------------
+
+export const startPlayer = (): AsyncAction => async (
+  dispatch,
+  getState,
+  { queuePlayer }
+) => {
+  if (!PLAYER_TIMER1 && !PLAYER_TIMER2) {
+    _installTimer1(dispatch, getState, queuePlayer);
+    _installTimer2(dispatch, getState, queuePlayer);
+    dispatch(start());
+  }
+};
+
+// ------------------------------------------------------------------
+
+export const stopPlayer = (): AsyncAction => async (
+  dispatch,
+  _,
+  { queuePlayer }
+) => {
+  if (PLAYER_TIMER1 && PLAYER_TIMER2) {
+    clearTimeout(PLAYER_TIMER1);
+    PLAYER_TIMER1 = null;
+    clearTimeout(PLAYER_TIMER2);
+    PLAYER_TIMER2 = null;
+    await queuePlayer.stop();
+    dispatch(stop());
+    dispatch(setPlayerTrackPercent(0));
+  }
+};
+
+// ------------------------------------------------------------------
+
+export const stopPreview = (): AsyncAction => async (
+  _1,
+  _2,
+  { previewPlayer }
+) => {
+  console.debug("Stop previewing...");
+  await previewPlayer.stop();
+};
 
 // ------------------------------------------------------------------
 
@@ -119,67 +160,4 @@ const _installTimer2 = (
       _installTimer2(dispatch, getState, queuePlayer);
     }
   }, 250); // Must do very few operation because called very often (if we put less it creates blink on mobile when playing & scrolling)
-};
-
-export const startPlayer = (): AsyncAction => async (
-  dispatch,
-  getState,
-  { queuePlayer }
-) => {
-  if (!PLAYER_TIMER1 && !PLAYER_TIMER2) {
-    _installTimer1(dispatch, getState, queuePlayer);
-    _installTimer2(dispatch, getState, queuePlayer);
-    dispatch(start());
-  }
-};
-
-// ------------------------------------------------------------------
-
-export const stopPlayer = (): AsyncAction => async (
-  dispatch,
-  _,
-  { queuePlayer }
-) => {
-  if (PLAYER_TIMER1 && PLAYER_TIMER2) {
-    clearTimeout(PLAYER_TIMER1);
-    PLAYER_TIMER1 = null;
-    clearTimeout(PLAYER_TIMER2);
-    PLAYER_TIMER2 = null;
-    await queuePlayer.stop();
-    dispatch(stop());
-    dispatch(setPlayerTrackPercent(0));
-  }
-};
-
-// ------------------------------------------------------------------
-
-export const startPreview = (trackId: string): AsyncAction => async (
-  dispatch,
-  getState,
-  { deezer, previewPlayer }
-) => {
-  try {
-    const state = getState();
-    let track = state.tracks.tracks[trackId];
-    if (!track) {
-      console.debug("Loading track...", { trackId });
-      track = await deezer.loadTrack(trackId);
-      dispatch(setTracks([track]));
-    }
-    console.debug("Start previewing...");
-    await previewPlayer.play(0, track.id.toString(), track.preview, 0);
-  } catch (err) {
-    dispatch(displayError("Cannot load track", err));
-  }
-};
-
-// ------------------------------------------------------------------
-
-export const stopPreview = (): AsyncAction => async (
-  _1,
-  _2,
-  { previewPlayer }
-) => {
-  console.debug("Stop previewing...");
-  await previewPlayer.stop();
 };

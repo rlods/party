@@ -6,14 +6,15 @@ import SearchModal from "../../components/Room/SearchModal";
 import { popModal } from "../../actions/modals";
 import { previewContainer } from "../../actions/containers";
 import { queueTracks } from "../../actions/rooms";
-import { startPreview, stopPreview } from "../../actions/player";
-import { MediaType } from "../../utils/containers";
+import { stopPreview } from "../../actions/player";
+import { MediaType } from "../../utils/medias";
 import { isRoomLocked } from "../../selectors/rooms";
+import { previewTrack } from "../../actions/tracks";
 
 // ------------------------------------------------------------------
 
 const stateToProps = (state: RootState) => ({
-  locked: isRoomLocked(state)
+  locked: isRoomLocked(state),
 });
 
 const dispatchToProps = (dispatch: ThunkDispatch<RootState, any, any>) => ({
@@ -21,17 +22,17 @@ const dispatchToProps = (dispatch: ThunkDispatch<RootState, any, any>) => ({
   onSelect: (mediaType: MediaType, mediaId: string) =>
     dispatch(
       "track" === mediaType
-        ? queueTracks("album", "", mediaId)
-        : queueTracks(mediaType, mediaId, "")
+        ? queueTracks("deezer", "album", "", mediaId)
+        : queueTracks("deezer", mediaType, mediaId, "")
     ),
   onStartPreview: (mediaType: MediaType, mediaId: string) => {
     dispatch(
       "track" === mediaType
-        ? startPreview(mediaId)
-        : previewContainer(mediaType, mediaId)
+        ? previewTrack("deezer", mediaType, mediaId)
+        : previewContainer("deezer", mediaType, mediaId)
     );
   },
-  onStopPreview: () => dispatch(stopPreview())
+  onStopPreview: () => dispatch(stopPreview()),
 });
 
 export type MappedProps = ReturnType<typeof stateToProps> &

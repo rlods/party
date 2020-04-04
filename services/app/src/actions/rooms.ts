@@ -7,7 +7,7 @@ import { RoomInfo } from "../utils/rooms";
 import { FirebaseRoom } from "../utils/firebase";
 import { loadTracks } from "./tracks";
 import { loadContainer } from "./containers";
-import { ContainerType } from "../utils/containers";
+import { ContainerType, ProviderType } from "../utils/medias";
 import { CombinedColor } from "../utils/colorpicker";
 import history from "../utils/history";
 import { setQueue } from "./queue";
@@ -76,7 +76,7 @@ export const enterRoom = (id: string, secret: string): AsyncAction => async (
           trackIds = Object.entries(newInfo.queue)
             .sort((track1, track2) => Number(track1[0]) - Number(track2[0]))
             .map((track) => track[1].id);
-          dispatch(loadTracks(trackIds, false, false));
+          dispatch(loadTracks("deezer", trackIds, false, false));
         }
         // console.log("TOTO", newInfo);
         dispatch(setQueue(trackIds, newInfo.queue_position));
@@ -139,14 +139,17 @@ export const unlockRoom = (secret: string): AsyncAction => async (
 // ------------------------------------------------------------------
 
 export const queueTracks = (
+  providerType: ProviderType,
   containerType: ContainerType,
   containerId: string,
   trackId: string
 ): AsyncAction => async (dispatch) => {
   if (containerId) {
-    dispatch(loadContainer(containerType, containerId, true, false));
+    dispatch(
+      loadContainer(providerType, containerType, containerId, true, false)
+    );
   }
   if (trackId) {
-    dispatch(loadTracks([trackId], true, false));
+    dispatch(loadTracks(providerType, [trackId], true, false));
   }
 };

@@ -1,7 +1,7 @@
 import { AxiosError } from "axios";
 //
 import { createAction, AsyncAction } from ".";
-import { Container, ContainerType } from "../utils/containers";
+import { Container, ContainerType, ProviderType } from "../utils/medias";
 import { displayError } from "./messages";
 import { appendInQueue } from "./queue";
 import { loadTracks, setTracks } from "./tracks";
@@ -25,6 +25,7 @@ const setContainers = (containers: Container[]) =>
 // ------------------------------------------------------------------
 
 export const loadContainer = (
+  providerType: ProviderType,
   containerType: ContainerType,
   containerId: string,
   enqueue: boolean,
@@ -53,14 +54,19 @@ export const loadContainer = (
           console.debug("Enqueuing container...");
           dispatch(
             appendInQueue(
-              container.tracks.data.map(track => track.id.toString())
+              container.tracks.data.map((track) => track.id.toString())
             )
           );
         }
         if (preview) {
           console.debug("Previewing container...");
           dispatch(
-            loadTracks([container.tracks.data[0].id.toString()], false, true)
+            loadTracks(
+              providerType,
+              [container.tracks.data[0].id.toString()],
+              false,
+              true
+            )
           );
         }
       }
@@ -73,9 +79,12 @@ export const loadContainer = (
 // ------------------------------------------------------------------
 
 export const previewContainer = (
+  providerType: ProviderType,
   containerType: ContainerType,
   containerId: string
-): AsyncAction => async dispatch => {
+): AsyncAction => async (dispatch) => {
   console.debug("Previewing container...", { containerType, containerId });
-  dispatch(loadContainer(containerType, containerId, false, true));
+  dispatch(
+    loadContainer(providerType, containerType, containerId, false, true)
+  );
 };
