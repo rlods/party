@@ -1,4 +1,4 @@
-import React, { Component, Fragment, RefObject, createRef } from "react";
+import React, { Component, RefObject, createRef } from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
 //
 import FormModal from "../Modals/FormModal";
@@ -73,7 +73,7 @@ class ConnectUserModal extends Component<MappedProps & WithTranslation, State> {
   private renderButtons = () => {
     const { t } = this.props;
     return (
-      <Fragment>
+      <>
         <IconButton
           title={t("users.connect")}
           kind="primary"
@@ -87,7 +87,7 @@ class ConnectUserModal extends Component<MappedProps & WithTranslation, State> {
           icon="plus"
           onClick={this.props.onToggle}
         />
-      </Fragment>
+      </>
     );
   };
 

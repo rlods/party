@@ -4,13 +4,16 @@ import { withTranslation, WithTranslation } from "react-i18next";
 import { MappedProps } from "../../containers/Room/Queue";
 import { Track } from "./Medias";
 import IconButton from "../Common/IconButton";
+import { LoadingIcon } from "../Common/Icon";
 import "./Queue.scss";
+import QueueItem from "./QueueItem";
 
 // ------------------------------------------------------------------
 
 class Queue extends Component<MappedProps & WithTranslation> {
   public render = () => {
     const {
+      loaded,
       locked,
       playing,
       trackIndex,
@@ -25,29 +28,34 @@ class Queue extends Component<MappedProps & WithTranslation> {
       <div className="Queue">
         {tracks.length > 0 ? (
           tracks.map((track, index) => (
-            <div className="QueueItem" key={index}>
-              <Track
-                track={track}
-                playable={!locked}
-                playing={playing && trackIndex === index}
-                onPlay={() => onPlay(index)}
-                onStop={onStop}
-                actions={
-                  !locked ? (
-                    <IconButton
-                      title={t("medias.remove")}
-                      icon="trash"
-                      onClick={() => onRemove(index)}
-                    />
-                  ) : null
-                }
-              />
-            </div>
+            <QueueItem
+              key={index}
+              locked={locked}
+              playing={playing && trackIndex === index}
+              track={track}
+              onPlay={() => onPlay(index)}
+              onRemove={() => onRemove(index)}
+              onStop={onStop}
+            />
           ))
         ) : (
           <div className="QueueEmpty">
-            <IconButton title="..." icon="shower" onClick={onSearch} size="L" />
-            <span onClick={onSearch}>{t("rooms.empty")}</span>
+            {loaded ? (
+              <>
+                <IconButton
+                  title="..."
+                  icon="shower"
+                  onClick={onSearch}
+                  size="L"
+                />
+                <span onClick={onSearch}>{t("rooms.empty")}</span>
+              </>
+            ) : (
+              <>
+                <LoadingIcon size="L" />
+                <span>{t("rooms.loading")}</span>
+              </>
+            )}
           </div>
         )}
       </div>

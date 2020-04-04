@@ -1,4 +1,4 @@
-import React, { Component, Fragment, RefObject, createRef } from "react";
+import React, { Component, RefObject, createRef } from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
 import { v4 } from "uuid";
 //
@@ -72,7 +72,7 @@ class CreateUserModal extends Component<MappedProps & WithTranslation, State> {
   private renderButtons = () => {
     const { t } = this.props;
     return (
-      <Fragment>
+      <>
         <IconButton
           title={t("users.create")}
           kind="primary"
@@ -86,7 +86,7 @@ class CreateUserModal extends Component<MappedProps & WithTranslation, State> {
           icon="sign-in"
           onClick={this.props.onToggle}
         />
-      </Fragment>
+      </>
     );
   };
 

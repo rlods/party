@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { withTranslation, WithTranslation } from "react-i18next";
 //
@@ -46,7 +46,7 @@ class Splash extends Component<MappedProps & WithTranslation> {
                 />
               </div>
             ) : (
-              <Fragment>
+              <>
                 <div className="MenuItem">
                   <IconButton
                     displayTitle={true}
@@ -56,7 +56,7 @@ class Splash extends Component<MappedProps & WithTranslation> {
                     title={t("users.connect")}
                   />
                 </div>
-              </Fragment>
+              </>
             )}
           </div>
         </div>

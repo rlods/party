@@ -1,4 +1,4 @@
-import React, { Fragment, ReactNode } from "react";
+import React, { ReactNode } from "react";
 //
 import { MediaType } from "../../utils/containers";
 
@@ -11,7 +11,7 @@ const MAX_RESULTS_COUNT = 5;
 const SearchResultCategory = <T extends { id: number }>({
   items,
   label,
-  cb
+  cb,
 }: {
   items: T[];
   label: string;
@@ -19,16 +19,16 @@ const SearchResultCategory = <T extends { id: number }>({
   cb: (item: T) => ReactNode;
 }) =>
   items.length > 0 ? (
-    <Fragment>
+    <>
       <div className="ModalField">
         <label>{label}</label>
       </div>
-      {items.slice(0, MAX_RESULTS_COUNT).map(item => (
+      {items.slice(0, MAX_RESULTS_COUNT).map((item) => (
         <div key={item.id} className="ModalField">
           <div className="SearchResultItem">{cb(item)}</div>
         </div>
       ))}
-    </Fragment>
+    </>
   ) : null;
 
 export default SearchResultCategory;

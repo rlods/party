@@ -1,4 +1,4 @@
-import React, { Component, Fragment, createRef, RefObject } from "react";
+import React, { Component, createRef, RefObject } from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
 //
 import FormModal from "../Modals/FormModal";
@@ -61,7 +61,7 @@ class SearchModal extends Component<MappedProps & WithTranslation, State> {
   private renderButtons = () => {
     const { t } = this.props;
     return (
-      <Fragment>
+      <>
         <IconButton
           title={t("medias.search")}
           kind="primary"
@@ -69,7 +69,7 @@ class SearchModal extends Component<MappedProps & WithTranslation, State> {
           type="submit"
         />
         <CancelButton onClick={this.props.onClose} />
-      </Fragment>
+      </>
     );
   };
 
@@ -103,7 +103,7 @@ class SearchModal extends Component<MappedProps & WithTranslation, State> {
       results: { albums, playlists, tracks },
     } = this.state;
     return (
-      <Fragment>
+      <>
         <SearchResultCategory
           label={t("medias.albums")}
           type="album"
@@ -173,7 +173,7 @@ class SearchModal extends Component<MappedProps & WithTranslation, State> {
             />
           )}
         />
-      </Fragment>
+      </>
     );
   };
 

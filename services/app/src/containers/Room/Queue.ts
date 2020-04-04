@@ -6,12 +6,13 @@ import Queue from "../../components/Room/Queue";
 import { extractTracks } from "../../selectors/tracks";
 import { setQueuePosition, removeFromQueue } from "../../actions/queue";
 import { stopPlayer, startPlayer } from "../../actions/player";
-import { isRoomLocked } from "../../selectors/rooms";
+import { isRoomLoaded, isRoomLocked } from "../../selectors/rooms";
 import { openModal } from "../../actions/modals";
 
 // ------------------------------------------------------------------
 
 const stateToProps = (state: RootState) => ({
+  loaded: isRoomLoaded(state),
   locked: isRoomLocked(state),
   playing: state.player.playing,
   trackIndex: state.queue.position % state.queue.trackIds.length,

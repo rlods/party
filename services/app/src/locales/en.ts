@@ -33,6 +33,7 @@ export default {
     key_placeholder: "Room Key...",
     key: "Room Key",
     link_copied_to_clipboard: "Room link has been copied to clipboard",
+    loading: "Loading...",
     locked: "Locked (click to unlock)",
     name_is_invalid: "Name is invalid",
     name_placeholderl: "Room Name...",

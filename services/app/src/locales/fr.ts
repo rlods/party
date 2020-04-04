@@ -32,6 +32,7 @@ export default {
     exit: "Quitter la pièce",
     key_placeholder: "Clef...",
     key: "Clef",
+    loading: "Chargement...",
     link_copied_to_clipboard:
       "Le lien de la pièce a été copié dans le presse-papier",
     locked: "Verrouillée (cliquer pour déverrouiller)",

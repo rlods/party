@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
 //
 import FormModal from "../Modals/FormModal";
@@ -32,7 +32,7 @@ class ConfirmModal extends Component<
   private renderButtons = () => {
     const { t } = this.props;
     return (
-      <Fragment>
+      <>
         <IconButton
           title={t("cancel")}
           kind="primary"
@@ -40,7 +40,7 @@ class ConfirmModal extends Component<
           type="submit"
         />
         <CancelButton onClick={this.props.onCancel} />
-      </Fragment>
+      </>
     );
   };
 }
