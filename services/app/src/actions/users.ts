@@ -5,6 +5,7 @@ import { createAction, AsyncAction } from ".";
 import { UserInfo } from "../utils/users";
 import { FirebaseUser } from "../utils/firebase";
 import { displayError } from "./messages";
+import { extractErrorMessage } from "../utils/messages";
 
 // ------------------------------------------------------------------
 
@@ -38,7 +39,7 @@ export const createUser = (name: string, secret: string): AsyncAction => async (
     await FirebaseUser(id, secret).update({ name });
     dispatch(connectUser(id, secret));
   } catch (err) {
-    dispatch(displayError("Cannot create user", err));
+    dispatch(displayError(extractErrorMessage(err)));
   }
 };
 
@@ -66,7 +67,7 @@ export const connectUser = (id: string, secret: string): AsyncAction => async (
       };
       newUser.subscribeInfo(FIREBASE_CB);
     } catch (err) {
-      dispatch(displayError("Cannot connect user", err));
+      dispatch(displayError(extractErrorMessage(err)));
       dispatch(setUserAccess("", ""));
     }
   }

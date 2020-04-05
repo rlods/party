@@ -11,6 +11,7 @@ import { ContainerType, ProviderType } from "../utils/medias";
 import { CombinedColor } from "../utils/colorpicker";
 import history from "../utils/history";
 import { setQueue } from "./queue";
+import { extractErrorMessage } from "../utils/messages";
 
 // ------------------------------------------------------------------
 
@@ -47,7 +48,7 @@ export const createRoom = (name: string, secret: string): AsyncAction => async (
     await FirebaseRoom(id, secret).update({ name });
     dispatch(enterRoom(id, secret));
   } catch (err) {
-    dispatch(displayError("Cannot create room", err));
+    dispatch(displayError(extractErrorMessage(err)));
   }
 };
 
@@ -85,7 +86,7 @@ export const enterRoom = (id: string, secret: string): AsyncAction => async (
       newRoom.subscribeInfo(FIREBASE_CB);
       history.push(`/room/${id}?key=${secret}`); // TODO: should push only if we're not already in it
     } catch (err) {
-      dispatch(displayError("Cannot join room", err));
+      dispatch(displayError(extractErrorMessage(err)));
     }
   }
 };

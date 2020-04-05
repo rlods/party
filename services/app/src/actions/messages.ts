@@ -1,5 +1,5 @@
 import { createAction, AsyncAction } from ".";
-import { Message, MessageType, extractErrorMessage } from "../utils/messages";
+import { Message, MessageType } from "../utils/messages";
 
 // ------------------------------------------------------------------
 
@@ -28,16 +28,8 @@ export const displayMessage = (
   setTimeout(() => dispatch(removeMessage(id)), duration);
 };
 
-export const displayError = (text: string, error?: any): AsyncAction => (
-  dispatch
-): any => {
-  dispatch(
-    displayMessage(
-      "error",
-      error ? `${text}: ${extractErrorMessage(error)}` : text,
-      3000
-    )
-  );
+export const displayError = (text: string): AsyncAction => (dispatch): any => {
+  dispatch(displayMessage("error", text, 3000));
 };
 
 export const displayInfo = (text: string) => displayMessage("info", text, 3000);

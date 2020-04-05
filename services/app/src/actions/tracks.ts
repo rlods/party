@@ -4,6 +4,7 @@ import { createAction, AsyncAction } from ".";
 import { displayError } from "./messages";
 import { appendInQueue } from "./queue";
 import { Track, TrackType, ProviderType } from "../utils/medias";
+import { extractErrorMessage } from "../utils/messages";
 
 // ------------------------------------------------------------------
 
@@ -61,7 +62,7 @@ export const loadTracks = (
         await previewPlayer.play(0, track.id.toString(), track.preview, 0);
       }
     } catch (err) {
-      dispatch(displayError("Cannot load track", err));
+      dispatch(displayError(extractErrorMessage(err)));
     }
   }
 };
@@ -84,6 +85,6 @@ export const previewTrack = (
     console.debug("Start previewing...");
     await previewPlayer.play(0, track.id.toString(), track.preview, 0);
   } catch (err) {
-    dispatch(displayError("Cannot load track", err));
+    dispatch(displayError(extractErrorMessage(err)));
   }
 };

@@ -22,7 +22,7 @@ const loadAudioBuffer = (url: string): Promise<AudioBuffer> =>
     req.responseType = "arraybuffer";
     req.addEventListener(
       "error",
-      () => reject(new Error("Audio buffer loading failed")),
+      () => reject(new Error("player.errors.cannot_load_audio_buffer")),
       false
     );
     req.addEventListener(

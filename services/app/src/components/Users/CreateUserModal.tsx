@@ -91,14 +91,14 @@ class CreateUserModal extends Component<MappedProps & WithTranslation, State> {
   };
 
   private onCreate = () => {
-    const { onClose, onCreate, onError, t } = this.props;
+    const { onClose, onCreate, onError } = this.props;
     const { name, secret } = this.state;
     if (name.trim().length === 0) {
-      onError(t("users.name_is_invalid"));
+      onError("users.name_is_invalid");
       return;
     }
     if (secret.trim().length === 0) {
-      onError(t("users.secret_is_invalid"));
+      onError("users.secret_is_invalid");
       return;
     }
     onCreate(name, secret);

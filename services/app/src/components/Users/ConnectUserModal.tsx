@@ -92,14 +92,14 @@ class ConnectUserModal extends Component<MappedProps & WithTranslation, State> {
   };
 
   private onConnect = () => {
-    const { onClose, onConnect, onError, t } = this.props;
+    const { onClose, onConnect, onError } = this.props;
     const { id, secret } = this.state;
     if (id.trim().length === 0) {
-      onError(t("users.id_is_invalid"));
+      onError("users.id_is_invalid");
       return;
     }
     if (secret.trim().length === 0) {
-      onError(t("users.secret_is_invalid"));
+      onError("users.secret_is_invalid");
       return;
     }
     onConnect(id, secret);

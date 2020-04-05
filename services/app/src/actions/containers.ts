@@ -5,6 +5,7 @@ import { Container, ContainerType, ProviderType } from "../utils/medias";
 import { displayError } from "./messages";
 import { appendInQueue } from "./queue";
 import { loadTracks, setTracks } from "./tracks";
+import { extractErrorMessage } from "../utils/messages";
 
 // ------------------------------------------------------------------
 
@@ -79,7 +80,7 @@ export const loadContainer = (
       }
     }
   } catch (err) {
-    dispatch(displayError("Cannot load container", err));
+    dispatch(displayError(extractErrorMessage(err)));
   }
 };
 

@@ -4,6 +4,9 @@ export default {
     powered_with: "boosté avec",
   },
   users: {
+    errors: {
+      invalid: "L'utilisateur est invalide",
+    },
     user: "Utilisateur",
     confirm_disconnect: "Êtes-vous sûr(e) de vouloir vous déconnecter ?",
     connect: "Se connecter",
@@ -22,6 +25,10 @@ export default {
     secret: "Secret",
   },
   rooms: {
+    errors: {
+      invalid: "La pièce est invalide",
+      locked: "La pièce est verrouillée",
+    },
     clear: "Supprimer toutes les pistes",
     confirm_clear: "Êtes-vous sûr(e) de vouloir supprimer toutes les pistes ?",
     confirm_exit: "Êtes-vous sûr(e) de vouloir quitter la pièce ?",
@@ -58,6 +65,9 @@ export default {
     tracks: "Pistes",
   },
   player: {
+    errors: {
+      cannot_load_audio_buffer: "Le buffer Audio ne peut pas être chargé",
+    },
     backward: "Piste précédente",
     forward: "Piste suivante",
     play: "Lire",

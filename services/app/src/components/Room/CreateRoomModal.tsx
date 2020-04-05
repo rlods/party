@@ -85,14 +85,14 @@ class CreateRoomModal extends Component<MappedProps & WithTranslation, State> {
   };
 
   private onCreate = () => {
-    const { onClose, onCreate, onError, t } = this.props;
+    const { onClose, onCreate, onError } = this.props;
     const { name, secret } = this.state;
     if (name.trim().length === 0) {
-      onError(t("rooms.name_is_invalid"));
+      onError("rooms.name_is_invalid");
       return;
     }
     if (secret.trim().length === 0) {
-      onError(t("rooms.secret_is_invalid"));
+      onError("rooms.secret_is_invalid");
       return;
     }
     onCreate(name, secret);

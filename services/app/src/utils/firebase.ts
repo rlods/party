@@ -55,7 +55,7 @@ export const FirebaseRoom = (id: string, secret?: string) => {
           _values = newValues;
           resolve(_values);
         } else {
-          reject(new Error("Room is invalid"));
+          reject(new Error("rooms.errors.invalid"));
         }
       });
     });
@@ -152,7 +152,7 @@ export const FirebaseUser = (id: string, secret?: string) => {
           _values = newValues;
           resolve(_values);
         } else {
-          reject(new Error("User is invalid"));
+          reject(new Error("users.errors.invalid"));
         }
       });
     });

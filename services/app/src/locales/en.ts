@@ -4,6 +4,9 @@ export default {
     powered_with: "Powered with",
   },
   users: {
+    errors: {
+      invalid: "User is invalid",
+    },
     user: "User",
     confirm_disconnect: "Are you sure you want to disconnect?",
     connect: "Connect",
@@ -22,6 +25,10 @@ export default {
     secret: "User Secret",
   },
   rooms: {
+    errors: {
+      invalid: "Room is invalid",
+      locked: "Room is locked",
+    },
     clear: "Clear all tracks",
     confirm_clear: "Are you sure you want to remove all tracks?",
     confirm_exit: "Are you sure you want to leave the room?",
@@ -57,6 +64,9 @@ export default {
     tracks: "Tracks",
   },
   player: {
+    errors: {
+      cannot_load_audio_buffer: "Audio buffer loading failed",
+    },
     backward: "Backward",
     forward: "Forward",
     play: "Play",

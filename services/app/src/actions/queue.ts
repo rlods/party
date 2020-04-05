@@ -2,6 +2,7 @@ import { createAction, AsyncAction } from ".";
 import { RoomQueue } from "../utils/rooms";
 import { displayError } from "./messages";
 import { lockRoom } from "./rooms";
+import { extractErrorMessage } from "../utils/messages";
 
 // ------------------------------------------------------------------
 
@@ -24,11 +25,11 @@ export const clearQueue = (): AsyncAction => async (dispatch, getState) => {
       console.debug("Clearing queue...");
       await room.update({ queue: {}, queue_position: 0 });
     } catch (err) {
-      dispatch(displayError("Cannot clear queue"));
+      dispatch(displayError(extractErrorMessage(err)));
       dispatch(lockRoom());
     }
   } else {
-    dispatch(displayError("Room is locked"));
+    dispatch(displayError("rooms.error.locked"));
   }
 };
 
@@ -52,12 +53,12 @@ export const appendInQueue = (trackIds: string[]): AsyncAction => async (
         });
         await room.update({ queue });
       } catch (err) {
-        dispatch(displayError("Cannot append in queue"));
+        dispatch(displayError(extractErrorMessage(err)));
         dispatch(lockRoom());
       }
     }
   } else {
-    dispatch(displayError("Room is locked"));
+    dispatch(displayError("rooms.error.locked"));
   }
 };
 
@@ -88,12 +89,12 @@ export const removeFromQueue = (index: number): AsyncAction => async (
           queue_position: index < oldIndex ? position - 1 : position,
         });
       } catch (err) {
-        dispatch(displayError("Cannot remove from queue"));
+        dispatch(displayError(extractErrorMessage(err)));
         dispatch(lockRoom());
       }
     }
   } else {
-    dispatch(displayError("Room is locked"));
+    dispatch(displayError("rooms.error.locked"));
   }
 };
 
@@ -114,12 +115,12 @@ export const setQueuePosition = (newPosition: number): AsyncAction => async (
         });
         await room.update({ queue_position: newPosition });
       } catch (err) {
-        dispatch(displayError("Cannot set queue position"));
+        dispatch(displayError(extractErrorMessage(err)));
         dispatch(lockRoom());
       }
     }
   } else {
-    dispatch(displayError("Room is locked"));
+    dispatch(displayError("rooms.error.locked"));
   }
 };
 
