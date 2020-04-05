@@ -13,7 +13,7 @@ import "./SearchModal.scss";
 // ------------------------------------------------------------------
 
 type State = {
-  playingMediaId: number;
+  playingMediaId: string;
   playingMediaType: MediaType;
   query: string;
   results: SearchAllResults;
@@ -23,7 +23,7 @@ class SearchModal extends Component<MappedProps & WithTranslation, State> {
   private queryRef: RefObject<HTMLInputElement> = createRef();
 
   public readonly state: State = {
-    playingMediaId: 0,
+    playingMediaId: "",
     playingMediaType: "track",
     query: "",
     results: {
@@ -117,8 +117,11 @@ class SearchModal extends Component<MappedProps & WithTranslation, State> {
             media={media}
             mediaType={type}
             playable={true}
-            playing={playingMediaType === type && playingMediaId === media.id}
-            onPlay={() => this.onStartPreview(type, media.id)}
+            playing={
+              playingMediaType === type &&
+              playingMediaId === media.id.toString()
+            }
+            onPlay={() => this.onStartPreview(type, media.id.toString())}
             onStop={this.onStopPreview}
           />
         )}
@@ -138,9 +141,9 @@ class SearchModal extends Component<MappedProps & WithTranslation, State> {
 
   private onStartPreview = (
     playingMediaType: MediaType,
-    playingMediaId: number
+    playingMediaId: string
   ) => {
-    this.props.onStartPreview(playingMediaType, playingMediaId.toString());
+    this.props.onStartPreview(playingMediaType, playingMediaId);
     this.setState({
       playingMediaId,
       playingMediaType,
@@ -150,7 +153,7 @@ class SearchModal extends Component<MappedProps & WithTranslation, State> {
   private onStopPreview = () => {
     this.props.onStopPreview();
     this.setState({
-      playingMediaId: 0,
+      playingMediaId: "",
       playingMediaType: "track",
     });
   };
