@@ -9,6 +9,7 @@ export type State = {
   fetching: boolean;
   error: null | AxiosError;
   medias: {
+    // keys are MediaType
     album: { [id: string]: Album };
     playlist: { [id: string]: Playlist };
     track: { [id: string]: Track };

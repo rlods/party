@@ -1,19 +1,20 @@
 import { RootState } from "../reducers";
-import { Track } from "../utils/medias";
+import { Media, MediaAccess } from "../utils/medias";
 
 // ------------------------------------------------------------------
 
-export const extractTracks = (state: RootState, trackIds: string[]) => {
-  const res: Array<Track | null> = [];
+export const extractMedias = (
+  state: RootState,
+  mediaAccesses: MediaAccess[]
+) => {
+  const res: Array<Media | null> = [];
   const {
-    medias: {
-      medias: { track: tracks },
-    },
+    medias: { medias },
   } = state;
-  for (const trackId of trackIds) {
-    const track = tracks[trackId];
-    if (!!track) {
-      res.push(track);
+  for (const mediaAccess of mediaAccesses) {
+    const media = medias[mediaAccess.type][mediaAccess.id];
+    if (!!media) {
+      res.push(media);
     } else {
       res.push(null); // Stiil loading or cannot be loaded or to reload later because of rate limit
     }

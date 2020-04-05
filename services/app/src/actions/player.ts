@@ -4,6 +4,7 @@ import { pickColor } from "../utils/colorpicker";
 import { setQueuePosition } from "./queue";
 import { Player } from "../utils/player";
 import { RootState } from "../reducers";
+import { MediaAccess } from "../utils/medias";
 
 // ------------------------------------------------------------------
 
@@ -70,7 +71,7 @@ let PLAYER_TIMER2: NodeJS.Timeout | null = null;
 const _computeNextPosition = (
   queuePlayer: ReturnType<typeof Player>,
   queueTrackPosition: number,
-  trackIds: string[]
+  medias: MediaAccess[]
 ) => {
   let nextPosition = -1;
   const playingTrackID = queuePlayer.getPlayingTrackID();
@@ -84,9 +85,7 @@ const _computeNextPosition = (
       nextPosition =
         playingTrackPosition >= 0 ? playingTrackPosition : queueTrackPosition;
     }
-  } else if (
-    playingTrackID !== trackIds[queueTrackPosition % trackIds.length]
-  ) {
+  } else if (playingTrackID !== medias[queueTrackPosition % medias.length].id) {
     // User has deleted playing track
     nextPosition = queueTrackPosition;
   }
@@ -101,21 +100,21 @@ const _installTimer1 = (
   // Don't use setInterval because a step could be triggered before previous one terminated
   PLAYER_TIMER1 = setTimeout(async () => {
     const {
-      queue: { position, trackIds },
+      queue: { medias: queueMedias, position },
       medias: {
         medias: { track: tracks },
       },
     } = getState();
-    if (trackIds.length > 0) {
+    if (queueMedias.length > 0) {
       // Detect and apply change to queue and player
       const nextTrackPosition = _computeNextPosition(
         queuePlayer,
         position,
-        trackIds
+        queueMedias
       );
       if (nextTrackPosition >= 0) {
-        const nextIndex = nextTrackPosition % trackIds.length;
-        const nextTrack = tracks[trackIds[nextIndex]];
+        const nextIndex = nextTrackPosition % queueMedias.length;
+        const nextTrack = tracks[queueMedias[nextIndex].id];
         console.debug("Detected play change...", {
           nextIndex,
           nextTrack,
@@ -152,9 +151,9 @@ const _installTimer2 = (
   // Don't use setInterval because a step could be triggered before previous one terminated
   PLAYER_TIMER2 = setTimeout(() => {
     const {
-      queue: { trackIds },
+      queue: { medias: queueMedias },
     } = getState();
-    if (trackIds.length > 0) {
+    if (queueMedias.length > 0) {
       // Refresh player track percent
       dispatch(setPlayerTrackPercent(queuePlayer.getPlayingTrackPercent()));
 

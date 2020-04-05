@@ -14,9 +14,9 @@ class Queue extends Component<MappedProps & WithTranslation> {
     const {
       loaded,
       locked,
+      medias,
       playing,
       playingIndex,
-      tracks,
       onPlay,
       onRemove,
       onSearch,
@@ -25,13 +25,14 @@ class Queue extends Component<MappedProps & WithTranslation> {
     } = this.props;
     return (
       <div className="Queue">
-        {tracks.length > 0 ? (
-          tracks.map((track, index) => (
+        {medias.length > 0 ? (
+          medias.map((media, index) => (
             <QueueItem
               key={index}
               locked={locked}
               playing={playing && playingIndex === index}
-              track={track}
+              media={media}
+              mediaType="track"
               onPlay={() => onPlay(index)}
               onRemove={() => onRemove(index)}
               onStop={onStop}

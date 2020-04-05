@@ -13,7 +13,7 @@ import { lockRoom } from "../../actions/rooms";
 // ------------------------------------------------------------------
 
 const stateToProps = (state: RootState) => ({
-  tracksCount: state.queue.trackIds.length,
+  tracksCount: state.queue.medias.length,
   locked: isRoomLocked(state),
   playing: state.player.playing,
 });

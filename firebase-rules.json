@@ -43,8 +43,11 @@
           "playing": { ".validate": "newData.isBoolean()" },
           "queue": {
             "$track_index": {
-              ".validate": "$track_index.matches(/^[0-9]+$/) && newData.hasChildren(['id', 'type'])",
+              ".validate": "$track_index.matches(/^[0-9]+$/) && newData.hasChildren(['id', 'provider', 'type'])",
               "id": {
+                ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length < 20"
+              },
+              "provider": {
                 ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length < 20"
               },
               "type": {

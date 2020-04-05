@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react";
 //
-import { MediaType } from "../../utils/medias";
+import { Media } from "../../utils/medias";
 
 // ------------------------------------------------------------------
 
@@ -8,15 +8,14 @@ const MAX_RESULTS_COUNT = 5;
 
 // ------------------------------------------------------------------
 
-const SearchResultCategory = <T extends { id: number }>({
+const SearchResultCategory = ({
   items,
   label,
   cb,
 }: {
-  items: T[];
+  items: Media[];
   label: string;
-  type: MediaType;
-  cb: (item: T) => ReactNode;
+  cb: (item: Media) => ReactNode;
 }) =>
   items.length > 0 ? (
     <>

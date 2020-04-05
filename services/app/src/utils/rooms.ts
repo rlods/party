@@ -1,3 +1,5 @@
+import { MediaAccess } from "./medias";
+
 export type RoomType = "blind" | "dj";
 
 export type RoomInfo = {
@@ -15,10 +17,7 @@ export type RoomAccess = {
 };
 
 export type RoomQueue = {
-  [index: string]: {
-    id: string;
-    type: string;
-  };
+  [index: string]: MediaAccess;
 };
 
 // ------------------------------------------------------------------

@@ -1,16 +1,17 @@
 import React, { Component } from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
 //
-import { Track } from "./Medias";
+import Media from "./Medias";
 import IconButton from "../Common/IconButton";
-import { ApiTrack } from "../../utils/deezer";
+import { Media as MediaData, MediaType } from "../../utils/medias";
 
 // ------------------------------------------------------------------
 
 type Props = {
   locked: boolean;
+  media: MediaData | null; // if null : stiil loading or cannot be loaded or to reload later because of rate limit
+  mediaType: MediaType;
   playing: boolean;
-  track: ApiTrack | null; // if null : stiil loading or cannot be loaded or to reload later because of rate limit
   onPlay: () => void;
   onRemove: () => void;
   onStop: () => void;
@@ -18,12 +19,22 @@ type Props = {
 
 class QueueItem extends Component<Props & WithTranslation> {
   public render = () => {
-    const { locked, playing, track, onPlay, onRemove, onStop, t } = this.props;
+    const {
+      locked,
+      media,
+      mediaType,
+      playing,
+      onPlay,
+      onRemove,
+      onStop,
+      t,
+    } = this.props;
     return (
       <div className="QueueItem">
-        <Track
-          track={track}
-          playable={!!track && !locked}
+        <Media
+          media={media}
+          mediaType={mediaType}
+          playable={!!media && !locked}
           playing={playing}
           onPlay={onPlay}
           onStop={onStop}

@@ -1,18 +1,19 @@
 import { Reducer } from "redux";
 import { QueueAction } from "../actions/queue";
+import { MediaAccess } from "../utils/medias";
 
 // ------------------------------------------------------------------
 
 export type State = {
+  medias: MediaAccess[];
   playing: boolean;
   position: number;
-  trackIds: string[];
 };
 
 export const INITIAL_STATE: State = {
+  medias: [],
   playing: false,
   position: 0,
-  trackIds: [],
 };
 
 // ------------------------------------------------------------------

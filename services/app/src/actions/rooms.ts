@@ -6,7 +6,7 @@ import { displayError } from "./messages";
 import { RoomInfo } from "../utils/rooms";
 import { FirebaseRoom } from "../utils/firebase";
 import { loadMedias } from "./medias";
-import { MediaType, Provider } from "../utils/medias";
+import { MediaType, Provider, MediaAccess } from "../utils/medias";
 import { CombinedColor } from "../utils/colorpicker";
 import history from "../utils/history";
 import { setQueue } from "./queue";
@@ -71,15 +71,25 @@ export const enterRoom = (id: string, secret: string): AsyncAction => async (
       dispatch(setRoomAccess(id, secret));
       FIREBASE_CB = (snapshot: firebase.database.DataSnapshot) => {
         const newInfo = snapshot.val() as RoomInfo;
-        let trackIds: string[] = [];
+        let mediaAccesses: MediaAccess[] = [];
         if (newInfo.queue) {
-          trackIds = Object.entries(newInfo.queue)
-            .sort((track1, track2) => Number(track1[0]) - Number(track2[0]))
-            .map((track) => track[1].id);
-          dispatch(loadMedias("deezer", "track", trackIds, false, false));
+          mediaAccesses = Object.entries(newInfo.queue)
+            .sort((media1, media2) => Number(media1[0]) - Number(media2[0]))
+            .map((media) => media[1]);
+          dispatch(
+            loadMedias(
+              "deezer",
+              "track",
+              mediaAccesses.map((media) => media.id),
+              false,
+              false
+            )
+          );
         }
         console.log("TOTO", newInfo);
-        dispatch(setQueue(newInfo.playing, trackIds, newInfo.queue_position));
+        dispatch(
+          setQueue(mediaAccesses, newInfo.playing, newInfo.queue_position)
+        );
         dispatch(setRoom(newRoom, newInfo));
       };
       newRoom.subscribeInfo(FIREBASE_CB);

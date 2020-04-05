@@ -2,6 +2,7 @@ import { createAction, AsyncAction } from ".";
 import { RoomQueue } from "../utils/rooms";
 import { displayError } from "./messages";
 import { lockRoom } from "./rooms";
+import { MediaAccess } from "../utils/medias";
 import { extractErrorMessage } from "../utils/messages";
 
 // ------------------------------------------------------------------
@@ -9,10 +10,10 @@ import { extractErrorMessage } from "../utils/messages";
 export type QueueAction = ReturnType<typeof setQueue>;
 
 export const setQueue = (
+  medias: MediaAccess[],
   playing: boolean,
-  trackIds: string[],
   position: number
-) => createAction("queue/SET", { playing, position, trackIds });
+) => createAction("queue/SET", { medias, playing, position });
 
 // ------------------------------------------------------------------
 
@@ -42,15 +43,21 @@ export const appendInQueue = (trackIds: string[]): AsyncAction => async (
   } = getState();
   if (room && !room.isLocked()) {
     if (trackIds.length > 0) {
+      const {
+        queue: { medias: queueMedias },
+      } = getState();
       try {
         console.debug("Appending queue...", { trackIds });
         const queue: RoomQueue = {};
-        [...getState().queue.trackIds, ...trackIds].forEach((id, index) => {
-          queue[index] = {
-            id,
-            type: "deezer",
-          };
-        });
+        [...queueMedias.map((media) => media.id), ...trackIds].forEach(
+          (id, index) => {
+            queue[index] = {
+              id,
+              provider: "deezer",
+              type: "track",
+            };
+          }
+        );
         await room.update({ queue });
       } catch (err) {
         dispatch(displayError(extractErrorMessage(err)));
@@ -67,22 +74,19 @@ export const removeFromQueue = (index: number): AsyncAction => async (
   getState
 ) => {
   const {
-    queue: { trackIds, position },
+    queue: { medias: queueMedias, position },
     rooms: { room },
   } = getState();
   if (room && !room.isLocked()) {
-    if (index < trackIds.length) {
+    if (index < queueMedias.length) {
       try {
         console.debug("Removing from queue...", { index });
-        const oldIndex = position % trackIds.length;
+        const oldIndex = position % queueMedias.length;
         const queue: RoomQueue = {};
-        const copy = [...getState().queue.trackIds];
+        const copy = [...queueMedias];
         copy.splice(index, 1);
-        copy.forEach((id, index) => {
-          queue[index] = {
-            id,
-            type: "deezer",
-          };
+        copy.forEach((mediaAccess, index) => {
+          queue[index] = mediaAccess;
         });
         await room.update({
           queue,
@@ -128,21 +132,21 @@ export const setQueuePosition = (newPosition: number): AsyncAction => async (
 
 export const moveBackward = (): AsyncAction => async (dispatch, getState) => {
   const {
-    queue: { position, trackIds },
+    queue: { medias: queueMedias, position },
   } = getState();
-  if (trackIds.length > 0) {
+  if (queueMedias.length > 0) {
     console.debug("Moving backward...");
     dispatch(
-      setQueuePosition(position > 0 ? position - 1 : trackIds.length - 1)
+      setQueuePosition(position > 0 ? position - 1 : queueMedias.length - 1)
     );
   }
 };
 
 export const moveForward = (): AsyncAction => async (dispatch, getState) => {
   const {
-    queue: { position, trackIds },
+    queue: { medias: queueMedias, position },
   } = getState();
-  if (trackIds.length > 0) {
+  if (queueMedias.length > 0) {
     console.debug("Moving forward...");
     dispatch(setQueuePosition(position + 1));
   }

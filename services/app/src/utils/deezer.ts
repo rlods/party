@@ -9,9 +9,10 @@ type SearchResult<T> = {
 };
 
 export type SearchAllResults = {
-  albums: SearchResult<ApiAlbum>;
-  playlists: SearchResult<ApiPlaylist>;
-  tracks: SearchResult<ApiTrack>;
+  // keys are MediaType
+  album: SearchResult<ApiAlbum>;
+  playlist: SearchResult<ApiPlaylist>;
+  track: SearchResult<ApiTrack>;
 };
 
 export type ApiAlbum = {
@@ -106,12 +107,12 @@ export const DeezerApi = () => {
   const searchTracks = (query: string) => _search<ApiTrack>("track", query);
 
   const searchAll = async (query: string): Promise<SearchAllResults> => {
-    const [albums, playlists, tracks] = await Promise.all([
+    const [album, playlist, track] = await Promise.all([
       searchAlbums(query),
       searchPlaylists(query),
       searchTracks(query),
     ]);
-    return { albums, playlists, tracks };
+    return { album, playlist, track };
   };
 
   const loadAlbum = async (id: string) => {
