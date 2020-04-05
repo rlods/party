@@ -3,6 +3,7 @@ import { AxiosError } from "axios";
 import { createAction, AsyncAction } from ".";
 import { displayError } from "./messages";
 import { appendInQueue } from "./queue";
+import { onlyUnique } from "../utils";
 import {
   Media,
   MediaType,
@@ -27,11 +28,6 @@ const success = () => createAction("medias/FETCHED");
 const error = (error: AxiosError) => createAction("medias/ERROR", error);
 const reset = () => createAction("medias/RESET");
 const set = (medias: Media[]) => createAction("medias/SET", medias);
-
-// ------------------------------------------------------------------
-
-const onlyUnique = (value: string, index: number, self: string[]) =>
-  self.indexOf(value) === index;
 
 // ------------------------------------------------------------------
 
