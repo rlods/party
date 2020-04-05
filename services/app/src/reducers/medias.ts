@@ -8,16 +8,20 @@ import { Track, Album, Playlist } from "../utils/medias";
 export type State = {
   fetching: boolean;
   error: null | AxiosError;
-  albums: { [id: string]: Album };
-  playlists: { [id: string]: Playlist };
+  containers: {
+    album: { [id: string]: Album };
+    playlist: { [id: string]: Playlist };
+  };
   tracks: { [id: string]: Track };
 };
 
 const INITIAL_STATE: State = {
   fetching: false,
   error: null,
-  albums: {},
-  playlists: {},
+  containers: {
+    album: {},
+    playlist: {},
+  },
   tracks: {},
 };
 
@@ -50,18 +54,13 @@ export const mediasReducer: Reducer<State, MediasAction> = (
     case "medias/SET_CONTAINERS": {
       const copy = {
         ...state,
-        albums: { ...state.albums },
-        playlists: { ...state.playlists },
+        containers: {
+          album: { ...state.containers.album },
+          playlist: { ...state.containers.playlist },
+        },
       };
       for (const container of action.payload) {
-        switch (container.type) {
-          case "album":
-            copy.albums[container.id] = container;
-            break;
-          case "playlist":
-            copy.playlists[container.id] = container;
-            break;
-        }
+        copy.containers[container.type][container.id] = container;
       }
       return copy;
     }

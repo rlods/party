@@ -47,19 +47,11 @@ export const loadContainers = (
 ): AsyncAction => async (dispatch, getState, { deezer }) => {
   try {
     const {
-      medias: { albums, playlists },
+      medias: { containers },
     } = getState();
     for (const containerId of containerIds) {
       // TODO: parallelize and batch
-      let container: Container | null = null;
-      switch (containerType) {
-        case "album":
-          container = albums[containerId];
-          break;
-        case "playlist":
-          container = playlists[containerId];
-          break;
-      }
+      let container = containers[containerType][containerId];
       if (!container) {
         console.debug("Loading container...", { containerId, containerType });
         switch (containerType) {
