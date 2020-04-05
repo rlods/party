@@ -10,7 +10,7 @@ import {
   MEDIA_TYPE_DEFINITIONS,
   MediaType,
   ProviderType,
-  SearchAllResults,
+  SearchResults,
 } from "../../utils/medias";
 import SearchResultCategory from "./SearchResultCategory";
 import "./SearchModal.scss";
@@ -22,7 +22,7 @@ type State = {
   playingMediaType: MediaType;
   provider: ProviderType;
   query: string;
-  results: SearchAllResults;
+  results: SearchResults;
 };
 
 class SearchModal extends Component<MappedProps & WithTranslation, State> {
@@ -35,9 +35,9 @@ class SearchModal extends Component<MappedProps & WithTranslation, State> {
     query: "",
     results: {
       // keys are MediaType
-      album: { data: [], total: 0 },
-      playlist: { data: [], total: 0 },
-      track: { data: [], total: 0 },
+      album: [],
+      playlist: [],
+      track: [],
     },
   };
 
@@ -110,7 +110,7 @@ class SearchModal extends Component<MappedProps & WithTranslation, State> {
       <SearchResultCategory
         key={type}
         label={t(label)}
-        items={results[type].data}
+        items={results[type]}
         cb={(media) => (
           <Media
             actions={

@@ -41,37 +41,19 @@ export const loadMedias = (
     } = getState();
     try {
       if (mediaType === "track") {
+        // TRACK
         const { track: oldTracks } = medias;
         const newTrackIds: string[] = mediaIds
           .filter((trackId) => !oldTracks[trackId])
           .filter(onlyUnique);
         let newTracks: Track[] = [];
         if (newTrackIds.length > 0) {
-          console.debug("Loading track...", { mediaIds: newTrackIds });
-
-          newTracks = await Promise.all(
-            newTrackIds.map((trackId) => deezer.loadTrack(trackId))
-          );
-
-          if (newTrackIds.length > 1) {
-            console.warn(
-              `********* TODO Optimize & Handle Rate Limit to load ${newTrackIds.length} tracks`,
-              newTracks
-            );
-            for (const track of newTracks) {
-              if ((track as any).error) {
-                console.warn(
-                  "********* TODO A rate limit error has been detected"
-                );
-                break;
-              }
-            }
-          }
-
+          console.debug("Loading tracks...", { mediaIds: newTrackIds });
+          newTracks = await deezer.loadTracks(newTrackIds);
           dispatch(set(newTracks));
         }
         if (enqueue) {
-          console.debug("Enqueuing track...", { mediaIds });
+          console.debug("Enqueuing tracks...", { mediaIds });
           dispatch(appendInQueue(provider, mediaIds));
         }
         if (preview) {
@@ -83,46 +65,47 @@ export const loadMedias = (
           await previewPlayer.play(0, track.id, track.preview, 0);
         }
       } else {
-        for (const mediaId of mediaIds) {
-          // TODO: parallelize and batch
-          let media = medias[mediaType][mediaId];
-          if (!media) {
-            console.debug("Loading container...", { mediaId, mediaType });
-            switch (mediaType) {
-              case "album":
-                media = await deezer.loadAlbum(mediaId);
-                break;
-              case "playlist":
-                media = await deezer.loadPlaylist(mediaId);
-                break;
+        // CONTAINERS
+        const { [mediaType]: oldContainers } = medias;
+        console.log("TITI", medias);
+        const newContainerIds: string[] = mediaIds
+          .filter((containerId) => !oldContainers[containerId])
+          .filter(onlyUnique);
+        let newContainers: Media[] = [];
+        if (newContainerIds.length > 0) {
+          console.debug("Loading containers...", { mediaIds: newContainerIds });
+          newContainers = await deezer.load(mediaType, newContainerIds);
+          dispatch(set(newContainers));
+        }
+        if (enqueue) {
+          console.debug("Enqueuing containers tracks...", { mediaIds });
+          for (const containerId of mediaIds) {
+            const container =
+              oldContainers[containerId] ||
+              newContainers.find((container) => container.id === containerId);
+            dispatch(
+              appendInQueue(
+                provider,
+                container.tracks!.map((track) => track.id)
+              )
+            );
+          }
+        }
+        if (preview) {
+          let track: Track | null = null;
+          for (const containerId of mediaIds) {
+            const container =
+              oldContainers[containerId] ||
+              newContainers.find((container) => container.id === containerId);
+            if (container.tracks && container.tracks.length > 0) {
+              track = container.tracks[0];
             }
           }
-          if (media) {
-            dispatch(set([media]));
-            if (media.tracks && media.tracks.length > 0) {
-              dispatch(set(media.tracks));
-              if (enqueue) {
-                console.debug("Enqueuing container tracks...");
-                dispatch(
-                  appendInQueue(
-                    provider,
-                    media.tracks.map((track) => track.id)
-                  )
-                );
-              }
-              if (preview) {
-                console.debug("Previewing container first track...");
-                dispatch(
-                  loadMedias(
-                    provider,
-                    "track",
-                    [media.tracks[0].id],
-                    false,
-                    true
-                  )
-                );
-              }
-            }
+          if (track) {
+            console.debug("Previewing container first track...");
+            dispatch(loadMedias(provider, "track", [track.id], false, true));
+          } else {
+            console.debug("No container track found to preview...");
           }
         }
       }

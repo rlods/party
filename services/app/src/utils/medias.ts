@@ -79,16 +79,11 @@ export type Media = Album | Playlist | Track;
 
 // ------------------------------------------------------------------
 
-export type SearchResult<T> = {
-  data: T[];
-  total: number;
-};
-
-export type SearchAllResults = {
+export type SearchResults = {
   // keys are MediaType
-  album: SearchResult<Album>;
-  playlist: SearchResult<Playlist>;
-  track: SearchResult<Track>;
+  album: Album[];
+  playlist: Playlist[];
+  track: Track[];
 };
 
 // ------------------------------------------------------------------
