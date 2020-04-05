@@ -3,15 +3,13 @@ import { ThunkDispatch } from "redux-thunk";
 //
 import { RootState } from "../../reducers";
 import Head from "../../components/Room/Head";
-import { extractRoom, isRoomLocked } from "../../selectors/rooms";
-import { openModal, confirmModal } from "../../actions/modals";
-import { lockRoom } from "../../actions/rooms";
+import { extractRoom } from "../../selectors/rooms";
+import { confirmModal } from "../../actions/modals";
 import { displayMessage } from "../../actions/messages";
 
 // ------------------------------------------------------------------
 
 const stateToProps = (state: RootState) => ({
-  locked: isRoomLocked(state),
   room: extractRoom(state),
 });
 
@@ -19,9 +17,7 @@ const dispatchToProps = (dispatch: ThunkDispatch<RootState, any, any>) => ({
   onConfirm: (question: string, onConfirmed: () => void) => {
     dispatch(confirmModal(question, onConfirmed));
   },
-  onLock: () => dispatch(lockRoom()),
   onMessage: (message: string) => dispatch(displayMessage("info", message)),
-  onUnlock: () => dispatch(openModal({ type: "UnlockRoom", props: null })),
 });
 
 export type MappedProps = ReturnType<typeof stateToProps> &

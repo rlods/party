@@ -4,12 +4,11 @@ import { ThunkDispatch } from "redux-thunk";
 import { RootState } from "../../reducers";
 import SearchModal from "../../components/Room/SearchModal";
 import { popModal } from "../../actions/modals";
-import { previewContainer } from "../../actions/containers";
+import { previewContainer, previewTrack } from "../../actions/medias";
 import { queueTracks } from "../../actions/rooms";
 import { stopPreview } from "../../actions/player";
 import { MediaType } from "../../utils/medias";
 import { isRoomLocked } from "../../selectors/rooms";
-import { previewTrack } from "../../actions/tracks";
 
 // ------------------------------------------------------------------
 

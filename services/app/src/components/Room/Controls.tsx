@@ -3,7 +3,6 @@ import { withTranslation, WithTranslation } from "react-i18next";
 //
 import { MappedProps } from "../../containers/Room/Controls";
 import IconButton from "../Common/IconButton";
-import history from "../../utils/history";
 import Progress from "../../containers/Room/Progress";
 import "./Controls.scss";
 
@@ -17,6 +16,7 @@ class Controls extends Component<MappedProps & WithTranslation> {
       onPlay,
       onSearch,
       onStop,
+      onUnlock,
       tracksCount,
       locked,
       playing,
@@ -81,27 +81,35 @@ class Controls extends Component<MappedProps & WithTranslation> {
             />
           </div>
           <div className="Control">
-            <IconButton
-              onClick={this.onExit}
-              icon="sign-out"
-              title={t("rooms.exit")}
-            />
+            {locked ? (
+              <IconButton
+                icon="lock"
+                onClick={onUnlock}
+                size="M"
+                title={t("rooms.locked")}
+              />
+            ) : (
+              <IconButton
+                icon="unlock"
+                onClick={this.onLock}
+                size="M"
+                title={t("rooms.unlocked")}
+              />
+            )}
           </div>
         </div>
       </div>
     );
   };
 
-  onClear = () => {
+  private onClear = () => {
     const { onClear, onConfirm, t } = this.props;
     onConfirm(t("rooms.confirm_clear"), onClear);
   };
 
-  onExit = () => {
+  private onLock = () => {
     const { onConfirm, t } = this.props;
-    onConfirm(t("rooms.confirm_exit"), () => {
-      history.push("/");
-    });
+    onConfirm(t("rooms.confirm_lock"), this.props.onLock);
   };
 }
 

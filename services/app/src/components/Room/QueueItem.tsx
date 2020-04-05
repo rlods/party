@@ -10,7 +10,7 @@ import { ApiTrack } from "../../utils/deezer";
 type Props = {
   locked: boolean;
   playing: boolean;
-  track: ApiTrack;
+  track: ApiTrack | null; // if null : stiil loading or cannot be loaded or to reload later because of rate limit
   onPlay: () => void;
   onRemove: () => void;
   onStop: () => void;
@@ -23,7 +23,7 @@ class QueueItem extends Component<Props & WithTranslation> {
       <div className="QueueItem">
         <Track
           track={track}
-          playable={!locked}
+          playable={!!track && !locked}
           playing={playing}
           onPlay={onPlay}
           onStop={onStop}

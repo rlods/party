@@ -3,7 +3,7 @@ import { ThunkDispatch } from "redux-thunk";
 //
 import { RootState } from "../../reducers";
 import Queue from "../../components/Room/Queue";
-import { extractTracks } from "../../selectors/tracks";
+import { extractTracks } from "../../selectors/medias";
 import { setQueuePosition, removeFromQueue } from "../../actions/queue";
 import { stopPlayer, startPlayer } from "../../actions/player";
 import { isRoomLoaded, isRoomLocked } from "../../selectors/rooms";

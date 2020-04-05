@@ -4,6 +4,7 @@ import { withTranslation, WithTranslation } from "react-i18next";
 import { ApiAlbum, ApiPlaylist, ApiTrack } from "../../utils/deezer";
 import Cover from "./Cover";
 import "./Medias.scss";
+import { LoadingIcon } from "../Common/Icon";
 
 // ------------------------------------------------------------------
 
@@ -94,7 +95,7 @@ export const Playlist = withTranslation()(_Playlist);
 
 type TrackProps = {
   actions?: ReactNode;
-  track: ApiTrack;
+  track: ApiTrack | null; // if null : stiil loading or cannot be loaded or to reload later because of rate limit
   playable: boolean;
   playing: boolean;
   onPlay: () => void;
@@ -110,25 +111,31 @@ export class _Track extends Component<TrackProps & WithTranslation> {
         <Cover
           playable={playable}
           playing={playing}
-          image={track.album.cover_small}
+          image={track?.album.cover_small || ""}
           onPlay={onPlay}
           onStop={onStop}
         />
         <div className="Metas">
-          <div className="Meta TrackTitle">
-            <a href={track.link} target="_blank" rel="noopener noreferrer">
-              {track.title}
-            </a>
-          </div>
-          <div className="Meta TrackArtistName">
-            <a
-              href={track.artist.link}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {t("medias.by", { artist: track.artist.name })}
-            </a>
-          </div>
+          {!!track ? (
+            <>
+              <div className="Meta TrackTitle">
+                <a href={track.link} target="_blank" rel="noopener noreferrer">
+                  {track.title}
+                </a>
+              </div>
+              <div className="Meta TrackArtistName">
+                <a
+                  href={track.artist.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {t("medias.by", { artist: track.artist.name })}
+                </a>
+              </div>
+            </>
+          ) : (
+            <LoadingIcon size="M" />
+          )}
         </div>
       </div>
     );

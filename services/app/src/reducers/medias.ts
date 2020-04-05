@@ -1,7 +1,7 @@
 import { Reducer } from "redux";
 import { AxiosError } from "axios";
-import { ContainersAction } from "../actions/containers";
-import { Album, Playlist } from "../utils/medias";
+import { MediasAction } from "../actions/medias";
+import { Track, Album, Playlist } from "../utils/medias";
 
 // ------------------------------------------------------------------
 
@@ -10,6 +10,7 @@ export type State = {
   error: null | AxiosError;
   albums: { [id: string]: Album };
   playlists: { [id: string]: Playlist };
+  tracks: { [id: string]: Track };
 };
 
 const INITIAL_STATE: State = {
@@ -17,35 +18,36 @@ const INITIAL_STATE: State = {
   error: null,
   albums: {},
   playlists: {},
+  tracks: {},
 };
 
 // ------------------------------------------------------------------
 
-export const containersReducer: Reducer<State, ContainersAction> = (
+export const mediasReducer: Reducer<State, MediasAction> = (
   state = INITIAL_STATE,
-  action: ContainersAction
+  action: MediasAction
 ): State => {
   switch (action.type) {
-    case "containers/FETCHING":
+    case "medias/FETCHING":
       return {
         ...state,
         fetching: true,
         error: null,
       };
-    case "containers/FETCHED": {
+    case "medias/FETCHED": {
       return {
         ...state,
         fetching: false,
         error: null,
       };
     }
-    case "containers/ERROR":
+    case "medias/ERROR":
       return {
         ...state,
         fetching: false,
         error: action.payload,
       };
-    case "containers/SET_CONTAINERS": {
+    case "medias/SET_CONTAINERS": {
       const copy = {
         ...state,
         albums: { ...state.albums },
@@ -63,7 +65,14 @@ export const containersReducer: Reducer<State, ContainersAction> = (
       }
       return copy;
     }
-    case "containers/RESET":
+    case "medias/SET_TRACKS": {
+      const copy = { ...state, tracks: { ...state.tracks } };
+      for (const track of action.payload) {
+        copy.tracks[track.id] = track;
+      }
+      return copy;
+    }
+    case "medias/RESET":
       return INITIAL_STATE;
     default:
       return state;

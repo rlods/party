@@ -102,7 +102,7 @@ const _installTimer1 = (
   PLAYER_TIMER1 = setTimeout(async () => {
     const {
       queue: { position, trackIds },
-      tracks: { tracks },
+      medias: { tracks },
     } = getState();
     if (trackIds.length > 0) {
       // Detect and apply change to queue and player

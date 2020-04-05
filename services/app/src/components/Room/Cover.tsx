@@ -21,8 +21,8 @@ class Cover extends Component<Props & WithTranslation> {
     if (playable) {
       return (
         <div
-          className={classNames("Cover", { playing })}
-          style={{ backgroundImage: `url('${image}')` }}
+          className={classNames("Cover", { playable, playing })}
+          style={image ? { backgroundImage: `url('${image}')` } : {}}
           onClick={!playing ? onPlay : onStop}
         >
           {!playing ? (
@@ -36,7 +36,7 @@ class Cover extends Component<Props & WithTranslation> {
       return (
         <div
           className={classNames("Cover", { playing })}
-          style={{ backgroundImage: `url('${image}')` }}
+          style={image ? { backgroundImage: `url('${image}')` } : {}}
         >
           {playing ? <Icon icon="music" title={t("player.playing")} /> : null}
         </div>

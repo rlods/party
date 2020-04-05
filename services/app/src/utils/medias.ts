@@ -10,7 +10,7 @@ export type ContainerType = "album" | "playlist";
 
 export type MediaType = ContainerType | TrackType;
 
-export type ProviderType = "deezer";
+export type Provider = "deezer";
 
 export type Track = ApiTrack;
 

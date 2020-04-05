@@ -5,9 +5,8 @@ import { createAction, AsyncAction } from ".";
 import { displayError } from "./messages";
 import { RoomInfo } from "../utils/rooms";
 import { FirebaseRoom } from "../utils/firebase";
-import { loadTracks } from "./tracks";
-import { loadContainer } from "./containers";
-import { ContainerType, ProviderType } from "../utils/medias";
+import { loadContainers, loadTracks } from "./medias";
+import { ContainerType, Provider } from "../utils/medias";
 import { CombinedColor } from "../utils/colorpicker";
 import history from "../utils/history";
 import { setQueue } from "./queue";
@@ -140,17 +139,17 @@ export const unlockRoom = (secret: string): AsyncAction => async (
 // ------------------------------------------------------------------
 
 export const queueTracks = (
-  providerType: ProviderType,
+  provider: Provider,
   containerType: ContainerType,
   containerId: string,
   trackId: string
 ): AsyncAction => async (dispatch) => {
   if (containerId) {
     dispatch(
-      loadContainer(providerType, containerType, containerId, true, false)
+      loadContainers(provider, containerType, [containerId], true, false)
     );
   }
   if (trackId) {
-    dispatch(loadTracks(providerType, [trackId], true, false));
+    dispatch(loadTracks(provider, [trackId], true, false));
   }
 };

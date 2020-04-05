@@ -7,6 +7,8 @@ import { startPlayer, stopPlayer } from "../../actions/player";
 import { openModal, confirmModal } from "../../actions/modals";
 import { clearQueue, moveBackward, moveForward } from "../../actions/queue";
 import { isRoomLocked } from "../../selectors/rooms";
+import { displayMessage } from "../../actions/messages";
+import { lockRoom } from "../../actions/rooms";
 
 // ------------------------------------------------------------------
 
@@ -24,6 +26,9 @@ const dispatchToProps = (dispatch: ThunkDispatch<RootState, any, any>) => ({
   onConfirm: (question: string, onConfirmed: () => void) => {
     dispatch(confirmModal(question, onConfirmed));
   },
+  onLock: () => dispatch(lockRoom()),
+  onUnlock: () => dispatch(openModal({ type: "UnlockRoom", props: null })),
+  onMessage: (message: string) => dispatch(displayMessage("info", message)),
   onMoveBackward: () => dispatch(moveBackward()),
   onMoveForward: () => dispatch(moveForward()),
   onPlay: () => dispatch(startPlayer()),

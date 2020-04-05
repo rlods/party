@@ -3,6 +3,7 @@ import { withTranslation, WithTranslation } from "react-i18next";
 //
 import IconButton from "../Common/IconButton";
 import { MappedProps } from "../../containers/Room/Head";
+import history from "../../utils/history";
 import { copyToClipboard } from "../../utils/clipboard";
 import "./Head.scss";
 
@@ -10,33 +11,24 @@ import "./Head.scss";
 
 class Head extends Component<MappedProps & WithTranslation> {
   public render = () => {
-    const { locked, room, onUnlock, t } = this.props;
+    const { room, t } = this.props;
     return (
       <div className="Head">
-        <div className="RoomStatus">
-          {locked ? (
-            <IconButton
-              icon="lock"
-              onClick={onUnlock}
-              size="M"
-              title={t("rooms.locked")}
-            />
-          ) : (
-            <IconButton
-              icon="unlock"
-              onClick={this.onLock}
-              size="M"
-              title={t("rooms.unlocked")}
-            />
-          )}
-        </div>
-        <div className="RoomName">{room ? room.name : ""}</div>
         <div className="RoomLink">
           <IconButton
             icon="link"
             onClick={this.onCopyLink}
             size="M"
             title={t("rooms.copy_link")}
+          />
+        </div>
+        <div className="RoomName">{room ? room.name : ""}</div>
+        <div className="RoomExit">
+          <IconButton
+            onClick={this.onExit}
+            icon="sign-out"
+            size="M"
+            title={t("rooms.exit")}
           />
         </div>
       </div>
@@ -49,9 +41,11 @@ class Head extends Component<MappedProps & WithTranslation> {
     onMessage(t("rooms.link_copied_to_clipboard"));
   };
 
-  private onLock = () => {
+  private onExit = () => {
     const { onConfirm, t } = this.props;
-    onConfirm(t("rooms.confirm_lock"), this.props.onLock);
+    onConfirm(t("rooms.confirm_exit"), () => {
+      history.push("/");
+    });
   };
 }
 
