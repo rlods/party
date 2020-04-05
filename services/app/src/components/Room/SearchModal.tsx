@@ -6,29 +6,9 @@ import { MappedProps } from "../../containers/Room/SearchModal";
 import IconButton, { CancelButton } from "../Common/IconButton";
 import { DEFAULT_API, SearchAllResults } from "../../utils/deezer";
 import Media from "./Medias";
-import { MediaType } from "../../utils/medias";
+import { MEDIA_TYPE_DEFINITIONS, MediaType } from "../../utils/medias";
 import SearchResultCategory from "./SearchResultCategory";
 import "./SearchModal.scss";
-
-// ------------------------------------------------------------------
-
-const RESULT_DESCRIPTIONS: Array<{
-  label: string;
-  type: MediaType;
-}> = [
-  {
-    label: "medias.albums",
-    type: "album",
-  },
-  {
-    label: "medias.playlists",
-    type: "playlist",
-  },
-  {
-    label: "medias.tracks",
-    type: "track",
-  },
-];
 
 // ------------------------------------------------------------------
 
@@ -118,7 +98,7 @@ class SearchModal extends Component<MappedProps & WithTranslation, State> {
   private renderResults = () => {
     const { locked, t } = this.props;
     const { playingMediaId, playingMediaType, results } = this.state;
-    return RESULT_DESCRIPTIONS.map(({ label, type }) => (
+    return MEDIA_TYPE_DEFINITIONS.map(({ label, type }) => (
       <SearchResultCategory
         key={type}
         label={t(label)}
