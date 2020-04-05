@@ -125,7 +125,7 @@ const _installTimer1 = (
           pickColor(nextTrack.album.cover_small),
           queuePlayer.play(
             nextTrackPosition,
-            nextTrack.id.toString(),
+            nextTrack.id,
             nextTrack.preview,
             0
           ),

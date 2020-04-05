@@ -72,7 +72,7 @@ class _Media extends Component<MediaProps & WithTranslation> {
                 {album.title}
               </a>
             </div>
-            <div className="Meta AlbumArtistName">
+            <div className="Meta AlbumArtist">
               <a
                 href={album.artist.link}
                 target="_blank"
@@ -102,6 +102,15 @@ class _Media extends Component<MediaProps & WithTranslation> {
                 {media.title}
               </a>
             </div>
+            <div className="Meta PlaylistCreator">
+              <a
+                href={playlist.user.link}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {t("medias.by", { artist: playlist.user.name })}
+              </a>
+            </div>
           </div>
         </div>
       );
@@ -123,7 +132,7 @@ class _Media extends Component<MediaProps & WithTranslation> {
                 {track.title}
               </a>
             </div>
-            <div className="Meta TrackArtistName">
+            <div className="Meta TrackArtist">
               <a
                 href={track.artist.link}
                 target="_blank"

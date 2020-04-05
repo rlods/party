@@ -4,10 +4,9 @@ import { ThunkDispatch } from "redux-thunk";
 import { RootState } from "../../reducers";
 import SearchModal from "../../components/Room/SearchModal";
 import { popModal } from "../../actions/modals";
-import { previewMedia } from "../../actions/medias";
-import { queueTracks } from "../../actions/rooms";
+import { loadMedias } from "../../actions/medias";
 import { stopPreview } from "../../actions/player";
-import { MediaType } from "../../utils/medias";
+import { ProviderType, MediaType } from "../../utils/medias";
 import { isRoomLocked } from "../../selectors/rooms";
 
 // ------------------------------------------------------------------
@@ -18,11 +17,11 @@ const stateToProps = (state: RootState) => ({
 
 const dispatchToProps = (dispatch: ThunkDispatch<RootState, any, any>) => ({
   onClose: () => dispatch(popModal()),
-  onSelect: (mediaType: MediaType, mediaId: string) =>
-    dispatch(queueTracks("deezer", mediaType, mediaId)),
-  onStartPreview: (mediaType: MediaType, mediaId: string) =>
-    dispatch(previewMedia("deezer", mediaType, mediaId)),
-  onStopPreview: () => dispatch(stopPreview()),
+  onSelect: (provider: ProviderType, mediaType: MediaType, mediaId: string) =>
+    dispatch(loadMedias(provider, mediaType, [mediaId], true, false)),
+  onPlay: (provider: ProviderType, mediaType: MediaType, mediaId: string) =>
+    dispatch(loadMedias(provider, mediaType, [mediaId], false, true)),
+  onStop: () => dispatch(stopPreview()),
 });
 
 export type MappedProps = ReturnType<typeof stateToProps> &

@@ -20,6 +20,7 @@ const INITIAL_STATE: State = {
   fetching: false,
   error: null,
   medias: {
+    // keys are MediaType
     album: {},
     playlist: {},
     track: {},

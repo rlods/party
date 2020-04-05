@@ -2,7 +2,7 @@ import { createAction, AsyncAction } from ".";
 import { RoomQueue } from "../utils/rooms";
 import { displayError } from "./messages";
 import { lockRoom } from "./rooms";
-import { MediaAccess } from "../utils/medias";
+import { MediaAccess, ProviderType } from "../utils/medias";
 import { extractErrorMessage } from "../utils/messages";
 
 // ------------------------------------------------------------------
@@ -34,10 +34,10 @@ export const clearQueue = (): AsyncAction => async (dispatch, getState) => {
   }
 };
 
-export const appendInQueue = (trackIds: string[]): AsyncAction => async (
-  dispatch,
-  getState
-) => {
+export const appendInQueue = (
+  provider: ProviderType,
+  trackIds: string[]
+): AsyncAction => async (dispatch, getState) => {
   const {
     rooms: { room },
   } = getState();
@@ -53,7 +53,7 @@ export const appendInQueue = (trackIds: string[]): AsyncAction => async (
           (id, index) => {
             queue[index] = {
               id,
-              provider: "deezer",
+              provider,
               type: "track",
             };
           }

@@ -3,7 +3,7 @@ import { AxiosError } from "axios";
 import { createAction, AsyncAction } from ".";
 import { displayError } from "./messages";
 import { appendInQueue } from "./queue";
-import { Media, MediaType, Provider, Track } from "../utils/medias";
+import { Media, MediaType, ProviderType, Track } from "../utils/medias";
 import { extractErrorMessage } from "../utils/messages";
 
 // ------------------------------------------------------------------
@@ -29,7 +29,7 @@ const onlyUnique = (value: string, index: number, self: string[]) =>
 // ------------------------------------------------------------------
 
 export const loadMedias = (
-  provider: Provider,
+  provider: ProviderType,
   mediaType: MediaType,
   mediaIds: string[],
   enqueue: boolean,
@@ -39,54 +39,8 @@ export const loadMedias = (
     const {
       medias: { medias },
     } = getState();
-    if (mediaType === "album" || mediaType === "playlist") {
-      try {
-        for (const mediaId of mediaIds) {
-          // TODO: parallelize and batch
-          let media = medias[mediaType][mediaId];
-          if (!media) {
-            console.debug("Loading media...", { mediaId, mediaType });
-            switch (mediaType) {
-              case "album":
-                media = await deezer.loadAlbum(mediaId);
-                break;
-              case "playlist":
-                media = await deezer.loadPlaylist(mediaId);
-                break;
-            }
-          }
-          if (media) {
-            dispatch(set([media]));
-            if (media.tracks && media.tracks.data.length > 0) {
-              dispatch(set(media.tracks.data));
-              if (enqueue) {
-                console.debug("Enqueuing media...");
-                dispatch(
-                  appendInQueue(
-                    media.tracks.data.map((track) => track.id.toString())
-                  )
-                );
-              }
-              if (preview) {
-                console.debug("Previewing media...");
-                dispatch(
-                  loadMedias(
-                    provider,
-                    mediaType,
-                    [media.tracks.data[0].id.toString()],
-                    false,
-                    true
-                  )
-                );
-              }
-            }
-          }
-        }
-      } catch (err) {
-        dispatch(displayError(extractErrorMessage(err)));
-      }
-    } else {
-      try {
+    try {
+      if (mediaType === "track") {
         const { track: oldTracks } = medias;
         const newTrackIds: string[] = mediaIds
           .filter((trackId) => !oldTracks[trackId])
@@ -118,48 +72,60 @@ export const loadMedias = (
         }
         if (enqueue) {
           console.debug("Enqueuing track...", { mediaIds });
-          dispatch(appendInQueue(mediaIds));
+          dispatch(appendInQueue(provider, mediaIds));
         }
         if (preview) {
           const trackId = mediaIds[0];
           const track =
             oldTracks[trackId] ||
-            newTracks.find((track) => track.id.toString() === trackId);
+            newTracks.find((track) => track.id === trackId);
           console.debug("Previewing track...", { track, trackId });
-          await previewPlayer.play(0, track.id.toString(), track.preview, 0);
+          await previewPlayer.play(0, track.id, track.preview, 0);
         }
-      } catch (err) {
-        dispatch(displayError(extractErrorMessage(err)));
+      } else {
+        for (const mediaId of mediaIds) {
+          // TODO: parallelize and batch
+          let media = medias[mediaType][mediaId];
+          if (!media) {
+            console.debug("Loading container...", { mediaId, mediaType });
+            switch (mediaType) {
+              case "album":
+                media = await deezer.loadAlbum(mediaId);
+                break;
+              case "playlist":
+                media = await deezer.loadPlaylist(mediaId);
+                break;
+            }
+          }
+          if (media) {
+            dispatch(set([media]));
+            if (media.tracks && media.tracks.length > 0) {
+              dispatch(set(media.tracks));
+              if (enqueue) {
+                console.debug("Enqueuing container tracks...");
+                dispatch(
+                  appendInQueue(
+                    provider,
+                    media.tracks.map((track) => track.id)
+                  )
+                );
+              }
+              if (preview) {
+                console.debug("Previewing container first track...");
+                dispatch(
+                  loadMedias(
+                    provider,
+                    "track",
+                    [media.tracks[0].id],
+                    false,
+                    true
+                  )
+                );
+              }
+            }
+          }
+        }
       }
-    }
-  }
-};
-
-// ------------------------------------------------------------------
-
-export const previewMedia = (
-  provider: Provider,
-  mediaType: MediaType,
-  mediaId: string
-): AsyncAction => async (dispatch, getState, { deezer, previewPlayer }) => {
-  console.debug("Previewing media...", { mediaType, mediaId });
-  if (mediaType === "album" || mediaType === "playlist") {
-    dispatch(loadMedias(provider, mediaType, [mediaId], false, true));
-  } else {
-    try {
-      const {
-        medias: {
-          medias: { track: tracks },
-        },
-      } = getState();
-      let track = tracks[mediaId];
-      if (!track) {
-        console.debug("Loading track...", { mediaId });
-        track = await deezer.loadTrack(mediaId);
-        dispatch(set([track]));
-      }
-      console.debug("Start previewing...");
-      await previewPlayer.play(0, track.id.toString(), track.preview, 0);
     } catch (err) {
       dispatch(displayError(extractErrorMessage(err)));
     }

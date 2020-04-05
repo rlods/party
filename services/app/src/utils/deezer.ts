@@ -1,25 +1,20 @@
 // import Axios from "axios";
 import jsonp from "jsonp";
+//
+import {
+  SearchAllResults,
+  SearchResult,
+  Album,
+  Playlist,
+  Track,
+} from "./medias";
 
 // ------------------------------------------------------------------
-
-type SearchResult<T> = {
-  data: T[];
-  total: number;
-};
-
-export type SearchAllResults = {
-  // keys are MediaType
-  album: SearchResult<ApiAlbum>;
-  playlist: SearchResult<ApiPlaylist>;
-  track: SearchResult<ApiTrack>;
-};
 
 export type ApiAlbum = {
   artist: {
     id: number;
     name: string;
-    link: string;
     picture_big: string;
     picture_small: string;
   };
@@ -27,48 +22,110 @@ export type ApiAlbum = {
   cover_big: string;
   cover_small: string;
   id: number;
-  link: string;
-  nb_tracks: number;
   title: string;
   tracks?: { data: ApiTrack[] };
-  type: "album";
 };
 
 export type ApiPlaylist = {
-  description: string;
   id: number;
-  link: string;
-  nb_tracks: number;
   picture_big: string;
   picture_small: string;
   public: true;
   title: string;
   tracks?: { data: ApiTrack[] };
-  type: "playlist";
+  user: {
+    id: number;
+    name: string;
+  };
 };
 
 export type ApiTrack = {
   album: {
-    id: number;
-    title: string;
     cover_big: string;
     cover_small: string;
+    id: number;
+    title: string;
   };
   artist: {
     id: number;
     name: string;
-    link: string;
     picture_big: string;
     picture_small: string;
   };
   duration: number;
   id: number;
-  link: string;
   preview: string;
   readable: boolean;
   title: string;
-  type: "track";
 };
+
+// ------------------------------------------------------------------
+
+const ConvertAlbum = (album: ApiAlbum): Album => ({
+  artist: {
+    id: album.artist.id.toString(),
+    name: album.artist.name,
+    link: `https://www.deezer.com/artist/${album.artist.id}`,
+    picture_big: album.artist.picture_big,
+    picture_small: album.artist.picture_small,
+  },
+  cover_big: album.cover_big,
+  cover_small: album.cover_small,
+  id: album.id.toString(),
+  link: `https://www.deezer.com/album/${album.id}`,
+  title: album.title,
+  tracks:
+    album.tracks !== void 0
+      ? album.tracks.data.map((track) => ConvertTrack(track, album))
+      : void 0,
+  type: "album",
+});
+
+const ConvertPlaylist = (playlist: ApiPlaylist): Playlist => ({
+  id: playlist.id.toString(),
+  link: `https://www.deezer.com/playlist/${playlist.id}`,
+  picture_big: playlist.picture_big,
+  picture_small: playlist.picture_small,
+  public: playlist.public,
+  title: playlist.title,
+  tracks:
+    playlist.tracks !== void 0
+      ? playlist.tracks.data.map((track) => ConvertTrack(track, track.album))
+      : void 0,
+  type: "playlist",
+  user: {
+    id: playlist.user.id.toString(),
+    name: playlist.user.name,
+    link: `https://www.deezer.com/profile/${playlist.user.id}`,
+  },
+});
+
+const ConvertTrack = (
+  track: ApiTrack,
+  album: { id: number; title: string; cover_big: string; cover_small: string }
+): Track => ({
+  album: {
+    id: album.id.toString(),
+    link: `https://www.deezer.com/album/${album.id}`,
+    title: album.title,
+    cover_big: album.cover_big,
+    cover_small: album.cover_small,
+  },
+  artist: {
+    id: track.artist.id.toString(),
+    name: track.artist.name,
+    link: `https://www.deezer.com/artist/${track.artist.id}`,
+    picture_big: track.artist.picture_big,
+    picture_small: track.artist.picture_small,
+  },
+  duration: track.duration,
+  id: track.id.toString(),
+  link: `https://www.deezer.com/track/${track.id}`,
+  preview: track.preview,
+  readable: track.readable,
+  title: track.title,
+  type: "track",
+});
 
 // ------------------------------------------------------------------
 
@@ -97,7 +154,7 @@ export const DeezerApi = () => {
   const _search = <T>(type: string, query: string) =>
     _call<SearchResult<T>>(`search/${type}`, `q=${encodeURIComponent(query)}`);
 
-  const _load = <T>(type: string, id: string) => _call<T>(`/${type}/${id}`);
+  const _load = <T>(type: string, id: string) => _call<T>(`${type}/${id}`);
 
   const searchAlbums = (query: string) => _search<ApiAlbum>("album", query);
 
@@ -112,21 +169,36 @@ export const DeezerApi = () => {
       searchPlaylists(query),
       searchTracks(query),
     ]);
-    return { album, playlist, track };
+    return {
+      album: {
+        data: album.data.map(ConvertAlbum),
+        total: album.total,
+      },
+      playlist: {
+        data: playlist.data.map(ConvertPlaylist),
+        total: playlist.total,
+      },
+      track: {
+        data: track.data.map((track) => ConvertTrack(track, track.album)),
+        total: track.total,
+      },
+    };
   };
 
-  const loadAlbum = async (id: string) => {
+  const loadAlbum = async (id: string): Promise<Album> => {
     const album = await _load<ApiAlbum>("album", id);
-    album.tracks!.data.forEach((track) => {
-      track.album = album;
-      track.artist.link = `https://www.deezer.com/artist/${track.artist.id}`;
-    });
-    return album;
+    return ConvertAlbum(album);
   };
 
-  const loadPlaylist = (id: string) => _load<ApiPlaylist>("playlist", id);
+  const loadPlaylist = async (id: string): Promise<Playlist> => {
+    const playlist = await _load<ApiPlaylist>("playlist", id);
+    return ConvertPlaylist(playlist);
+  };
 
-  const loadTrack = (id: string) => _load<ApiTrack>("track", id);
+  const loadTrack = async (id: string): Promise<Track> => {
+    const track = await _load<ApiTrack>("track", id);
+    return ConvertTrack(track, track.album);
+  };
 
   return {
     searchAll,

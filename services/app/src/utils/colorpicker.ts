@@ -17,7 +17,7 @@ const CACHE: { [url: string]: CombinedColor } = {};
 
 const DEFAULT_COLOR = {
   bg: { r: 255, g: 255, b: 255 },
-  fg: { r: 0, g: 0, b: 0 }
+  fg: { r: 0, g: 0, b: 0 },
 };
 
 // ------------------------------------------------------------------
@@ -37,7 +37,7 @@ export const pickColor = async (url: string) => {
           fg:
             bg.r * 0.299 + bg.g * 0.587 + bg.b * 0.114 > 186
               ? { r: 0, g: 0, b: 0 }
-              : { r: 255, g: 255, b: 255 }
+              : { r: 255, g: 255, b: 255 },
         };
       } catch (err) {
         console.debug("An error prevented colorpicking", err);
@@ -46,38 +46,3 @@ export const pickColor = async (url: string) => {
   }
   return res;
 };
-
-/*
-const backgroundColor = color
-? `rgb(${color.r}, ${color.g}, ${color.b})`
-: void 0;
-<div
-style={{
-  backgroundColor
-}}
->
-x
-</div>
-
-colors: {
-  [id: string]: {
-    r: number;
-    g: number;
-    b: number;
-    a: number;
-  };
-};,
-colors: {}
-const color = this.state.colors[album.id];
-
-import { pickColor } from "../../utils/colorpicker";
-
-private XXX = async (id: number, url: string) => {
-  if (!this.state.colors[id]) {
-    const color = await pickColor(url);
-    this.setState({
-      colors: { ...this.state.colors, [id]: color }
-    });
-  }
-};
-*/

@@ -6,7 +6,7 @@ import { displayError } from "./messages";
 import { RoomInfo } from "../utils/rooms";
 import { FirebaseRoom } from "../utils/firebase";
 import { loadMedias } from "./medias";
-import { MediaType, Provider, MediaAccess } from "../utils/medias";
+import { MediaAccess } from "../utils/medias";
 import { CombinedColor } from "../utils/colorpicker";
 import history from "../utils/history";
 import { setQueue } from "./queue";
@@ -144,14 +144,4 @@ export const unlockRoom = (secret: string): AsyncAction => async (
     room.setSecret(secret);
     dispatch(setRoomAccess(id, secret));
   }
-};
-
-// ------------------------------------------------------------------
-
-export const queueTracks = (
-  provider: Provider,
-  mediaType: MediaType,
-  mediaId: string
-): AsyncAction => async (dispatch) => {
-  dispatch(loadMedias(provider, mediaType, [mediaId], true, false));
 };

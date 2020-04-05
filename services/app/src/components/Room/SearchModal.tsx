@@ -4,9 +4,14 @@ import { withTranslation, WithTranslation } from "react-i18next";
 import FormModal from "../Modals/FormModal";
 import { MappedProps } from "../../containers/Room/SearchModal";
 import IconButton, { CancelButton } from "../Common/IconButton";
-import { DEFAULT_API, SearchAllResults } from "../../utils/deezer";
+import { DEFAULT_API } from "../../utils/deezer";
 import Media from "./Medias";
-import { MEDIA_TYPE_DEFINITIONS, MediaType } from "../../utils/medias";
+import {
+  MEDIA_TYPE_DEFINITIONS,
+  MediaType,
+  ProviderType,
+  SearchAllResults,
+} from "../../utils/medias";
 import SearchResultCategory from "./SearchResultCategory";
 import "./SearchModal.scss";
 
@@ -15,6 +20,7 @@ import "./SearchModal.scss";
 type State = {
   playingMediaId: string;
   playingMediaType: MediaType;
+  provider: ProviderType;
   query: string;
   results: SearchAllResults;
 };
@@ -25,8 +31,10 @@ class SearchModal extends Component<MappedProps & WithTranslation, State> {
   public readonly state: State = {
     playingMediaId: "",
     playingMediaType: "track",
+    provider: "deezer",
     query: "",
     results: {
+      // keys are MediaType
       album: { data: [], total: 0 },
       playlist: { data: [], total: 0 },
       track: { data: [], total: 0 },
@@ -40,7 +48,7 @@ class SearchModal extends Component<MappedProps & WithTranslation, State> {
   }
 
   public componentWillUnmount() {
-    this.props.onStopPreview();
+    this.props.onStop();
   }
 
   public render = () => {
@@ -96,8 +104,8 @@ class SearchModal extends Component<MappedProps & WithTranslation, State> {
   };
 
   private renderResults = () => {
-    const { locked, t } = this.props;
-    const { playingMediaId, playingMediaType, results } = this.state;
+    const { onSelect, locked, t } = this.props;
+    const { playingMediaId, playingMediaType, provider, results } = this.state;
     return MEDIA_TYPE_DEFINITIONS.map(({ label, type }) => (
       <SearchResultCategory
         key={type}
@@ -110,18 +118,15 @@ class SearchModal extends Component<MappedProps & WithTranslation, State> {
                 <IconButton
                   title={t("medias.add")}
                   icon="plus"
-                  onClick={() => this.onSelect(type, media.id)}
+                  onClick={() => onSelect(provider, type, media.id)}
                 />
               ) : null
             }
             media={media}
             mediaType={type}
             playable={true}
-            playing={
-              playingMediaType === type &&
-              playingMediaId === media.id.toString()
-            }
-            onPlay={() => this.onStartPreview(type, media.id.toString())}
+            playing={playingMediaType === type && playingMediaId === media.id}
+            onPlay={() => this.onStartPreview(type, media.id)}
             onStop={this.onStopPreview}
           />
         )}
@@ -136,14 +141,11 @@ class SearchModal extends Component<MappedProps & WithTranslation, State> {
     }
   };
 
-  private onSelect = (mediaType: MediaType, mediaId: number) =>
-    this.props.onSelect(mediaType, mediaId.toString());
-
   private onStartPreview = (
     playingMediaType: MediaType,
     playingMediaId: string
   ) => {
-    this.props.onStartPreview(playingMediaType, playingMediaId);
+    this.props.onPlay(this.state.provider, playingMediaType, playingMediaId);
     this.setState({
       playingMediaId,
       playingMediaType,
@@ -151,7 +153,7 @@ class SearchModal extends Component<MappedProps & WithTranslation, State> {
   };
 
   private onStopPreview = () => {
-    this.props.onStopPreview();
+    this.props.onStop();
     this.setState({
       playingMediaId: "",
       playingMediaType: "track",
