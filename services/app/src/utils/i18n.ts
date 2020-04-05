@@ -13,7 +13,7 @@ export const changeLanguage = (language: string) =>
 
 export const initLocales = async (): Promise<void> =>
   new Promise((resolve, reject) => {
-    console.log("Initializing language...");
+    console.debug("Initializing language...");
     i18next.use(initReactI18next).init(
       {
         fallbackLng: "en",

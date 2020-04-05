@@ -3,7 +3,14 @@ import { AxiosError } from "axios";
 import { createAction, AsyncAction } from ".";
 import { displayError } from "./messages";
 import { appendInQueue } from "./queue";
-import { Media, MediaType, ProviderType, Track } from "../utils/medias";
+import {
+  Media,
+  MediaType,
+  ProviderType,
+  Track,
+  Playlist,
+  Album,
+} from "../utils/medias";
 import { extractErrorMessage } from "../utils/messages";
 
 // ------------------------------------------------------------------
@@ -67,7 +74,6 @@ export const loadMedias = (
       } else {
         // CONTAINERS
         const { [mediaType]: oldContainers } = medias;
-        console.log("TITI", medias);
         const newContainerIds: string[] = mediaIds
           .filter((containerId) => !oldContainers[containerId])
           .filter(onlyUnique);
@@ -75,8 +81,17 @@ export const loadMedias = (
         if (newContainerIds.length > 0) {
           console.debug("Loading containers...", { mediaIds: newContainerIds });
           newContainers = await deezer.load(mediaType, newContainerIds);
-          dispatch(set(newContainers));
+
+          const newContainersAndTracks = [...newContainers];
+          for (const container of newContainers) {
+            newContainersAndTracks.push(
+              ...(container as Album | Playlist).tracks!
+            );
+          }
+
+          dispatch(set(newContainersAndTracks));
         }
+
         if (enqueue) {
           console.debug("Enqueuing containers tracks...", { mediaIds });
           for (const containerId of mediaIds) {

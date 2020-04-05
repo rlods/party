@@ -43,12 +43,16 @@ export const FirebaseRoom = (id: string, secret?: string) => {
   const isLocked = () => !_secret;
 
   const setSecret = (newSecret: string) => {
-    console.debug("SETTING SECRET", newSecret);
+    console.debug("[Firebase] Setting room secret", {
+      oldSecret: _secret,
+      newSecret,
+    });
     _secret = newSecret;
   };
 
   const wait = async (): Promise<RoomInfo> =>
     new Promise((resolve, reject) => {
+      console.debug("[Firebase] Waiting room...");
       _info.once("value", (snapshot) => {
         const newValues = snapshot.val();
         if (newValues) {
@@ -61,19 +65,23 @@ export const FirebaseRoom = (id: string, secret?: string) => {
     });
 
   const subscribeInfo = (cb: FirebaseCB) => {
+    console.debug("[Firebase] Subscribing room...");
     _info.on("value", cb);
   };
 
   const unsubscribeInfo = (cb: FirebaseCB) => {
+    console.debug("[Firebase] Unsubscribing room...");
     _info.off("value", cb);
   };
 
   const subscribeMembers = (cbAdded: FirebaseCB, cbRemoved: FirebaseCB) => {
+    console.debug("[Firebase] Subscribing members...");
     _members.on("child_added", cbAdded);
     _members.on("child_removed", cbRemoved);
   };
 
   const unsubscribeMembers = (cbAdded: FirebaseCB, cbRemoved: FirebaseCB) => {
+    console.debug("[Firebase] Unsubscribing members...");
     _members.off("child_added", cbAdded);
     _members.off("child_removed", cbRemoved);
   };
@@ -86,6 +94,12 @@ export const FirebaseRoom = (id: string, secret?: string) => {
   }: Partial<
     Pick<RoomInfo, "name" | "playing" | "queue" | "queue_position">
   >) => {
+    console.debug("[Firebase] Updating room...", {
+      name,
+      playing,
+      queue,
+      queue_position,
+    });
     if (name !== void 0) {
       _values.name = name;
     }
@@ -141,11 +155,16 @@ export const FirebaseUser = (id: string, secret?: string) => {
   const isLocked = () => !_secret;
 
   const setSecret = (newSecret: string) => {
+    console.debug("[Firebase] Setting user secret...", {
+      oldSecret: _secret,
+      newSecret,
+    });
     _secret = newSecret;
   };
 
   const wait = async (): Promise<UserInfo> =>
     new Promise((resolve, reject) => {
+      console.debug("[Firebase] Waiting user...");
       _info.once("value", (snapshot) => {
         const newValues = snapshot.val();
         if (newValues) {
@@ -158,10 +177,12 @@ export const FirebaseUser = (id: string, secret?: string) => {
     });
 
   const subscribeInfo = (cb: FirebaseCB) => {
+    console.debug("[Firebase] Subscribing user...");
     _info.on("value", cb);
   };
 
   const unsubscribeInfo = (cb: FirebaseCB) => {
+    console.debug("[Firebase] Unsubscribing user...");
     _info.off("value", cb);
   };
 
@@ -169,6 +190,7 @@ export const FirebaseUser = (id: string, secret?: string) => {
     name,
     room_id,
   }: Partial<Pick<UserInfo, "name" | "room_id">>) => {
+    console.debug("[Firebase] Updating user...", { name, room_id });
     if (name !== void 0) {
       _values.name = name;
     }
@@ -188,6 +210,7 @@ export const FirebaseUser = (id: string, secret?: string) => {
   };
 
   const installDisconnect = () => {
+    console.debug("[Firebase] Installing user disconnect...");
     _user.onDisconnect().cancel();
     _user.onDisconnect().set({
       info: {

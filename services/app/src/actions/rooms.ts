@@ -30,11 +30,11 @@ const reset = () => createAction("rooms/RESET");
 const setRoom = (
   room: ReturnType<typeof FirebaseRoom> | null,
   info: RoomInfo | null
-) => createAction("rooms/SET_ROOM", { room, room_info: info });
+) => createAction("rooms/SET", { room, room_info: info });
 const setRoomAccess = (id: string, secret: string) =>
-  createAction("rooms/SET_ROOM_ACCESS", { id, secret });
+  createAction("rooms/SET_ACCESS", { id, secret });
 export const setRoomColor = (color: CombinedColor) =>
-  createAction("rooms/SET_ROOM_COLOR", color);
+  createAction("rooms/SET_COLOR", color);
 
 // ------------------------------------------------------------------
 
@@ -69,30 +69,29 @@ export const enterRoom = (id: string, secret: string): AsyncAction => async (
       const newRoom = FirebaseRoom(id, secret);
       dispatch(setRoom(newRoom, await newRoom.wait()));
       dispatch(setRoomAccess(id, secret));
-      FIREBASE_CB = (snapshot: firebase.database.DataSnapshot) => {
-        const newInfo = snapshot.val() as RoomInfo;
-        let mediaAccesses: MediaAccess[] = [];
-        if (newInfo.queue) {
-          mediaAccesses = Object.entries(newInfo.queue)
-            .sort((media1, media2) => Number(media1[0]) - Number(media2[0]))
-            .map((media) => media[1]);
-          dispatch(
-            loadMedias(
-              "deezer",
-              "track",
-              mediaAccesses.map((media) => media.id),
-              false,
-              false
-            )
-          );
+      FIREBASE_CB = newRoom.subscribeInfo(
+        (snapshot: firebase.database.DataSnapshot) => {
+          const newInfo = snapshot.val() as RoomInfo;
+          console.debug("[Firebase] Received room update...", newInfo);
+          let medias: MediaAccess[] = [];
+          if (newInfo.queue) {
+            medias = Object.entries(newInfo.queue)
+              .sort((media1, media2) => Number(media1[0]) - Number(media2[0]))
+              .map((media) => media[1]);
+            dispatch(
+              loadMedias(
+                "deezer",
+                "track",
+                medias.map((media) => media.id),
+                false,
+                false
+              )
+            );
+          }
+          dispatch(setQueue(medias, newInfo.playing, newInfo.queue_position));
+          dispatch(setRoom(newRoom, newInfo));
         }
-        console.log("TOTO", newInfo);
-        dispatch(
-          setQueue(mediaAccesses, newInfo.playing, newInfo.queue_position)
-        );
-        dispatch(setRoom(newRoom, newInfo));
-      };
-      newRoom.subscribeInfo(FIREBASE_CB);
+      );
       history.push(`/room/${id}?key=${secret}`); // TODO: should push only if we're not already in it
     } catch (err) {
       dispatch(displayError(extractErrorMessage(err)));

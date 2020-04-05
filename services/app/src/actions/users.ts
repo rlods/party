@@ -24,9 +24,9 @@ const reset = () => createAction("users/RESET");
 const setUser = (
   user: ReturnType<typeof FirebaseUser> | null,
   info: UserInfo | null
-) => createAction("users/SET_USER", { user, user_info: info });
+) => createAction("users/SET", { user, user_info: info });
 const setUserAccess = (id: string, secret: string) =>
-  createAction("users/SET_USER_ACCESS", { id, secret });
+  createAction("users/SET_ACCESS", { id, secret });
 
 // ------------------------------------------------------------------
 
@@ -61,11 +61,13 @@ export const connectUser = (id: string, secret: string): AsyncAction => async (
       const newUser = FirebaseUser(id);
       dispatch(setUser(newUser, await newUser.wait()));
       dispatch(setUserAccess(id, secret));
-      FIREBASE_CB = (snapshot: firebase.database.DataSnapshot) => {
-        const newInfo = snapshot.val() as UserInfo;
-        dispatch(setUser(newUser, newInfo));
-      };
-      newUser.subscribeInfo(FIREBASE_CB);
+      FIREBASE_CB = newUser.subscribeInfo(
+        (snapshot: firebase.database.DataSnapshot) => {
+          const newInfo = snapshot.val() as UserInfo;
+          console.debug("[Firebase] Received user update...", newInfo);
+          dispatch(setUser(newUser, newInfo));
+        }
+      );
     } catch (err) {
       dispatch(displayError(extractErrorMessage(err)));
       dispatch(setUserAccess("", ""));

@@ -51,19 +51,19 @@ export const roomsReducer: Reducer<State, RoomsAction> = (
         fetching: false,
         error: action.payload,
       };
-    case "rooms/SET_ROOM": {
+    case "rooms/SET": {
       return {
         ...state,
         ...action.payload,
       };
     }
-    case "rooms/SET_ROOM_ACCESS": {
+    case "rooms/SET_ACCESS": {
       return {
         ...state,
         room_access: action.payload,
       };
     }
-    case "rooms/SET_ROOM_COLOR": {
+    case "rooms/SET_COLOR": {
       return {
         ...state,
         room_color: action.payload,

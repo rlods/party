@@ -53,13 +53,13 @@ export const usersReducer: Reducer<State, UsersAction> = (
         fetching: false,
         error: action.payload,
       };
-    case "users/SET_USER": {
+    case "users/SET": {
       return {
         ...state,
         ...action.payload,
       };
     }
-    case "users/SET_USER_ACCESS": {
+    case "users/SET_ACCESS": {
       saveUserAccess(action.payload);
       return {
         ...state,
