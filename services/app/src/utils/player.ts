@@ -15,8 +15,13 @@ const decodeAudioData = (encodedBuffer: ArrayBuffer): Promise<AudioBuffer> =>
     getContext().decodeAudioData(encodedBuffer, resolve, reject)
   );
 
-const loadAudioBuffer = (url: string): Promise<AudioBuffer> =>
+const loadAudioBuffer = (trackId: string, url: string): Promise<AudioBuffer> =>
   new Promise((resolve, reject) => {
+    if (!url) {
+      console.error("Track has invalid URL", { trackId });
+      reject(new Error("Invalid URL"));
+      return;
+    }
     const req = new XMLHttpRequest();
     req.open("GET", url, true);
     req.responseType = "arraybuffer";
@@ -31,7 +36,10 @@ const loadAudioBuffer = (url: string): Promise<AudioBuffer> =>
         try {
           resolve(await decodeAudioData(req.response as ArrayBuffer));
         } catch (error) {
-          console.debug("An error occurred while decoding audio data");
+          console.debug("An error occurred while decoding audio data", {
+            trackId,
+            url,
+          });
           reject(error);
         }
       },
@@ -114,11 +122,15 @@ export const Player = (chainPlay: boolean) => {
     return 0;
   };
 
-  const _loadBuffer = async (url: string) => {
+  const _loadBuffer = async (trackId: string, url: string) => {
     // TODO: cache N last audio buffers
+    if (!url) {
+      console.error("Track has invalid URL", { trackId });
+      throw new Error("Invalid URL");
+    }
     if (_bufferUrl !== url) {
-      console.debug("Loading audio...", { url });
-      _buffer = await loadAudioBuffer(url);
+      console.debug("Loading audio...", { trackId, url });
+      _buffer = await loadAudioBuffer(trackId, url);
       _bufferUrl = url;
     }
   };
@@ -130,7 +142,7 @@ export const Player = (chainPlay: boolean) => {
     offset: number
   ) => {
     await stop();
-    await _loadBuffer(trackUrl); // TODO: warning if loadBuffer takes long for some reason and user clicks stop before end, next part of this function will continue after stop have been requested
+    await _loadBuffer(trackId, trackUrl); // TODO: warning if loadBuffer takes long for some reason and user clicks stop before end, next part of this function will continue after stop have been requested
     console.debug("Starting audio...", { trackPosition, trackId, trackUrl });
     _trackId = trackId;
     _trackPosition = trackPosition;

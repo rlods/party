@@ -4,7 +4,9 @@ export type MediaAccess = {
   type: MediaType;
 };
 
-export type MediaType = "album" | "playlist" | "track";
+export type ContainerType = "album" | "playlist";
+
+export type MediaType = ContainerType | "track";
 
 export type MediaTypeDefinition = {
   label: string;
@@ -40,7 +42,6 @@ export type Playlist = {
   link: string;
   picture_big: string;
   picture_small: string;
-  public: true;
   title: string;
   tracks?: Track[];
   type: "playlist";
@@ -70,12 +71,13 @@ export type Track = {
   id: string;
   link: string;
   preview: string;
-  readable: boolean;
   title: string;
   type: "track";
 };
 
-export type Media = Album | Playlist | Track;
+export type Container = Album | Playlist;
+
+export type Media = Container | Track;
 
 // ------------------------------------------------------------------
 

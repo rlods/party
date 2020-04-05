@@ -3,14 +3,13 @@ import { AxiosError } from "axios";
 import { createAction, AsyncAction } from ".";
 import { displayError } from "./messages";
 import { appendInQueue } from "./queue";
-import { onlyUnique } from "../utils";
+import { getFromDictOrList, onlyUnique } from "../utils";
 import {
   Media,
   MediaType,
   ProviderType,
   Track,
-  Playlist,
-  Album,
+  Container,
 } from "../utils/medias";
 import { extractErrorMessage } from "../utils/messages";
 
@@ -61,11 +60,13 @@ export const loadMedias = (
         }
         if (preview) {
           const trackId = mediaIds[0];
-          const track =
-            oldTracks[trackId] ||
-            newTracks.find((track) => track.id === trackId);
-          console.debug("Previewing track...", { track, trackId });
-          await previewPlayer.play(0, track.id, track.preview, 0);
+          const track = getFromDictOrList(oldTracks, newTracks, trackId);
+          if (track) {
+            console.debug("Previewing track...", { track, trackId });
+            await previewPlayer.play(0, track.id, track.preview, 0);
+          } else {
+            console.debug("Cannot load track to preview...");
+          }
         }
       } else {
         // CONTAINERS
@@ -73,16 +74,17 @@ export const loadMedias = (
         const newContainerIds: string[] = mediaIds
           .filter((containerId) => !oldContainers[containerId])
           .filter(onlyUnique);
-        let newContainers: Media[] = [];
+        let newContainers: Array<Container> = [];
         if (newContainerIds.length > 0) {
           console.debug("Loading containers...", { mediaIds: newContainerIds });
-          newContainers = await deezer.load(mediaType, newContainerIds);
+          newContainers = await deezer.loadContainers(
+            mediaType,
+            newContainerIds
+          );
 
-          const newContainersAndTracks = [...newContainers];
+          const newContainersAndTracks: Media[] = [...newContainers];
           for (const container of newContainers) {
-            newContainersAndTracks.push(
-              ...(container as Album | Playlist).tracks!
-            );
+            newContainersAndTracks.push(...container.tracks!);
           }
 
           dispatch(set(newContainersAndTracks));
@@ -91,32 +93,39 @@ export const loadMedias = (
         if (enqueue) {
           console.debug("Enqueuing containers tracks...", { mediaIds });
           for (const containerId of mediaIds) {
-            const container =
-              oldContainers[containerId] ||
-              newContainers.find((container) => container.id === containerId);
-            dispatch(
-              appendInQueue(
-                provider,
-                container.tracks!.map((track) => track.id)
-              )
+            const container = getFromDictOrList<Container>(
+              oldContainers,
+              newContainers,
+              containerId
             );
+            if (container) {
+              dispatch(
+                appendInQueue(
+                  provider,
+                  container.tracks!.map((track) => track.id)
+                )
+              );
+            }
           }
         }
         if (preview) {
           let track: Track | null = null;
           for (const containerId of mediaIds) {
-            const container =
-              oldContainers[containerId] ||
-              newContainers.find((container) => container.id === containerId);
-            if (container.tracks && container.tracks.length > 0) {
+            const container = getFromDictOrList<Container>(
+              oldContainers,
+              newContainers,
+              containerId
+            );
+            if (container && container.tracks && container.tracks.length > 0) {
               track = container.tracks[0];
+              break;
             }
           }
           if (track) {
             console.debug("Previewing container first track...");
-            dispatch(loadMedias(provider, "track", [track.id], false, true));
+            await previewPlayer.play(0, track.id, track.preview, 0);
           } else {
-            console.debug("No container track found to preview...");
+            console.debug("Cannot load track to preview...");
           }
         }
       }

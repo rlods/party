@@ -1,15 +1,16 @@
 // import Axios from "axios";
 import jsonp from "jsonp";
 //
+import { sleep } from ".";
 import {
   SearchResults,
+  Container,
+  ContainerType,
   Album,
   Playlist,
   Track,
   MediaType,
-  Media,
 } from "./medias";
-import { sleep } from ".";
 
 // ------------------------------------------------------------------
 
@@ -31,7 +32,6 @@ export type ApiAlbum = {
     picture_big: string;
     picture_small: string;
   };
-  available: boolean;
   cover_big: string;
   cover_small: string;
   id: number;
@@ -100,7 +100,9 @@ const ConvertAlbum = (album: ApiAlbum): Album => ({
   title: album.title,
   tracks:
     album.tracks !== void 0
-      ? album.tracks.data.map((track) => ConvertTrack(track, album))
+      ? album.tracks.data
+          .filter((track) => track.readable && track.preview)
+          .map((track) => ConvertTrack(track, album))
       : void 0,
   type: "album",
 });
@@ -113,11 +115,12 @@ const ConvertPlaylist = (
   link: `https://www.deezer.com/playlist/${playlist.id}`,
   picture_big: playlist.picture_big,
   picture_small: playlist.picture_small,
-  public: playlist.public,
   title: playlist.title,
   tracks:
     playlist.tracks !== void 0
-      ? playlist.tracks.data.map((track) => ConvertTrack(track, track.album))
+      ? playlist.tracks.data
+          .filter((track) => track.readable && track.preview)
+          .map((track) => ConvertTrack(track, track.album))
       : void 0,
   type: "playlist",
   user: {
@@ -149,7 +152,6 @@ const ConvertTrack = (
   id: track.id.toString(),
   link: `https://www.deezer.com/track/${track.id}`,
   preview: track.preview,
-  readable: track.readable,
   title: track.title,
   type: "track",
 });
@@ -223,26 +225,28 @@ export const DeezerApi = () => {
     return medias as T[];
   };
 
-  const searchAlbums = (query: string) => _search<ApiAlbum>("album", query);
+  const _searchAlbums = (query: string) => _search<ApiAlbum>("album", query);
 
-  const searchPlaylists = (query: string) =>
+  const _searchPlaylists = (query: string) =>
     _search<ApiPlaylist>("playlist", query);
 
-  const searchTracks = (query: string) => _search<ApiTrack>("track", query);
+  const _searchTracks = (query: string) => _search<ApiTrack>("track", query);
 
   const search = async (query: string): Promise<SearchResults> => {
     const [album, playlist, track] = await Promise.all([
-      searchAlbums(query),
-      searchPlaylists(query),
-      searchTracks(query),
+      _searchAlbums(query),
+      _searchPlaylists(query),
+      _searchTracks(query),
     ]);
     return {
       // keys are MediaType
       album: album.data.map(ConvertAlbum),
-      playlist: playlist.data.map((playlist) =>
-        ConvertPlaylist(playlist, playlist.user!)
-      ),
-      track: track.data.map((track) => ConvertTrack(track, track.album)),
+      playlist: playlist.data
+        .filter((playlist) => playlist.public)
+        .map((playlist) => ConvertPlaylist(playlist, playlist.user!)),
+      track: track.data
+        .filter((track) => track.readable && track.preview)
+        .map((track) => ConvertTrack(track, track.album)),
     };
   };
 
@@ -258,25 +262,26 @@ export const DeezerApi = () => {
     );
   };
 
-  const loadTracks = async (ids: string[]): Promise<Track[]> => {
-    const tracks = await _loadWithRetry<ApiTrack>("track", ids);
-    return tracks.map((track) => ConvertTrack(track, track.album));
-  };
-
-  const load = async (type: MediaType, ids: string[]): Promise<Media[]> => {
+  const loadContainers = async (
+    type: ContainerType,
+    ids: string[]
+  ): Promise<Container[]> => {
     switch (type) {
       case "album":
         return loadAlbums(ids);
       case "playlist":
         return loadPlaylists(ids);
-      case "track":
-        return loadTracks(ids);
     }
+  };
+
+  const loadTracks = async (ids: string[]): Promise<Track[]> => {
+    const tracks = await _loadWithRetry<ApiTrack>("track", ids);
+    return tracks.map((track) => ConvertTrack(track, track.album));
   };
 
   return {
     search,
-    load,
+    loadContainers,
     loadTracks,
   };
 };

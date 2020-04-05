@@ -5,6 +5,8 @@ import { setQueuePosition } from "./queue";
 import { Player } from "../utils/player";
 import { RootState } from "../reducers";
 import { MediaAccess } from "../utils/medias";
+import { displayError } from "./messages";
+import { extractErrorMessage } from "../utils/messages";
 
 // ------------------------------------------------------------------
 
@@ -120,17 +122,22 @@ const _installTimer1 = (
           nextTrack,
           nextTrackPosition,
         });
-        dispatch(setQueuePosition(nextTrackPosition));
-        const [color] = await Promise.all([
-          pickColor(nextTrack.album.cover_small),
-          queuePlayer.play(
-            nextTrackPosition,
-            nextTrack.id,
-            nextTrack.preview,
-            0
-          ),
-        ]);
-        dispatch(setRoomColor(color));
+
+        try {
+          dispatch(setQueuePosition(nextTrackPosition));
+          const [color] = await Promise.all([
+            pickColor(nextTrack.album.cover_small),
+            queuePlayer.play(
+              nextTrackPosition,
+              nextTrack.id,
+              nextTrack.preview,
+              0
+            ),
+          ]);
+          dispatch(setRoomColor(color));
+        } catch (err) {
+          dispatch(displayError(extractErrorMessage(err)));
+        }
       }
 
       // Reschedule time

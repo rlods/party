@@ -120,7 +120,7 @@ class _Media extends Component<MediaProps & WithTranslation> {
         <div className="Media Track">
           {actions}
           <Cover
-            playable={playable}
+            playable={playable && !!track.preview}
             playing={playing}
             image={track.album.cover_small}
             onPlay={onPlay}
