@@ -137,7 +137,7 @@ class SearchModal extends Component<MappedProps & WithTranslation, State> {
   private onSearch = async () => {
     const { query } = this.state;
     if (query.trim().length > 0) {
-      this.setState({ results: await DEFAULT_API.searchAll(query) });
+      this.setState({ results: await DEFAULT_API.search(query) });
     }
   };
 
