@@ -4,11 +4,9 @@ export type Album = ApiAlbum;
 
 export type Playlist = ApiPlaylist;
 
-export type Container = Album | Playlist;
+export type Media = Album | Playlist | Track;
 
-export type ContainerType = "album" | "playlist";
-
-export type MediaType = ContainerType | TrackType;
+export type MediaType = "album" | "playlist" | "track";
 
 export type Provider = "deezer";
 

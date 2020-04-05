@@ -6,7 +6,9 @@ import { Track } from "../utils/medias";
 export const extractTracks = (state: RootState, trackIds: string[]) => {
   const res: Array<Track | null> = [];
   const {
-    medias: { tracks },
+    medias: {
+      medias: { track: tracks },
+    },
   } = state;
   for (const trackId of trackIds) {
     const track = tracks[trackId];

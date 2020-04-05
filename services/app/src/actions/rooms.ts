@@ -5,8 +5,8 @@ import { createAction, AsyncAction } from ".";
 import { displayError } from "./messages";
 import { RoomInfo } from "../utils/rooms";
 import { FirebaseRoom } from "../utils/firebase";
-import { loadContainers, loadTracks } from "./medias";
-import { ContainerType, Provider } from "../utils/medias";
+import { loadMedias } from "./medias";
+import { MediaType, Provider } from "../utils/medias";
 import { CombinedColor } from "../utils/colorpicker";
 import history from "../utils/history";
 import { setQueue } from "./queue";
@@ -76,7 +76,7 @@ export const enterRoom = (id: string, secret: string): AsyncAction => async (
           trackIds = Object.entries(newInfo.queue)
             .sort((track1, track2) => Number(track1[0]) - Number(track2[0]))
             .map((track) => track[1].id);
-          dispatch(loadTracks("deezer", trackIds, false, false));
+          dispatch(loadMedias("deezer", "track", trackIds, false, false));
         }
         console.log("TOTO", newInfo);
         dispatch(setQueue(newInfo.playing, trackIds, newInfo.queue_position));
@@ -140,16 +140,8 @@ export const unlockRoom = (secret: string): AsyncAction => async (
 
 export const queueTracks = (
   provider: Provider,
-  containerType: ContainerType,
-  containerId: string,
-  trackId: string
+  mediaType: MediaType,
+  mediaId: string
 ): AsyncAction => async (dispatch) => {
-  if (containerId) {
-    dispatch(
-      loadContainers(provider, containerType, [containerId], true, false)
-    );
-  }
-  if (trackId) {
-    dispatch(loadTracks(provider, [trackId], true, false));
-  }
+  dispatch(loadMedias(provider, mediaType, [mediaId], true, false));
 };
