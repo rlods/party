@@ -17,11 +17,6 @@ const decodeAudioData = (encodedBuffer: ArrayBuffer): Promise<AudioBuffer> =>
 
 const loadAudioBuffer = (trackId: string, url: string): Promise<AudioBuffer> =>
   new Promise((resolve, reject) => {
-    if (!url) {
-      console.error("Track has invalid URL", { trackId });
-      reject(new Error("Invalid URL"));
-      return;
-    }
     const req = new XMLHttpRequest();
     req.open("GET", url, true);
     req.responseType = "arraybuffer";
@@ -40,13 +35,40 @@ const loadAudioBuffer = (trackId: string, url: string): Promise<AudioBuffer> =>
             trackId,
             url,
           });
-          reject(error);
+          reject(new Error("player.errors.cannot_decode_audio_data"));
         }
       },
       false
     );
     req.send();
   });
+
+const AUDIO_BUFFER_CACHES: Array<{ buffer: AudioBuffer; url: string }> = [];
+const AUDIO_BUFFER_CACHES_MAX_SIZE = 10;
+
+const loadAudioBufferWithCache = async (
+  trackId: string,
+  url: string
+): Promise<AudioBuffer> => {
+  if (!url) {
+    console.error("Track has invalid URL", { trackId });
+    throw new Error("Invalid URL");
+  }
+  let buffer: AudioBuffer | null = null;
+  const index = AUDIO_BUFFER_CACHES.findIndex((item) => item.url === url);
+  if (index >= 0) {
+    // Found: extract old buffer, it will be repush at the end of cache
+    console.debug("Reusing cached audio buffer...", { trackId, url });
+    buffer = AUDIO_BUFFER_CACHES.splice(index, 1)[0].buffer;
+  } else {
+    // Not Found
+    console.debug("Loading audio buffer...", { trackId, url });
+    buffer = await loadAudioBuffer(trackId, url);
+  }
+  AUDIO_BUFFER_CACHES.push({ buffer, url });
+  AUDIO_BUFFER_CACHES.splice(AUDIO_BUFFER_CACHES_MAX_SIZE);
+  return buffer;
+};
 
 // ------------------------------------------------------------------
 
@@ -80,7 +102,6 @@ export const Player = (chainPlay: boolean) => {
   let gainNode: GainNode | null = null;
   let _node: AudioNode | null = null;
   let _buffer: AudioBuffer | null = null;
-  let _bufferUrl: string = "";
   let _sourceNode: AudioBufferSourceNode | null = null;
   let _sourceNodeStartTime = 0;
   let _trackId = "";
@@ -122,19 +143,6 @@ export const Player = (chainPlay: boolean) => {
     return 0;
   };
 
-  const _loadBuffer = async (trackId: string, url: string) => {
-    // TODO: cache N last audio buffers
-    if (!url) {
-      console.error("Track has invalid URL", { trackId });
-      throw new Error("Invalid URL");
-    }
-    if (_bufferUrl !== url) {
-      console.debug("Loading audio...", { trackId, url });
-      _buffer = await loadAudioBuffer(trackId, url);
-      _bufferUrl = url;
-    }
-  };
-
   const play = async (
     trackPosition: number,
     trackId: string,
@@ -142,7 +150,7 @@ export const Player = (chainPlay: boolean) => {
     offset: number
   ) => {
     await stop();
-    await _loadBuffer(trackId, trackUrl); // TODO: warning if loadBuffer takes long for some reason and user clicks stop before end, next part of this function will continue after stop have been requested
+    _buffer = await loadAudioBufferWithCache(trackId, trackUrl); // TODO: warning if loadBuffer takes long for some reason and user clicks stop before end, next part of this function will continue after stop have been requested
     console.debug("Starting audio...", { trackPosition, trackId, trackUrl });
     _trackId = trackId;
     _trackPosition = trackPosition;
@@ -153,6 +161,7 @@ export const Player = (chainPlay: boolean) => {
     _sourceNode.loopEnd = 0;
     _sourceNode.onended = () => {
       console.debug("Audio terminated...");
+      _buffer = null;
       _sourceNode = null;
       if (chainPlay) {
         _trackPosition++;

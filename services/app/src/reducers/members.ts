@@ -14,7 +14,7 @@ export type State = {
 const INITIAL_STATE: State = {
   fetching: false,
   error: null,
-  items: []
+  items: [],
 };
 
 // ------------------------------------------------------------------
@@ -28,25 +28,25 @@ export const membersReducer: Reducer<State, MembersAction> = (
       return {
         ...state,
         fetching: true,
-        error: null
+        error: null,
       };
     case "members/FETCHED": {
       const items = [...state.items];
-      //TODOfor (const item of action.payload) {
+      //TODO for (const item of action.payload) {
       //  items[item.id] = item;
       //}
       return {
         ...state,
         fetching: false,
         error: null,
-        items
+        items,
       };
     }
     case "members/ERROR":
       return {
         ...state,
         fetching: false,
-        error: action.payload
+        error: action.payload,
       };
     case "members/RESET":
       return INITIAL_STATE;

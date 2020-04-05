@@ -66,7 +66,8 @@ export default {
   },
   player: {
     errors: {
-      cannot_load_audio_buffer: "Le buffer Audio ne peut pas être chargé",
+      cannot_decode_audio_data: "Le buffer audio ne peut pas être décodé",
+      cannot_load_audio_buffer: "Le buffer audio ne peut pas être chargé",
     },
     backward: "Piste précédente",
     forward: "Piste suivante",
