@@ -8,7 +8,7 @@ const MAX_RESULTS_COUNT = 5;
 
 // ------------------------------------------------------------------
 
-const SearchResultCategory = ({
+export const SearchResultCategory = ({
 	items,
 	label,
 	cb
@@ -29,5 +29,3 @@ const SearchResultCategory = ({
 			))}
 		</>
 	) : null;
-
-export default SearchResultCategory;

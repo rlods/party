@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
 import classNames from "classnames";
 //
-import Icon from "../Common/Icon";
+import { Icon } from "../Common/Icon";
 import "./Cover.scss";
 
 // ------------------------------------------------------------------

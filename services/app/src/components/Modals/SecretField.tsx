@@ -1,62 +1,65 @@
-import React, { Component } from "react";
-import { withTranslation, WithTranslation } from "react-i18next";
+import React, { useCallback } from "react";
+import { useTranslation } from "react-i18next";
 //
 import { copyToClipboard } from "../../utils/clipboard";
-import IconButton from "../Common/IconButton";
-import { MappedProps } from "../../containers/Modals/SecretField";
+import { IconButton } from "../Common/IconButton";
+import { displayMessage } from "../../actions/messages";
+import { useDispatch } from "react-redux";
 
 // ------------------------------------------------------------------
 
-type Props = {
+export const SecretField = ({
+	id,
+	label,
+	onChange,
+	placeholder,
+	value
+}: {
 	id: string;
 	label: string;
 	onChange: (value: string) => void;
 	placeholder: string;
 	value: string;
-};
+}) => {
+	const dispatch = useDispatch();
+	const { t } = useTranslation();
 
-class SecretField extends Component<Props & MappedProps & WithTranslation> {
-	public render = () => {
-		const { id, label, onChange, placeholder, value } = this.props;
-		return (
-			<div className="ModalField">
-				<label htmlFor={id}>{label}</label>
-				<div
-					style={{
-						display: "flex",
-						flexDirection: "row",
-						justifyContent: "space-between"
-					}}>
-					<input
-						style={{
-							flexGrow: 1,
-							marginRight: "0.5rem"
-						}}
-						id={id}
-						type="password"
-						placeholder={placeholder}
-						maxLength={36}
-						minLength={36}
-						required={true}
-						value={value}
-						onChange={e => onChange(e.target.value)}
-					/>
-					<IconButton
-						icon="clipboard"
-						onClick={this.onCopyToClipboard}
-						size="M"
-						title={`Copy to Clipboard`}
-					/>
-				</div>
-			</div>
-		);
-	};
-
-	private onCopyToClipboard = async () => {
-		const { onMessage, value, t } = this.props;
+	const onCopyToClipboard = useCallback(async () => {
 		await copyToClipboard(value);
-		onMessage(t("secret_copied_to_clipboard"));
-	};
-}
+		dispatch(displayMessage("info", t("secret_copied_to_clipboard")));
+	}, [dispatch, t, value]);
 
-export default withTranslation()(SecretField);
+	return (
+		<div className="ModalField">
+			<label htmlFor={id}>{label}</label>
+			<div
+				style={{
+					display: "flex",
+					flexDirection: "row",
+					justifyContent: "space-between"
+				}}>
+				<input
+					style={{
+						flexGrow: 1,
+						marginRight: "0.5rem"
+					}}
+					id={id}
+					type="password"
+					autoComplete="password"
+					placeholder={placeholder}
+					maxLength={36}
+					minLength={36}
+					required={true}
+					value={value}
+					onChange={e => onChange(e.target.value)}
+				/>
+				<IconButton
+					icon="clipboard"
+					onClick={onCopyToClipboard}
+					size="M"
+					title={`Copy to Clipboard`}
+				/>
+			</div>
+		</div>
+	);
+};

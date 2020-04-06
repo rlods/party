@@ -1,0 +1,9 @@
+.Room {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+	height: 100vh;
+	max-height: 100vh;
+	transition: color 300ms ease-in-out, background-color 300ms ease-in-out;
+}

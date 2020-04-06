@@ -1,11 +1,16 @@
-import React, { Component, RefObject, createRef } from "react";
-import { withTranslation, WithTranslation } from "react-i18next";
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import { useDispatch } from "react-redux";
+import { useTranslation } from "react-i18next";
 import { v4 } from "uuid";
 //
-import FormModal from "../Modals/FormModal";
-import { MappedProps } from "../../containers/Users/CreateUserModal";
-import IconButton, { CancelButton } from "../Common/IconButton";
-import SecretField from "../../containers/Modals/SecretField";
+import { FormModal } from "../Modals/FormModal";
+import { IconButton } from "../Common/IconButton";
+import { CancelButton } from "../Common/CancelButton";
+import { SecretField } from "../Modals/SecretField";
+import { popModal, openModal } from "../../actions/modals";
+import { displayError } from "../../actions/messages";
+import { createUser } from "../../actions/user";
+import { Dispatch } from "../../actions";
 
 // ------------------------------------------------------------------
 
@@ -13,97 +18,82 @@ let USER_COUNTER = 1;
 
 // ------------------------------------------------------------------
 
-type State = {
-	name: string;
-	secret: string;
-};
+export const CreateUserModal = () => {
+	const dispatch = useDispatch<Dispatch>();
+	const [name, setName] = useState("");
+	const [secret, setSecret] = useState(v4());
+	const nameRef = useRef<HTMLInputElement>(null);
+	const { t } = useTranslation();
 
-class CreateUserModal extends Component<MappedProps & WithTranslation, State> {
-	private nameRef: RefObject<HTMLInputElement> = createRef();
-
-	public readonly state: State = {
-		name: "",
-		secret: v4()
-	};
-
-	public componentDidMount() {
-		this.setState({
-			name: `${this.props.t("users.user")} ${USER_COUNTER}`
-		});
-		if (this.nameRef.current) {
-			this.nameRef.current.focus();
+	useEffect(() => {
+		setName(`${t("users.user")} ${USER_COUNTER}`);
+		if (nameRef.current) {
+			nameRef.current.focus();
 		}
-	}
+	}, [t]);
 
-	public render = () => {
-		const { t } = this.props;
-		const { name, secret } = this.state;
-		return (
-			<FormModal
-				title={t("users.user_creation")}
-				onSubmit={this.onCreate}
-				renderButtons={this.renderButtons}>
-				<div className="ModalField">
-					<label htmlFor="modal-name">{t("users.name")}</label>
-					<input
-						id="modal-name"
-						type="text"
-						placeholder={t("users.name_placeholder")}
-						maxLength={100}
-						minLength={2}
-						required={true}
-						value={name}
-						ref={this.nameRef}
-						onChange={e => this.setState({ name: e.target.value })}
-					/>
-				</div>
-				<SecretField
-					id="modal-secret"
-					label={t("users.secret")}
-					placeholder={t("users.secret_placeholder")}
-					value={secret}
-					onChange={newSecret => this.setState({ secret: newSecret })}
-				/>
-			</FormModal>
-		);
-	};
+	const onClose = useCallback(() => dispatch(popModal()), [dispatch]);
 
-	private renderButtons = () => {
-		const { t } = this.props;
-		return (
-			<>
-				<IconButton
-					title={t("users.create")}
-					kind="primary"
-					icon="plus"
-					type="submit"
-				/>
-				<CancelButton onClick={this.props.onClose} />
-				<IconButton
-					title={t("users.connect")}
-					kind="default"
-					icon="sign-in"
-					onClick={this.props.onToggle}
-				/>
-			</>
-		);
-	};
-
-	private onCreate = () => {
-		const { onClose, onCreate, onError } = this.props;
-		const { name, secret } = this.state;
+	const onCreate = useCallback(() => {
 		if (name.trim().length === 0) {
-			onError("users.name_is_invalid");
+			dispatch(displayError("users.name_is_invalid"));
 			return;
 		}
 		if (secret.trim().length === 0) {
-			onError("users.secret_is_invalid");
+			dispatch(displayError("users.secret_is_invalid"));
 			return;
 		}
-		onCreate(name, secret);
-		onClose();
+		dispatch(createUser(name, secret));
+		dispatch(popModal());
 		USER_COUNTER++;
-	};
-}
+	}, [dispatch, name, secret]);
 
-export default withTranslation()(CreateUserModal);
+	const onToggle = useCallback(() => {
+		dispatch(openModal({ type: "ConnectUser", props: null }));
+	}, [dispatch]);
+
+	return (
+		<FormModal
+			title={t("users.user_creation")}
+			onSubmit={onCreate}
+			renderButtons={() => (
+				<>
+					<IconButton
+						title={t("users.create")}
+						kind="primary"
+						icon="plus"
+						type="submit"
+					/>
+					<CancelButton onClick={onClose} />
+					<IconButton
+						title={t("users.connect")}
+						kind="default"
+						icon="sign-in"
+						onClick={onToggle}
+					/>
+				</>
+			)}>
+			<div className="ModalField">
+				<label htmlFor="modal-name">{t("users.name")}</label>
+				<input
+					id="modal-name"
+					type="text"
+					placeholder={t("users.name_placeholder")}
+					maxLength={100}
+					minLength={2}
+					required={true}
+					value={name}
+					ref={nameRef}
+					onChange={e => setName(e.target.value)}
+				/>
+			</div>
+			<SecretField
+				id="modal-secret"
+				label={t("users.secret")}
+				placeholder={t("users.secret_placeholder")}
+				value={secret}
+				onChange={newSecret => setSecret(newSecret)}
+			/>
+		</FormModal>
+	);
+};

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import classNames from "classnames";
 //
-import Icon from "../Common/Icon";
+import { Icon } from "../Common/Icon";
 
 // ------------------------------------------------------------------
 

@@ -1,52 +1,62 @@
-import React, { Component } from "react";
-import { withTranslation, WithTranslation } from "react-i18next";
+import React, { useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 //
-import IconButton from "../Common/IconButton";
-import { MappedProps } from "../../containers/Room/Head";
+import { IconButton } from "../Common/IconButton";
 import history from "../../utils/history";
 import { copyToClipboard } from "../../utils/clipboard";
+import { Dispatch } from "../../actions";
+import { RootState } from "../../reducers";
+import { extractRoom } from "../../selectors/room";
+import { displayMessage } from "../../actions/messages";
+import { confirmModal } from "../../actions/modals";
+import { RoomInfo } from "../../utils/rooms";
 import "./Head.scss";
 
 // ------------------------------------------------------------------
 
-class Head extends Component<MappedProps & WithTranslation> {
-	public render = () => {
-		const { room, t } = this.props;
-		return (
-			<div className="Head">
-				<div className="RoomLink">
-					<IconButton
-						icon="link"
-						onClick={this.onCopyLink}
-						size="M"
-						title={t("rooms.copy_link")}
-					/>
-				</div>
-				<div className="RoomName">{room ? room.name : ""}</div>
-				<div className="RoomExit">
-					<IconButton
-						onClick={this.onExit}
-						icon="sign-out"
-						size="M"
-						title={t("rooms.exit")}
-					/>
-				</div>
-			</div>
-		);
-	};
+export const Head = () => {
+	const dispatch = useDispatch<Dispatch>();
+	const { t } = useTranslation();
 
-	private onCopyLink = async () => {
-		const { onMessage, t } = this.props;
+	const { room } = useSelector<RootState, { room: RoomInfo | null }>(
+		state => ({
+			room: extractRoom(state)
+		})
+	);
+
+	const onCopy = useCallback(async () => {
 		await copyToClipboard(document.location.href.split("?")[0]);
-		onMessage(t("rooms.link_copied_to_clipboard"));
-	};
+		dispatch(displayMessage("info", t("rooms.link_copied_to_clipboard")));
+	}, [t, dispatch]);
 
-	private onExit = () => {
-		const { onConfirm, t } = this.props;
-		onConfirm(t("rooms.confirm_exit"), () => {
-			history.push("/");
-		});
-	};
-}
+	const onExit = useCallback(() => {
+		dispatch(
+			confirmModal(t("rooms.confirm_exit"), () => {
+				history.push("/");
+			})
+		);
+	}, [t, dispatch]);
 
-export default withTranslation()(Head);
+	return (
+		<div className="Head">
+			<div className="RoomLink">
+				<IconButton
+					icon="link"
+					onClick={onCopy}
+					size="M"
+					title={t("rooms.copy_link")}
+				/>
+			</div>
+			<div className="RoomName">{room ? room.name : ""}</div>
+			<div className="RoomExit">
+				<IconButton
+					onClick={onExit}
+					icon="sign-out"
+					size="M"
+					title={t("rooms.exit")}
+				/>
+			</div>
+		</div>
+	);
+};

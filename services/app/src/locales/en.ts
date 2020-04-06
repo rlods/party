@@ -44,7 +44,7 @@ export default {
 		loading: "Loading...",
 		locked: "Locked (click to unlock)",
 		name_is_invalid: "Name is invalid",
-		name_placeholderl: "Room Name...",
+		name_placeholder: "Room Name...",
 		name: "Room Name",
 		room_creation: "Room Creation",
 		room_unlocking: "Room Unlocking",

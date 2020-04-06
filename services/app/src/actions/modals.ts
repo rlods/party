@@ -1,5 +1,4 @@
 import { createAction, AsyncAction } from ".";
-import { ConfirmModalProps } from "../components/Modals/ConfirmModal";
 
 // ------------------------------------------------------------------
 
@@ -9,7 +8,14 @@ export type ModalPrereqT<T extends string, P> = {
 };
 
 export type ModalPrereq =
-	| ModalPrereqT<"Confirm", ConfirmModalProps>
+	| ModalPrereqT<
+			"Confirm",
+			{
+				question: string;
+				onCanceled?: () => void;
+				onConfirmed: () => void;
+			}
+	  >
 	| ModalPrereqT<"ConnectUser", null>
 	| ModalPrereqT<"CreateRoom", null>
 	| ModalPrereqT<"CreateUser", null>

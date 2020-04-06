@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
 //
 import Media from "./Medias";
-import IconButton from "../Common/IconButton";
+import { IconButton } from "../Common/IconButton";
 import { Media as MediaData, MediaType } from "../../utils/medias";
 
 // ------------------------------------------------------------------

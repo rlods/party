@@ -1,33 +1,43 @@
-import React, { Component } from "react";
+import React from "react";
+import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 //
-import { MappedProps } from "../../containers/App/Messages";
 import { Message } from "../../utils/messages";
+import { extractMessages } from "../../selectors/messages";
+import { RootState } from "../../reducers";
 import "./Messages.scss";
-import { withTranslation, WithTranslation } from "react-i18next";
 
 // ------------------------------------------------------------------
 
-class Messages extends Component<MappedProps & WithTranslation> {
-	public render = () => (
+export const Messages = () => {
+	const { t } = useTranslation();
+
+	const { messages } = useSelector<RootState, { messages: Message[] }>(
+		state => ({
+			messages: extractMessages(state)
+		})
+	);
+
+	return (
 		<div className="Messages">
 			<TransitionGroup>
-				{this.props.messages.map(this.renderMessage)}
+				{messages.map(message => (
+					<CSSTransition
+						key={message.id}
+						classNames="Message"
+						timeout={{ enter: 200, exit: 200 }}>
+						<div
+							className={classNames(
+								"Message",
+								"Message-" + message.type
+							)}>
+							{t(message.text)}
+						</div>
+					</CSSTransition>
+				))}
 			</TransitionGroup>
 		</div>
 	);
-
-	private renderMessage = (message: Message) => (
-		<CSSTransition
-			key={message.id}
-			classNames="Message"
-			timeout={{ enter: 200, exit: 200 }}>
-			<div className={classNames("Message", "Message-" + message.type)}>
-				{this.props.t(message.text)}
-			</div>
-		</CSSTransition>
-	);
-}
-
-export default withTranslation()(Messages);
+};

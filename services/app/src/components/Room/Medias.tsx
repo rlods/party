@@ -2,7 +2,7 @@ import React, { ReactNode, Component } from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
 //
 import Cover from "./Cover";
-import { LoadingIcon } from "../Common/Icon";
+import { LoadingIcon } from "../Common/LoadingIcon";
 import {
 	Album,
 	Playlist,

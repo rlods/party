@@ -1,9 +1,10 @@
-import React, { Component, createRef, RefObject } from "react";
-import { withTranslation, WithTranslation } from "react-i18next";
+import React, { useRef, useState, useEffect, useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 //
-import FormModal from "../Modals/FormModal";
-import { MappedProps } from "../../containers/Room/SearchModal";
-import IconButton, { CancelButton } from "../Common/IconButton";
+import { FormModal } from "../Modals/FormModal";
+import { IconButton } from "../Common/IconButton";
+import { CancelButton } from "../Common/CancelButton";
 import { DEFAULT_API } from "../../utils/deezer";
 import Media from "./Medias";
 import {
@@ -12,78 +13,91 @@ import {
 	ProviderType,
 	SearchResults
 } from "../../utils/medias";
-import SearchResultCategory from "./SearchResultCategory";
+import { SearchResultCategory } from "./SearchResultCategory";
+import { Dispatch } from "../../actions";
+import { popModal } from "../../actions/modals";
+import { loadMedias } from "../../actions/medias";
+import { stopPreview } from "../../actions/player";
+import { isRoomLocked } from "../../selectors/room";
+import { RootState } from "../../reducers";
 import "./SearchModal.scss";
 
 // ------------------------------------------------------------------
 
-type State = {
-	playingMediaId: string;
-	playingMediaType: MediaType;
-	provider: ProviderType;
-	query: string;
-	results: SearchResults;
-};
+export const SearchModal = () => {
+	const dispatch = useDispatch<Dispatch>();
+	const { t } = useTranslation();
+	const queryRef = useRef<HTMLInputElement>(null);
+	const { locked } = useSelector<RootState, { locked: boolean }>(state => ({
+		locked: isRoomLocked(state)
+	}));
+	const [playingMediaId, setPlayingMediaId] = useState("");
+	const [playingMediaType, setPlayingMediaType] = useState<MediaType>(
+		"track"
+	);
+	const [provider] = useState<ProviderType>("deezer");
+	const [query, setQuery] = useState("");
+	const [results, setResults] = useState<SearchResults>({
+		// keys are MediaType
+		album: [],
+		playlist: [],
+		track: []
+	});
 
-class SearchModal extends Component<MappedProps & WithTranslation, State> {
-	private queryRef: RefObject<HTMLInputElement> = createRef();
+	const onClose = useCallback(() => dispatch(popModal()), [dispatch]);
 
-	public readonly state: State = {
-		playingMediaId: "",
-		playingMediaType: "track",
-		provider: "deezer",
-		query: "",
-		results: {
-			// keys are MediaType
-			album: [],
-			playlist: [],
-			track: []
+	const onSearch = useCallback(async () => {
+		if (query.trim().length > 0) {
+			setResults(await DEFAULT_API.search(query));
 		}
-	};
+	}, [query]);
 
-	public componentDidMount() {
-		if (this.queryRef.current) {
-			this.queryRef.current.focus();
+	const onSelect = useCallback(
+		(provider: ProviderType, mediaType: MediaType, mediaId: string) =>
+			dispatch(loadMedias(provider, mediaType, [mediaId], true, false)),
+		[dispatch]
+	);
+
+	const onStartPreview = useCallback(
+		(mediaType: MediaType, mediaId: string) => {
+			dispatch(loadMedias(provider, mediaType, [mediaId], false, true));
+			setPlayingMediaId(mediaId);
+			setPlayingMediaType(mediaType);
+		},
+		[dispatch, provider]
+	);
+
+	const onStopPreview = useCallback(() => {
+		dispatch(stopPreview());
+		setPlayingMediaId("");
+		setPlayingMediaType("track");
+	}, [dispatch]);
+
+	useEffect(() => {
+		if (queryRef.current) {
+			queryRef.current.focus();
 		}
-	}
+		return () => {
+			dispatch(stopPreview());
+		};
+	}, [dispatch]);
 
-	public componentWillUnmount() {
-		this.props.onStop();
-	}
-
-	public render = () => {
-		const { t } = this.props;
-		return (
-			<FormModal
-				className="SearchModal"
-				title={t("medias.medias_search")}
-				onSubmit={this.onSearch}
-				renderButtons={this.renderButtons}>
-				{this.renderInputs()}
-				{this.renderResults()}
-			</FormModal>
-		);
-	};
-
-	private renderButtons = () => {
-		const { t } = this.props;
-		return (
-			<>
-				<IconButton
-					title={t("medias.search")}
-					kind="primary"
-					icon="search"
-					type="submit"
-				/>
-				<CancelButton onClick={this.props.onClose} />
-			</>
-		);
-	};
-
-	private renderInputs = () => {
-		const { t } = this.props;
-		const { query } = this.state;
-		return (
+	return (
+		<FormModal
+			className="SearchModal"
+			title={t("medias.medias_search")}
+			onSubmit={onSearch}
+			renderButtons={() => (
+				<>
+					<IconButton
+						title={t("medias.search")}
+						kind="primary"
+						icon="search"
+						type="submit"
+					/>
+					<CancelButton onClick={onClose} />
+				</>
+			)}>
 			<div className="ModalField">
 				<input
 					id="modal-query"
@@ -93,85 +107,41 @@ class SearchModal extends Component<MappedProps & WithTranslation, State> {
 					minLength={2}
 					required={true}
 					value={query}
-					ref={this.queryRef}
-					onChange={e => {
-						this.setState({ query: e.target.value });
-					}}
+					ref={queryRef}
+					onChange={e => setQuery(e.target.value)}
 				/>
 			</div>
-		);
-	};
-
-	private renderResults = () => {
-		const { onSelect, locked, t } = this.props;
-		const {
-			playingMediaId,
-			playingMediaType,
-			provider,
-			results
-		} = this.state;
-		return MEDIA_TYPE_DEFINITIONS.map(({ label, type }) => (
-			<SearchResultCategory
-				key={type}
-				label={t(label)}
-				items={results[type]}
-				cb={media => (
-					<Media
-						actions={
-							!locked ? (
-								<IconButton
-									title={t("medias.add")}
-									icon="plus"
-									onClick={() =>
-										onSelect(provider, type, media.id)
-									}
-								/>
-							) : null
-						}
-						media={media}
-						mediaType={type}
-						playable={true}
-						playing={
-							playingMediaType === type &&
-							playingMediaId === media.id
-						}
-						onPlay={() => this.onStartPreview(type, media.id)}
-						onStop={this.onStopPreview}
-					/>
-				)}
-			/>
-		));
-	};
-
-	private onSearch = async () => {
-		const { query } = this.state;
-		if (query.trim().length > 0) {
-			this.setState({ results: await DEFAULT_API.search(query) });
-		}
-	};
-
-	private onStartPreview = (
-		playingMediaType: MediaType,
-		playingMediaId: string
-	) => {
-		this.props.onPlay(
-			this.state.provider,
-			playingMediaType,
-			playingMediaId
-		);
-		this.setState({
-			playingMediaId,
-			playingMediaType
-		});
-	};
-
-	private onStopPreview = () => {
-		this.props.onStop();
-		this.setState({
-			playingMediaId: "",
-			playingMediaType: "track"
-		});
-	};
-}
-
-export default withTranslation()(SearchModal);
+			{MEDIA_TYPE_DEFINITIONS.map(({ label, type }) => (
+				<SearchResultCategory
+					key={type}
+					label={t(label)}
+					items={results[type]}
+					cb={media => (
+						<Media
+							actions={
+								!locked ? (
+									<IconButton
+										title={t("medias.add")}
+										icon="plus"
+										onClick={() =>
+											onSelect(provider, type, media.id)
+										}
+									/>
+								) : null
+							}
+							media={media}
+							mediaType={type}
+							playable={true}
+							playing={
+								playingMediaType === type &&
+								playingMediaId === media.id
+							}
+							onPlay={() => onStartPreview(type, media.id)}
+							onStop={onStopPreview}
+						/>
+					)}
+				/>
+			))}
+		</FormModal>
+	);
+};

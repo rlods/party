@@ -1,19 +1,21 @@
-import React, { Component, MouseEvent } from "react";
+import React, { MouseEvent, useState, useEffect, useCallback } from "react";
 import { CSSTransition } from "react-transition-group";
 //
-import { MappedProps } from "../../containers/Modals";
-import { ModalPrereq } from "../../actions/modals";
-import ConfirmModal from "../../containers/Modals/ConfirmModal";
-import ConnectUserModal from "../../containers/Users/ConnectUserModal";
-import CreateRoomModal from "../../containers/Room/CreateRoomModal";
-import CreateUserModal from "../../containers/Users/CreateUserModal";
-import SearchModal from "../../containers/Room/SearchModal";
-import UnlockRoomModal from "../../containers/Room/UnlockRoomModal";
+import { ModalPrereq, popModal } from "../../actions/modals";
+import { ConfirmModal } from "./ConfirmModal";
+import { ConnectUserModal } from "../Users/ConnectUserModal";
+import { CreateRoomModal } from "../Room/CreateRoomModal";
+import { CreateUserModal } from "..//Users/CreateUserModal";
+import { SearchModal } from "..//Room/SearchModal";
+import { UnlockRoomModal } from "../Room/UnlockRoomModal";
 import "./index.scss";
+import { useDispatch, useSelector } from "react-redux";
+import { Dispatch } from "../../actions";
+import { RootState } from "../../reducers";
 
 // ------------------------------------------------------------------
 
-const TransitionTimeout = 300;
+const TRANSITION_TIMEOUT = 300;
 
 // ------------------------------------------------------------------
 
@@ -36,90 +38,85 @@ export const getModal = (prereq: ModalPrereq) => {
 
 // ------------------------------------------------------------------
 
-type State = {
-	curr_prereq?: ModalPrereq;
-	prev_prereq?: ModalPrereq; // Keeping prev modal prereq for modal fadeout
-};
+export const Modals = () => {
+	const dispatch = useDispatch<Dispatch>();
 
-class Modals extends Component<MappedProps, State> {
-	public readonly state: State = {
-		curr_prereq: void 0,
-		prev_prereq: void 0
-	};
+	const { prereq } = useSelector<RootState, { prereq?: ModalPrereq }>(
+		state => ({
+			prereq:
+				state.modals.stack.length > 0
+					? state.modals.stack[state.modals.stack.length - 1]
+					: void 0
+		})
+	);
 
-	public componentDidMount = () => {
-		document.addEventListener("keydown", this.onKeyDown);
-	};
+	const [currPrereq, setCurrPrereq] = useState<ModalPrereq | undefined>(
+		void 0
+	);
+	const [prevPrereq, setPrevPrereq] = useState<ModalPrereq | undefined>(
+		void 0
+	);
 
-	public componentWillUnmount = () => {
-		document.removeEventListener("keydown", this.onKeyDown);
-	};
+	const onClickOverlay = useCallback(
+		(e: MouseEvent) => {
+			// Clicking overlay will close current modal
+			e.stopPropagation();
+			dispatch(popModal());
+		},
+		[dispatch]
+	);
 
-	public componentDidUpdate = (prevProps: MappedProps) => {
-		const oldPrereq = prevProps.prereq;
-		const newPrereq = this.props.prereq;
-		if (oldPrereq !== newPrereq) {
-			// Hide current modal before showing new one (if there is a new one)
-			this.setState(
-				{
-					curr_prereq: void 0,
-					prev_prereq: oldPrereq
-				},
-				() => {
-					if (newPrereq) {
-						setTimeout(() => {
-							this.setState({
-								curr_prereq: newPrereq
-							});
-						}, TransitionTimeout);
-					}
-				}
-			);
-		}
-	};
+	const onKeyDown = useCallback(
+		(e: KeyboardEvent) => {
+			if (e.keyCode === 27) {
+				dispatch(popModal());
+			}
+		},
+		[dispatch]
+	);
 
-	public render = () => {
-		const { curr_prereq, prev_prereq } = this.state;
-		const prereq = curr_prereq || prev_prereq;
-		let modal = null;
+	useEffect(() => {
+		document.addEventListener("keydown", onKeyDown);
+
+		return () => {
+			document.removeEventListener("keydown", onKeyDown);
+		};
+	});
+
+	useEffect(() => {
+		// Hide current modal before showing new one (if there is a new one)
+		setCurrPrereq(void 0);
+		setPrevPrereq(prereq);
+	}, [prereq]);
+
+	useEffect(() => {
 		if (prereq) {
-			modal = getModal(prereq);
+			setTimeout(() => {
+				setCurrPrereq(prereq);
+			}, TRANSITION_TIMEOUT);
 		}
-		return (
-			<CSSTransition
-				in={!!curr_prereq}
-				timeout={TransitionTimeout}
-				unmountOnExit={true}>
-				<div className="ModalOverlay" onClick={this.onClickOverlay}>
-					{modal && (
-						<div
-							className="ModalWrapper"
-							role="dialog"
-							onClick={this.onClickWrapper}>
-							{modal}
-						</div>
-					)}
-				</div>
-			</CSSTransition>
-		);
-	};
+	}, [prereq, prevPrereq]);
 
-	private onClickOverlay = (event: MouseEvent) => {
-		// Clicking overlay will close current modal
-		event.stopPropagation();
-		this.props.onCloseModal();
-	};
-
-	private onClickWrapper = (event: MouseEvent) => {
-		// Clicking wrapper modal will not progagate to overlay which would close current modal
-		event.stopPropagation();
-	};
-
-	private onKeyDown = (e: KeyboardEvent) => {
-		if (e.keyCode === 27) {
-			this.props.onCloseModal();
-		}
-	};
-}
-
-export default Modals;
+	const xxx = currPrereq || prevPrereq;
+	const modal = xxx ? getModal(xxx) : null;
+	return (
+		<CSSTransition
+			in={!!currPrereq}
+			timeout={TRANSITION_TIMEOUT}
+			unmountOnExit={true}>
+			<div className="ModalOverlay" onClick={onClickOverlay}>
+				{modal && (
+					<div
+						className="ModalWrapper"
+						role="dialog"
+						onClick={(e: MouseEvent) => {
+							// Clicking wrapper modal will not progagate to overlay which would close current modal
+							e.stopPropagation();
+						}}>
+						{modal}
+					</div>
+				)}
+			</div>
+		</CSSTransition>
+	);
+};

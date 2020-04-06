@@ -1,77 +1,65 @@
-import React, { Component, createRef, RefObject } from "react";
-import { withTranslation, WithTranslation } from "react-i18next";
+import React, { useRef, useState, useEffect, useCallback } from "react";
+import { useDispatch } from "react-redux";
+import { useTranslation } from "react-i18next";
 //
-import FormModal from "../Modals/FormModal";
-import { MappedProps } from "../../containers/Room/UnlockRoomModal";
-import IconButton, { CancelButton } from "../Common/IconButton";
+import { FormModal } from "../Modals/FormModal";
+import { IconButton } from "../Common/IconButton";
+import { CancelButton } from "../Common/CancelButton";
+import { Dispatch } from "../../actions";
+import { popModal } from "../../actions/modals";
+import { unlockRoom } from "../../actions/room";
 
 // ------------------------------------------------------------------
 
-type State = {
-	secret: string;
-};
+export const UnlockRoomModal = () => {
+	const dispatch = useDispatch<Dispatch>();
+	const [secret, setSecret] = useState("");
+	const secretRef = useRef<HTMLInputElement>(null);
+	const { t } = useTranslation();
 
-class UnlockRoomModal extends Component<MappedProps & WithTranslation, State> {
-	private secretRef: RefObject<HTMLInputElement> = createRef();
-
-	public readonly state: State = {
-		secret: ""
-	};
-
-	public componentDidMount() {
-		if (this.secretRef.current) {
-			this.secretRef.current.focus();
+	useEffect(() => {
+		if (secretRef.current) {
+			secretRef.current.focus();
 		}
-	}
+	}, []);
 
-	public render = () => {
-		const { t } = this.props;
-		const { secret } = this.state;
-		return (
-			<FormModal
-				title={t("rooms.room_unlocking")}
-				onSubmit={this.onUnlock}
-				renderButtons={this.renderButtons}>
-				<div className="ModalField">
-					<label htmlFor="modal-secret">{t("rooms.key")}</label>
-					<input
-						id="modal-secret"
-						type="password"
-						placeholder={t("rooms.key_placeholder")}
-						maxLength={36}
-						minLength={36}
-						required={true}
-						value={secret}
-						ref={this.secretRef}
-						onChange={e => {
-							this.setState({ secret: e.target.value });
-						}}
+	const onClose = useCallback(() => dispatch(popModal()), [dispatch]);
+
+	const onUnlock = useCallback(() => {
+		dispatch(unlockRoom(secret));
+		dispatch(popModal());
+	}, [dispatch, secret]);
+
+	return (
+		<FormModal
+			title={t("rooms.room_unlocking")}
+			onSubmit={onUnlock}
+			renderButtons={() => (
+				<>
+					<IconButton
+						title={t("rooms.unlock")}
+						kind="primary"
+						icon="unlock"
+						type="submit"
 					/>
-				</div>
-			</FormModal>
-		);
-	};
-
-	private renderButtons = () => {
-		const { t } = this.props;
-		return (
-			<>
-				<IconButton
-					title={t("rooms.unlock")}
-					kind="primary"
-					icon="unlock"
-					type="submit"
+					<CancelButton onClick={onClose} />
+				</>
+			)}>
+			<div className="ModalField">
+				<label htmlFor="modal-secret">{t("rooms.key")}</label>
+				<input
+					id="modal-secret"
+					type="password"
+					autoComplete="password"
+					placeholder={t("rooms.key_placeholder")}
+					maxLength={36}
+					minLength={36}
+					required={true}
+					value={secret}
+					ref={secretRef}
+					onChange={e => setSecret(e.target.value)}
 				/>
-				<CancelButton onClick={this.props.onClose} />
-			</>
-		);
-	};
-
-	private onUnlock = () => {
-		const { onClose, onUnlock } = this.props;
-		onUnlock(this.state.secret);
-		onClose();
-	};
-}
-
-export default withTranslation()(UnlockRoomModal);
+			</div>
+		</FormModal>
+	);
+};

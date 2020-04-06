@@ -46,7 +46,7 @@ export default {
 			"Le lien de la salle a été copié dans le presse-papier",
 		locked: "Verrouillée (cliquer pour déverrouiller)",
 		name_is_invalid: "Le nom est invalide",
-		name_placeholderl: "Nom...",
+		name_placeholder: "Nom...",
 		name: "Nom",
 		room: "Salle",
 		room_creation: "Création d'une salle",
