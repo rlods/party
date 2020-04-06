@@ -36,7 +36,7 @@ export const createRoom = (
 	try {
 		const id = v4();
 		console.debug("Creating room...", { id, secret });
-		await FirebaseRoom(id, secret).update({ name });
+		await FirebaseRoom({ id, secret }).update({ name });
 		dispatch(enterRoom(id, secret));
 	} catch (err) {
 		dispatch(displayError(extractErrorMessage(err)));
@@ -58,7 +58,7 @@ export const enterRoom = (id: string, secret: string): AsyncAction => async (
 		dispatch(exitRoom());
 		try {
 			console.debug("Entering room...", { id, secret });
-			const newRoom = FirebaseRoom(id, secret);
+			const newRoom = FirebaseRoom({ id, secret });
 			dispatch(
 				setRoom({
 					access: { id, secret },

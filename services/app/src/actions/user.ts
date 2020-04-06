@@ -32,7 +32,7 @@ export const createUser = (
 	try {
 		console.debug("Creating user...");
 		const id = v4();
-		await FirebaseUser(id, secret).update({ name });
+		await FirebaseUser({ id, secret }).update({ name });
 		dispatch(connectUser(id, secret));
 	} catch (err) {
 		dispatch(displayError(extractErrorMessage(err)));
@@ -54,7 +54,7 @@ export const connectUser = (id: string, secret: string): AsyncAction => async (
 		dispatch(disconnectUser());
 		try {
 			console.debug("Connection user...", { id, secret });
-			const newUser = FirebaseUser(id);
+			const newUser = FirebaseUser({ id, secret });
 			dispatch(
 				setUser({
 					access: { id, secret },
@@ -81,12 +81,17 @@ export const connectUser = (id: string, secret: string): AsyncAction => async (
 
 export const disconnectUser = (): AsyncAction => async (dispatch, getState) => {
 	const {
-		user: { user }
+		user: {
+			access: { id, secret },
+			user
+		}
 	} = getState();
-	if (user) {
+	if (id || secret || user) {
 		console.debug("Disconnecting user...");
-		user.unsubscribeInfo(FIREBASE_CB);
-		FIREBASE_CB = null;
+		if (user) {
+			user.unsubscribeInfo(FIREBASE_CB);
+			FIREBASE_CB = null;
+		}
 		dispatch(resetUser());
 	}
 };

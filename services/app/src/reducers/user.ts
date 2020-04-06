@@ -27,14 +27,14 @@ const INITIAL_STATE: State = {
 	fetching: false,
 	error: null,
 	user: null,
-	access: loadUserAccess(),
+	access: { id: "", secret: "" },
 	info: null
 };
 
 // ------------------------------------------------------------------
 
 export const userReducer: Reducer<State, UserAction> = (
-	state = INITIAL_STATE,
+	state = { ...INITIAL_STATE, access: loadUserAccess() },
 	action: UserAction
 ): State => {
 	switch (action.type) {

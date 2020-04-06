@@ -22,29 +22,40 @@ const APPS: {
 	};
 } = {};
 
-firebaseConfig.appIDs.forEach(appId => {
-	const databaseURL = `https://${appId}.firebaseio.com`;
-	const app = firebase.initializeApp({ databaseURL });
-	const database = firebase.database(app);
-	APPS[appId] = {
-		app,
-		database,
-		members: database.ref("members"),
-		rooms: database.ref("rooms"),
-		users: database.ref("users")
-	};
-});
+const DEFAULT_APP_ID = firebaseConfig.appIDs[0];
 
-const DEFAULT_APP = Object.values(APPS)[0];
+const createOrGetApp = (appId: string = DEFAULT_APP_ID) => {
+	let res = APPS[appId];
+	if (!res) {
+		console.debug("[Firebase] Creating app", { appId });
+		const databaseURL = `https://${appId}.firebaseio.com`;
+		const app = firebase.initializeApp({ databaseURL });
+		const database = firebase.database(app);
+		APPS[appId] = res = {
+			app,
+			database,
+			members: database.ref("members"),
+			rooms: database.ref("rooms"),
+			users: database.ref("users")
+		};
+	}
+	return res;
+};
 
 // ------------------------------------------------------------------
 
-export const FirebaseRoom = (id: string, secret?: string) => {
-	const _room = DEFAULT_APP.rooms.child(id);
+export const FirebaseRoom = ({
+	id,
+	secret
+}: {
+	id: string;
+	secret?: string;
+}) => {
+	const app = createOrGetApp();
+	const _room = app.rooms.child(id);
 	const _info = _room.child("info");
-	const _members = DEFAULT_APP.members.child(id);
+	const _members = app.members.child(id);
 	let _secret = secret || "";
-	console.debug("INIT SECRET", _secret);
 	let _values: RoomInfo = {
 		name: "dummy",
 		playing: false,
@@ -153,8 +164,15 @@ export const FirebaseRoom = (id: string, secret?: string) => {
 
 // ------------------------------------------------------------------
 
-export const FirebaseUser = (id: string, secret?: string) => {
-	const _user = DEFAULT_APP.users.child(id);
+export const FirebaseUser = ({
+	id,
+	secret
+}: {
+	id: string;
+	secret?: string;
+}) => {
+	const app = createOrGetApp();
+	const _user = app.users.child(id);
 	const _info = _user.child("info");
 	let _membership: firebase.database.Reference | null = null;
 	let _secret = secret || "";
@@ -241,6 +259,7 @@ export const FirebaseUser = (id: string, secret?: string) => {
 	};
 
 	const enter = async (room: ReturnType<typeof FirebaseRoom>) => {
+		const app = createOrGetApp();
 		if (_membership) {
 			await _membership.remove();
 			_membership = null;
@@ -248,7 +267,7 @@ export const FirebaseUser = (id: string, secret?: string) => {
 		await update({
 			room_id: room.id
 		});
-		_membership = DEFAULT_APP.members.child(room.id).child(id);
+		_membership = app.members.child(room.id).child(id);
 		_membership.onDisconnect().remove();
 		await _membership.set({
 			timestamp: firebase.database.ServerValue.TIMESTAMP
@@ -281,10 +300,13 @@ export const FirebaseUser = (id: string, secret?: string) => {
 
 // ------------------------------------------------------------------
 
-export const FirebaseParty = (
-	id: string,
-	room: ReturnType<typeof FirebaseRoom>
-) => {
+export const FirebaseParty = ({
+	id,
+	room
+}: {
+	id: string;
+	room: ReturnType<typeof FirebaseRoom>;
+}) => {
 	const _members: string[] = [];
 	const _users: { [id: string]: ReturnType<typeof FirebaseUser> } = {};
 	let _info: RoomInfo = {
@@ -302,7 +324,7 @@ export const FirebaseParty = (
 			const index = _members.indexOf(userId);
 			if (index === -1) {
 				_members.push(userId);
-				_users[userId] = FirebaseUser(userId);
+				_users[userId] = FirebaseUser({ id: userId });
 				_log();
 			}
 		}
@@ -356,7 +378,7 @@ export const FirebaseParty = (
 // ------------------------------------------------------------------
 
 export const testRoom = async () => {
-	const room = FirebaseRoom("r1", "rs1");
+	const room = FirebaseRoom({ id: "r1", secret: "rs1" });
 	await room.update({ name: "R1" });
 	room.subscribeInfo(info => console.debug("ROOM", info.val()));
 	room.subscribeMembers(
@@ -373,7 +395,7 @@ export const testRoom = async () => {
 };
 
 export const testUser = async () => {
-	const user = FirebaseUser("u1", "us1");
+	const user = FirebaseUser({ id: "u1", secret: "us1" });
 	user.subscribeInfo(info => console.debug("USER", info.val()));
 	await user.update({ name: "U1" });
 	await sleep(1000);
@@ -381,20 +403,20 @@ export const testUser = async () => {
 };
 
 export const testParty = async () => {
-	const room1 = FirebaseRoom("r1", "rs1");
+	const room1 = FirebaseRoom({ id: "r1", secret: "rs1" });
 	await room1.update({ name: "R1" });
-	const room2 = FirebaseRoom("r2", "rs2");
+	const room2 = FirebaseRoom({ id: "r2", secret: "rs2" });
 	await room2.update({ name: "R2" });
-	const user1 = FirebaseUser("u1", "us1");
+	const user1 = FirebaseUser({ id: "u1", secret: "us1" });
 	await user1.update({ name: "U1" });
-	const user2 = FirebaseUser("u2", "us2");
+	const user2 = FirebaseUser({ id: "u2", secret: "us2" });
 	await user2.update({ name: "U2" });
 
 	await sleep(2000);
 
-	const party1 = FirebaseParty("P1", room1);
+	const party1 = FirebaseParty({ id: "P1", room: room1 });
 	await party1.init();
-	const party2 = FirebaseParty("P2", room2);
+	const party2 = FirebaseParty({ id: "P2", room: room2 });
 	await party2.init();
 
 	await sleep(1000);

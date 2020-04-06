@@ -213,7 +213,7 @@ export const DeezerApi = () => {
 				}
 			});
 			if (!first) {
-				console.debug(`Handling rate limit delayed batch...`, {
+				console.debug(`[Deezer] Handling rate limit delayed batch...`, {
 					subIds
 				});
 				await sleep(RATE_LIMIT_DELAY);
@@ -227,28 +227,33 @@ export const DeezerApi = () => {
 		return medias as T[];
 	};
 
-	const _searchAlbums = (query: string) => _search<ApiAlbum>("album", query);
+	const searchAlbums = async (query: string) => {
+		return (await _search<ApiAlbum>("album", query)).data.map(ConvertAlbum);
+	};
 
-	const _searchPlaylists = (query: string) =>
-		_search<ApiPlaylist>("playlist", query);
+	const searchPlaylists = async (query: string) => {
+		return (await _search<ApiPlaylist>("playlist", query)).data
+			.filter(playlist => playlist.public)
+			.map(playlist => ConvertPlaylist(playlist, playlist.user!));
+	};
 
-	const _searchTracks = (query: string) => _search<ApiTrack>("track", query);
+	const searchTracks = async (query: string) => {
+		return (await _search<ApiTrack>("track", query)).data
+			.filter(track => track.readable && track.preview)
+			.map(track => ConvertTrack(track, track.album));
+	};
 
 	const search = async (query: string): Promise<SearchResults> => {
 		const [album, playlist, track] = await Promise.all([
-			_searchAlbums(query),
-			_searchPlaylists(query),
-			_searchTracks(query)
+			searchAlbums(query),
+			searchPlaylists(query),
+			searchTracks(query)
 		]);
 		return {
 			// keys are MediaType
-			album: album.data.map(ConvertAlbum),
-			playlist: playlist.data
-				.filter(playlist => playlist.public)
-				.map(playlist => ConvertPlaylist(playlist, playlist.user!)),
-			track: track.data
-				.filter(track => track.readable && track.preview)
-				.map(track => ConvertTrack(track, track.album))
+			album: album,
+			playlist: playlist,
+			track: track
 		};
 	};
 
@@ -283,6 +288,9 @@ export const DeezerApi = () => {
 
 	return {
 		search,
+		searchAlbums,
+		searchPlaylists,
+		searchTracks,
 		loadContainers,
 		loadTracks
 	};
