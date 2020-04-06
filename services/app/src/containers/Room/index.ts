@@ -16,12 +16,12 @@ const dispatchToProps = (
 	dispatch: ThunkDispatch<RootState, any, any>,
 	ownProps: Props
 ) => {
-	const { key } = qs.parse(ownProps.location.search.substr(1)) as {
-		key?: string;
+	const { secret } = qs.parse(ownProps.location.search.substr(1)) as {
+		secret?: string;
 	};
 	return {
 		onEnter: () =>
-			dispatch(enterRoom(ownProps.match.params.room_id, key || "")),
+			dispatch(enterRoom(ownProps.match.params.room_id, secret || "")),
 		onExit: () => dispatch(exitRoom())
 	};
 };

@@ -102,7 +102,7 @@ export const enterRoom = (id: string, secret: string): AsyncAction => async (
 					);
 				}
 			);
-			history.push(`/room/${id}?key=${secret}`); // TODO: should push only if we're not already in it
+			history.push(`/room/${id}?secret=${secret}`); // TODO: should push only if we're not already in it
 		} catch (err) {
 			dispatch(displayError(extractErrorMessage(err)));
 		}
@@ -133,6 +133,7 @@ export const lockRoom = (): AsyncAction => async (dispatch, getState) => {
 	if (room && room.id === id) {
 		console.debug("Locking room...", { id });
 		room.setSecret("");
+		history.push(`/room/${id}`);
 		dispatch(setRoom({ access: { id, secret: "" } }));
 	}
 };
@@ -150,6 +151,7 @@ export const unlockRoom = (secret: string): AsyncAction => async (
 	if (room && room.id === id) {
 		console.debug("Unlocking room...", { id, secret });
 		room.setSecret(secret);
+		history.push(`/room/${id}?secret=${secret}`);
 		dispatch(setRoom({ access: { id, secret } }));
 	}
 };

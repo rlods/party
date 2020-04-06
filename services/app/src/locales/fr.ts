@@ -37,6 +37,7 @@ export default {
 		copy_link: "Copier le lien de la salle dans le presse-papier",
 		create: "Créer une salle",
 		empty: "Cette salle est vide, vous devriez ajouter quelques pistes...",
+		empty_for_now: "Cette salle est pour le moment vide...",
 		exit: "Quitter la salle",
 		key_placeholder: "Clef...",
 		key: "Clef",

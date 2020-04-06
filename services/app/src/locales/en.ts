@@ -36,6 +36,7 @@ export default {
 		copy_link: "Copy Room Link to Clipboard",
 		create: "Create a room",
 		empty: "It's empty here, you should add some tracks...",
+		empty_for_now: "It's empty here, the owner has to fill it..",
 		exit: "Exit Room",
 		key_placeholder: "Room Key...",
 		key: "Room Key",

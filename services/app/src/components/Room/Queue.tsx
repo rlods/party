@@ -49,7 +49,11 @@ class Queue extends Component<MappedProps & WithTranslation> {
 									size="L"
 								/>
 								<span onClick={onSearch}>
-									{t("rooms.empty")}
+									{t(
+										locked
+											? "rooms.empty_for_now"
+											: "rooms.empty"
+									)}
 								</span>
 							</>
 						) : (
