@@ -12,23 +12,37 @@ type FirebaseCB = (eventType: firebase.database.DataSnapshot) => void;
 
 // ------------------------------------------------------------------
 
-const firebaseApp = firebase.initializeApp({
-	databaseURL: `https://${firebaseConfig.databaseIDs[0]}.firebaseio.com`
+const APPS: {
+	[id: string]: {
+		app: firebase.app.App;
+		database: firebase.database.Database;
+		members: firebase.database.Reference;
+		rooms: firebase.database.Reference;
+		users: firebase.database.Reference;
+	};
+} = {};
+
+firebaseConfig.appIDs.forEach(appId => {
+	const databaseURL = `https://${appId}.firebaseio.com`;
+	const app = firebase.initializeApp({ databaseURL });
+	const database = firebase.database(app);
+	APPS[appId] = {
+		app,
+		database,
+		members: database.ref("members"),
+		rooms: database.ref("rooms"),
+		users: database.ref("users")
+	};
 });
-const firebaseDatabase = firebase.database(firebaseApp);
 
-// ------------------------------------------------------------------
-
-const MEMBERS = firebaseDatabase.ref("members");
-const ROOMS = firebaseDatabase.ref("rooms");
-const USERS = firebaseDatabase.ref("users");
+const DEFAULT_APP = Object.values(APPS)[0];
 
 // ------------------------------------------------------------------
 
 export const FirebaseRoom = (id: string, secret?: string) => {
-	const _room = ROOMS.child(id);
+	const _room = DEFAULT_APP.rooms.child(id);
 	const _info = _room.child("info");
-	const _members = MEMBERS.child(id);
+	const _members = DEFAULT_APP.members.child(id);
 	let _secret = secret || "";
 	console.debug("INIT SECRET", _secret);
 	let _values: RoomInfo = {
@@ -140,7 +154,7 @@ export const FirebaseRoom = (id: string, secret?: string) => {
 // ------------------------------------------------------------------
 
 export const FirebaseUser = (id: string, secret?: string) => {
-	const _user = USERS.child(id);
+	const _user = DEFAULT_APP.users.child(id);
 	const _info = _user.child("info");
 	let _membership: firebase.database.Reference | null = null;
 	let _secret = secret || "";
@@ -234,7 +248,7 @@ export const FirebaseUser = (id: string, secret?: string) => {
 		await update({
 			room_id: room.id
 		});
-		_membership = MEMBERS.child(room.id).child(id);
+		_membership = DEFAULT_APP.members.child(room.id).child(id);
 		_membership.onDisconnect().remove();
 		await _membership.set({
 			timestamp: firebase.database.ServerValue.TIMESTAMP
