@@ -16,7 +16,7 @@ export type UserAccess = {
 export const loadUserAccess = (): UserAccess => {
   const res: UserAccess = {
     id: "",
-    secret: ""
+    secret: "",
   };
   const s = localStorage.getItem("U");
   if (s) {
@@ -32,13 +32,17 @@ export const loadUserAccess = (): UserAccess => {
   return res;
 };
 
+export const deleteUserAccess = () => {
+  localStorage.removeItem("U");
+};
+
 export const saveUserAccess = ({ id, secret }: UserAccess) => {
   localStorage.setItem(
     "U",
     btoa(
       JSON.stringify({
         i: id,
-        s: secret
+        s: secret,
       })
     )
   );

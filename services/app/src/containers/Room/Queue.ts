@@ -6,7 +6,7 @@ import Queue from "../../components/Room/Queue";
 import { extractMedias } from "../../selectors/medias";
 import { setQueuePosition, removeFromQueue } from "../../actions/queue";
 import { stopPlayer, startPlayer } from "../../actions/player";
-import { isRoomLoaded, isRoomLocked } from "../../selectors/rooms";
+import { isRoomLoaded, isRoomLocked } from "../../selectors/room";
 import { openModal } from "../../actions/modals";
 
 // ------------------------------------------------------------------
@@ -14,9 +14,9 @@ import { openModal } from "../../actions/modals";
 const stateToProps = (state: RootState) => ({
   loaded: isRoomLoaded(state),
   locked: isRoomLocked(state),
-  medias: extractMedias(state, state.queue.medias),
+  medias: extractMedias(state, state.room.medias),
   playing: state.player.playing,
-  playingIndex: state.queue.position % state.queue.medias.length,
+  playingIndex: state.room.position % state.room.medias.length,
 });
 
 const dispatchToProps = (dispatch: ThunkDispatch<RootState, any, any>) => ({

@@ -3,7 +3,7 @@ import { ThunkDispatch } from "redux-thunk";
 //
 import { RootState } from "../../reducers";
 import CreateUserModal from "../../components/Users/CreateUserModal";
-import { createUser } from "../../actions/users";
+import { createUser } from "../../actions/user";
 import { popModal, openModal } from "../../actions/modals";
 import { displayError } from "../../actions/messages";
 
@@ -18,7 +18,7 @@ const dispatchToProps = (dispatch: ThunkDispatch<RootState, any, any>) => ({
   onCreate: (name: string, secret: string) =>
     dispatch(createUser(name, secret)),
   onError: (message: string) => dispatch(displayError(message)),
-  onToggle: () => dispatch(openModal({ type: "ConnectUser", props: null }))
+  onToggle: () => dispatch(openModal({ type: "ConnectUser", props: null })),
 });
 
 export type MappedProps = ReturnType<typeof stateToProps> &

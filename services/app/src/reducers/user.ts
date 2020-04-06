@@ -1,7 +1,8 @@
 import { Reducer } from "redux";
 import { AxiosError } from "axios";
-import { UsersAction } from "../actions/users";
+import { UserAction } from "../actions/user";
 import {
+  deleteUserAccess,
   saveUserAccess,
   loadUserAccess,
   UserAccess,
@@ -11,62 +12,61 @@ import { FirebaseUser } from "../utils/firebase";
 
 // ------------------------------------------------------------------
 
-export type State = {
+export type UserData = {
+  user: ReturnType<typeof FirebaseUser> | null;
+  access: UserAccess;
+  info: UserInfo | null;
+};
+
+export type State = UserData & {
   fetching: boolean;
   error: null | AxiosError;
-  user: ReturnType<typeof FirebaseUser> | null;
-  user_access: UserAccess;
-  user_info: UserInfo | null;
 };
 
 const INITIAL_STATE: State = {
   fetching: false,
   error: null,
   user: null,
-  user_access: loadUserAccess(),
-  user_info: null,
+  access: loadUserAccess(),
+  info: null,
 };
 
 // ------------------------------------------------------------------
 
-export const usersReducer: Reducer<State, UsersAction> = (
+export const userReducer: Reducer<State, UserAction> = (
   state = INITIAL_STATE,
-  action: UsersAction
+  action: UserAction
 ): State => {
   switch (action.type) {
-    case "users/FETCHING":
+    case "user/FETCHING":
       return {
         ...state,
         fetching: true,
         error: null,
       };
-    case "users/FETCHED": {
+    case "user/FETCHED": {
       return {
         ...state,
         fetching: false,
         error: null,
       };
     }
-    case "users/ERROR":
+    case "user/ERROR":
       return {
         ...state,
         fetching: false,
         error: action.payload,
       };
-    case "users/SET": {
-      return {
+    case "user/SET": {
+      const copy = {
         ...state,
         ...action.payload,
       };
+      saveUserAccess(copy.access);
+      return copy;
     }
-    case "users/SET_ACCESS": {
-      saveUserAccess(action.payload);
-      return {
-        ...state,
-        user_access: action.payload,
-      };
-    }
-    case "users/RESET":
+    case "user/RESET":
+      deleteUserAccess();
       return INITIAL_STATE;
     default:
       return state;

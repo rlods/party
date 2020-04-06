@@ -6,27 +6,22 @@ import { UserInfo } from "../utils/users";
 import { FirebaseUser } from "../utils/firebase";
 import { displayError } from "./messages";
 import { extractErrorMessage } from "../utils/messages";
+import { UserData } from "../reducers/user";
 
 // ------------------------------------------------------------------
 
-export type UsersAction =
+export type UserAction =
   | ReturnType<typeof fetching>
   | ReturnType<typeof success>
   | ReturnType<typeof error>
-  | ReturnType<typeof reset>
-  | ReturnType<typeof setUser>
-  | ReturnType<typeof setUserAccess>;
+  | ReturnType<typeof resetUser>
+  | ReturnType<typeof setUser>;
 
-const fetching = () => createAction("users/FETCHING");
-const success = () => createAction("users/FETCHED");
-const error = (error: AxiosError) => createAction("users/ERROR", error);
-const reset = () => createAction("users/RESET");
-const setUser = (
-  user: ReturnType<typeof FirebaseUser> | null,
-  info: UserInfo | null
-) => createAction("users/SET", { user, user_info: info });
-const setUserAccess = (id: string, secret: string) =>
-  createAction("users/SET_ACCESS", { id, secret });
+const fetching = () => createAction("user/FETCHING");
+const success = () => createAction("user/FETCHED");
+const error = (error: AxiosError) => createAction("user/ERROR", error);
+const resetUser = () => createAction("user/RESET");
+const setUser = (values: Partial<UserData>) => createAction("user/SET", values);
 
 // ------------------------------------------------------------------
 
@@ -52,46 +47,50 @@ export const connectUser = (id: string, secret: string): AsyncAction => async (
   getState
 ) => {
   const {
-    users: { user },
+    user: { user },
   } = getState();
   if (!user || user.id !== id) {
     dispatch(disconnectUser());
     try {
       console.debug("Connection user...", { id, secret });
       const newUser = FirebaseUser(id);
-      dispatch(setUser(newUser, await newUser.wait()));
-      dispatch(setUserAccess(id, secret));
+      dispatch(
+        setUser({
+          access: { id, secret },
+          user: newUser,
+          info: await newUser.wait(),
+        })
+      );
       FIREBASE_CB = newUser.subscribeInfo(
         (snapshot: firebase.database.DataSnapshot) => {
           const newInfo = snapshot.val() as UserInfo;
           console.debug("[Firebase] Received user update...", newInfo);
-          dispatch(setUser(newUser, newInfo));
+          dispatch(setUser({ user: newUser, info: newInfo }));
         }
       );
     } catch (err) {
       dispatch(displayError(extractErrorMessage(err)));
-      dispatch(setUserAccess("", ""));
+      dispatch(setUser({ access: { id, secret: "" } }));
     }
   }
 };
 
 export const disconnectUser = (): AsyncAction => async (dispatch, getState) => {
   const {
-    users: { user },
+    user: { user },
   } = getState();
   if (user) {
     console.debug("Disconnecting user...");
     user.unsubscribeInfo(FIREBASE_CB);
     FIREBASE_CB = null;
-    setUser(null, null);
-    dispatch(setUserAccess("", ""));
+    dispatch(resetUser());
   }
 };
 
 export const reconnectUser = (): AsyncAction => async (dispatch, getState) => {
   const {
-    users: {
-      user_access: { id, secret },
+    user: {
+      access: { id, secret },
     },
   } = getState();
   if (id && secret) {

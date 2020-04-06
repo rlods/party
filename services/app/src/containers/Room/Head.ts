@@ -3,7 +3,7 @@ import { ThunkDispatch } from "redux-thunk";
 //
 import { RootState } from "../../reducers";
 import Head from "../../components/Room/Head";
-import { extractRoom } from "../../selectors/rooms";
+import { extractRoom } from "../../selectors/room";
 import { confirmModal } from "../../actions/modals";
 import { displayMessage } from "../../actions/messages";
 

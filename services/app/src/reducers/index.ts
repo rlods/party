@@ -3,9 +3,8 @@ import { mediasReducer as medias } from "./medias";
 import { messagesReducer as messages } from "./messages";
 import { modalsReducer as modals } from "./modals";
 import { playerReducer as player } from "./player";
-import { queueReducer as queue } from "./queue";
-import { roomsReducer as rooms } from "./rooms";
-import { usersReducer as users } from "./users";
+import { roomReducer as room } from "./room";
+import { userReducer as user } from "./user";
 
 export type RootState = ReturnType<typeof rootReducer>;
 
@@ -14,7 +13,6 @@ export const rootReducer = combineReducers({
   messages,
   modals,
   player,
-  queue,
-  rooms,
-  users,
+  room,
+  user,
 });

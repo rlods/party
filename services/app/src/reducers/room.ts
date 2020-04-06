@@ -1,75 +1,73 @@
 import { Reducer } from "redux";
 import { AxiosError } from "axios";
-import { RoomsAction } from "../actions/rooms";
+import { RoomAction } from "../actions/room";
 import { RoomAccess, RoomInfo } from "../utils/rooms";
 import { CombinedColor } from "../utils/colorpicker";
 import { FirebaseRoom } from "../utils/firebase";
+import { MediaAccess } from "../utils/medias";
 
 // ------------------------------------------------------------------
 
-export type State = {
+export type RoomData = {
+  room: ReturnType<typeof FirebaseRoom> | null;
+  access: RoomAccess;
+  color: CombinedColor;
+  info: RoomInfo | null;
+  medias: MediaAccess[];
+  playing: boolean;
+  position: number;
+};
+
+export type State = RoomData & {
   fetching: boolean;
   error: null | AxiosError;
-  room: ReturnType<typeof FirebaseRoom> | null;
-  room_access: RoomAccess;
-  room_color: CombinedColor;
-  room_info: RoomInfo | null;
 };
 
 const INITIAL_STATE: State = {
   fetching: false,
   error: null,
   room: null,
-  room_access: { id: "", secret: "" },
-  room_color: { fg: { r: 0, g: 0, b: 0 }, bg: { r: 255, g: 255, b: 255 } },
-  room_info: null,
+  access: { id: "", secret: "" },
+  color: { fg: { r: 0, g: 0, b: 0 }, bg: { r: 255, g: 255, b: 255 } },
+  info: null,
+  medias: [],
+  playing: false,
+  position: 0,
 };
 
 // ------------------------------------------------------------------
 
-export const roomsReducer: Reducer<State, RoomsAction> = (
+export const roomReducer: Reducer<State, RoomAction> = (
   state = INITIAL_STATE,
-  action: RoomsAction
+  action: RoomAction
 ): State => {
   switch (action.type) {
-    case "rooms/FETCHING":
+    case "room/FETCHING":
       return {
         ...state,
         fetching: true,
         error: null,
       };
-    case "rooms/FETCHED": {
+    case "room/FETCHED": {
       return {
         ...state,
         fetching: false,
         error: null,
       };
     }
-    case "rooms/ERROR":
+    case "room/ERROR":
       return {
         ...state,
         fetching: false,
         error: action.payload,
       };
-    case "rooms/SET": {
+    case "room/SET": {
       return {
         ...state,
         ...action.payload,
       };
     }
-    case "rooms/SET_ACCESS": {
-      return {
-        ...state,
-        room_access: action.payload,
-      };
-    }
-    case "rooms/SET_COLOR": {
-      return {
-        ...state,
-        room_color: action.payload,
-      };
-    }
-    case "rooms/RESET":
+    case "room/RESET":
       return INITIAL_STATE;
     default:
       return state;

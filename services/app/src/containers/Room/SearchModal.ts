@@ -7,7 +7,7 @@ import { popModal } from "../../actions/modals";
 import { loadMedias } from "../../actions/medias";
 import { stopPreview } from "../../actions/player";
 import { ProviderType, MediaType } from "../../utils/medias";
-import { isRoomLocked } from "../../selectors/rooms";
+import { isRoomLocked } from "../../selectors/room";
 
 // ------------------------------------------------------------------
 

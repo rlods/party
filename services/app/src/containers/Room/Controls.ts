@@ -6,14 +6,14 @@ import Controls from "../../components/Room/Controls";
 import { startPlayer, stopPlayer } from "../../actions/player";
 import { openModal, confirmModal } from "../../actions/modals";
 import { clearQueue, moveBackward, moveForward } from "../../actions/queue";
-import { isRoomLocked } from "../../selectors/rooms";
+import { isRoomLocked } from "../../selectors/room";
 import { displayMessage } from "../../actions/messages";
-import { lockRoom } from "../../actions/rooms";
+import { lockRoom } from "../../actions/room";
 
 // ------------------------------------------------------------------
 
 const stateToProps = (state: RootState) => ({
-  tracksCount: state.queue.medias.length,
+  tracksCount: state.room.medias.length,
   locked: isRoomLocked(state),
   playing: state.player.playing,
 });

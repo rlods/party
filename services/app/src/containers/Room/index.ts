@@ -4,12 +4,12 @@ import * as qs from "qs";
 //
 import { RootState } from "../../reducers";
 import Room, { Props } from "../../components/Room";
-import { enterRoom, exitRoom } from "../../actions/rooms";
+import { enterRoom, exitRoom } from "../../actions/room";
 
 // ------------------------------------------------------------------
 
 const stateToProps = (state: RootState, ownProps: Props) => ({
-  color: state.rooms.room_color
+  color: state.room.color,
 });
 
 const dispatchToProps = (
@@ -22,7 +22,7 @@ const dispatchToProps = (
   return {
     onEnter: () =>
       dispatch(enterRoom(ownProps.match.params.room_id, key || "")),
-    onExit: () => dispatch(exitRoom())
+    onExit: () => dispatch(exitRoom()),
   };
 };
 

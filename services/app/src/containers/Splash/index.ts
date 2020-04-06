@@ -3,14 +3,14 @@ import { ThunkDispatch } from "redux-thunk";
 //
 import { RootState } from "../../reducers";
 import Splash from "../../components/Splash";
-import { extractUser } from "../../selectors/users";
+import { extractUser } from "../../selectors/user";
 import { openModal, confirmModal } from "../../actions/modals";
-import { disconnectUser } from "../../actions/users";
+import { disconnectUser } from "../../actions/user";
 
 // ------------------------------------------------------------------
 
 const stateToProps = (state: RootState) => ({
-  loggedIn: !!state.users.user_access.id,
+  loggedIn: !!state.user.access.id,
   user: extractUser(state),
 });
 

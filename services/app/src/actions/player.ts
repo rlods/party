@@ -1,5 +1,5 @@
 import { AsyncAction, createAction, Dispatch } from ".";
-import { setRoomColor } from "./rooms";
+import { setRoom } from "./room";
 import { pickColor } from "../utils/colorpicker";
 import { setQueuePosition } from "./queue";
 import { Player } from "../utils/player";
@@ -11,16 +11,13 @@ import { extractErrorMessage } from "../utils/messages";
 // ------------------------------------------------------------------
 
 export type PlayerAction =
-  | ReturnType<typeof reset>
-  | ReturnType<typeof setPlayerTrackPercent>
-  | ReturnType<typeof start>
-  | ReturnType<typeof stop>;
+  | ReturnType<typeof resetPlayer>
+  | ReturnType<typeof setPlayer>;
 
-const reset = () => createAction("player/RESET");
-const setPlayerTrackPercent = (percent: number) =>
-  createAction("player/SET_TRACK_PERCENT", percent);
-const start = () => createAction("player/START");
-const stop = () => createAction("player/STOP");
+const resetPlayer = () => createAction("player/RESET");
+const setPlayer = (
+  values: Partial<{ playing: boolean; track_percent: number }>
+) => createAction("player/SET", values);
 
 // ------------------------------------------------------------------
 
@@ -32,7 +29,7 @@ export const startPlayer = (): AsyncAction => async (
   if (!PLAYER_TIMER1 && !PLAYER_TIMER2) {
     _installTimer1(dispatch, getState, queuePlayer);
     _installTimer2(dispatch, getState, queuePlayer);
-    dispatch(start());
+    dispatch(setPlayer({ playing: true }));
   }
 };
 
@@ -49,8 +46,7 @@ export const stopPlayer = (): AsyncAction => async (
     clearTimeout(PLAYER_TIMER2);
     PLAYER_TIMER2 = null;
     await queuePlayer.stop();
-    dispatch(stop());
-    dispatch(setPlayerTrackPercent(0));
+    dispatch(resetPlayer());
   }
 };
 
@@ -102,7 +98,7 @@ const _installTimer1 = (
   // Don't use setInterval because a step could be triggered before previous one terminated
   PLAYER_TIMER1 = setTimeout(async () => {
     const {
-      queue: { medias: queueMedias, position },
+      room: { medias: queueMedias, position },
       medias: {
         medias: { track: tracks },
       },
@@ -134,7 +130,7 @@ const _installTimer1 = (
               0
             ),
           ]);
-          dispatch(setRoomColor(color));
+          dispatch(setRoom({ color }));
         } catch (err) {
           dispatch(displayError(extractErrorMessage(err)));
         }
@@ -158,11 +154,13 @@ const _installTimer2 = (
   // Don't use setInterval because a step could be triggered before previous one terminated
   PLAYER_TIMER2 = setTimeout(() => {
     const {
-      queue: { medias: queueMedias },
+      room: { medias },
     } = getState();
-    if (queueMedias.length > 0) {
+    if (medias.length > 0) {
       // Refresh player track percent
-      dispatch(setPlayerTrackPercent(queuePlayer.getPlayingTrackPercent()));
+      dispatch(
+        setPlayer({ track_percent: queuePlayer.getPlayingTrackPercent() })
+      );
 
       // Reschedule time
       _installTimer2(dispatch, getState, queuePlayer);

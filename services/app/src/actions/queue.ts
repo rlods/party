@@ -1,25 +1,15 @@
-import { createAction, AsyncAction } from ".";
+import { AsyncAction } from ".";
 import { RoomQueue } from "../utils/rooms";
 import { displayError } from "./messages";
-import { lockRoom } from "./rooms";
-import { MediaAccess, ProviderType } from "../utils/medias";
+import { lockRoom } from "./room";
+import { ProviderType } from "../utils/medias";
 import { extractErrorMessage } from "../utils/messages";
-
-// ------------------------------------------------------------------
-
-export type QueueAction = ReturnType<typeof setQueue>;
-
-export const setQueue = (
-  medias: MediaAccess[],
-  playing: boolean,
-  position: number
-) => createAction("queue/SET", { medias, playing, position });
 
 // ------------------------------------------------------------------
 
 export const clearQueue = (): AsyncAction => async (dispatch, getState) => {
   const {
-    rooms: { room },
+    room: { room },
   } = getState();
   if (room && !room.isLocked()) {
     try {
@@ -39,12 +29,12 @@ export const appendInQueue = (
   trackIds: string[]
 ): AsyncAction => async (dispatch, getState) => {
   const {
-    rooms: { room },
+    room: { room },
   } = getState();
   if (room && !room.isLocked()) {
     if (trackIds.length > 0) {
       const {
-        queue: { medias: queueMedias },
+        room: { medias: queueMedias },
       } = getState();
       try {
         console.debug("Appending queue...", { trackIds });
@@ -74,8 +64,7 @@ export const removeFromQueue = (index: number): AsyncAction => async (
   getState
 ) => {
   const {
-    queue: { medias: queueMedias, position },
-    rooms: { room },
+    room: { medias: queueMedias, position, room },
   } = getState();
   if (room && !room.isLocked()) {
     if (index < queueMedias.length) {
@@ -107,8 +96,7 @@ export const setQueuePosition = (newPosition: number): AsyncAction => async (
   getState
 ) => {
   const {
-    queue: { position: oldPosition },
-    rooms: { room },
+    room: { position: oldPosition, room },
   } = getState();
   if (room && !room.isLocked()) {
     if (oldPosition !== newPosition) {
@@ -132,7 +120,7 @@ export const setQueuePosition = (newPosition: number): AsyncAction => async (
 
 export const moveBackward = (): AsyncAction => async (dispatch, getState) => {
   const {
-    queue: { medias: queueMedias, position },
+    room: { medias: queueMedias, position },
   } = getState();
   if (queueMedias.length > 0) {
     console.debug("Moving backward...");
@@ -144,7 +132,7 @@ export const moveBackward = (): AsyncAction => async (dispatch, getState) => {
 
 export const moveForward = (): AsyncAction => async (dispatch, getState) => {
   const {
-    queue: { medias: queueMedias, position },
+    room: { medias: queueMedias, position },
   } = getState();
   if (queueMedias.length > 0) {
     console.debug("Moving forward...");
