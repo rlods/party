@@ -10,10 +10,10 @@ import { reconnectUser } from "../../actions/user";
 const stateToProps = (state: RootState) => ({});
 
 const dispatchToProps = (dispatch: ThunkDispatch<RootState, any, any>) => ({
-  onReconnect: () => dispatch(reconnectUser()),
+	onReconnect: () => dispatch(reconnectUser())
 });
 
 export type MappedProps = ReturnType<typeof stateToProps> &
-  ReturnType<typeof dispatchToProps>;
+	ReturnType<typeof dispatchToProps>;
 
 export default connect(stateToProps, dispatchToProps)(App);

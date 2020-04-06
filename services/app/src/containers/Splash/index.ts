@@ -10,20 +10,22 @@ import { disconnectUser } from "../../actions/user";
 // ------------------------------------------------------------------
 
 const stateToProps = (state: RootState) => ({
-  loggedIn: !!state.user.access.id,
-  user: extractUser(state),
+	loggedIn: !!state.user.access.id,
+	user: extractUser(state)
 });
 
 const dispatchToProps = (dispatch: ThunkDispatch<RootState, any, any>) => ({
-  onConfirm: (question: string, onConfirmed: () => void) => {
-    dispatch(confirmModal(question, onConfirmed));
-  },
-  onCreateRoom: () => dispatch(openModal({ type: "CreateRoom", props: null })),
-  onConnectUser: () => dispatch(openModal({ type: "CreateUser", props: null })),
-  onDisconnectUser: () => dispatch(disconnectUser()),
+	onConfirm: (question: string, onConfirmed: () => void) => {
+		dispatch(confirmModal(question, onConfirmed));
+	},
+	onCreateRoom: () =>
+		dispatch(openModal({ type: "CreateRoom", props: null })),
+	onConnectUser: () =>
+		dispatch(openModal({ type: "CreateUser", props: null })),
+	onDisconnectUser: () => dispatch(disconnectUser())
 });
 
 export type MappedProps = ReturnType<typeof stateToProps> &
-  ReturnType<typeof dispatchToProps>;
+	ReturnType<typeof dispatchToProps>;
 
 export default connect(stateToProps, dispatchToProps)(Splash);

@@ -3,8 +3,8 @@ FROM node:12-alpine
 ARG NODE_ENV
 ENV NODE_ENV=${NODE_ENV}
 
-ARG FIREBASE_URL
-ENV REACT_APP_FIREBASE_URL=${FIREBASE_URL}
+ARG DATABASE_ID
+ENV REACT_APP_DATABASE_ID=${DATABASE_ID}
 
 COPY services/app /home/node/app/services/app
 WORKDIR /home/node/app/services/app

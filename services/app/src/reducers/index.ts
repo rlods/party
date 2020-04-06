@@ -9,10 +9,10 @@ import { userReducer as user } from "./user";
 export type RootState = ReturnType<typeof rootReducer>;
 
 export const rootReducer = combineReducers({
-  medias,
-  messages,
-  modals,
-  player,
-  room,
-  user,
+	medias,
+	messages,
+	modals,
+	player,
+	room,
+	user
 });

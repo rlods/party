@@ -11,17 +11,17 @@ export const INITIAL_STATE: State = [];
 // ------------------------------------------------------------------
 
 export const messagesReducer: Reducer<State, MessagesAction> = (
-  state = INITIAL_STATE,
-  action
+	state = INITIAL_STATE,
+	action
 ): State => {
-  switch (action.type) {
-    case "message/ADD":
-      return [action.payload, ...state];
-    case "message/REMOVE":
-      return state.filter(other => other.id !== action.payload);
-    case "message/RESET":
-      return INITIAL_STATE;
-    default:
-      return state;
-  }
+	switch (action.type) {
+		case "message/ADD":
+			return [action.payload, ...state];
+		case "message/REMOVE":
+			return state.filter(other => other.id !== action.payload);
+		case "message/RESET":
+			return INITIAL_STATE;
+		default:
+			return state;
+	}
 };

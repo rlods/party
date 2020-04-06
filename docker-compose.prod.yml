@@ -4,5 +4,5 @@ services:
   app:
     build:
       args:
-        FIREBASE_URL: "https://test-rl-7ffe8.firebaseio.com"
+        DATABASE_ID: "test-rl-7ffe8"
         NODE_ENV: production

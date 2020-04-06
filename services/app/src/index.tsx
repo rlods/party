@@ -16,37 +16,39 @@ import "./index.scss";
 // ------------------------------------------------------------------
 
 const init = async () => {
-  const composeEnhancers =
-    process.env.NODE_ENV === "development" ? composeWithDevTools({}) : compose;
+	const composeEnhancers =
+		process.env.NODE_ENV === "development"
+			? composeWithDevTools({})
+			: compose;
 
-  const deezer = DEFAULT_API;
-  const queuePlayer = Player(true);
-  const previewPlayer = Player(false);
-  initLocales();
+	const deezer = DEFAULT_API;
+	const queuePlayer = Player(true);
+	const previewPlayer = Player(false);
+	initLocales();
 
-  const store = createStore(
-    rootReducer,
-    composeEnhancers(
-      applyMiddleware(
-        thunk.withExtraArgument({ deezer, queuePlayer, previewPlayer })
-      )
-    )
-  );
+	const store = createStore(
+		rootReducer,
+		composeEnhancers(
+			applyMiddleware(
+				thunk.withExtraArgument({ deezer, queuePlayer, previewPlayer })
+			)
+		)
+	);
 
-  // const dispatch: Dispatch = store.dispatch.bind(store);
+	// const dispatch: Dispatch = store.dispatch.bind(store);
 
-  return store;
+	return store;
 };
 
 // ------------------------------------------------------------------
 
-init().then((store) => {
-  ReactDOM.render(
-    <Provider store={store}>
-      <HashRouter>
-        <Route path="/" component={App} />
-      </HashRouter>
-    </Provider>,
-    document.getElementById("root")
-  );
+init().then(store => {
+	ReactDOM.render(
+		<Provider store={store}>
+			<HashRouter>
+				<Route path="/" component={App} />
+			</HashRouter>
+		</Provider>,
+		document.getElementById("root")
+	);
 });

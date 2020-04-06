@@ -13,30 +13,30 @@ import { lockRoom } from "../../actions/room";
 // ------------------------------------------------------------------
 
 const stateToProps = (state: RootState) => ({
-  tracksCount: state.room.medias.length,
-  locked: isRoomLocked(state),
-  playing: state.player.playing,
+	tracksCount: state.room.medias.length,
+	locked: isRoomLocked(state),
+	playing: state.player.playing
 });
 
 const dispatchToProps = (dispatch: ThunkDispatch<RootState, any, any>) => ({
-  onClear: () => {
-    dispatch(clearQueue());
-    dispatch(stopPlayer());
-  },
-  onConfirm: (question: string, onConfirmed: () => void) => {
-    dispatch(confirmModal(question, onConfirmed));
-  },
-  onLock: () => dispatch(lockRoom()),
-  onUnlock: () => dispatch(openModal({ type: "UnlockRoom", props: null })),
-  onMessage: (message: string) => dispatch(displayMessage("info", message)),
-  onMoveBackward: () => dispatch(moveBackward()),
-  onMoveForward: () => dispatch(moveForward()),
-  onPlay: () => dispatch(startPlayer()),
-  onSearch: () => dispatch(openModal({ type: "Search", props: null })),
-  onStop: () => dispatch(stopPlayer()),
+	onClear: () => {
+		dispatch(clearQueue());
+		dispatch(stopPlayer());
+	},
+	onConfirm: (question: string, onConfirmed: () => void) => {
+		dispatch(confirmModal(question, onConfirmed));
+	},
+	onLock: () => dispatch(lockRoom()),
+	onUnlock: () => dispatch(openModal({ type: "UnlockRoom", props: null })),
+	onMessage: (message: string) => dispatch(displayMessage("info", message)),
+	onMoveBackward: () => dispatch(moveBackward()),
+	onMoveForward: () => dispatch(moveForward()),
+	onPlay: () => dispatch(startPlayer()),
+	onSearch: () => dispatch(openModal({ type: "Search", props: null })),
+	onStop: () => dispatch(stopPlayer())
 });
 
 export type MappedProps = ReturnType<typeof stateToProps> &
-  ReturnType<typeof dispatchToProps>;
+	ReturnType<typeof dispatchToProps>;
 
 export default connect(stateToProps, dispatchToProps)(Controls);

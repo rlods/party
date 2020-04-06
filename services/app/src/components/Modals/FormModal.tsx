@@ -7,26 +7,31 @@ import "./FormModal.scss";
 // ------------------------------------------------------------------
 
 type Props = {
-  className?: string;
-  onSubmit: () => void;
-  renderButtons: () => React.ReactNode;
-  title: string;
+	className?: string;
+	onSubmit: () => void;
+	renderButtons: () => React.ReactNode;
+	title: string;
 };
 
 class FormModal extends Component<Props> {
-  public render = () => {
-    const { children, className, renderButtons, title, onSubmit } = this.props;
-    return (
-      <Modal
-        className={classNames("FormModal", className)}
-        title={title}
-        renderFoot={renderButtons}
-        onSubmit={onSubmit}
-      >
-        {children}
-      </Modal>
-    );
-  };
+	public render = () => {
+		const {
+			children,
+			className,
+			renderButtons,
+			title,
+			onSubmit
+		} = this.props;
+		return (
+			<Modal
+				className={classNames("FormModal", className)}
+				title={title}
+				renderFoot={renderButtons}
+				onSubmit={onSubmit}>
+				{children}
+			</Modal>
+		);
+	};
 }
 
 export default FormModal;

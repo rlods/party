@@ -5,10 +5,10 @@ import { Member } from "../utils/members";
 // ------------------------------------------------------------------
 
 export type MembersAction =
-  | ReturnType<typeof fetching>
-  | ReturnType<typeof success>
-  | ReturnType<typeof error>
-  | ReturnType<typeof reset>;
+	| ReturnType<typeof fetching>
+	| ReturnType<typeof success>
+	| ReturnType<typeof error>
+	| ReturnType<typeof reset>;
 
 const fetching = () => createAction("members/FETCHING");
 const success = (members: Member[]) => createAction("members/FETCHED", members);

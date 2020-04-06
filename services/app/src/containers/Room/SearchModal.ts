@@ -12,19 +12,19 @@ import { isRoomLocked } from "../../selectors/room";
 // ------------------------------------------------------------------
 
 const stateToProps = (state: RootState) => ({
-  locked: isRoomLocked(state),
+	locked: isRoomLocked(state)
 });
 
 const dispatchToProps = (dispatch: ThunkDispatch<RootState, any, any>) => ({
-  onClose: () => dispatch(popModal()),
-  onSelect: (provider: ProviderType, mediaType: MediaType, mediaId: string) =>
-    dispatch(loadMedias(provider, mediaType, [mediaId], true, false)),
-  onPlay: (provider: ProviderType, mediaType: MediaType, mediaId: string) =>
-    dispatch(loadMedias(provider, mediaType, [mediaId], false, true)),
-  onStop: () => dispatch(stopPreview()),
+	onClose: () => dispatch(popModal()),
+	onSelect: (provider: ProviderType, mediaType: MediaType, mediaId: string) =>
+		dispatch(loadMedias(provider, mediaType, [mediaId], true, false)),
+	onPlay: (provider: ProviderType, mediaType: MediaType, mediaId: string) =>
+		dispatch(loadMedias(provider, mediaType, [mediaId], false, true)),
+	onStop: () => dispatch(stopPreview())
 });
 
 export type MappedProps = ReturnType<typeof stateToProps> &
-  ReturnType<typeof dispatchToProps>;
+	ReturnType<typeof dispatchToProps>;
 
 export default connect(stateToProps, dispatchToProps)(SearchModal);

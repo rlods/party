@@ -1,42 +1,42 @@
 .Media {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: center;
 
-  .Metas {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    font-size: 14px;
-    line-height: 18px;
+	.Metas {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		font-size: 14px;
+		line-height: 18px;
 
-    .Meta {
-      &.AlbumTitle {
-      }
+		.Meta {
+			&.AlbumTitle {
+			}
 
-      &.AlbumArtist {
-      }
+			&.AlbumArtist {
+			}
 
-      &.PlaylistTitle {
-      }
+			&.PlaylistTitle {
+			}
 
-      &.PlaylistCreator {
-      }
+			&.PlaylistCreator {
+			}
 
-      &.TrackTitle {
-      }
+			&.TrackTitle {
+			}
 
-      &.TrackArtist {
-      }
-    }
-  }
+			&.TrackArtist {
+			}
+		}
+	}
 
-  & > * {
-    margin-left: 10px;
+	& > * {
+		margin-left: 10px;
 
-    &:first-child {
-      margin-left: 0;
-    }
-  }
+		&:first-child {
+			margin-left: 0;
+		}
+	}
 }

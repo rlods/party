@@ -11,23 +11,27 @@ import "./index.scss";
 // ------------------------------------------------------------------
 
 class App extends Component<MappedProps> {
-  public componentDidMount = async () => {
-    this.props.onReconnect();
-  };
+	public componentDidMount = async () => {
+		this.props.onReconnect();
+	};
 
-  public render = () => {
-    return (
-      <div className="App">
-        <Modals />
-        <Switch>
-          <Route exact={true} path="/room/:room_id" component={Room} />
-          <Route exact={true} path="/" component={Splash} />
-          <Redirect to="/" />
-        </Switch>
-        <Messages />
-      </div>
-    );
-  };
+	public render = () => {
+		return (
+			<div className="App">
+				<Modals />
+				<Switch>
+					<Route
+						exact={true}
+						path="/room/:room_id"
+						component={Room}
+					/>
+					<Route exact={true} path="/" component={Splash} />
+					<Redirect to="/" />
+				</Switch>
+				<Messages />
+			</div>
+		);
+	};
 }
 
 export default App;

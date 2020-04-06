@@ -1,27 +1,27 @@
 .Cover {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
 
-  height: 50px;
-  min-height: 50px;
-  width: 50px;
-  min-width: 50px;
-  background-position: center center;
-  background-size: cover;
-  box-shadow: 0 2px 6px rgba(25, 25, 34, 0.2);
-  border-radius: 0.25rem;
-  opacity: 0.7;
-  transition: opacity 300ms ease-in-out, box-shadow 300ms ease-in-out;
+	height: 50px;
+	min-height: 50px;
+	width: 50px;
+	min-width: 50px;
+	background-position: center center;
+	background-size: cover;
+	box-shadow: 0 2px 6px rgba(25, 25, 34, 0.2);
+	border-radius: 0.25rem;
+	opacity: 0.7;
+	transition: opacity 300ms ease-in-out, box-shadow 300ms ease-in-out;
 
-  &.playable {
-    cursor: pointer;
-  }
+	&.playable {
+		cursor: pointer;
+	}
 
-  &.playable:hover,
-  &.playing {
-    box-shadow: 0 2px 6px rgba(25, 25, 34, 0.5);
-    opacity: 1;
-  }
+	&.playable:hover,
+	&.playing {
+		box-shadow: 0 2px 6px rgba(25, 25, 34, 0.5);
+		opacity: 1;
+	}
 }

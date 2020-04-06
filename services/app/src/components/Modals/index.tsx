@@ -18,110 +18,108 @@ const TransitionTimeout = 300;
 // ------------------------------------------------------------------
 
 export const getModal = (prereq: ModalPrereq) => {
-  switch (prereq.type) {
-    case "Confirm":
-      return <ConfirmModal {...prereq.props} />;
-    case "ConnectUser":
-      return <ConnectUserModal />;
-    case "CreateRoom":
-      return <CreateRoomModal />;
-    case "CreateUser":
-      return <CreateUserModal />;
-    case "Search":
-      return <SearchModal />;
-    case "UnlockRoom":
-      return <UnlockRoomModal />;
-  }
+	switch (prereq.type) {
+		case "Confirm":
+			return <ConfirmModal {...prereq.props} />;
+		case "ConnectUser":
+			return <ConnectUserModal />;
+		case "CreateRoom":
+			return <CreateRoomModal />;
+		case "CreateUser":
+			return <CreateUserModal />;
+		case "Search":
+			return <SearchModal />;
+		case "UnlockRoom":
+			return <UnlockRoomModal />;
+	}
 };
 
 // ------------------------------------------------------------------
 
 type State = {
-  curr_prereq?: ModalPrereq;
-  prev_prereq?: ModalPrereq; // Keeping prev modal prereq for modal fadeout
+	curr_prereq?: ModalPrereq;
+	prev_prereq?: ModalPrereq; // Keeping prev modal prereq for modal fadeout
 };
 
 class Modals extends Component<MappedProps, State> {
-  public readonly state: State = {
-    curr_prereq: void 0,
-    prev_prereq: void 0,
-  };
+	public readonly state: State = {
+		curr_prereq: void 0,
+		prev_prereq: void 0
+	};
 
-  public componentDidMount = () => {
-    document.addEventListener("keydown", this.onKeyDown);
-  };
+	public componentDidMount = () => {
+		document.addEventListener("keydown", this.onKeyDown);
+	};
 
-  public componentWillUnmount = () => {
-    document.removeEventListener("keydown", this.onKeyDown);
-  };
+	public componentWillUnmount = () => {
+		document.removeEventListener("keydown", this.onKeyDown);
+	};
 
-  public componentDidUpdate = (prevProps: MappedProps) => {
-    const oldPrereq = prevProps.prereq;
-    const newPrereq = this.props.prereq;
-    if (oldPrereq !== newPrereq) {
-      // Hide current modal before showing new one (if there is a new one)
-      this.setState(
-        {
-          curr_prereq: void 0,
-          prev_prereq: oldPrereq,
-        },
-        () => {
-          if (newPrereq) {
-            setTimeout(() => {
-              this.setState({
-                curr_prereq: newPrereq,
-              });
-            }, TransitionTimeout);
-          }
-        }
-      );
-    }
-  };
+	public componentDidUpdate = (prevProps: MappedProps) => {
+		const oldPrereq = prevProps.prereq;
+		const newPrereq = this.props.prereq;
+		if (oldPrereq !== newPrereq) {
+			// Hide current modal before showing new one (if there is a new one)
+			this.setState(
+				{
+					curr_prereq: void 0,
+					prev_prereq: oldPrereq
+				},
+				() => {
+					if (newPrereq) {
+						setTimeout(() => {
+							this.setState({
+								curr_prereq: newPrereq
+							});
+						}, TransitionTimeout);
+					}
+				}
+			);
+		}
+	};
 
-  public render = () => {
-    const { curr_prereq, prev_prereq } = this.state;
-    const prereq = curr_prereq || prev_prereq;
-    let modal = null;
-    if (prereq) {
-      modal = getModal(prereq);
-    }
-    return (
-      <CSSTransition
-        in={!!curr_prereq}
-        timeout={TransitionTimeout}
-        unmountOnExit={true}
-      >
-        <div className="ModalOverlay" onClick={this.onClickOverlay}>
-          {modal && (
-            <div
-              className="ModalWrapper"
-              role="dialog"
-              onClick={this.onClickWrapper}
-            >
-              {modal}
-            </div>
-          )}
-        </div>
-      </CSSTransition>
-    );
-  };
+	public render = () => {
+		const { curr_prereq, prev_prereq } = this.state;
+		const prereq = curr_prereq || prev_prereq;
+		let modal = null;
+		if (prereq) {
+			modal = getModal(prereq);
+		}
+		return (
+			<CSSTransition
+				in={!!curr_prereq}
+				timeout={TransitionTimeout}
+				unmountOnExit={true}>
+				<div className="ModalOverlay" onClick={this.onClickOverlay}>
+					{modal && (
+						<div
+							className="ModalWrapper"
+							role="dialog"
+							onClick={this.onClickWrapper}>
+							{modal}
+						</div>
+					)}
+				</div>
+			</CSSTransition>
+		);
+	};
 
-  private onClickOverlay = (event: MouseEvent) => {
-    // Clicking overlay will close current modal
-    event.stopPropagation();
-    this.props.onCloseModal();
-  };
+	private onClickOverlay = (event: MouseEvent) => {
+		// Clicking overlay will close current modal
+		event.stopPropagation();
+		this.props.onCloseModal();
+	};
 
-  private onClickWrapper = (event: MouseEvent) => {
-    // Clicking wrapper modal will not progagate to overlay which would close current modal
-    event.stopPropagation();
-  };
+	private onClickWrapper = (event: MouseEvent) => {
+		// Clicking wrapper modal will not progagate to overlay which would close current modal
+		event.stopPropagation();
+	};
 
-  private onKeyDown = (e: KeyboardEvent) => {
-    if (e.keyCode === 27) {
-      this.props.onCloseModal();
-    }
-  };
+	private onKeyDown = (e: KeyboardEvent) => {
+		if (e.keyCode === 27) {
+			this.props.onCloseModal();
+		}
+	};
 }
 
 export default Modals;

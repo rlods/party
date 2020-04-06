@@ -1,53 +1,53 @@
 .Messages {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 120px;
-  z-index: 100000;
+	position: fixed;
+	left: 0;
+	right: 0;
+	bottom: 120px;
+	z-index: 100000;
 
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 }
 
 .Message {
-  background-color: #fff;
-  padding: 0.5rem;
-  margin-top: 0.5rem;
-  color: #000;
-  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.3);
-  border-radius: 0.25rem;
+	background-color: #fff;
+	padding: 0.5rem;
+	margin-top: 0.5rem;
+	color: #000;
+	box-shadow: 0 1px 6px rgba(0, 0, 0, 0.3);
+	border-radius: 0.25rem;
 
-  max-width: 90vw;
-  min-width: 300px;
+	max-width: 90vw;
+	min-width: 300px;
 }
 
 .Message-error {
-  background-color: #dc3545;
-  color: #fff;
+	background-color: #dc3545;
+	color: #fff;
 }
 
 .Message-info {
-  background-color: #28a745;
-  color: #fff;
+	background-color: #28a745;
+	color: #fff;
 }
 
 /* --------------------------------------------------------------- */
 
 .Message-enter {
-  opacity: 0;
+	opacity: 0;
 }
 
 .Message-enter.Message-enter-active {
-  opacity: 1;
-  transition: opacity 200ms ease-in;
+	opacity: 1;
+	transition: opacity 200ms ease-in;
 }
 
 .Message-exit {
-  opacity: 1;
+	opacity: 1;
 }
 
 .Message-exit.Message-exit-active {
-  opacity: 0.01;
-  transition: opacity 350ms ease-out;
+	opacity: 0.01;
+	transition: opacity 350ms ease-out;
 }

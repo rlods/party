@@ -9,24 +9,24 @@ import { enterRoom, exitRoom } from "../../actions/room";
 // ------------------------------------------------------------------
 
 const stateToProps = (state: RootState, ownProps: Props) => ({
-  color: state.room.color,
+	color: state.room.color
 });
 
 const dispatchToProps = (
-  dispatch: ThunkDispatch<RootState, any, any>,
-  ownProps: Props
+	dispatch: ThunkDispatch<RootState, any, any>,
+	ownProps: Props
 ) => {
-  const { key } = qs.parse(ownProps.location.search.substr(1)) as {
-    key?: string;
-  };
-  return {
-    onEnter: () =>
-      dispatch(enterRoom(ownProps.match.params.room_id, key || "")),
-    onExit: () => dispatch(exitRoom()),
-  };
+	const { key } = qs.parse(ownProps.location.search.substr(1)) as {
+		key?: string;
+	};
+	return {
+		onEnter: () =>
+			dispatch(enterRoom(ownProps.match.params.room_id, key || "")),
+		onExit: () => dispatch(exitRoom())
+	};
 };
 
 export type MappedProps = ReturnType<typeof stateToProps> &
-  ReturnType<typeof dispatchToProps>;
+	ReturnType<typeof dispatchToProps>;
 
 export default connect(stateToProps, dispatchToProps)(Room);

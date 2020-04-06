@@ -1,5 +1,5 @@
 const config = {
-  databaseURL: process.env.REACT_APP_FIREBASE_URL
+	databaseIDs: (process.env.REACT_APP_DATABASE_ID || "").split("|")
 };
 
 console.debug(config);

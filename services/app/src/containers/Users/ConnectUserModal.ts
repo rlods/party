@@ -10,17 +10,18 @@ import { displayError } from "../../actions/messages";
 // ------------------------------------------------------------------
 
 const stateToProps = (state: RootState) => {
-  return {};
+	return {};
 };
 
 const dispatchToProps = (dispatch: ThunkDispatch<RootState, any, any>) => ({
-  onClose: () => dispatch(popModal()),
-  onConnect: (id: string, secret: string) => dispatch(connectUser(id, secret)),
-  onError: (message: string) => dispatch(displayError(message)),
-  onToggle: () => dispatch(openModal({ type: "CreateUser", props: null })),
+	onClose: () => dispatch(popModal()),
+	onConnect: (id: string, secret: string) =>
+		dispatch(connectUser(id, secret)),
+	onError: (message: string) => dispatch(displayError(message)),
+	onToggle: () => dispatch(openModal({ type: "CreateUser", props: null }))
 });
 
 export type MappedProps = ReturnType<typeof stateToProps> &
-  ReturnType<typeof dispatchToProps>;
+	ReturnType<typeof dispatchToProps>;
 
 export default connect(stateToProps, dispatchToProps)(ConnectUserModal);

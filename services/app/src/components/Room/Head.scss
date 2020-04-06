@@ -1,20 +1,20 @@
 .Head {
-  display: flex;
-  flex-direction: row;
-  flex-shrink: 0;
-  align-self: stretch;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1rem 1rem 0.5rem 1rem;
+	display: flex;
+	flex-direction: row;
+	flex-shrink: 0;
+	align-self: stretch;
+	align-items: center;
+	justify-content: space-between;
+	padding: 1rem 1rem 0.5rem 1rem;
 
-  .RoomLink {
-  }
+	.RoomLink {
+	}
 
-  .RoomName {
-    font-size: 12px;
-    font-weight: bold;
-  }
+	.RoomName {
+		font-size: 12px;
+		font-weight: bold;
+	}
 
-  .RoomExit {
-  }
+	.RoomExit {
+	}
 }

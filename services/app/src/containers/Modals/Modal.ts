@@ -7,15 +7,15 @@ import { popModal } from "../../actions/modals";
 // ------------------------------------------------------------------
 
 const mapStateToProps = (state: RootState) => ({
-  has_prev_modal: state.modals.stack.length > 1
+	has_prev_modal: state.modals.stack.length > 1
 });
 
 const mapDispatchToProps = (dispatch: any) => ({
-  onClose: () => dispatch(popModal()),
-  onPop: () => dispatch(popModal())
+	onClose: () => dispatch(popModal()),
+	onPop: () => dispatch(popModal())
 });
 
 export type MappedProps = ReturnType<typeof mapStateToProps> &
-  ReturnType<typeof mapDispatchToProps>;
+	ReturnType<typeof mapDispatchToProps>;
 
 export default connect(mapStateToProps, mapDispatchToProps)(Modal);

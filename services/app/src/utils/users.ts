@@ -1,49 +1,49 @@
 export type UserInfo = {
-  name: string;
-  online: boolean;
-  room_id: string;
-  status: string;
-  timestamp: number;
+	name: string;
+	online: boolean;
+	room_id: string;
+	status: string;
+	timestamp: number;
 };
 
 export type UserAccess = {
-  id: string;
-  secret: string;
+	id: string;
+	secret: string;
 };
 
 // ------------------------------------------------------------------
 
 export const loadUserAccess = (): UserAccess => {
-  const res: UserAccess = {
-    id: "",
-    secret: "",
-  };
-  const s = localStorage.getItem("U");
-  if (s) {
-    try {
-      const d = JSON.parse(atob(s));
-      if (typeof d.i === "string" && typeof d.s === "string") {
-        res.id = d.i;
-        res.secret = d.s;
-        console.debug("Loaded user access: ", res);
-      }
-    } catch (err) {}
-  }
-  return res;
+	const res: UserAccess = {
+		id: "",
+		secret: ""
+	};
+	const s = localStorage.getItem("U");
+	if (s) {
+		try {
+			const d = JSON.parse(atob(s));
+			if (typeof d.i === "string" && typeof d.s === "string") {
+				res.id = d.i;
+				res.secret = d.s;
+				console.debug("Loaded user access: ", res);
+			}
+		} catch (err) {}
+	}
+	return res;
 };
 
 export const deleteUserAccess = () => {
-  localStorage.removeItem("U");
+	localStorage.removeItem("U");
 };
 
 export const saveUserAccess = ({ id, secret }: UserAccess) => {
-  localStorage.setItem(
-    "U",
-    btoa(
-      JSON.stringify({
-        i: id,
-        s: secret,
-      })
-    )
-  );
+	localStorage.setItem(
+		"U",
+		btoa(
+			JSON.stringify({
+				i: id,
+				s: secret
+			})
+		)
+	);
 };

@@ -7,12 +7,12 @@ import { extractMessages } from "../../selectors/messages";
 // ------------------------------------------------------------------
 
 const mapStateToProps = (state: RootState) => ({
-  messages: extractMessages(state),
+	messages: extractMessages(state)
 });
 
 const mapDispatchToProps = (dispatch: any) => ({});
 
 export type MappedProps = ReturnType<typeof mapStateToProps> &
-  ReturnType<typeof mapDispatchToProps>;
+	ReturnType<typeof mapDispatchToProps>;
 
 export default connect(mapStateToProps, mapDispatchToProps)(Messages);

@@ -7,13 +7,13 @@ import Progress from "../../components/Room/Progress";
 // ------------------------------------------------------------------
 
 const stateToProps = (state: RootState) => ({
-  playing: state.player.playing,
-  value: state.player.track_percent
+	playing: state.player.playing,
+	value: state.player.track_percent
 });
 
 const dispatchToProps = (dispatch: ThunkDispatch<RootState, any, any>) => ({});
 
 export type MappedProps = ReturnType<typeof stateToProps> &
-  ReturnType<typeof dispatchToProps>;
+	ReturnType<typeof dispatchToProps>;
 
 export default connect(stateToProps, dispatchToProps)(Progress);

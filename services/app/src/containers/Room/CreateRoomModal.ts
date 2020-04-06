@@ -10,17 +10,17 @@ import { displayError } from "../../actions/messages";
 // ------------------------------------------------------------------
 
 const stateToProps = (state: RootState) => {
-  return {};
+	return {};
 };
 
 const dispatchToProps = (dispatch: ThunkDispatch<RootState, any, any>) => ({
-  onClose: () => dispatch(popModal()),
-  onCreate: (name: string, secret: string) =>
-    dispatch(createRoom(name, secret)),
-  onError: (message: string) => dispatch(displayError(message)),
+	onClose: () => dispatch(popModal()),
+	onCreate: (name: string, secret: string) =>
+		dispatch(createRoom(name, secret)),
+	onError: (message: string) => dispatch(displayError(message))
 });
 
 export type MappedProps = ReturnType<typeof stateToProps> &
-  ReturnType<typeof dispatchToProps>;
+	ReturnType<typeof dispatchToProps>;
 
 export default connect(stateToProps, dispatchToProps)(CreateRoomModal);

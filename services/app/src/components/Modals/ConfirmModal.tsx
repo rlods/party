@@ -8,41 +8,40 @@ import IconButton, { CancelButton } from "../Common/IconButton";
 // ------------------------------------------------------------------
 
 export type ConfirmModalProps = {
-  question: string;
-  onCanceled?: () => void;
-  onConfirmed: () => void;
+	question: string;
+	onCanceled?: () => void;
+	onConfirmed: () => void;
 };
 
 class ConfirmModal extends Component<
-  ConfirmModalProps & MappedProps & WithTranslation
+	ConfirmModalProps & MappedProps & WithTranslation
 > {
-  public render = () => {
-    const { question, t } = this.props;
-    return (
-      <FormModal
-        title={t("confirm")}
-        onSubmit={this.props.onConfirmed}
-        renderButtons={this.renderButtons}
-      >
-        {question}
-      </FormModal>
-    );
-  };
+	public render = () => {
+		const { question, t } = this.props;
+		return (
+			<FormModal
+				title={t("confirm")}
+				onSubmit={this.props.onConfirmed}
+				renderButtons={this.renderButtons}>
+				{question}
+			</FormModal>
+		);
+	};
 
-  private renderButtons = () => {
-    const { t } = this.props;
-    return (
-      <>
-        <IconButton
-          title={t("cancel")}
-          kind="primary"
-          icon="plus"
-          type="submit"
-        />
-        <CancelButton onClick={this.props.onCancel} />
-      </>
-    );
-  };
+	private renderButtons = () => {
+		const { t } = this.props;
+		return (
+			<>
+				<IconButton
+					title={t("cancel")}
+					kind="primary"
+					icon="plus"
+					type="submit"
+				/>
+				<CancelButton onClick={this.props.onCancel} />
+			</>
+		);
+	};
 }
 
 export default withTranslation()(ConfirmModal);

@@ -9,15 +9,15 @@ import { popModal } from "../../actions/modals";
 // ------------------------------------------------------------------
 
 const stateToProps = (state: RootState) => {
-  return {};
+	return {};
 };
 
 const dispatchToProps = (dispatch: ThunkDispatch<RootState, any, any>) => ({
-  onClose: () => dispatch(popModal()),
-  onUnlock: (secret: string) => dispatch(unlockRoom(secret)),
+	onClose: () => dispatch(popModal()),
+	onUnlock: (secret: string) => dispatch(unlockRoom(secret))
 });
 
 export type MappedProps = ReturnType<typeof stateToProps> &
-  ReturnType<typeof dispatchToProps>;
+	ReturnType<typeof dispatchToProps>;
 
 export default connect(stateToProps, dispatchToProps)(UnlockRoomModal);
