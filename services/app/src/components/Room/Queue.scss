@@ -1,5 +1,5 @@
 .Queue {
-	padding: 0.5rem 1rem;
+	padding: 0.5rem 0.75rem;
 	overflow-y: auto;
 	overflow-x: hidden;
 	width: 50%;
@@ -24,7 +24,12 @@
 	}
 
 	&::-webkit-scrollbar-thumb {
-		background-color: rgba(0, 0, 0, 0.3);
+		transition: background-color 300ms ease-in-out; /* not supported by scrollbar */
+		background-color: rgb(
+			0,
+			0,
+			0
+		); /* color will be overriden in Room.scss */
 	}
 
 	.QueueItem {

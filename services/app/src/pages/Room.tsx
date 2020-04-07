@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation, useParams } from "react-router-dom";
+import classNames from "classnames";
 import qs from "qs";
 //
 import { Head } from "../components/Room/Head";
@@ -41,9 +42,8 @@ export const Room = () => {
 
 	return (
 		<div
-			className="Room"
+			className={classNames("Room", fg)}
 			style={{
-				color: `rgb(${fg.r}, ${fg.g}, ${fg.b})`,
 				backgroundColor: `rgb(${bg.r}, ${bg.g}, ${bg.b})`
 			}}>
 			<Head />

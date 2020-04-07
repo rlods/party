@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 //
 import { copyToClipboard } from "../../utils/clipboard";
 import { IconButton } from "../Common/IconButton";
-import { displayMessage } from "../../actions/messages";
+import { displayInfo } from "../../actions/messages";
 import { useDispatch } from "react-redux";
 
 // ------------------------------------------------------------------
@@ -26,8 +26,8 @@ export const SecretField = ({
 
 	const onCopyToClipboard = useCallback(async () => {
 		await copyToClipboard(value);
-		dispatch(displayMessage("info", t("secret_copied_to_clipboard")));
-	}, [dispatch, t, value]);
+		dispatch(displayInfo("secret_copied_to_clipboard"));
+	}, [dispatch, value]);
 
 	return (
 		<div className="ModalField">
@@ -57,7 +57,7 @@ export const SecretField = ({
 					icon="clipboard"
 					onClick={onCopyToClipboard}
 					size="M"
-					title={`Copy to Clipboard`}
+					title={t("copy_to_clipboard")}
 				/>
 			</div>
 		</div>

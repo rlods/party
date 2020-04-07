@@ -133,7 +133,7 @@ export const lockRoom = (): AsyncAction => async (dispatch, getState) => {
 	if (room && room.id === id) {
 		console.debug("Locking room...", { id });
 		room.setSecret("");
-		history.push(`/room/${id}`);
+		history.replace(`/room/${id}`);
 		dispatch(setRoom({ access: { id, secret: "" } }));
 	}
 };
@@ -151,7 +151,7 @@ export const unlockRoom = (secret: string): AsyncAction => async (
 	if (room && room.id === id) {
 		console.debug("Unlocking room...", { id, secret });
 		room.setSecret(secret);
-		history.push(`/room/${id}?secret=${secret}`);
+		history.replace(`/room/${id}?secret=${secret}`);
 		dispatch(setRoom({ access: { id, secret } }));
 	}
 };

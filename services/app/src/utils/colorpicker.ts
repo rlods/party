@@ -10,14 +10,14 @@ export type Color = {
 
 export type CombinedColor = {
 	bg: Color;
-	fg: Color;
+	fg: string;
 };
 
 const CACHE: { [url: string]: CombinedColor } = {};
 
 const DEFAULT_COLOR = {
 	bg: { r: 255, g: 255, b: 255 },
-	fg: { r: 0, g: 0, b: 0 }
+	fg: "dark"
 };
 
 // ------------------------------------------------------------------
@@ -36,8 +36,8 @@ export const pickColor = async (url: string) => {
 					bg,
 					fg:
 						bg.r * 0.299 + bg.g * 0.587 + bg.b * 0.114 > 186
-							? { r: 0, g: 0, b: 0 }
-							: { r: 255, g: 255, b: 255 }
+							? "dark"
+							: "light"
 				};
 			} catch (err) {
 				console.debug("An error prevented colorpicking", err);

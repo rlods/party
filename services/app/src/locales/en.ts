@@ -51,7 +51,9 @@ export default {
 		room: "Room",
 		secret_is_invalid: "Secret is invalid",
 		unlock: "Unlock",
-		unlocked: "Unlocked (click to lock)"
+		unlocked: "Unlocked (click to lock)",
+		track_count: "{{count}} track",
+		track_count_plural: "{{count}} tracks"
 	},
 	medias: {
 		by: "by {{artist}}",
@@ -76,5 +78,6 @@ export default {
 		stop: "Stop"
 	},
 	cancel: "Cancel",
+	copy_to_clipboard: "Copy to Clipboard",
 	secret_copied_to_clipboard: "Secret has been copied to clipboard"
 };

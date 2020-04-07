@@ -28,7 +28,7 @@ const INITIAL_STATE: State = {
 	error: null,
 	room: null,
 	access: { id: "", secret: "" },
-	color: { fg: { r: 0, g: 0, b: 0 }, bg: { r: 255, g: 255, b: 255 } },
+	color: { fg: "dark", bg: { r: 255, g: 255, b: 255 } },
 	info: null,
 	medias: [],
 	playing: false,

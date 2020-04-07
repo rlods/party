@@ -1,14 +1,14 @@
 import React, { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
+import { useHistory } from "react-router-dom";
 //
 import { IconButton } from "../Common/IconButton";
-import history from "../../utils/history";
 import { copyToClipboard } from "../../utils/clipboard";
 import { Dispatch } from "../../actions";
 import { RootState } from "../../reducers";
 import { extractRoom } from "../../selectors/room";
-import { displayMessage } from "../../actions/messages";
+import { displayInfo } from "../../actions/messages";
 import { confirmModal } from "../../actions/modals";
 import { RoomInfo } from "../../utils/rooms";
 import "./Head.scss";
@@ -18,17 +18,20 @@ import "./Head.scss";
 export const Head = () => {
 	const dispatch = useDispatch<Dispatch>();
 	const { t } = useTranslation();
+	const history = useHistory();
 
-	const { room } = useSelector<RootState, { room: RoomInfo | null }>(
-		state => ({
-			room: extractRoom(state)
-		})
-	);
+	const { room, tracksCount } = useSelector<
+		RootState,
+		{ room: RoomInfo | null; tracksCount: number }
+	>(state => ({
+		room: extractRoom(state),
+		tracksCount: state.room.medias.length
+	}));
 
 	const onCopy = useCallback(async () => {
 		await copyToClipboard(document.location.href.split("?")[0]);
-		dispatch(displayMessage("info", t("rooms.link_copied_to_clipboard")));
-	}, [t, dispatch]);
+		dispatch(displayInfo("rooms.link_copied_to_clipboard"));
+	}, [dispatch]);
 
 	const onExit = useCallback(() => {
 		dispatch(
@@ -36,7 +39,7 @@ export const Head = () => {
 				history.push("/");
 			})
 		);
-	}, [t, dispatch]);
+	}, [t, dispatch, history]);
 
 	return (
 		<div className="Head">
@@ -48,7 +51,17 @@ export const Head = () => {
 					title={t("rooms.copy_link")}
 				/>
 			</div>
-			<div className="RoomName">{room ? room.name : ""}</div>
+			<div className="RoomMeta">
+				{room ? (
+					<>
+						<span className="RoomName">{room.name}</span>
+						<span className="RoomSize">
+							{" "}
+							-- {t("rooms.track_count", { count: tracksCount })}
+						</span>
+					</>
+				) : null}
+			</div>
 			<div className="RoomExit">
 				<IconButton
 					onClick={onExit}

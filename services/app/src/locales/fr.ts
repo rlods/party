@@ -53,7 +53,9 @@ export default {
 		room_unlocking: "Déverrouillage de la salle",
 		secret_is_invalid: "Le secret is invalide",
 		unlock: "Déverrouiller",
-		unlocked: "Déverrouillée (cliquer pour verrouiller)"
+		unlocked: "Déverrouillée (cliquer pour verrouiller)",
+		track_count: "{{count}} piste",
+		track_count_plural: "{{count}} pistes"
 	},
 	medias: {
 		by: "par {{artist}}",
@@ -78,5 +80,6 @@ export default {
 		stop: "Arrêter"
 	},
 	cancel: "Annuler",
+	copy_to_clipboard: "Copier dans le presse-papier",
 	secret_copied_to_clipboard: "Le secret a été copié dans le presse-papier"
 };

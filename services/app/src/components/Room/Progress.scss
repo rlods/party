@@ -3,13 +3,7 @@
 	flex-direction: column;
 	flex-shrink: 0;
 	align-self: stretch;
-	padding: 1rem 0;
-
-	&:not(.playing) {
-		progress::-webkit-progress-bar {
-			background-color: rgba(0, 0, 0, 0.1);
-		}
-	}
+	padding: 0.75rem 0;
 
 	progress {
 		width: 100%;
@@ -19,12 +13,17 @@
 
 		&::-webkit-progress-bar {
 			border-radius: 1rem;
-			background-color: rgba(0, 0, 0, 0.3);
+			transition: background-color 300ms ease-in-out;
+			background-color: rgb(
+				0,
+				0,
+				0
+			); /* color will be overriden in Room.scss */
 		}
 
 		&::-webkit-progress-value {
 			border-radius: 1rem;
-			background-color: #0f0;
+			background-color: #0f0 !important;
 		}
 	}
 }
