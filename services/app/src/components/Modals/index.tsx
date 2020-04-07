@@ -19,21 +19,24 @@ const TRANSITION_TIMEOUT = 300;
 
 // ------------------------------------------------------------------
 
-export const getModal = (prereq: ModalPrereq) => {
-	switch (prereq.type) {
-		case "Confirm":
-			return <ConfirmModal {...prereq.props} />;
-		case "ConnectUser":
-			return <ConnectUserModal />;
-		case "CreateRoom":
-			return <CreateRoomModal />;
-		case "CreateUser":
-			return <CreateUserModal />;
-		case "Search":
-			return <SearchModal />;
-		case "UnlockRoom":
-			return <UnlockRoomModal />;
+export const getModal = (prereq?: ModalPrereq) => {
+	if (prereq) {
+		switch (prereq.type) {
+			case "Confirm":
+				return <ConfirmModal {...prereq.props} />;
+			case "ConnectUser":
+				return <ConnectUserModal />;
+			case "CreateRoom":
+				return <CreateRoomModal />;
+			case "CreateUser":
+				return <CreateUserModal />;
+			case "Search":
+				return <SearchModal />;
+			case "UnlockRoom":
+				return <UnlockRoomModal />;
+		}
 	}
+	return null;
 };
 
 // ------------------------------------------------------------------
@@ -57,29 +60,19 @@ export const Modals = () => {
 		void 0
 	);
 
-	const onClickOverlay = useCallback(
-		(e: MouseEvent) => {
-			// Clicking overlay will close current modal
-			e.stopPropagation();
-			dispatch(popModal());
-		},
-		[dispatch]
-	);
-
-	const onKeyDown = useCallback(
-		(e: KeyboardEvent) => {
-			if (e.keyCode === 27) {
-				dispatch(popModal());
-			}
-		},
-		[dispatch]
-	);
+	const onPopModal = useCallback(() => dispatch(popModal()), [dispatch]);
 
 	useEffect(() => {
-		document.addEventListener("keydown", onKeyDown);
+		const keyDown = (e: KeyboardEvent) => {
+			if (e.keyCode === 27) {
+				onPopModal();
+			}
+		};
+
+		document.addEventListener("keydown", keyDown);
 
 		return () => {
-			document.removeEventListener("keydown", onKeyDown);
+			document.removeEventListener("keydown", keyDown);
 		};
 	});
 
@@ -97,14 +90,19 @@ export const Modals = () => {
 		}
 	}, [prereq, prevPrereq]);
 
-	const xxx = currPrereq || prevPrereq;
-	const modal = xxx ? getModal(xxx) : null;
+	const modal = getModal(currPrereq || prevPrereq);
 	return (
 		<CSSTransition
 			in={!!currPrereq}
 			timeout={TRANSITION_TIMEOUT}
 			unmountOnExit={true}>
-			<div className="ModalOverlay" onClick={onClickOverlay}>
+			<div
+				className="ModalOverlay"
+				onClick={e => {
+					// Clicking overlay will close current modal
+					e.stopPropagation();
+					onPopModal();
+				}}>
 				{modal && (
 					<div
 						className="ModalWrapper"
