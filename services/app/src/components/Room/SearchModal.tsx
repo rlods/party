@@ -88,6 +88,7 @@ export const SearchModal = () => {
 			renderButtons={() => (
 				<>
 					<IconButton
+						disabled={query.trim().length === 0}
 						title={t("medias.search")}
 						kind="primary"
 						icon="search"
