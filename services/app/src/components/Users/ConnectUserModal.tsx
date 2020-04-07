@@ -9,6 +9,7 @@ import { popModal, openModal } from "../../actions/modals";
 import { displayError } from "../../actions/messages";
 import { connectUser } from "../../actions/user";
 import { Dispatch } from "../../actions";
+import { SECRET_FIELD_SIZE } from "../Modals/SecretField";
 
 // ------------------------------------------------------------------
 
@@ -52,6 +53,10 @@ export const ConnectUserModal = () => {
 			renderButtons={() => (
 				<>
 					<IconButton
+						disabled={
+							id.trim().length === 0 ||
+							secret.length !== SECRET_FIELD_SIZE
+						}
 						title={t("users.connect")}
 						kind="primary"
 						icon="sign-in"

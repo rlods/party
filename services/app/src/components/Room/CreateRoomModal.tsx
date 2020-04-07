@@ -6,7 +6,7 @@ import { v4 } from "uuid";
 import { FormModal } from "../Modals/FormModal";
 import { IconButton } from "../Common/IconButton";
 import { CancelButton } from "../Common/CancelButton";
-import { SecretField } from "../Modals/SecretField";
+import { SecretField, SECRET_FIELD_SIZE } from "../Modals/SecretField";
 import { Dispatch } from "../../actions";
 import { popModal } from "../../actions/modals";
 import { createRoom } from "../../actions/room";
@@ -55,6 +55,10 @@ export const CreateRoomModal = () => {
 			renderButtons={() => (
 				<>
 					<IconButton
+						disabled={
+							name.trim().length === 0 ||
+							secret.length !== SECRET_FIELD_SIZE
+						}
 						title={t("rooms.create")}
 						kind="primary"
 						icon="plus"

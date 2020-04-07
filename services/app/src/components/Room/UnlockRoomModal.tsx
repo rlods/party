@@ -8,6 +8,7 @@ import { CancelButton } from "../Common/CancelButton";
 import { Dispatch } from "../../actions";
 import { popModal } from "../../actions/modals";
 import { unlockRoom } from "../../actions/room";
+import { SECRET_FIELD_SIZE } from "../Modals/SecretField";
 
 // ------------------------------------------------------------------
 
@@ -37,6 +38,7 @@ export const UnlockRoomModal = () => {
 			renderButtons={() => (
 				<>
 					<IconButton
+						disabled={secret.length !== SECRET_FIELD_SIZE}
 						title={t("rooms.unlock")}
 						kind="primary"
 						icon="unlock"

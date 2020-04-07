@@ -6,7 +6,7 @@ import { v4 } from "uuid";
 import { FormModal } from "../Modals/FormModal";
 import { IconButton } from "../Common/IconButton";
 import { CancelButton } from "../Common/CancelButton";
-import { SecretField } from "../Modals/SecretField";
+import { SecretField, SECRET_FIELD_SIZE } from "../Modals/SecretField";
 import { popModal, openModal } from "../../actions/modals";
 import { displayError } from "../../actions/messages";
 import { createUser } from "../../actions/user";
@@ -59,6 +59,10 @@ export const CreateUserModal = () => {
 			renderButtons={() => (
 				<>
 					<IconButton
+						disabled={
+							name.trim().length === 0 ||
+							secret.length !== SECRET_FIELD_SIZE
+						}
 						title={t("users.create")}
 						kind="primary"
 						icon="plus"

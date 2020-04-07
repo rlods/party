@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import { useTranslation } from "react-i18next";
 //
 import { IconButton } from "../Common/IconButton";
@@ -29,13 +29,16 @@ export const Queue = () => {
 			playing: boolean;
 			playingIndex: number;
 		}
-	>(state => ({
-		loaded: isRoomLoaded(state),
-		locked: isRoomLocked(state),
-		medias: extractMedias(state, state.room.medias),
-		playing: state.player.playing,
-		playingIndex: state.room.position % state.room.medias.length
-	}));
+	>(
+		state => ({
+			loaded: isRoomLoaded(state),
+			locked: isRoomLocked(state),
+			medias: extractMedias(state, state.room.medias),
+			playing: state.player.playing,
+			playingIndex: state.room.position % state.room.medias.length
+		}),
+		shallowEqual // is it betted with that?
+	);
 
 	const onPlay = useCallback(
 		(index: number) => {

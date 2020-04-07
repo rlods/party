@@ -54,11 +54,11 @@ export const Head = () => {
 			<div className="RoomMeta">
 				{room ? (
 					<>
-						<span className="RoomName">{room.name}</span>
-						<span className="RoomSize">
-							{" "}
-							-- {t("rooms.track_count", { count: tracksCount })}
-						</span>
+						<div className="RoomName">{room.name}</div>
+						<div className="RoomSize">
+							&nbsp;--&nbsp;
+							{t("rooms.track_count", { count: tracksCount })}
+						</div>
 					</>
 				) : null}
 			</div>

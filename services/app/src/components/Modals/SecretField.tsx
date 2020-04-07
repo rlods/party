@@ -8,6 +8,8 @@ import { useDispatch } from "react-redux";
 
 // ------------------------------------------------------------------
 
+export const SECRET_FIELD_SIZE = 36;
+
 export const SecretField = ({
 	id,
 	label,
@@ -47,8 +49,8 @@ export const SecretField = ({
 					type="password"
 					autoComplete="password"
 					placeholder={placeholder}
-					maxLength={36}
-					minLength={36}
+					maxLength={SECRET_FIELD_SIZE}
+					minLength={SECRET_FIELD_SIZE}
 					required={true}
 					value={value}
 					onChange={e => onChange(e.target.value)}
