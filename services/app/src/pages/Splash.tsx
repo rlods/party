@@ -5,7 +5,6 @@ import { useTranslation } from "react-i18next";
 //
 import { IconButton } from "../components/Common/IconButton";
 import { RootState } from "../reducers";
-import { extractUser } from "../selectors/user";
 import { openModal } from "../actions/modals";
 import { disconnectUser } from "../actions/user";
 import "./Splash.scss";
@@ -14,11 +13,8 @@ import "./Splash.scss";
 
 export const Splash = () => {
 	const dispatch = useDispatch();
-	const { loggedIn } = useSelector<RootState, { loggedIn: boolean }>(
-		state => ({
-			loggedIn: !!state.user.access.id,
-			user: extractUser(state)
-		})
+	const loggedIn = useSelector<RootState, boolean>(
+		state => !!state.user.access.id
 	);
 	const { t } = useTranslation();
 

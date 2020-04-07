@@ -7,9 +7,9 @@ import "./Progress.scss";
 // ------------------------------------------------------------------
 
 export const Progress = () => {
-	const { value } = useSelector<RootState, { value: number }>(state => ({
-		value: state.player.track_percent
-	}));
+	const value = useSelector<RootState, number>(
+		state => state.player.track_percent
+	);
 	return (
 		<div className="Progress">
 			<progress max={100} value={value * 100} />

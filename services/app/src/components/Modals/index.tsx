@@ -1,6 +1,9 @@
 import React, { MouseEvent, useState, useEffect, useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { CSSTransition } from "react-transition-group";
 //
+import { Dispatch } from "../../actions";
+import { RootState } from "../../reducers";
 import { ModalPrereq, popModal } from "../../actions/modals";
 import { ConfirmModal } from "./ConfirmModal";
 import { ConnectUserModal } from "../Users/ConnectUserModal";
@@ -9,9 +12,6 @@ import { CreateUserModal } from "..//Users/CreateUserModal";
 import { SearchModal } from "..//Room/SearchModal";
 import { UnlockRoomModal } from "../Room/UnlockRoomModal";
 import "./index.scss";
-import { useDispatch, useSelector } from "react-redux";
-import { Dispatch } from "../../actions";
-import { RootState } from "../../reducers";
 
 // ------------------------------------------------------------------
 
@@ -43,14 +43,10 @@ export const getModal = (prereq?: ModalPrereq) => {
 
 export const Modals = () => {
 	const dispatch = useDispatch<Dispatch>();
-
-	const { prereq } = useSelector<RootState, { prereq?: ModalPrereq }>(
-		state => ({
-			prereq:
-				state.modals.stack.length > 0
-					? state.modals.stack[state.modals.stack.length - 1]
-					: void 0
-		})
+	const prereq = useSelector<RootState, ModalPrereq | undefined>(state =>
+		state.modals.stack.length > 0
+			? state.modals.stack[state.modals.stack.length - 1]
+			: void 0
 	);
 
 	const [currPrereq, setCurrPrereq] = useState<ModalPrereq | undefined>(

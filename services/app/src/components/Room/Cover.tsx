@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import { withTranslation, WithTranslation } from "react-i18next";
+import React from "react";
+import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 //
 import { Icon } from "../Common/Icon";
@@ -7,17 +7,21 @@ import "./Cover.scss";
 
 // ------------------------------------------------------------------
 
-type Props = {
-	image: string;
-	onPlay: () => void;
-	onStop: () => void;
-	playable: boolean;
-	playing: boolean;
-};
-
-class Cover extends Component<Props & WithTranslation> {
-	public render = () => {
-		const { playable, playing, image, onPlay, onStop, t } = this.props;
+export const Cover = React.memo(
+	({
+		playable,
+		playing,
+		image,
+		onPlay,
+		onStop
+	}: {
+		image: string;
+		onPlay: () => void;
+		onStop: () => void;
+		playable: boolean;
+		playing: boolean;
+	}) => {
+		const { t } = useTranslation();
 		if (playable) {
 			return (
 				<div
@@ -42,7 +46,5 @@ class Cover extends Component<Props & WithTranslation> {
 				</div>
 			);
 		}
-	};
-}
-
-export default withTranslation()(Cover);
+	}
+);

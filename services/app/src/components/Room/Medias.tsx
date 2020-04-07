@@ -1,7 +1,7 @@
-import React, { ReactNode, Component } from "react";
-import { withTranslation, WithTranslation } from "react-i18next";
+import React, { ReactNode } from "react";
+import { useTranslation } from "react-i18next";
 //
-import Cover from "./Cover";
+import { Cover } from "./Cover";
 import { LoadingIcon } from "../Common/LoadingIcon";
 import {
 	Album,
@@ -14,30 +14,25 @@ import "./Medias.scss";
 
 // ------------------------------------------------------------------
 
-type MediaProps = {
-	actions?: ReactNode;
-	media: MediaData | null;
-	mediaType: MediaType;
-	playable: boolean;
-	playing: boolean;
-	onPlay: () => void;
-	onStop: () => void;
-};
-
-// ------------------------------------------------------------------
-
-class _Media extends Component<MediaProps & WithTranslation> {
-	public render = () => {
-		const {
-			actions,
-			media,
-			mediaType,
-			playable,
-			playing,
-			onPlay,
-			onStop,
-			t
-		} = this.props;
+export const Media = React.memo(
+	({
+		actions,
+		media,
+		mediaType,
+		playable,
+		playing,
+		onPlay,
+		onStop
+	}: {
+		actions?: ReactNode;
+		media: MediaData | null;
+		mediaType: MediaType;
+		playable: boolean;
+		playing: boolean;
+		onPlay: () => void;
+		onStop: () => void;
+	}) => {
+		const { t } = useTranslation();
 		if (!media) {
 			return (
 				<div className="Media">
@@ -150,8 +145,8 @@ class _Media extends Component<MediaProps & WithTranslation> {
 					</div>
 				</div>
 			);
+		} else {
+			return null;
 		}
-	};
-}
-
-export default withTranslation()(_Media);
+	}
+);

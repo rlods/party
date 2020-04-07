@@ -6,7 +6,7 @@ import { FormModal } from "../Modals/FormModal";
 import { IconButton } from "../Common/IconButton";
 import { CancelButton } from "../Common/CancelButton";
 import { DEFAULT_API } from "../../utils/deezer";
-import Media from "./Medias";
+import { Media } from "./Medias";
 import {
 	MEDIA_TYPE_DEFINITIONS,
 	MediaType,
@@ -28,9 +28,7 @@ export const SearchModal = () => {
 	const dispatch = useDispatch<Dispatch>();
 	const { t } = useTranslation();
 	const queryRef = useRef<HTMLInputElement>(null);
-	const { locked } = useSelector<RootState, { locked: boolean }>(state => ({
-		locked: isRoomLocked(state)
-	}));
+	const locked = useSelector<RootState, boolean>(isRoomLocked);
 	const [playingMediaId, setPlayingMediaId] = useState("");
 	const [playingMediaType, setPlayingMediaType] = useState<MediaType>(
 		"track"

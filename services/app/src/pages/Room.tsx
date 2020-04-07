@@ -17,11 +17,9 @@ import "./Room.scss";
 
 export const Room = () => {
 	const dispatch = useDispatch<Dispatch>();
-	const {
-		color: { fg, bg }
-	} = useSelector<RootState, { color: CombinedColor }>(state => ({
-		color: state.room.color
-	}));
+	const { fg, bg } = useSelector<RootState, CombinedColor>(
+		state => state.room.color
+	);
 
 	const { search } = useLocation();
 	const { room_id } = useParams<{

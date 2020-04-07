@@ -19,14 +19,10 @@ export const Head = () => {
 	const dispatch = useDispatch<Dispatch>();
 	const { t } = useTranslation();
 	const history = useHistory();
-
-	const { room, tracksCount } = useSelector<
-		RootState,
-		{ room: RoomInfo | null; tracksCount: number }
-	>(state => ({
-		room: extractRoom(state),
-		tracksCount: state.room.medias.length
-	}));
+	const room = useSelector<RootState, RoomInfo | null>(extractRoom);
+	const tracksCount = useSelector<RootState, number>(
+		state => state.room.medias.length
+	);
 
 	const onCopy = useCallback(async () => {
 		await copyToClipboard(document.location.href.split("?")[0]);

@@ -13,13 +13,7 @@ import "./Messages.scss";
 
 export const Messages = () => {
 	const { t } = useTranslation();
-
-	const { messages } = useSelector<RootState, { messages: Message[] }>(
-		state => ({
-			messages: extractMessages(state)
-		})
-	);
-
+	const messages = useSelector<RootState, Message[]>(extractMessages);
 	return (
 		<div className="Messages">
 			<TransitionGroup>

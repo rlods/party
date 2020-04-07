@@ -25,12 +25,9 @@ export const Modal = ({
 }) => {
 	const dispatch = useDispatch<Dispatch>();
 	const { t } = useTranslation();
-	const { has_prev_modal } = useSelector<
-		RootState,
-		{ has_prev_modal: boolean }
-	>(state => ({
-		has_prev_modal: state.modals.stack.length > 1
-	}));
+	const has_prev_modal = useSelector<RootState, boolean>(
+		state => state.modals.stack.length > 1
+	);
 
 	const onClose = useCallback(() => dispatch(closeModal()), [dispatch]);
 	const onPop = useCallback(() => dispatch(popModal()), [dispatch]);

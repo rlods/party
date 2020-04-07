@@ -18,14 +18,13 @@ import "./Controls.scss";
 export const Controls = () => {
 	const dispatch = useDispatch<Dispatch>();
 	const { t } = useTranslation();
-	const { tracksCount, locked, playing } = useSelector<
-		RootState,
-		{ tracksCount: number; locked: boolean; playing: boolean }
-	>(state => ({
-		tracksCount: state.room.medias.length,
-		locked: isRoomLocked(state),
-		playing: state.player.playing
-	}));
+	const tracksCount = useSelector<RootState, number>(
+		state => state.room.medias.length
+	);
+	const locked = useSelector<RootState, boolean>(isRoomLocked);
+	const playing = useSelector<RootState, boolean>(
+		state => state.player.playing
+	);
 
 	const onClear = useCallback(() => {
 		dispatch(
