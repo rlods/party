@@ -266,7 +266,7 @@ const DeezerApiImpl = (): DeezerApi => {
 			.map(track => ConvertTrack(track, track.album));
 	};
 
-	const search = async (query: string): Promise<SearchResults> => {
+	const search = async (query: string) => {
 		const [album, playlist, track] = await Promise.all([
 			searchAlbums(query),
 			searchPlaylists(query),
@@ -280,22 +280,19 @@ const DeezerApiImpl = (): DeezerApi => {
 		};
 	};
 
-	const loadAlbums = async (ids: string[]): Promise<Album[]> => {
+	const loadAlbums = async (ids: string[]) => {
 		const albums = await _loadWithRetry<ApiAlbum>("album", ids);
 		return albums.map(album => ConvertAlbum(album));
 	};
 
-	const loadPlaylists = async (ids: string[]): Promise<Playlist[]> => {
+	const loadPlaylists = async (ids: string[]) => {
 		const playlists = await _loadWithRetry<ApiPlaylist>("playlist", ids);
 		return playlists.map(playlist =>
 			ConvertPlaylist(playlist, playlist.creator!)
 		);
 	};
 
-	const loadContainers = async (
-		type: ContainerType,
-		ids: string[]
-	): Promise<Container[]> => {
+	const loadContainers = async (type: ContainerType, ids: string[]) => {
 		switch (type) {
 			case "album":
 				return loadAlbums(ids);

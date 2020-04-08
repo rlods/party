@@ -111,7 +111,7 @@ export type Player = {
 
 // ------------------------------------------------------------------
 
-export const PlayerImpl = (chainPlay: boolean): Player => {
+const PlayerImpl = (chainPlay: boolean): Player => {
 	let analyserNode: AnalyserNode | null = null;
 	let gainNode: GainNode | null = null;
 	let _node: AudioNode | null = null;
