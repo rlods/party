@@ -2,20 +2,19 @@ import React, { ReactNode } from "react";
 //
 import { Media } from "../../utils/medias";
 import { ModalField } from "../Modals/ModalFields";
-
-// ------------------------------------------------------------------
-
-const MAX_RESULTS_COUNT = 5;
+import { IconButton } from "../Common/IconButton";
 
 // ------------------------------------------------------------------
 
 export const SearchResultCategory = ({
 	items,
 	label,
+	onViewMore,
 	cb
 }: {
 	items: Media[];
 	label: string;
+	onViewMore: () => void;
 	cb: (item: Media) => ReactNode;
 }) =>
 	items.length > 0 ? (
@@ -25,10 +24,19 @@ export const SearchResultCategory = ({
 					<label>{label}</label>
 				</div>
 			</ModalField>
-			{items.slice(0, MAX_RESULTS_COUNT).map(item => (
+			{items.map(item => (
 				<ModalField key={item.id}>
 					<div className="SearchResultItem">{cb(item)}</div>
 				</ModalField>
 			))}
+			<ModalField>
+				<div className="XXX">
+					<IconButton
+						icon="ellipsis-h"
+						onClick={onViewMore}
+						title="View more..."
+					/>
+				</div>
+			</ModalField>
 		</>
 	) : null;

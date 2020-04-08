@@ -25,6 +25,11 @@ import "./SearchModal.scss";
 
 // ------------------------------------------------------------------
 
+const SEARCH_RESULTS_COUNT = 5;
+const VIEW_MORE_RESULTS_COUNT = 50;
+
+// ------------------------------------------------------------------
+
 export const SearchModal = () => {
 	const dispatch = useDispatch<Dispatch>();
 	const { t } = useTranslation();
@@ -47,7 +52,11 @@ export const SearchModal = () => {
 
 	const onSearch = useCallback(async () => {
 		if (query.trim().length > 0) {
-			setResults(await DEFAULT_API.search(query));
+			setResults(
+				await DEFAULT_API.search(query, {
+					limit: SEARCH_RESULTS_COUNT
+				})
+			);
 		}
 	}, [query]);
 
@@ -71,6 +80,38 @@ export const SearchModal = () => {
 		setPlayingMediaId("");
 		setPlayingMediaType("track");
 	}, [dispatch]);
+
+	const onViewMore = useCallback(
+		async (type: MediaType) => {
+			const results: SearchResults = {
+				album: [],
+				playlist: [],
+				track: []
+			};
+			switch (type) {
+				case "album":
+					results["album"] = await DEFAULT_API.searchAlbums(query, {
+						limit: VIEW_MORE_RESULTS_COUNT
+					});
+					break;
+				case "playlist":
+					results["playlist"] = await DEFAULT_API.searchPlaylists(
+						query,
+						{
+							limit: VIEW_MORE_RESULTS_COUNT
+						}
+					);
+					break;
+				case "track":
+					results["track"] = await DEFAULT_API.searchTracks(query, {
+						limit: VIEW_MORE_RESULTS_COUNT
+					});
+					break;
+			}
+			setResults(results);
+		},
+		[query, setResults]
+	);
 
 	useEffect(() => {
 		if (queryRef.current) {
@@ -116,6 +157,7 @@ export const SearchModal = () => {
 					key={type}
 					label={t(label)}
 					items={results[type]}
+					onViewMore={() => onViewMore(type)}
 					cb={media => (
 						<Media
 							actions={

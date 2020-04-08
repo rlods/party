@@ -18,6 +18,10 @@ const RATE_LIMIT_DELAY = 5000; // ms
 
 // ------------------------------------------------------------------
 
+export type ApiSearchOptions = {
+	limit?: number;
+};
+
 export type ApiError = {
 	code: number;
 	message: string;
@@ -159,13 +163,25 @@ const ConvertTrack = (
 // ------------------------------------------------------------------
 
 export type DeezerApi = {
-	searchAlbums: (query: string) => Promise<Album[]>;
+	searchAlbums: (
+		query: string,
+		options?: ApiSearchOptions
+	) => Promise<Album[]>;
 
-	searchPlaylists: (query: string) => Promise<Playlist[]>;
+	searchPlaylists: (
+		query: string,
+		options?: ApiSearchOptions
+	) => Promise<Playlist[]>;
 
-	searchTracks: (query: string) => Promise<Track[]>;
+	searchTracks: (
+		query: string,
+		options?: ApiSearchOptions
+	) => Promise<Track[]>;
 
-	search: (query: string) => Promise<SearchResults>;
+	search: (
+		query: string,
+		options?: ApiSearchOptions
+	) => Promise<SearchResults>;
 
 	loadAlbums: (ids: string[]) => Promise<Album[]>;
 
@@ -197,16 +213,23 @@ const DeezerApiImpl = (): DeezerApi => {
 
 	const _call = async <T>(path: string, qs?: string) => {
 		// We have to rely on jsonp because the Deezer api is CORS restricted
-		const fullpath = qs
+		const url = qs
 			? `${API_BASE}/${path}?${qs}&output=jsonp&callback=`
 			: `${API_BASE}/${path}?output=jsonp&callback=`;
-		return await _asyncJsonp<T>(fullpath);
+		console.debug("[Deezer] Requesting... ", { url });
+		return await _asyncJsonp<T>(url);
 	};
 
-	const _search = <T>(type: MediaType, query: string) =>
+	const _search = <T>(
+		type: MediaType,
+		query: string,
+		options?: ApiSearchOptions
+	) =>
 		_call<ApiSearchResult<T>>(
 			`search/${type}`,
-			`q=${encodeURIComponent(query)}`
+			`q=${encodeURIComponent(query)}${
+				options && options.limit ? `&limit=${options.limit}` : ""
+			}`
 		);
 
 	const _load = <T extends { error?: ApiError }>(
@@ -250,27 +273,32 @@ const DeezerApiImpl = (): DeezerApi => {
 		return medias as T[];
 	};
 
-	const searchAlbums = async (query: string) => {
-		return (await _search<ApiAlbum>("album", query)).data.map(ConvertAlbum);
+	const searchAlbums = async (query: string, options?: ApiSearchOptions) => {
+		return (await _search<ApiAlbum>("album", query, options)).data.map(
+			ConvertAlbum
+		);
 	};
 
-	const searchPlaylists = async (query: string) => {
-		return (await _search<ApiPlaylist>("playlist", query)).data
+	const searchPlaylists = async (
+		query: string,
+		options?: ApiSearchOptions
+	) => {
+		return (await _search<ApiPlaylist>("playlist", query, options)).data
 			.filter(playlist => playlist.public)
 			.map(playlist => ConvertPlaylist(playlist, playlist.user!));
 	};
 
-	const searchTracks = async (query: string) => {
-		return (await _search<ApiTrack>("track", query)).data
+	const searchTracks = async (query: string, options?: ApiSearchOptions) => {
+		return (await _search<ApiTrack>("track", query, options)).data
 			.filter(track => track.readable && track.preview)
 			.map(track => ConvertTrack(track, track.album));
 	};
 
-	const search = async (query: string) => {
+	const search = async (query: string, options?: ApiSearchOptions) => {
 		const [album, playlist, track] = await Promise.all([
-			searchAlbums(query),
-			searchPlaylists(query),
-			searchTracks(query)
+			searchAlbums(query, options),
+			searchPlaylists(query, options),
+			searchTracks(query, options)
 		]);
 		return {
 			// keys are MediaType

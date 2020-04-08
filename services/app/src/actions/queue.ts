@@ -29,13 +29,10 @@ export const appendInQueue = (
 	trackIds: string[]
 ): AsyncAction => async (dispatch, getState) => {
 	const {
-		room: { room }
+		room: { medias: queueMedias, room }
 	} = getState();
 	if (room && !room.isLocked()) {
 		if (trackIds.length > 0) {
-			const {
-				room: { medias: queueMedias }
-			} = getState();
 			try {
 				console.debug("Appending queue...", { trackIds });
 				const queue: RoomQueue = {};
@@ -77,10 +74,16 @@ export const removeFromQueue = (index: number): AsyncAction => async (
 				copy.forEach((mediaAccess, index) => {
 					queue[index] = mediaAccess;
 				});
-				await room.update({
-					queue,
-					queue_position: index < oldIndex ? position - 1 : position
-				});
+				if (index < oldIndex) {
+					await room.update({
+						queue,
+						queue_position: position - 1
+					});
+				} else {
+					await room.update({
+						queue
+					});
+				}
 			} catch (err) {
 				dispatch(displayError(extractErrorMessage(err)));
 				dispatch(lockRoom());

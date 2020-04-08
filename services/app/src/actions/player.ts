@@ -26,9 +26,16 @@ export const startPlayer = (): AsyncAction => async (
 	getState,
 	{ queuePlayer }
 ) => {
-	if (!PLAYER_TIMER) {
-		_installTimer(dispatch, getState, queuePlayer);
-		dispatch(setPlayer({ playing: true }));
+	const {
+		room: { room }
+	} = getState();
+	if (room && !room.isLocked()) {
+		if (!PLAYER_TIMER) {
+			_installTimer(dispatch, getState, queuePlayer);
+			dispatch(setPlayer({ playing: true }));
+		}
+	} else {
+		dispatch(displayError("rooms.error.locked"));
 	}
 };
 
@@ -36,14 +43,21 @@ export const startPlayer = (): AsyncAction => async (
 
 export const stopPlayer = (): AsyncAction => async (
 	dispatch,
-	_,
+	getState,
 	{ queuePlayer }
 ) => {
-	if (PLAYER_TIMER) {
-		clearTimeout(PLAYER_TIMER);
-		PLAYER_TIMER = null;
-		await queuePlayer.stop();
-		dispatch(resetPlayer());
+	const {
+		room: { room }
+	} = getState();
+	if (room && !room.isLocked()) {
+		if (PLAYER_TIMER) {
+			clearTimeout(PLAYER_TIMER);
+			PLAYER_TIMER = null;
+			await queuePlayer.stop();
+			dispatch(resetPlayer());
+		}
+	} else {
+		dispatch(displayError("rooms.error.locked"));
 	}
 };
 
@@ -73,7 +87,11 @@ const _computeNextPosition = (
 	if (playingTrackPosition !== queueTrackPosition) {
 		if (queuePlayer.isPlaying()) {
 			// User has clicked an other track or added/removed a track in queue
-			nextPosition = queueTrackPosition;
+			if (
+				playingTrackID !== medias[queueTrackPosition % medias.length].id
+			) {
+				nextPosition = queueTrackPosition;
+			}
 		} else {
 			// Not playing which means previous track has terminated
 			nextPosition =
