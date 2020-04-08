@@ -6,7 +6,11 @@ import { v4 } from "uuid";
 import { FormModal } from "../Modals/FormModal";
 import { IconButton } from "../Common/IconButton";
 import { CancelButton } from "../Common/CancelButton";
-import { SecretField, SECRET_FIELD_SIZE } from "../Modals/SecretField";
+import {
+	SecretField,
+	SECRET_FIELD_SIZE,
+	InputField
+} from "../Modals/ModalFields";
 import { popModal, openModal } from "../../actions/modals";
 import { displayError } from "../../actions/messages";
 import { createUser } from "../../actions/user";
@@ -77,20 +81,18 @@ export const CreateUserModal = () => {
 					/>
 				</>
 			)}>
-			<div className="ModalField">
-				<label htmlFor="modal-name">{t("users.name")}</label>
-				<input
-					id="modal-name"
-					type="text"
-					placeholder={t("users.name_placeholder")}
-					maxLength={100}
-					minLength={2}
-					required={true}
-					value={name}
-					ref={nameRef}
-					onChange={e => setName(e.target.value)}
-				/>
-			</div>
+			<InputField
+				id="modal-name"
+				label={t("users.name")}
+				type="text"
+				placeholder={t("users.name_placeholder")}
+				maxLength={100}
+				minLength={2}
+				required={true}
+				value={name}
+				ref={nameRef}
+				onChange={e => setName(e.target.value)}
+			/>
 			<SecretField
 				id="modal-secret"
 				label={t("users.secret")}

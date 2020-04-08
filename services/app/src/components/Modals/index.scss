@@ -45,7 +45,6 @@
 			display: flex;
 			flex-direction: column;
 			justify-content: flex-start;
-			user-select: none;
 			overflow: hidden;
 
 			.ModalHead {
@@ -89,21 +88,22 @@
 				flex-direction: column;
 				flex-shrink: 1;
 				justify-content: flex-start;
-				overflow-y: auto;
+				overflow-y: scroll;
 				padding: 0.5rem;
 
 				.ModalField {
 					display: flex;
 					flex-direction: column;
 					flex-shrink: 0;
-					margin-top: 0.5rem;
-
-					&:first-child {
-						margin-top: 0;
-					}
 
 					label {
 						font-weight: bold;
+					}
+
+					.XXX {
+						display: flex;
+						flex-direction: column;
+						flex-shrink: 0;
 						padding: 0.25rem 0;
 					}
 

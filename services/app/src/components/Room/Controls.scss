@@ -10,7 +10,6 @@
 	border-top-style: solid;
 	border-color: rgb(0, 0, 0); /* color will be overriden in Room.scss */
 	transition: border-color 300ms ease-in-out;
-	user-select: none;
 
 	.ControlsSet {
 		display: flex;
@@ -28,6 +27,20 @@
 			&:first-child {
 				margin-left: 0;
 			}
+		}
+	}
+}
+
+body {
+	&.dark {
+		.Controls {
+			border-color: rgba(0, 0, 0, 0.1);
+		}
+	}
+
+	&.light {
+		.Controls {
+			border-color: rgba(255, 255, 255, 0.1);
 		}
 	}
 }

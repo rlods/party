@@ -20,6 +20,7 @@ import { loadMedias } from "../../actions/medias";
 import { stopPreview } from "../../actions/player";
 import { isRoomLocked } from "../../selectors/room";
 import { RootState } from "../../reducers";
+import { ModalField } from "../Modals/ModalFields";
 import "./SearchModal.scss";
 
 // ------------------------------------------------------------------
@@ -97,7 +98,7 @@ export const SearchModal = () => {
 					<CancelButton onClick={onClose} />
 				</>
 			)}>
-			<div className="ModalField">
+			<ModalField>
 				<input
 					id="modal-query"
 					type="text"
@@ -109,7 +110,7 @@ export const SearchModal = () => {
 					ref={queryRef}
 					onChange={e => setQuery(e.target.value)}
 				/>
-			</div>
+			</ModalField>
 			{MEDIA_TYPE_DEFINITIONS.map(({ label, type }) => (
 				<SearchResultCategory
 					key={type}
@@ -118,15 +119,14 @@ export const SearchModal = () => {
 					cb={media => (
 						<Media
 							actions={
-								!locked ? (
-									<IconButton
-										title={t("medias.add")}
-										icon="plus"
-										onClick={() =>
-											onSelect(provider, type, media.id)
-										}
-									/>
-								) : null
+								<IconButton
+									disabled={locked}
+									title={t("medias.add")}
+									icon="plus"
+									onClick={() =>
+										onSelect(provider, type, media.id)
+									}
+								/>
 							}
 							media={media}
 							mediaType={type}

@@ -3,15 +3,22 @@
 	flex-direction: row;
 	justify-content: flex-start;
 	align-items: center;
+	overflow: hidden;
+	padding: 0.25rem 0;
 
 	.Metas {
 		display: flex;
 		flex-direction: column;
-		align-items: flex-start;
+		align-items: stretch;
 		font-size: 14px;
 		line-height: 18px;
+		overflow: hidden;
 
 		.Meta {
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+
 			&.AlbumTitle {
 			}
 

@@ -9,7 +9,7 @@ import { popModal, openModal } from "../../actions/modals";
 import { displayError } from "../../actions/messages";
 import { connectUser } from "../../actions/user";
 import { Dispatch } from "../../actions";
-import { SECRET_FIELD_SIZE } from "../Modals/SecretField";
+import { SECRET_FIELD_SIZE, InputField } from "../Modals/ModalFields";
 
 // ------------------------------------------------------------------
 
@@ -71,34 +71,30 @@ export const ConnectUserModal = () => {
 					/>
 				</>
 			)}>
-			<div className="ModalField">
-				<label htmlFor="modal-id">{t("users.user_id")}</label>
-				<input
-					id="modal-id"
-					type="text"
-					placeholder={t("users.id_placeholder")}
-					maxLength={36}
-					minLength={36}
-					required={true}
-					value={id}
-					ref={idRef}
-					onChange={e => setId(e.target.value)}
-				/>
-			</div>
-			<div className="ModalField">
-				<label htmlFor="modal-secret">{t("users.secret")}</label>
-				<input
-					id="modal-secret"
-					type="password"
-					autoComplete="password"
-					placeholder={t("users.secret_placeholder")}
-					maxLength={36}
-					minLength={36}
-					required={true}
-					value={secret}
-					onChange={e => setSecret(e.target.value)}
-				/>
-			</div>
+			<InputField
+				id="modal-id"
+				label={t("users.user_id")}
+				type="text"
+				placeholder={t("users.id_placeholder")}
+				maxLength={36}
+				minLength={36}
+				required={true}
+				value={id}
+				ref={idRef}
+				onChange={e => setId(e.target.value)}
+			/>
+			<InputField
+				id="modal-secret"
+				label={t("users.secret")}
+				type="password"
+				autoComplete="password"
+				placeholder={t("users.secret_placeholder")}
+				maxLength={36}
+				minLength={36}
+				required={true}
+				value={secret}
+				onChange={e => setSecret(e.target.value)}
+			/>
 		</FormModal>
 	);
 };

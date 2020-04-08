@@ -5,39 +5,4 @@
 	align-items: center;
 	height: 100vh;
 	max-height: 100vh;
-	transition: color 300ms ease-in-out, background-color 300ms ease-in-out;
-
-	&.dark {
-		color: rgb(0, 0, 0);
-
-		.Controls,
-		.Head {
-			border-color: rgba(0, 0, 0, 0.1);
-		}
-
-		.Progress progress::-webkit-progress-bar {
-			background-color: rgba(0, 0, 0, 0.1);
-		}
-
-		.Queue::-webkit-scrollbar-thumb {
-			background-color: rgba(0, 0, 0, 0.3);
-		}
-	}
-
-	&.light {
-		color: rgb(255, 255, 255);
-
-		.Controls,
-		.Head {
-			border-color: rgba(255, 255, 255, 0.1);
-		}
-
-		.Progress progress::-webkit-progress-bar {
-			background-color: rgba(255, 255, 255, 0.1);
-		}
-
-		.Queue::-webkit-scrollbar-thumb {
-			background-color: rgba(255, 255, 255, 0.3);
-		}
-	}
 }

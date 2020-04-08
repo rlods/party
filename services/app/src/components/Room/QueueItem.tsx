@@ -36,13 +36,12 @@ export const QueueItem = React.memo(
 					onPlay={onPlay}
 					onStop={onStop}
 					actions={
-						!locked ? (
-							<IconButton
-								title={t("medias.remove")}
-								icon="trash"
-								onClick={onRemove}
-							/>
-						) : null
+						<IconButton
+							disabled={locked}
+							title={t("medias.remove")}
+							icon="trash"
+							onClick={onRemove}
+						/>
 					}
 				/>
 			</div>

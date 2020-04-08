@@ -8,7 +8,7 @@ import { CancelButton } from "../Common/CancelButton";
 import { Dispatch } from "../../actions";
 import { popModal } from "../../actions/modals";
 import { unlockRoom } from "../../actions/room";
-import { SECRET_FIELD_SIZE } from "../Modals/SecretField";
+import { SECRET_FIELD_SIZE, InputField } from "../Modals/ModalFields";
 
 // ------------------------------------------------------------------
 
@@ -47,21 +47,19 @@ export const UnlockRoomModal = () => {
 					<CancelButton onClick={onClose} />
 				</>
 			)}>
-			<div className="ModalField">
-				<label htmlFor="modal-secret">{t("rooms.key")}</label>
-				<input
-					id="modal-secret"
-					type="password"
-					autoComplete="password"
-					placeholder={t("rooms.key_placeholder")}
-					maxLength={36}
-					minLength={36}
-					required={true}
-					value={secret}
-					ref={secretRef}
-					onChange={e => setSecret(e.target.value)}
-				/>
-			</div>
+			<InputField
+				id="modal-secret"
+				label={t("rooms.key")}
+				type="password"
+				autoComplete="password"
+				placeholder={t("rooms.key_placeholder")}
+				maxLength={36}
+				minLength={36}
+				required={true}
+				value={secret}
+				ref={secretRef}
+				onChange={e => setSecret(e.target.value)}
+			/>
 		</FormModal>
 	);
 };

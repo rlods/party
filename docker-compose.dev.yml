@@ -4,7 +4,7 @@ services:
   app:
     build:
       args:
-        FIREBASE_APP_IDS: "test-rl-7ffe8"
+        DATABASE_ID: "test-rl-7ffe8"
         NODE_ENV: development
     command: npm run start
     tty: true

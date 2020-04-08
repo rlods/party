@@ -5,6 +5,8 @@ body {
 	line-height: 20px;
 	margin: 0;
 	padding: 0;
+	-webkit-tap-highlight-color: transparent;
+	user-select: none;
 }
 
 div,
@@ -36,5 +38,17 @@ a {
 
 	&:hover {
 		text-decoration: underline;
+	}
+}
+
+body {
+	transition: color 300ms ease-in-out, background-color 300ms ease-in-out;
+
+	&.dark {
+		color: rgb(0, 0, 0);
+	}
+
+	&.light {
+		color: rgb(255, 255, 255);
 	}
 }

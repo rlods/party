@@ -38,12 +38,13 @@ export const Room = () => {
 		};
 	}, [dispatch, room_id, secret]);
 
+	useEffect(() => {
+		document.body.className = fg;
+		document.body.style.backgroundColor = `rgb(${bg.r}, ${bg.g}, ${bg.b})`;
+	}, [bg, fg]);
+
 	return (
-		<div
-			className={classNames("Room", fg)}
-			style={{
-				backgroundColor: `rgb(${bg.r}, ${bg.g}, ${bg.b})`
-			}}>
+		<div className={classNames("Room")}>
 			<Head />
 			<Queue />
 			<Controls />

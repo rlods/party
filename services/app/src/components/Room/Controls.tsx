@@ -25,7 +25,6 @@ export const Controls = () => {
 	const playing = useSelector<RootState, boolean>(
 		state => state.player.playing
 	);
-
 	const onClear = useCallback(() => {
 		dispatch(
 			confirmModal(t("rooms.confirm_clear"), () => {

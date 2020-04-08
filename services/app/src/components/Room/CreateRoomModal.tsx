@@ -6,7 +6,11 @@ import { v4 } from "uuid";
 import { FormModal } from "../Modals/FormModal";
 import { IconButton } from "../Common/IconButton";
 import { CancelButton } from "../Common/CancelButton";
-import { SecretField, SECRET_FIELD_SIZE } from "../Modals/SecretField";
+import {
+	SecretField,
+	SECRET_FIELD_SIZE,
+	InputField
+} from "../Modals/ModalFields";
 import { Dispatch } from "../../actions";
 import { popModal } from "../../actions/modals";
 import { createRoom } from "../../actions/room";
@@ -67,20 +71,18 @@ export const CreateRoomModal = () => {
 					<CancelButton onClick={onClose} />
 				</>
 			)}>
-			<div className="ModalField">
-				<label htmlFor="modal-name">{t("rooms.name")}</label>
-				<input
-					id="modal-name"
-					type="text"
-					placeholder={t("rooms.name_placeholder")}
-					maxLength={100}
-					minLength={2}
-					required={true}
-					value={name}
-					ref={nameRef}
-					onChange={e => setName(e.target.value)}
-				/>
-			</div>
+			<InputField
+				id="modal-name"
+				label={t("rooms.name")}
+				type="text"
+				placeholder={t("rooms.name_placeholder")}
+				maxLength={100}
+				minLength={2}
+				required={true}
+				value={name}
+				ref={nameRef}
+				onChange={e => setName(e.target.value)}
+			/>
 			<SecretField
 				id="modal-secret"
 				label={t("rooms.key")}
