@@ -1,4 +1,4 @@
-import { AsyncAction, createAction, Dispatch } from ".";
+import { AsyncAction, Dispatch } from ".";
 import { setRoom, lockRoom } from "./room";
 import { pickColor } from "../utils/colorpicker";
 import { Player } from "../utils/player";
@@ -9,29 +9,12 @@ import { extractErrorMessage } from "../utils/messages";
 
 // ------------------------------------------------------------------
 
-export type PlayerAction =
-	| ReturnType<typeof resetPlayer>
-	| ReturnType<typeof setPlayer>;
-
-const resetPlayer = () => createAction("player/RESET");
-const setPlayer = (
-	values: Partial<{ playing: boolean; track_percent: number }>
-) => createAction("player/SET", values);
-
-// ------------------------------------------------------------------
-
 export const xxxPlayer = (): AsyncAction => async (
 	dispatch,
 	getState,
 	{ queuePlayer }
 ) => {
-	const {
-		player: { playing }
-	} = getState();
-	if (!playing) {
-		_installTimer(dispatch, getState, queuePlayer);
-		dispatch(setPlayer({ playing: true }));
-	}
+	_installTimer(dispatch, getState, queuePlayer);
 };
 
 export const startPlayer = (): AsyncAction => async (dispatch, getState) => {
@@ -51,7 +34,7 @@ export const startPlayer = (): AsyncAction => async (dispatch, getState) => {
 			}
 		}
 	} else {
-		dispatch(displayError("rooms.error.locked"));
+		dispatch(displayError("rooms.error.locked 1"));
 	}
 };
 
@@ -62,14 +45,8 @@ export const yyyPlayer = (): AsyncAction => async (
 	getState,
 	{ queuePlayer }
 ) => {
-	const {
-		player: { playing }
-	} = getState();
-	if (playing) {
-		_uninstallTimer();
-		await queuePlayer.stop();
-		dispatch(resetPlayer());
-	}
+	_uninstallTimer();
+	await queuePlayer.stop();
 };
 
 export const stopPlayer = (): AsyncAction => async (dispatch, getState) => {
@@ -89,7 +66,7 @@ export const stopPlayer = (): AsyncAction => async (dispatch, getState) => {
 			}
 		}
 	} else {
-		dispatch(displayError("rooms.error.locked"));
+		dispatch(displayError("rooms.error.locked 2"));
 	}
 };
 
@@ -190,7 +167,9 @@ const _installTimer = (
 		} else {
 			// Last track has been removed from queue by user
 			console.debug("No more tracks in queue...");
-			dispatch(stopPlayer());
+			dispatch(setRoom({ playing: false }));
+			await queuePlayer.stop();
+			PLAYER_TIMER = null;
 		}
 	}, 250);
 };

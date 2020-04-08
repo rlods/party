@@ -6,8 +6,8 @@ import { Track, Album, Playlist } from "../utils/medias";
 // ------------------------------------------------------------------
 
 export type State = {
-	fetching: boolean;
 	error: null | AxiosError;
+	fetching: boolean;
 	medias: {
 		// keys are MediaType
 		album: { [id: string]: Album };
@@ -17,8 +17,8 @@ export type State = {
 };
 
 const INITIAL_STATE: State = {
-	fetching: false,
 	error: null,
+	fetching: false,
 	medias: {
 		// keys are MediaType
 		album: {},

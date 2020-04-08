@@ -23,7 +23,7 @@ export const Controls = () => {
 	);
 	const locked = useSelector<RootState, boolean>(isRoomLocked);
 	const playing = useSelector<RootState, boolean>(
-		state => state.player.playing
+		state => state.room.playing
 	);
 	const onClear = useCallback(() => {
 		dispatch(

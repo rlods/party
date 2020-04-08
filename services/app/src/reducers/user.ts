@@ -24,11 +24,11 @@ export type State = UserData & {
 };
 
 const INITIAL_STATE: State = {
-	fetching: false,
-	error: null,
-	user: null,
 	access: { id: "", secret: "" },
-	info: null
+	error: null,
+	fetching: false,
+	info: null,
+	user: null
 };
 
 // ------------------------------------------------------------------

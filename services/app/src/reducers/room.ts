@@ -9,13 +9,13 @@ import { MediaAccess } from "../utils/medias";
 // ------------------------------------------------------------------
 
 export type RoomData = {
-	room: ReturnType<typeof FirebaseRoom> | null;
 	access: RoomAccess;
 	color: CombinedColor;
 	info: RoomInfo | null;
 	medias: MediaAccess[];
 	playing: boolean;
 	position: number;
+	room: ReturnType<typeof FirebaseRoom> | null;
 };
 
 export type State = RoomData & {
@@ -24,15 +24,15 @@ export type State = RoomData & {
 };
 
 const INITIAL_STATE: State = {
-	fetching: false,
-	error: null,
-	room: null,
 	access: { id: "", secret: "" },
 	color: { fg: "dark", bg: { r: 255, g: 255, b: 255 } },
+	error: null,
+	fetching: false,
 	info: null,
 	medias: [],
 	playing: false,
-	position: 0
+	position: 0,
+	room: null
 };
 
 // ------------------------------------------------------------------

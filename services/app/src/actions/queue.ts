@@ -14,13 +14,13 @@ export const clearQueue = (): AsyncAction => async (dispatch, getState) => {
 	if (room && !room.isLocked()) {
 		try {
 			console.debug("Clearing queue...");
-			await room.update({ queue: {}, queue_position: 0 });
+			await room.update({ playing: false, queue: {}, queue_position: 0 });
 		} catch (err) {
 			dispatch(displayError(extractErrorMessage(err)));
 			dispatch(lockRoom());
 		}
 	} else {
-		dispatch(displayError("rooms.error.locked"));
+		dispatch(displayError("rooms.error.locked 3"));
 	}
 };
 
@@ -52,7 +52,7 @@ export const appendInQueue = (
 			}
 		}
 	} else {
-		dispatch(displayError("rooms.error.locked"));
+		dispatch(displayError("rooms.error.locked 4"));
 	}
 };
 
@@ -66,22 +66,31 @@ export const removeFromQueue = (index: number): AsyncAction => async (
 	if (room && !room.isLocked()) {
 		if (index < queueMedias.length) {
 			try {
-				console.debug("Removing from queue...", { index });
-				const oldIndex = position % queueMedias.length;
-				const queue: RoomQueue = {};
-				const copy = [...queueMedias];
-				copy.splice(index, 1);
-				copy.forEach((mediaAccess, index) => {
-					queue[index] = mediaAccess;
-				});
-				if (index < oldIndex) {
-					await room.update({
-						queue,
-						queue_position: position - 1
+				if (queueMedias.length > 1) {
+					console.debug("Removing track from queue...", { index });
+					const oldIndex = position % queueMedias.length;
+					const queue: RoomQueue = {};
+					const copy = [...queueMedias];
+					copy.splice(index, 1);
+					copy.forEach((mediaAccess, index) => {
+						queue[index] = mediaAccess;
 					});
+					if (index < oldIndex) {
+						await room.update({
+							queue,
+							queue_position: position - 1
+						});
+					} else {
+						await room.update({
+							queue
+						});
+					}
 				} else {
+					console.debug("Removing last track from queue...");
 					await room.update({
-						queue
+						playing: false,
+						queue: {},
+						queue_position: 0
 					});
 				}
 			} catch (err) {
@@ -90,7 +99,7 @@ export const removeFromQueue = (index: number): AsyncAction => async (
 			}
 		}
 	} else {
-		dispatch(displayError("rooms.error.locked"));
+		dispatch(displayError("rooms.error.locked 5"));
 	}
 };
 
@@ -115,7 +124,7 @@ export const setQueuePosition = (newPosition: number): AsyncAction => async (
 			}
 		}
 	} else {
-		dispatch(displayError("rooms.error.locked"));
+		dispatch(displayError("rooms.error.locked 6"));
 	}
 };
 

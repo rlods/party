@@ -22,7 +22,7 @@ export const Queue = () => {
 	const loaded = useSelector<RootState, boolean>(isRoomLoaded);
 	const locked = useSelector<RootState, boolean>(isRoomLocked);
 	const playing = useSelector<RootState, boolean>(
-		state => state.player.playing
+		state => state.room.playing
 	);
 	const playingIndex = useSelector<RootState, number>(
 		state => state.room.position % state.room.medias.length

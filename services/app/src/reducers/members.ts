@@ -6,14 +6,14 @@ import { Member } from "../utils/members";
 // ------------------------------------------------------------------
 
 export type State = {
-	fetching: boolean;
 	error: null | AxiosError;
+	fetching: boolean;
 	items: Member[];
 };
 
 const INITIAL_STATE: State = {
-	fetching: false,
 	error: null,
+	fetching: false,
 	items: []
 };
 
