@@ -158,7 +158,30 @@ const ConvertTrack = (
 
 // ------------------------------------------------------------------
 
-export const DeezerApi = () => {
+export type DeezerApi = {
+	searchAlbums: (query: string) => Promise<Album[]>;
+
+	searchPlaylists: (query: string) => Promise<Playlist[]>;
+
+	searchTracks: (query: string) => Promise<Track[]>;
+
+	search: (query: string) => Promise<SearchResults>;
+
+	loadAlbums: (ids: string[]) => Promise<Album[]>;
+
+	loadPlaylists: (ids: string[]) => Promise<Playlist[]>;
+
+	loadContainers: (
+		type: ContainerType,
+		ids: string[]
+	) => Promise<Container[]>;
+
+	loadTracks: (ids: string[]) => Promise<Track[]>;
+};
+
+// ------------------------------------------------------------------
+
+const DeezerApiImpl = (): DeezerApi => {
 	const API_BASE = "https://api.deezer.com";
 
 	const _asyncJsonp = <T>(url: string): Promise<T> =>
@@ -291,11 +314,13 @@ export const DeezerApi = () => {
 		searchAlbums,
 		searchPlaylists,
 		searchTracks,
+		loadAlbums,
 		loadContainers,
+		loadPlaylists,
 		loadTracks
 	};
 };
 
 // ------------------------------------------------------------------
 
-export const DEFAULT_API = DeezerApi();
+export const DEFAULT_API = DeezerApiImpl();

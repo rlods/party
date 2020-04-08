@@ -67,7 +67,7 @@ let PLAYER_TIMER1: NodeJS.Timeout | null = null;
 let PLAYER_TIMER2: NodeJS.Timeout | null = null;
 
 const _computeNextPosition = (
-	queuePlayer: ReturnType<typeof Player>,
+	queuePlayer: Player,
 	queueTrackPosition: number,
 	medias: MediaAccess[]
 ) => {
@@ -97,7 +97,7 @@ const _computeNextPosition = (
 const _installTimer1 = (
 	dispatch: Dispatch,
 	getState: () => RootState,
-	queuePlayer: ReturnType<typeof Player>
+	queuePlayer: Player
 ) => {
 	// Don't use setInterval because a step could be triggered before previous one terminated
 	PLAYER_TIMER1 = setTimeout(async () => {
@@ -153,7 +153,7 @@ const _installTimer1 = (
 const _installTimer2 = (
 	dispatch: Dispatch,
 	getState: () => RootState,
-	queuePlayer: ReturnType<typeof Player>
+	queuePlayer: Player
 ) => {
 	// Don't use setInterval because a step could be triggered before previous one terminated
 	PLAYER_TIMER2 = setTimeout(() => {

@@ -1,9 +1,9 @@
 import { AnyAction } from "redux";
 import { ThunkAction, ThunkDispatch } from "redux-thunk";
 //
-import { RootState } from "../reducers";
-import { Player } from "../utils/player";
 import { DeezerApi } from "../utils/deezer";
+import { Player } from "../utils/player";
+import { RootState } from "../reducers";
 
 // ------------------------------------------------------------------
 
@@ -17,9 +17,9 @@ export type ActionWithPayload<T extends string, P> = {
 };
 
 export type Extended = {
-	deezer: ReturnType<typeof DeezerApi>;
-	previewPlayer: ReturnType<typeof Player>;
-	queuePlayer: ReturnType<typeof Player>;
+	deezer: DeezerApi;
+	previewPlayer: Player;
+	queuePlayer: Player;
 };
 
 export type Dispatch = ThunkDispatch<RootState, Extended, AnyAction>;

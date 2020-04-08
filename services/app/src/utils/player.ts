@@ -95,12 +95,23 @@ const loadAudioBufferWithCache = async (
 
 // ------------------------------------------------------------------
 
-export type PlayerCallbacks = {
-	onStart: () => void;
-	onStop: () => void;
+export type Player = {
+	isPlaying: () => boolean;
+	getPlayingTrackID: () => string;
+	getPlayingTrackPosition: () => number;
+	getPlayingTrackPercent: () => number;
+	play: (
+		trackPosition: number,
+		trackId: string,
+		trackUrl: string,
+		offset: number
+	) => Promise<void>;
+	stop: () => Promise<void>;
 };
 
-export const Player = (chainPlay: boolean) => {
+// ------------------------------------------------------------------
+
+export const PlayerImpl = (chainPlay: boolean): Player => {
 	let analyserNode: AnalyserNode | null = null;
 	let gainNode: GainNode | null = null;
 	let _node: AudioNode | null = null;
@@ -199,8 +210,6 @@ export const Player = (chainPlay: boolean) => {
 		});
 
 	return {
-		analyserNode,
-		gainNode,
 		getPlayingTrackID,
 		getPlayingTrackPercent,
 		getPlayingTrackPosition,
@@ -209,3 +218,9 @@ export const Player = (chainPlay: boolean) => {
 		stop
 	};
 };
+
+// ------------------------------------------------------------------
+
+export const QUEUE_PLAYER = PlayerImpl(true);
+
+export const PREVIEW_PLAYER = PlayerImpl(false);
