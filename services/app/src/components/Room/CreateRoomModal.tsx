@@ -34,7 +34,7 @@ export const CreateRoomModal = () => {
 		if (nameRef.current) {
 			nameRef.current.focus();
 		}
-	}, [t]);
+	}, [t, nameRef]);
 
 	const onClose = useCallback(() => dispatch(popModal()), [dispatch]);
 

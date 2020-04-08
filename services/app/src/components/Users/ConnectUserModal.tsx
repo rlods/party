@@ -24,7 +24,7 @@ export const ConnectUserModal = () => {
 		if (idRef.current) {
 			idRef.current.focus();
 		}
-	});
+	}, [idRef]);
 
 	const onClose = useCallback(() => dispatch(popModal()), [dispatch]);
 

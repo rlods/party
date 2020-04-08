@@ -26,9 +26,8 @@ export const startPlayer = (): AsyncAction => async (
 	getState,
 	{ queuePlayer }
 ) => {
-	if (!PLAYER_TIMER1 && !PLAYER_TIMER2) {
-		_installTimer1(dispatch, getState, queuePlayer);
-		_installTimer2(dispatch, getState, queuePlayer);
+	if (!PLAYER_TIMER) {
+		_installTimer(dispatch, getState, queuePlayer);
 		dispatch(setPlayer({ playing: true }));
 	}
 };
@@ -40,11 +39,9 @@ export const stopPlayer = (): AsyncAction => async (
 	_,
 	{ queuePlayer }
 ) => {
-	if (PLAYER_TIMER1 && PLAYER_TIMER2) {
-		clearTimeout(PLAYER_TIMER1);
-		PLAYER_TIMER1 = null;
-		clearTimeout(PLAYER_TIMER2);
-		PLAYER_TIMER2 = null;
+	if (PLAYER_TIMER) {
+		clearTimeout(PLAYER_TIMER);
+		PLAYER_TIMER = null;
 		await queuePlayer.stop();
 		dispatch(resetPlayer());
 	}
@@ -63,8 +60,7 @@ export const stopPreview = (): AsyncAction => async (
 
 // ------------------------------------------------------------------
 
-let PLAYER_TIMER1: NodeJS.Timeout | null = null;
-let PLAYER_TIMER2: NodeJS.Timeout | null = null;
+let PLAYER_TIMER: NodeJS.Timeout | null = null;
 
 const _computeNextPosition = (
 	queuePlayer: Player,
@@ -94,13 +90,13 @@ const _computeNextPosition = (
 	return nextPosition;
 };
 
-const _installTimer1 = (
+const _installTimer = (
 	dispatch: Dispatch,
 	getState: () => RootState,
 	queuePlayer: Player
 ) => {
 	// Don't use setInterval because a step could be triggered before previous one terminated
-	PLAYER_TIMER1 = setTimeout(async () => {
+	PLAYER_TIMER = setTimeout(async () => {
 		const {
 			room: { medias: queueMedias, position },
 			medias: {
@@ -141,35 +137,11 @@ const _installTimer1 = (
 			}
 
 			// Reschedule time
-			_installTimer1(dispatch, getState, queuePlayer);
+			_installTimer(dispatch, getState, queuePlayer);
 		} else {
 			// Last track has been removed from queue by user
 			console.debug("No more tracks in queue...");
 			dispatch(stopPlayer());
 		}
 	}, 250);
-};
-
-const _installTimer2 = (
-	dispatch: Dispatch,
-	getState: () => RootState,
-	queuePlayer: Player
-) => {
-	// Don't use setInterval because a step could be triggered before previous one terminated
-	PLAYER_TIMER2 = setTimeout(() => {
-		const {
-			room: { medias }
-		} = getState();
-		if (medias.length > 0) {
-			// Refresh player track percent
-			dispatch(
-				setPlayer({
-					track_percent: queuePlayer.getPlayingTrackPercent()
-				})
-			);
-
-			// Reschedule time
-			_installTimer2(dispatch, getState, queuePlayer);
-		}
-	}, 250); // Must do very few operation because called very often (if we put less it creates blink on mobile when playing & scrolling)
 };

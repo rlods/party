@@ -22,7 +22,7 @@ export const UnlockRoomModal = () => {
 		if (secretRef.current) {
 			secretRef.current.focus();
 		}
-	}, []);
+	}, [secretRef]);
 
 	const onClose = useCallback(() => dispatch(popModal()), [dispatch]);
 

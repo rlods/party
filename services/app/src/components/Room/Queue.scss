@@ -1,17 +1,13 @@
 .Queue {
 	padding: 0.5rem 0.75rem;
 	height: 100%;
-
-	/*
-	width: 50%;
-	min-width: 500px;
-	max-width: 600px;
-	*/
-	align-self: stretch;
-
 	overflow-x: hidden;
 	overflow-y: scroll;
 	-webkit-overflow-scrolling: touch; /* https://css-tricks.com/snippets/css/momentum-scrolling-on-ios-overflow-elements/ */
+
+	width: 50%;
+	min-width: 300px;
+	max-width: 600px;
 
 	@media screen and (max-width: 500px) {
 		& {

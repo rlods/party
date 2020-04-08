@@ -1,45 +1,65 @@
 .Head {
 	display: flex;
-	flex-direction: row;
+	flex-direction: column;
 	flex-shrink: 0;
-	align-self: stretch;
 	align-items: center;
-	justify-content: space-between;
-	padding: 0.75rem;
+	align-self: stretch;
 	border-bottom-width: 1px;
 	border-bottom-style: solid;
 	border-color: rgb(0, 0, 0); /* color will be overriden in Room.scss */
 	transition: border-color 300ms ease-in-out;
 
-	.RoomLink {
-	}
-
-	.RoomMeta {
+	.HeadInner {
 		display: flex;
 		flex-direction: row;
-		flex-grow: 1;
-		justify-content: center;
 		align-items: center;
-		padding: 0 0.5rem;
+		justify-content: space-between;
+		padding: 0.75rem;
 
-		line-height: 14px;
-		font-size: 12px;
-		font-weight: bold;
-		position: relative;
-		overflow: hidden;
-		white-space: nowrap;
+		width: 50%;
+		min-width: 300px;
+		max-width: 600px;
 
-		.RoomName {
+		@media screen and (max-width: 500px) {
+			& {
+				width: 100%;
+				min-width: auto;
+				max-width: auto;
+			}
+		}
+
+		.RoomLink {
+			flex-shrink: 0;
+		}
+
+		.RoomMeta {
+			display: flex;
+			flex-direction: row;
+			flex-grow: 1;
+			justify-content: center;
+			align-items: center;
+			padding: 0 0.5rem;
+
+			line-height: 14px;
+			font-size: 12px;
+			font-weight: bold;
+			position: relative;
 			overflow: hidden;
-			text-overflow: ellipsis;
+			white-space: nowrap;
+
+			.RoomName {
+				overflow: hidden;
+				text-overflow: ellipsis;
+			}
+
+			.RoomSize {
+				opacity: 0.6;
+			}
 		}
 
-		.RoomSize {
-			opacity: 0.6;
+		.RoomExit {
+			flex-shrink: 0;
 		}
-	}
-
-	.RoomExit {
 	}
 }
 

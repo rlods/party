@@ -1,15 +1,22 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
 //
-import { RootState } from "../../reducers";
+import { QUEUE_PLAYER } from "../../utils/player";
 import "./Progress.scss";
 
 // ------------------------------------------------------------------
 
 export const Progress = () => {
-	const value = useSelector<RootState, number>(
-		state => state.player.track_percent
-	);
+	const [value, setValue] = useState(0);
+
+	useEffect(() => {
+		const timer = setInterval(() => {
+			setValue(QUEUE_PLAYER.getPlayingTrackPercent());
+		}, 250);
+		return () => {
+			clearInterval(timer);
+		};
+	}, [setValue]);
+
 	return (
 		<div className="Progress">
 			<progress max={100} value={value * 100} />

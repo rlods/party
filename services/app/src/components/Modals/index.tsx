@@ -70,13 +70,13 @@ export const Modals = () => {
 		return () => {
 			document.removeEventListener("keydown", keyDown);
 		};
-	});
+	}, [onPopModal]);
 
 	useEffect(() => {
 		// Hide current modal before showing new one (if there is a new one)
 		setCurrPrereq(void 0);
 		setPrevPrereq(prereq);
-	}, [prereq]);
+	}, [prereq, setCurrPrereq, setPrevPrereq]);
 
 	useEffect(() => {
 		if (prereq) {
@@ -84,7 +84,7 @@ export const Modals = () => {
 				setCurrPrereq(prereq);
 			}, TRANSITION_TIMEOUT);
 		}
-	}, [prereq, prevPrereq]);
+	}, [prereq, setCurrPrereq]);
 
 	const modal = getModal(currPrereq || prevPrereq);
 	return (

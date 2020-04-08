@@ -39,32 +39,34 @@ export const Head = () => {
 
 	return (
 		<div className="Head">
-			<div className="RoomLink">
-				<IconButton
-					icon="link"
-					onClick={onCopy}
-					size="M"
-					title={t("rooms.copy_link")}
-				/>
-			</div>
-			<div className="RoomMeta">
-				{room ? (
-					<>
-						<div className="RoomName">{room.name}</div>
-						<div className="RoomSize">
-							&nbsp;--&nbsp;
-							{t("rooms.track_count", { count: tracksCount })}
-						</div>
-					</>
-				) : null}
-			</div>
-			<div className="RoomExit">
-				<IconButton
-					onClick={onExit}
-					icon="sign-out"
-					size="M"
-					title={t("rooms.exit")}
-				/>
+			<div className="HeadInner">
+				<div className="RoomLink">
+					<IconButton
+						icon="link"
+						onClick={onCopy}
+						size="M"
+						title={t("rooms.copy_link")}
+					/>
+				</div>
+				<div className="RoomMeta">
+					{room ? (
+						<>
+							<div className="RoomName">{room.name}</div>
+							<div className="RoomSize">
+								&nbsp;--&nbsp;
+								{t("rooms.track_count", { count: tracksCount })}
+							</div>
+						</>
+					) : null}
+				</div>
+				<div className="RoomExit">
+					<IconButton
+						onClick={onExit}
+						icon="sign-out"
+						size="M"
+						title={t("rooms.exit")}
+					/>
+				</div>
 			</div>
 		</div>
 	);
