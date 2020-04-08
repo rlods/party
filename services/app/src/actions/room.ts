@@ -10,6 +10,7 @@ import { MediaAccess } from "../utils/medias";
 import history from "../utils/history";
 import { extractErrorMessage } from "../utils/messages";
 import { RoomData } from "../reducers/room";
+import { xxxPlayer, yyyPlayer } from "./player";
 
 // ------------------------------------------------------------------
 
@@ -68,6 +69,9 @@ export const enterRoom = (id: string, secret: string): AsyncAction => async (
 			);
 			FIREBASE_CB = newRoom.subscribeInfo(
 				(snapshot: firebase.database.DataSnapshot) => {
+					const {
+						room: { playing: oldPlaying }
+					} = getState();
 					const newInfo = snapshot.val() as RoomInfo;
 					console.debug(
 						"[Firebase] Received room update...",
@@ -90,6 +94,13 @@ export const enterRoom = (id: string, secret: string): AsyncAction => async (
 								false
 							)
 						);
+					}
+					if (oldPlaying !== newInfo.playing) {
+						if (newInfo.playing) {
+							dispatch(xxxPlayer());
+						} else {
+							dispatch(yyyPlayer());
+						}
 					}
 					dispatch(
 						setRoom({
@@ -127,10 +138,10 @@ export const lockRoom = (): AsyncAction => async (dispatch, getState) => {
 	const {
 		room: {
 			room,
-			access: { id }
+			access: { id, secret: oldSecret }
 		}
 	} = getState();
-	if (room && room.id === id) {
+	if (room && room.id === id && !!oldSecret) {
 		console.debug("Locking room...", { id });
 		room.setSecret("");
 		// TODO : not history.replace(`/room/${id}`); as it would trigger a page refresh
@@ -145,10 +156,10 @@ export const unlockRoom = (secret: string): AsyncAction => async (
 	const {
 		room: {
 			room,
-			access: { id }
+			access: { id, secret: oldSecret }
 		}
 	} = getState();
-	if (room && room.id === id) {
+	if (room && room.id === id && !oldSecret) {
 		console.debug("Unlocking room...", { id, secret });
 		room.setSecret(secret);
 		// TODO : not history.replace(`/room/${id}?secret=${secret}`); as it would trigger a page refresh

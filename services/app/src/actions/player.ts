@@ -1,7 +1,6 @@
 import { AsyncAction, createAction, Dispatch } from ".";
-import { setRoom } from "./room";
+import { setRoom, lockRoom } from "./room";
 import { pickColor } from "../utils/colorpicker";
-import { setQueuePosition } from "./queue";
 import { Player } from "../utils/player";
 import { RootState } from "../reducers";
 import { MediaAccess } from "../utils/medias";
@@ -21,18 +20,35 @@ const setPlayer = (
 
 // ------------------------------------------------------------------
 
-export const startPlayer = (): AsyncAction => async (
+export const xxxPlayer = (): AsyncAction => async (
 	dispatch,
 	getState,
 	{ queuePlayer }
 ) => {
 	const {
-		room: { room }
+		player: { playing }
+	} = getState();
+	if (!playing) {
+		_installTimer(dispatch, getState, queuePlayer);
+		dispatch(setPlayer({ playing: true }));
+	}
+};
+
+export const startPlayer = (): AsyncAction => async (dispatch, getState) => {
+	const {
+		room: { room, playing }
 	} = getState();
 	if (room && !room.isLocked()) {
-		if (!PLAYER_TIMER) {
-			_installTimer(dispatch, getState, queuePlayer);
-			dispatch(setPlayer({ playing: true }));
+		if (!playing) {
+			try {
+				console.debug("Starting player...");
+				await room.update({
+					playing: true
+				});
+			} catch (err) {
+				dispatch(displayError(extractErrorMessage(err)));
+				dispatch(lockRoom());
+			}
 		}
 	} else {
 		dispatch(displayError("rooms.error.locked"));
@@ -41,20 +57,36 @@ export const startPlayer = (): AsyncAction => async (
 
 // ------------------------------------------------------------------
 
-export const stopPlayer = (): AsyncAction => async (
+export const yyyPlayer = (): AsyncAction => async (
 	dispatch,
 	getState,
 	{ queuePlayer }
 ) => {
 	const {
-		room: { room }
+		player: { playing }
+	} = getState();
+	if (playing) {
+		_uninstallTimer();
+		await queuePlayer.stop();
+		dispatch(resetPlayer());
+	}
+};
+
+export const stopPlayer = (): AsyncAction => async (dispatch, getState) => {
+	const {
+		room: { playing, room }
 	} = getState();
 	if (room && !room.isLocked()) {
-		if (PLAYER_TIMER) {
-			clearTimeout(PLAYER_TIMER);
-			PLAYER_TIMER = null;
-			await queuePlayer.stop();
-			dispatch(resetPlayer());
+		if (playing) {
+			try {
+				console.debug("Stopping player...");
+				await room.update({
+					playing: false
+				});
+			} catch (err) {
+				dispatch(displayError(extractErrorMessage(err)));
+				dispatch(lockRoom());
+			}
 		}
 	} else {
 		dispatch(displayError("rooms.error.locked"));
@@ -138,7 +170,6 @@ const _installTimer = (
 				});
 
 				try {
-					dispatch(setQueuePosition(nextTrackPosition));
 					const [color] = await Promise.all([
 						pickColor(nextTrack.album.cover_small),
 						queuePlayer.play(
@@ -148,7 +179,7 @@ const _installTimer = (
 							0
 						)
 					]);
-					dispatch(setRoom({ color }));
+					dispatch(setRoom({ color, position: nextTrackPosition }));
 				} catch (err) {
 					dispatch(displayError(extractErrorMessage(err)));
 				}
@@ -162,4 +193,11 @@ const _installTimer = (
 			dispatch(stopPlayer());
 		}
 	}, 250);
+};
+
+const _uninstallTimer = () => {
+	if (PLAYER_TIMER) {
+		clearTimeout(PLAYER_TIMER);
+		PLAYER_TIMER = null;
+	}
 };

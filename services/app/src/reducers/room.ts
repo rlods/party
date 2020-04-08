@@ -48,25 +48,23 @@ export const roomReducer: Reducer<State, RoomAction> = (
 				fetching: true,
 				error: null
 			};
-		case "room/FETCHED": {
+		case "room/FETCHED":
 			return {
 				...state,
 				fetching: false,
 				error: null
 			};
-		}
 		case "room/ERROR":
 			return {
 				...state,
 				fetching: false,
 				error: action.payload
 			};
-		case "room/SET": {
+		case "room/SET":
 			return {
 				...state,
 				...action.payload
 			};
-		}
 		case "room/RESET":
 			return INITIAL_STATE;
 		default:
