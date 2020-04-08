@@ -35,7 +35,7 @@ export const IconButton = React.memo(
 		<button
 			type={type}
 			aria-label={title}
-			className={classNames("IconButton", className, kind, size, {
+			className={classNames("IconButton", className, kind, {
 				clickable: !disabled && (!!onClick || type === "submit")
 			})}
 			onClick={disabled ? void 0 : onClick}

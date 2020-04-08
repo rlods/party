@@ -25,7 +25,7 @@ export const IconLink = React.memo(
 	}) => {
 		return (
 			<a
-				className={classNames("IconLink", className, size)}
+				className={classNames("IconLink", className)}
 				href={url}
 				target={blank ? "_blank" : void 0}
 				rel={blank ? "noopener noreferrer" : void 0}>
