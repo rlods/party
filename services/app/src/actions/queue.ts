@@ -34,7 +34,7 @@ export const appendInQueue = (
 	if (room && !room.isLocked()) {
 		if (trackIds.length > 0) {
 			try {
-				console.debug("Appending queue...", { trackIds });
+				console.debug("Appending queue...", { provider, trackIds });
 				const queue: RoomQueue = {};
 				[...queueMedias.map(media => media.id), ...trackIds].forEach(
 					(id, index) => {

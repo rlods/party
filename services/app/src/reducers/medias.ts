@@ -9,10 +9,13 @@ export type State = {
 	error: null | AxiosError;
 	fetching: boolean;
 	medias: {
-		// keys are MediaType
-		album: { [id: string]: Album };
-		playlist: { [id: string]: Playlist };
-		track: { [id: string]: Track };
+		// keys are ProvideType
+		deezer: {
+			// keys are MediaType
+			album: { [id: string]: Album };
+			playlist: { [id: string]: Playlist };
+			track: { [id: string]: Track };
+		};
 	};
 };
 
@@ -20,10 +23,13 @@ const INITIAL_STATE: State = {
 	error: null,
 	fetching: false,
 	medias: {
-		// keys are MediaType
-		album: {},
-		playlist: {},
-		track: {}
+		// keys are ProvideType
+		deezer: {
+			// keys are MediaType
+			album: {},
+			playlist: {},
+			track: {}
+		}
 	}
 };
 
@@ -57,13 +63,19 @@ export const mediasReducer: Reducer<State, MediasAction> = (
 			const copy = {
 				...state,
 				medias: {
-					album: { ...state.medias.album },
-					playlist: { ...state.medias.playlist },
-					track: { ...state.medias.track }
+					// keys are ProvideType
+					deezer: {
+						// keys are MediaType
+						album: { ...state.medias.deezer.album },
+						playlist: { ...state.medias.deezer.playlist },
+						track: { ...state.medias.deezer.track }
+					}
 				}
 			};
-			for (const media of action.payload) {
-				copy.medias[media.type][media.id] = media;
+			for (const media of action.payload.medias) {
+				copy.medias[action.payload.provider][media.type][
+					media.id
+				] = media;
 			}
 			return copy;
 		}

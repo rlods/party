@@ -12,7 +12,8 @@ export const extractMedias = (
 		medias: { medias }
 	} = state;
 	for (const mediaAccess of mediaAccesses) {
-		const media = medias[mediaAccess.type][mediaAccess.id];
+		const media =
+			medias[mediaAccess.provider][mediaAccess.type][mediaAccess.id];
 		if (!!media) {
 			res.push(media);
 		} else {

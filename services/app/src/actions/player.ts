@@ -126,9 +126,7 @@ const _installTimer = (
 	PLAYER_TIMER = setTimeout(async () => {
 		const {
 			room: { medias: queueMedias, position },
-			medias: {
-				medias: { track: tracks }
-			}
+			medias: { medias }
 		} = getState();
 		if (queueMedias.length > 0) {
 			// Detect and apply change to queue and player
@@ -139,26 +137,34 @@ const _installTimer = (
 			);
 			if (nextTrackPosition >= 0) {
 				const nextIndex = nextTrackPosition % queueMedias.length;
-				const nextTrack = tracks[queueMedias[nextIndex].id];
+				const nextAccess = queueMedias[nextIndex];
+				const nextTrack =
+					medias[nextAccess.provider][nextAccess.type][nextAccess.id];
 				console.debug("Detected play change...", {
 					nextIndex,
 					nextTrack,
 					nextTrackPosition
 				});
 
-				try {
-					const [color] = await Promise.all([
-						pickColor(nextTrack.album.cover_small),
-						queuePlayer.play(
-							nextTrackPosition,
-							nextTrack.id,
-							nextTrack.preview,
-							0
-						)
-					]);
-					dispatch(setRoom({ color, position: nextTrackPosition }));
-				} catch (err) {
-					dispatch(displayError(extractErrorMessage(err)));
+				if (nextTrack.type !== "track") {
+					console.warn("Found a non track media here, weird...");
+				} else {
+					try {
+						const [color] = await Promise.all([
+							pickColor(nextTrack.album.cover_small),
+							queuePlayer.play(
+								nextTrackPosition,
+								nextTrack.id,
+								nextTrack.preview,
+								0
+							)
+						]);
+						dispatch(
+							setRoom({ color, position: nextTrackPosition })
+						);
+					} catch (err) {
+						dispatch(displayError(extractErrorMessage(err)));
+					}
 				}
 			}
 

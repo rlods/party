@@ -26,7 +26,8 @@ const fetching = () => createAction("medias/FETCHING");
 const success = () => createAction("medias/FETCHED");
 const error = (error: AxiosError) => createAction("medias/ERROR", error);
 const reset = () => createAction("medias/RESET");
-const set = (medias: Media[]) => createAction("medias/SET", medias);
+const set = (provider: ProviderType, medias: Media[]) =>
+	createAction("medias/SET", { medias, provider });
 
 // ------------------------------------------------------------------
 
@@ -44,7 +45,9 @@ export const loadMedias = (
 		try {
 			if (mediaType === "track") {
 				// TRACK
-				const { track: oldTracks } = medias;
+				const {
+					[provider]: { track: oldTracks }
+				} = medias;
 				const newTrackIds: string[] = mediaIds
 					.filter(trackId => !oldTracks[trackId])
 					.filter(onlyUnique);
@@ -54,7 +57,7 @@ export const loadMedias = (
 						mediaIds: newTrackIds
 					});
 					newTracks = await deezer.loadTracks(newTrackIds);
-					dispatch(set(newTracks));
+					dispatch(set(provider, newTracks));
 				}
 				if (enqueue) {
 					console.debug("Enqueuing tracks...", { mediaIds });
@@ -79,7 +82,9 @@ export const loadMedias = (
 				}
 			} else {
 				// CONTAINERS
-				const { [mediaType]: oldContainers } = medias;
+				const {
+					[provider]: { [mediaType]: oldContainers }
+				} = medias;
 				const newContainerIds: string[] = mediaIds
 					.filter(containerId => !oldContainers[containerId])
 					.filter(onlyUnique);
@@ -98,7 +103,7 @@ export const loadMedias = (
 						newContainersAndTracks.push(...container.tracks!);
 					}
 
-					dispatch(set(newContainersAndTracks));
+					dispatch(set(provider, newContainersAndTracks));
 				}
 
 				if (enqueue) {

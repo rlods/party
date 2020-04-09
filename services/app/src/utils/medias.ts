@@ -1,9 +1,3 @@
-export type MediaAccess = {
-	id: string;
-	provider: ProviderType;
-	type: MediaType;
-};
-
 export type ContainerType = "album" | "playlist";
 
 export type MediaType = ContainerType | "track";
@@ -17,6 +11,30 @@ export type MediaTypeDefinition = {
 export type ProviderType = "deezer";
 
 export type TrackType = "track";
+
+// ------------------------------------------------------------------
+
+export type AlbumAccess = {
+	id: string;
+	provider: ProviderType;
+	type: "album";
+};
+
+export type PlaylistAccess = {
+	id: string;
+	provider: ProviderType;
+	type: "playlist";
+};
+
+export type TrackAccess = {
+	id: string;
+	provider: ProviderType;
+	type: "track";
+};
+
+export type ContainerAccess = AlbumAccess | PlaylistAccess;
+
+export type MediaAccess = ContainerAccess | TrackAccess;
 
 // ------------------------------------------------------------------
 
