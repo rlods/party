@@ -23,6 +23,11 @@ export const Splash = () => {
 		[dispatch]
 	);
 
+	const onJoinRoom = useCallback(
+		() => dispatch(openModal({ type: "JoinRoom", props: null })),
+		[dispatch]
+	);
+
 	const onConnectUser = useCallback(
 		() => dispatch(openModal({ type: "CreateUser", props: null })),
 		[dispatch]
@@ -52,19 +57,33 @@ export const Splash = () => {
 						/>
 					</a>
 				</div>
+				<div className="Description">
+					<span>{t("splash.description")}</span>
+				</div>
 			</div>
 			<div className="Middle">
 				<div className="Menu">
 					{loggedIn ? (
-						<div className="MenuItem">
-							<IconButton
-								displayTitle={true}
-								icon="plus"
-								onClick={onCreateRoom}
-								size="L"
-								title={t("rooms.create")}
-							/>
-						</div>
+						<>
+							<div className="MenuItem">
+								<IconButton
+									displayTitle={true}
+									icon="plus"
+									onClick={onCreateRoom}
+									size="L"
+									title={t("rooms.create")}
+								/>
+							</div>
+							<div className="MenuItem">
+								<IconButton
+									displayTitle={true}
+									icon="sign-in"
+									onClick={onJoinRoom}
+									size="L"
+									title={t("rooms.join")}
+								/>
+							</div>
+						</>
 					) : (
 						<>
 							<div className="MenuItem">

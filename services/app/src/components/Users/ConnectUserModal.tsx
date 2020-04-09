@@ -55,6 +55,7 @@ export const ConnectUserModal = () => {
 					<IconButton
 						disabled={
 							id.trim().length === 0 ||
+							id.length !== 36 ||
 							secret.length !== SECRET_FIELD_SIZE
 						}
 						title={t("users.connect")}
@@ -73,7 +74,7 @@ export const ConnectUserModal = () => {
 			)}>
 			<InputField
 				id="modal-id"
-				label={t("users.user_id")}
+				label={t("users.id")}
 				type="text"
 				placeholder={t("users.id_placeholder")}
 				maxLength={36}

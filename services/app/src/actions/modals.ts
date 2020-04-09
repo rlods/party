@@ -19,6 +19,7 @@ export type ModalPrereq =
 	| ModalPrereqT<"ConnectUser", null>
 	| ModalPrereqT<"CreateRoom", null>
 	| ModalPrereqT<"CreateUser", null>
+	| ModalPrereqT<"JoinRoom", null>
 	| ModalPrereqT<"Search", null>
 	| ModalPrereqT<"UnlockRoom", null>;
 

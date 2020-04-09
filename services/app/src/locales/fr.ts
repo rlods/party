@@ -1,7 +1,9 @@
 export default {
 	splash: {
 		CGU: "CGU",
-		powered_with: "boosté avec"
+		powered_with: "boosté avec",
+		description:
+			"Party est une expérimentation d'écoute synchronisée de musiques avec vos amis en ligne."
 	},
 	users: {
 		errors: {
@@ -13,16 +15,16 @@ export default {
 		connection: "Connexion",
 		create: "Créer un utilisateur",
 		disconnect: "Se déconnecter",
-		user_creation: "Création d'un utilisateur",
+		id: "Identifiant",
 		id_is_invalid: "L'identifiant est invalide",
 		id_placeholder: "Identifiant...",
-		user_id: "Identifiant",
 		name_is_invalid: "Le nom est invalide",
 		name_placeholder: "Nom...",
 		name: "Nom",
 		secret_is_invalid: "Le secret est invalide",
 		secret_placeholder: "Secret...",
-		secret: "Secret"
+		secret: "Secret",
+		user_creation: "Création d'un utilisateur"
 	},
 	rooms: {
 		errors: {
@@ -39,8 +41,11 @@ export default {
 		empty: "Cette salle est vide, vous devriez ajouter quelques pistes...",
 		empty_for_now: "Cette salle est pour le moment vide...",
 		exit: "Quitter la salle",
+		id: "Identifiant",
+		id_placeholder: "Identifiant...",
 		key_placeholder: "Clef...",
 		key: "Clef",
+		join: "Rejoindre une salle",
 		loading: "Chargement...",
 		link_copied_to_clipboard:
 			"Le lien de la salle a été copié dans le presse-papier",
@@ -50,6 +55,7 @@ export default {
 		name: "Nom",
 		room: "Salle",
 		room_creation: "Création d'une salle",
+		room_join: "Rejoindre une salle",
 		room_unlocking: "Déverrouillage de la salle",
 		secret_is_invalid: "Le secret is invalide",
 		unlock: "Déverrouiller",

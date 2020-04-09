@@ -1,7 +1,9 @@
 export default {
 	splash: {
 		CGU: "CGU",
-		powered_with: "Powered with"
+		powered_with: "Powered with",
+		description:
+			"Party is an experimentation to synchronize music listening with your online friends."
 	},
 	users: {
 		errors: {
@@ -13,16 +15,16 @@ export default {
 		connection: "Connection",
 		create: "Create a user",
 		disconnect: "Disconnect",
-		user_creation: "User Registration",
+		id: "User ID",
 		id_is_invalid: "ID is invalid",
 		id_placeholder: "User ID...",
-		user_id: "User ID",
 		name_is_invalid: "Name is invalid",
 		name_placeholder: "User Name...",
 		name: "User Name",
 		secret_is_invalid: "Secret is invalid",
 		secret_placeholder: "User Secret...",
-		secret: "User Secret"
+		secret: "User Secret",
+		user_creation: "User Registration"
 	},
 	rooms: {
 		errors: {
@@ -38,8 +40,11 @@ export default {
 		empty: "It's empty here, you should add some tracks...",
 		empty_for_now: "It's empty here, the owner has to fill it..",
 		exit: "Exit Room",
+		id: "Room ID",
+		id_placeholder: "Room ID...",
 		key_placeholder: "Room Key...",
 		key: "Room Key",
+		join: "Join a Room",
 		link_copied_to_clipboard: "Room link has been copied to clipboard",
 		loading: "Loading...",
 		locked: "Locked (click to unlock)",
@@ -47,6 +52,7 @@ export default {
 		name_placeholder: "Room Name...",
 		name: "Room Name",
 		room_creation: "Room Creation",
+		room_join: "Room Access",
 		room_unlocking: "Room Unlocking",
 		room: "Room",
 		secret_is_invalid: "Secret is invalid",
