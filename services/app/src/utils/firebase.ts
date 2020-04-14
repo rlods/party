@@ -91,12 +91,12 @@ export const FirebaseRoom = ({
 			});
 		});
 
-	const subscribeInfo = (cb: FirebaseCB) => {
+	const subscribe = (cb: FirebaseCB) => {
 		console.debug("[Firebase] Subscribing room...");
-		_info.on("value", cb);
+		return _info.on("value", cb);
 	};
 
-	const unsubscribeInfo = (cb: FirebaseCB) => {
+	const unsubscribe = (cb: FirebaseCB) => {
 		console.debug("[Firebase] Unsubscribing room...");
 		_info.off("value", cb);
 	};
@@ -154,9 +154,9 @@ export const FirebaseRoom = ({
 		isLocked,
 		setSecret,
 		wait,
-		subscribeInfo,
+		subscribe,
 		subscribeMembers,
-		unsubscribeInfo,
+		unsubscribe,
 		unsubscribeMembers,
 		update
 	};
@@ -210,12 +210,12 @@ export const FirebaseUser = ({
 			});
 		});
 
-	const subscribeInfo = (cb: FirebaseCB) => {
+	const subscribe = (cb: FirebaseCB) => {
 		console.debug("[Firebase] Subscribing user...");
-		_info.on("value", cb);
+		return _info.on("value", cb);
 	};
 
-	const unsubscribeInfo = (cb: FirebaseCB) => {
+	const unsubscribe = (cb: FirebaseCB) => {
 		console.debug("[Firebase] Unsubscribing user...");
 		_info.off("value", cb);
 	};
@@ -291,8 +291,8 @@ export const FirebaseUser = ({
 		isLocked,
 		setSecret,
 		wait,
-		subscribeInfo,
-		unsubscribeInfo,
+		subscribe,
+		unsubscribe,
 		update,
 		getInfo
 	};
@@ -358,12 +358,12 @@ export const FirebaseParty = ({
 	};
 
 	const init = () => {
-		room.subscribeInfo(_onRoomInfo);
+		room.subscribe(_onRoomInfo);
 		room.subscribeMembers(_onAdded, _onRemoved);
 	};
 
 	const terminate = () => {
-		room.unsubscribeInfo(_onRoomInfo);
+		room.unsubscribe(_onRoomInfo);
 		room.unsubscribeMembers(_onAdded, _onRemoved);
 	};
 
@@ -380,7 +380,7 @@ export const FirebaseParty = ({
 export const testRoom = async () => {
 	const room = FirebaseRoom({ id: "r1", secret: "rs1" });
 	await room.update({ name: "R1" });
-	room.subscribeInfo(info => console.debug("ROOM", info.val()));
+	room.subscribe(info => console.debug("ROOM", info.val()));
 	room.subscribeMembers(
 		members => console.debug("ADDED", members.key),
 		members => console.debug("REMOVED", members.key)
@@ -396,7 +396,7 @@ export const testRoom = async () => {
 
 export const testUser = async () => {
 	const user = FirebaseUser({ id: "u1", secret: "us1" });
-	user.subscribeInfo(info => console.debug("USER", info.val()));
+	user.subscribe(info => console.debug("USER", info.val()));
 	await user.update({ name: "U1" });
 	await sleep(1000);
 	await user.update({ name: "U1b" });

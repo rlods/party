@@ -1,59 +1,59 @@
 .IconButton {
-  border: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  outline: none;
-  padding: 0;
-  background-color: transparent;
-  opacity: 0.3;
-  transition: opacity 350ms ease-out;
-  color: inherit;
+	border: 0;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	outline: none;
+	padding: 0;
+	background-color: transparent;
+	opacity: 0.3;
+	transition: opacity 350ms ease-out;
+	color: inherit;
 
-  &.clickable {
-    cursor: pointer;
-  }
+	&.clickable {
+		cursor: pointer;
+	}
 
-  &:not(.clickable) {
-    opacity: 0.1;
-  }
+	&:not(.clickable) {
+		opacity: 0.1;
+	}
 
-  &:hover.clickable,
-  &.active {
-    opacity: 1;
-  }
+	&:hover.clickable,
+	&.active {
+		opacity: 1;
+	}
 
-  &:focus {
-    background-color: #f00;
-  }
+	&:focus {
+		background-color: #f00;
+	}
 
-  &.default {
-    background-color: transparent;
-  }
+	&.default {
+		background-color: transparent;
+	}
 
-  &.primary {
-    background-color: rgb(157, 183, 255);
-  }
+	&.primary {
+		background-color: rgb(157, 183, 255);
+	}
 
-  &.danger {
-    background-color: rgb(255, 168, 168);
-  }
+	&.danger {
+		background-color: rgb(255, 168, 168);
+	}
 
-  .IconButtonTitle {
-    &.S {
-      font-size: 12px;
-      line-height: 16px;
-    }
+	.IconButtonTitle {
+		&.S {
+			font-size: 12px;
+			line-height: 16px;
+		}
 
-    &.M {
-      font-size: 15px;
-      line-height: 20px;
-    }
+		&.M {
+			font-size: 15px;
+			line-height: 24px;
+		}
 
-    &.L {
-      font-size: 20px;
-      line-height: 32px;
-    }
-  }
+		&.L {
+			font-size: 20px;
+			line-height: 32px;
+		}
+	}
 }

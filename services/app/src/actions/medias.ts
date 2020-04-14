@@ -12,6 +12,7 @@ import {
 	Container
 } from "../utils/medias";
 import { extractErrorMessage } from "../utils/messages";
+import { PREVIEW_PLAYER } from "../utils/player";
 
 // ------------------------------------------------------------------
 
@@ -37,7 +38,7 @@ export const loadMedias = (
 	mediaIds: string[],
 	enqueue: boolean,
 	preview: boolean
-): AsyncAction => async (dispatch, getState, { deezer, previewPlayer }) => {
+): AsyncAction => async (dispatch, getState, { deezer }) => {
 	if (mediaIds.length > 0) {
 		const {
 			medias: { medias }
@@ -75,7 +76,12 @@ export const loadMedias = (
 							track,
 							trackId
 						});
-						await previewPlayer.play(0, track.id, track.preview, 0);
+						await PREVIEW_PLAYER.play(
+							0,
+							track.id,
+							track.preview,
+							0
+						);
 					} else {
 						console.debug("Cannot load track to preview...");
 					}
@@ -145,7 +151,12 @@ export const loadMedias = (
 					}
 					if (track) {
 						console.debug("Previewing container first track...");
-						await previewPlayer.play(0, track.id, track.preview, 0);
+						await PREVIEW_PLAYER.play(
+							0,
+							track.id,
+							track.preview,
+							0
+						);
 					} else {
 						console.debug("Cannot load track to preview...");
 					}

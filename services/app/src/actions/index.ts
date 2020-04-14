@@ -18,8 +18,7 @@ export type ActionWithPayload<T extends string, P> = {
 
 export type Extended = {
 	deezer: DeezerApi;
-	previewPlayer: Player;
-	queuePlayer: Player;
+	player: Player;
 };
 
 export type Dispatch = ThunkDispatch<RootState, Extended, AnyAction>;

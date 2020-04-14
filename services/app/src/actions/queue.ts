@@ -20,7 +20,7 @@ export const clearQueue = (): AsyncAction => async (dispatch, getState) => {
 			dispatch(lockRoom());
 		}
 	} else {
-		dispatch(displayError("rooms.error.locked 3"));
+		dispatch(displayError("rooms.error.locked"));
 	}
 };
 
@@ -52,7 +52,7 @@ export const appendInQueue = (
 			}
 		}
 	} else {
-		dispatch(displayError("rooms.error.locked 4"));
+		dispatch(displayError("rooms.error.locked"));
 	}
 };
 
@@ -99,7 +99,7 @@ export const removeFromQueue = (index: number): AsyncAction => async (
 			}
 		}
 	} else {
-		dispatch(displayError("rooms.error.locked 5"));
+		dispatch(displayError("rooms.error.locked"));
 	}
 };
 
@@ -124,7 +124,7 @@ export const setQueuePosition = (newPosition: number): AsyncAction => async (
 			}
 		}
 	} else {
-		dispatch(displayError("rooms.error.locked 6"));
+		dispatch(displayError("rooms.error.locked"));
 	}
 };
 

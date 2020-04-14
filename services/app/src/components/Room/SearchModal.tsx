@@ -17,10 +17,10 @@ import { SearchResultCategory } from "./SearchResultCategory";
 import { Dispatch } from "../../actions";
 import { popModal } from "../../actions/modals";
 import { loadMedias } from "../../actions/medias";
-import { stopPreview } from "../../actions/player";
 import { isRoomLocked } from "../../selectors/room";
 import { RootState } from "../../reducers";
 import { ModalField } from "../Modals/ModalFields";
+import { PREVIEW_PLAYER } from "../../utils/player";
 import "./SearchModal.scss";
 
 // ------------------------------------------------------------------
@@ -75,11 +75,12 @@ export const SearchModal = () => {
 		[dispatch, provider]
 	);
 
-	const onStopPreview = useCallback(() => {
-		dispatch(stopPreview());
+	const onStopPreview = useCallback(async () => {
+		console.debug("Stop previewing...");
+		await PREVIEW_PLAYER.stop();
 		setPlayingMediaId("");
 		setPlayingMediaType("track");
-	}, [dispatch]);
+	}, []);
 
 	const onViewMore = useCallback(
 		async (type: MediaType) => {
@@ -118,7 +119,8 @@ export const SearchModal = () => {
 			queryRef.current.focus();
 		}
 		return () => {
-			dispatch(stopPreview());
+			console.debug("Stop previewing...");
+			/*await*/ PREVIEW_PLAYER.stop();
 		};
 	}, [dispatch]);
 

@@ -62,7 +62,7 @@ export const connectUser = (id: string, secret: string): AsyncAction => async (
 					info: await newUser.wait()
 				})
 			);
-			FIREBASE_CB = newUser.subscribeInfo(
+			FIREBASE_CB = newUser.subscribe(
 				(snapshot: firebase.database.DataSnapshot) => {
 					const newInfo = snapshot.val() as UserInfo;
 					console.debug(
@@ -89,7 +89,7 @@ export const disconnectUser = (): AsyncAction => async (dispatch, getState) => {
 	if (id || secret || user) {
 		console.debug("Disconnecting user...");
 		if (user) {
-			user.unsubscribeInfo(FIREBASE_CB);
+			user.unsubscribe(FIREBASE_CB);
 			FIREBASE_CB = null;
 		}
 		dispatch(resetUser());
