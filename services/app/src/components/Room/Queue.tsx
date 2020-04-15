@@ -7,9 +7,13 @@ import { LoadingIcon } from "../Common/LoadingIcon";
 import { QueueItem } from "./QueueItem";
 import { Dispatch } from "../../actions";
 import { RootState } from "../../reducers";
-import { isRoomLoaded, isRoomLocked } from "../../selectors/room";
-import { extractMedias } from "../../selectors/medias";
-import { Media } from "../../utils/medias";
+import {
+	isRoomLoaded,
+	isRoomLocked,
+	isRoomPlaying
+} from "../../selectors/room";
+import { selectTracks } from "../../selectors/medias";
+import { Track } from "../../utils/medias";
 import { startPlayer, stopPlayer } from "../../actions/player";
 import { setQueuePosition, removeFromQueue } from "../../actions/queue";
 import { openModal } from "../../actions/modals";
@@ -21,15 +25,11 @@ export const Queue = () => {
 	const dispatch = useDispatch<Dispatch>();
 	const loaded = useSelector<RootState, boolean>(isRoomLoaded);
 	const locked = useSelector<RootState, boolean>(isRoomLocked);
-	const playing = useSelector<RootState, boolean>(
-		state => state.room.playing
+	const playing = useSelector<RootState, boolean>(isRoomPlaying);
+	const playingIndex = useSelector<RootState, number>(state =>
+		null !== state.room.info ? state.room.info.queue_position : 0
 	);
-	const playingIndex = useSelector<RootState, number>(
-		state => state.room.position % state.room.medias.length
-	);
-	const medias = useSelector<RootState, Array<Media | null>>(state =>
-		extractMedias(state, state.room.medias)
-	);
+	const tracks = useSelector<RootState, Array<Track | null>>(selectTracks);
 
 	const onPlay = useCallback(
 		(index: number) => {
@@ -53,10 +53,10 @@ export const Queue = () => {
 
 	return (
 		<div className="Queue">
-			{medias.length > 0 ? (
+			{tracks.length > 0 ? (
 				<QueueList
 					locked={locked}
-					medias={medias}
+					tracks={tracks}
 					playing={playing}
 					playingIndex={playingIndex}
 					onPlay={onPlay}
@@ -117,7 +117,7 @@ const EmptyQueueList = React.memo(
 const QueueList = React.memo(
 	({
 		locked,
-		medias,
+		tracks,
 		playing,
 		playingIndex,
 		onPlay,
@@ -125,7 +125,7 @@ const QueueList = React.memo(
 		onStop
 	}: {
 		locked: boolean;
-		medias: Array<Media | null>;
+		tracks: Array<Track | null>;
 		playing: boolean;
 		playingIndex: number;
 		onPlay: (index: number) => void;
@@ -133,13 +133,12 @@ const QueueList = React.memo(
 		onStop: () => void;
 	}) => (
 		<>
-			{medias.map((media, index) => (
+			{tracks.map((track, index) => (
 				<QueueItem
 					key={index}
 					locked={locked}
 					playing={playing && playingIndex === index}
-					media={media}
-					mediaType="track"
+					track={track}
 					onPlay={() => onPlay(index)}
 					onRemove={() => onRemove(index)}
 					onStop={onStop}

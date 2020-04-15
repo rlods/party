@@ -1,7 +1,6 @@
 import { AnyAction } from "redux";
 import { ThunkAction, ThunkDispatch } from "redux-thunk";
 //
-import { DeezerApi } from "../utils/deezer";
 import { Player } from "../utils/player";
 import { RootState } from "../reducers";
 
@@ -17,7 +16,6 @@ export type ActionWithPayload<T extends string, P> = {
 };
 
 export type Extended = {
-	deezer: DeezerApi;
 	player: Player;
 };
 

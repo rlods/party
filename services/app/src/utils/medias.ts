@@ -2,6 +2,8 @@ export type ContainerType = "album" | "playlist";
 
 export type MediaType = ContainerType | "track";
 
+export const MediaTypes: MediaType[] = ["album", "playlist", "track"];
+
 export type MediaTypeDefinition = {
 	label: string;
 	provider: ProviderType;
@@ -9,6 +11,8 @@ export type MediaTypeDefinition = {
 };
 
 export type ProviderType = "deezer";
+
+export const ProviderTypes: ProviderType[] = ["deezer"];
 
 export type TrackType = "track";
 
@@ -36,6 +40,11 @@ export type ContainerAccess = AlbumAccess | PlaylistAccess;
 
 export type MediaAccess = ContainerAccess | TrackAccess;
 
+export type ContextualizedTrackAccess = {
+	contextId: string;
+	contextType: MediaType;
+} & TrackAccess;
+
 // ------------------------------------------------------------------
 
 export type Album = {
@@ -50,6 +59,7 @@ export type Album = {
 	cover_small: string;
 	id: string;
 	link: string;
+	provider: ProviderType;
 	title: string;
 	tracks?: Track[];
 	type: "album";
@@ -60,6 +70,7 @@ export type Playlist = {
 	link: string;
 	picture_big: string;
 	picture_small: string;
+	provider: ProviderType;
 	title: string;
 	tracks?: Track[];
 	type: "playlist";
@@ -89,6 +100,7 @@ export type Track = {
 	id: string;
 	link: string;
 	preview: string;
+	provider: ProviderType;
 	title: string;
 	type: "track";
 };
@@ -97,13 +109,30 @@ export type Container = Album | Playlist;
 
 export type Media = Container | Track;
 
+export type StructuredMedias = {
+	// keys are ProvideType
+	deezer: {
+		// keys are MediaType
+		album: { [id: string]: Album };
+		playlist: { [id: string]: Playlist };
+		track: { [id: string]: Track };
+	};
+};
+
 // ------------------------------------------------------------------
 
+export type SearchOptions = {
+	limit?: number;
+};
+
 export type SearchResults = {
-	// keys are MediaType
-	album: Album[];
-	playlist: Playlist[];
-	track: Track[];
+	// keys are ProviderType
+	deezer: {
+		// keys are MediaType
+		album: Album[];
+		playlist: Playlist[];
+		track: Track[];
+	};
 };
 
 // ------------------------------------------------------------------
@@ -125,3 +154,142 @@ export const MEDIA_TYPE_DEFINITIONS: MediaTypeDefinition[] = [
 		type: "track"
 	}
 ];
+
+// ------------------------------------------------------------------
+
+export const findMediaInDict = (
+	access: MediaAccess,
+	medias: StructuredMedias
+): Media | undefined => medias[access.provider][access.type][access.id];
+
+// ------------------------------------------------------------------
+
+export const findMediaInList = (
+	access: MediaAccess,
+	medias: Media[]
+): Media | undefined =>
+	medias.find(
+		item =>
+			item.id === access.id &&
+			item.provider === access.provider &&
+			item.type === access.type
+	);
+
+// ------------------------------------------------------------------
+
+export const findMedia = (
+	access: MediaAccess,
+	dist: StructuredMedias,
+	list: Media[]
+) => findMediaInDict(access, dist) || findMediaInList(access, list);
+
+// ------------------------------------------------------------------
+
+export const findPreviewTrack = async (
+	access: MediaAccess,
+	oldMedias: StructuredMedias,
+	newMedias: Media[]
+) => {
+	const media = findMedia(access, oldMedias, newMedias);
+	if (!media) {
+		return null;
+	}
+	if (media.type === "track") {
+		return media;
+	}
+	if (media.tracks && media.tracks.length > 0) {
+		return media.tracks[0];
+	}
+	return null;
+};
+
+// ------------------------------------------------------------------
+
+export const extractTracks = (
+	accesses: MediaAccess[],
+	oldMedias: StructuredMedias,
+	newMedias: Media[]
+): ContextualizedTrackAccess[] => {
+	const tracks: ContextualizedTrackAccess[] = [];
+	for (const access of accesses) {
+		if (access.type === "track") {
+			tracks.push({
+				contextId: access.id,
+				contextType: access.type,
+				...access
+			});
+			continue;
+		}
+
+		const container = findMedia(access, oldMedias, newMedias);
+		if (
+			container &&
+			container.type !== "track" &&
+			container.tracks &&
+			container.tracks.length > 0
+		) {
+			for (const track of container.tracks) {
+				tracks.push({
+					contextId: container.id,
+					contextType: container.type,
+					id: track.id,
+					provider: track.provider,
+					type: track.type
+				});
+			}
+		}
+	}
+	return tracks;
+};
+
+// ------------------------------------------------------------------
+
+export const findContextFromTrackIndex = (
+	medias: MediaAccess[],
+	trackIndex: number,
+	allMedias: StructuredMedias
+): {
+	mediaFirstTrackIndex: number;
+	mediaIndex: number;
+	mediaSize: number;
+} => {
+	let index = 0;
+	for (let mediaIndex = 0; mediaIndex < medias.length; ++mediaIndex) {
+		const media = medias[mediaIndex];
+		if (media.type === "track") {
+			if (trackIndex === index) {
+				return {
+					mediaFirstTrackIndex: trackIndex,
+					mediaIndex,
+					mediaSize: 1
+				};
+			}
+			index++;
+		} else {
+			const container = findMediaInDict(media, allMedias);
+			if (
+				container &&
+				container.type !== "track" &&
+				container.tracks &&
+				container.tracks.length > 0
+			) {
+				const mediaFirstTrackIndex = index;
+				for (let i = 0; i < container.tracks.length; ++i) {
+					if (trackIndex === index) {
+						return {
+							mediaFirstTrackIndex,
+							mediaIndex,
+							mediaSize: container.tracks.length
+						};
+					}
+					index++;
+				}
+			}
+		}
+	}
+	return {
+		mediaFirstTrackIndex: -1,
+		mediaIndex: -1,
+		mediaSize: 0
+	};
+};

@@ -4,10 +4,10 @@
 	justify-content: center;
 	align-items: center;
 
-	height: 50px;
-	min-height: 50px;
-	width: 50px;
-	min-width: 50px;
+	height: 36px;
+	min-height: 36px;
+	width: 36px;
+	min-width: 36px;
 	background-position: center center;
 	background-size: cover;
 	box-shadow: 0 1px 3px rgba(25, 25, 34, 0.2);
@@ -23,5 +23,17 @@
 	&.playing {
 		box-shadow: 0 1px 3px rgba(25, 25, 34, 0.5);
 		opacity: 1;
+	}
+
+	.Icon {
+		opacity: 0;
+		transition: opacity 300ms ease-in-out;
+	}
+
+	&:hover,
+	&.playing {
+		.Icon {
+			opacity: 0.5;
+		}
 	}
 }

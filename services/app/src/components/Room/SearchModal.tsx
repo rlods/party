@@ -6,6 +6,7 @@ import { FormModal } from "../Modals/FormModal";
 import { IconButton } from "../Common/IconButton";
 import { CancelButton } from "../Common/CancelButton";
 import { DEFAULT_API } from "../../utils/deezer";
+import { search } from "../../utils/providers";
 import { Media } from "./Medias";
 import {
 	MEDIA_TYPE_DEFINITIONS,
@@ -16,11 +17,12 @@ import {
 import { SearchResultCategory } from "./SearchResultCategory";
 import { Dispatch } from "../../actions";
 import { popModal } from "../../actions/modals";
-import { loadMedias } from "../../actions/medias";
+import { previewMedia } from "../../actions/medias";
 import { isRoomLocked } from "../../selectors/room";
 import { RootState } from "../../reducers";
 import { ModalField } from "../Modals/ModalFields";
 import { PREVIEW_PLAYER } from "../../utils/player";
+import { appendToQueue } from "../../actions/queue";
 import "./SearchModal.scss";
 
 // ------------------------------------------------------------------
@@ -36,16 +38,21 @@ export const SearchModal = () => {
 	const queryRef = useRef<HTMLInputElement>(null);
 	const locked = useSelector<RootState, boolean>(isRoomLocked);
 	const [playingMediaId, setPlayingMediaId] = useState("");
+	const [playingMediaProvider, setPlayingMediaProvider] = useState<
+		ProviderType
+	>("deezer");
 	const [playingMediaType, setPlayingMediaType] = useState<MediaType>(
 		"track"
 	);
-	const [provider] = useState<ProviderType>("deezer");
 	const [query, setQuery] = useState("");
 	const [results, setResults] = useState<SearchResults>({
-		// keys are MediaType
-		album: [],
-		playlist: [],
-		track: []
+		// keys are ProviderType
+		deezer: {
+			// keys are MediaType
+			album: [],
+			playlist: [],
+			track: []
+		}
 	});
 
 	const onClose = useCallback(() => dispatch(popModal()), [dispatch]);
@@ -53,7 +60,7 @@ export const SearchModal = () => {
 	const onSearch = useCallback(async () => {
 		if (query.trim().length > 0) {
 			setResults(
-				await DEFAULT_API.search(query, {
+				await search(query, {
 					limit: SEARCH_RESULTS_COUNT
 				})
 			);
@@ -61,42 +68,49 @@ export const SearchModal = () => {
 	}, [query]);
 
 	const onSelect = useCallback(
-		(provider: ProviderType, mediaType: MediaType, mediaId: string) =>
-			dispatch(loadMedias(provider, mediaType, [mediaId], true, false)),
+		(provider: ProviderType, type: MediaType, id: string) =>
+			dispatch(appendToQueue([{ provider, type, id }])),
 		[dispatch]
 	);
 
 	const onStartPreview = useCallback(
-		(mediaType: MediaType, mediaId: string) => {
-			dispatch(loadMedias(provider, mediaType, [mediaId], false, true));
-			setPlayingMediaId(mediaId);
-			setPlayingMediaType(mediaType);
+		(provider: ProviderType, type: MediaType, id: string) => {
+			dispatch(previewMedia({ provider, type, id }));
+			setPlayingMediaId(id);
+			setPlayingMediaProvider(provider);
+			setPlayingMediaType(type);
 		},
-		[dispatch, provider]
+		[dispatch]
 	);
 
 	const onStopPreview = useCallback(async () => {
 		console.debug("Stop previewing...");
 		await PREVIEW_PLAYER.stop();
 		setPlayingMediaId("");
+		setPlayingMediaProvider("deezer");
 		setPlayingMediaType("track");
 	}, []);
 
 	const onViewMore = useCallback(
 		async (type: MediaType) => {
 			const results: SearchResults = {
-				album: [],
-				playlist: [],
-				track: []
+				deezer: {
+					album: [],
+					playlist: [],
+					track: []
+				}
 			};
 			switch (type) {
 				case "album":
-					results["album"] = await DEFAULT_API.searchAlbums(query, {
-						limit: VIEW_MORE_RESULTS_COUNT
-					});
+					results.deezer.album = await DEFAULT_API.searchAlbums(
+						query,
+						{
+							limit: VIEW_MORE_RESULTS_COUNT
+						}
+					);
 					break;
 				case "playlist":
-					results["playlist"] = await DEFAULT_API.searchPlaylists(
+					results.deezer.playlist = await DEFAULT_API.searchPlaylists(
 						query,
 						{
 							limit: VIEW_MORE_RESULTS_COUNT
@@ -104,9 +118,12 @@ export const SearchModal = () => {
 					);
 					break;
 				case "track":
-					results["track"] = await DEFAULT_API.searchTracks(query, {
-						limit: VIEW_MORE_RESULTS_COUNT
-					});
+					results.deezer.track = await DEFAULT_API.searchTracks(
+						query,
+						{
+							limit: VIEW_MORE_RESULTS_COUNT
+						}
+					);
 					break;
 			}
 			setResults(results);
@@ -154,11 +171,11 @@ export const SearchModal = () => {
 					onChange={e => setQuery(e.target.value)}
 				/>
 			</ModalField>
-			{MEDIA_TYPE_DEFINITIONS.map(({ label, type }) => (
+			{MEDIA_TYPE_DEFINITIONS.map(({ label, provider, type }) => (
 				<SearchResultCategory
 					key={type}
 					label={t(label)}
-					items={results[type]}
+					items={results[provider][type]}
 					onViewMore={() => onViewMore(type)}
 					cb={media => (
 						<Media
@@ -173,13 +190,15 @@ export const SearchModal = () => {
 								/>
 							}
 							media={media}
-							mediaType={type}
 							playable={true}
 							playing={
+								playingMediaProvider === provider &&
 								playingMediaType === type &&
 								playingMediaId === media.id
 							}
-							onPlay={() => onStartPreview(type, media.id)}
+							onPlay={() =>
+								onStartPreview(provider, type, media.id)
+							}
 							onStop={onStopPreview}
 						/>
 					)}

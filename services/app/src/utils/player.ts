@@ -32,7 +32,7 @@ const loadAudioBuffer = (trackId: string, url: string): Promise<AudioBuffer> =>
 					resolve(await decodeAudioData(req.response as ArrayBuffer));
 				} catch (error) {
 					console.debug(
-						"An error occurred while decoding audio data",
+						"[Player] An error occurred while decoding audio data",
 						{
 							trackId,
 							url
@@ -61,11 +61,14 @@ const loadAudioBufferWithCache = async (
 	const index = AUDIO_BUFFER_CACHES.findIndex(item => item.url === url);
 	if (index >= 0) {
 		// Found: extract old buffer, it will be repush at the end of cache
-		console.debug("Reusing cached audio buffer...", { trackId, url });
+		console.debug("[Player] Reusing cached audio buffer...", {
+			trackId,
+			url
+		});
 		buffer = AUDIO_BUFFER_CACHES.splice(index, 1)[0].buffer;
 	} else {
 		// Not Found
-		console.debug("Loading audio buffer...", { trackId, url });
+		console.debug("[Player] Loading audio buffer...", { trackId, url });
 		buffer = await loadAudioBuffer(trackId, url);
 	}
 	AUDIO_BUFFER_CACHES.push({ buffer, url });
@@ -80,7 +83,7 @@ const loadAudioBufferWithCache = async (
 	const fixAudioContext = () => {
 		document.removeEventListener("click", fixAudioContext);
 		document.removeEventListener("touchstart", fixAudioContext);
-		console.debug("Fixing audio context...");
+		console.debug("[Player] Fixing audio context...");
 		const context = getContext();
 		// Create empty buffer, connect to output, play sound
 		var buffer = context.createBuffer(1, 1, 22050);
@@ -166,7 +169,7 @@ const PlayerImpl = (chainPlay: boolean): Player => {
 	) => {
 		await stop();
 		_buffer = await loadAudioBufferWithCache(trackId, trackUrl); // TODO: warning if loadBuffer takes long for some reason and user clicks stop before end, next part of this function will continue after stop have been requested
-		console.debug("Starting audio...", {
+		console.debug("[Player] Starting audio...", {
 			trackPosition,
 			trackId,
 			trackUrl
@@ -179,7 +182,7 @@ const PlayerImpl = (chainPlay: boolean): Player => {
 		_sourceNode.loopStart = 0;
 		_sourceNode.loopEnd = 0;
 		_sourceNode.onended = () => {
-			console.debug("Audio terminated...");
+			console.debug("[Player] Audio terminated...");
 			_buffer = null;
 			_sourceNode = null;
 			if (chainPlay) {
@@ -192,17 +195,18 @@ const PlayerImpl = (chainPlay: boolean): Player => {
 		_sourceNodeStartTime = getContext().currentTime;
 	};
 
-	const stop = async (): Promise<void> =>
+	const stop = (): Promise<void> =>
 		new Promise(resolve => {
 			if (null !== _sourceNode) {
-				console.debug("Stopping audio...");
+				console.debug("[Player] Stopping audio...");
 				_sourceNode.onended = () => {
-					console.debug("Forced audio termination...");
+					console.debug("[Player] Forced audio termination...");
 					resolve();
 				};
 				_sourceNode.stop();
 				_sourceNode = null;
 				_sourceNodeStartTime = 0;
+				_trackId = "";
 				_trackPosition = -1;
 			} else {
 				resolve();

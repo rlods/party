@@ -50,32 +50,31 @@ export const connectUser = (id: string, secret: string): AsyncAction => async (
 	const {
 		user: { user }
 	} = getState();
-	if (!user || user.id !== id) {
-		dispatch(disconnectUser());
-		try {
-			console.debug("Connection user...", { id, secret });
-			const newUser = FirebaseUser({ id, secret });
-			dispatch(
-				setUser({
-					access: { id, secret },
-					user: newUser,
-					info: await newUser.wait()
-				})
-			);
-			FIREBASE_CB = newUser.subscribe(
-				(snapshot: firebase.database.DataSnapshot) => {
-					const newInfo = snapshot.val() as UserInfo;
-					console.debug(
-						"[Firebase] Received user update...",
-						newInfo
-					);
-					dispatch(setUser({ user: newUser, info: newInfo }));
-				}
-			);
-		} catch (err) {
-			dispatch(displayError(extractErrorMessage(err)));
-			dispatch(setUser({ access: { id, secret: "" } }));
-		}
+	if (user && user.id === id) {
+		// Nothing to do
+		return;
+	}
+	dispatch(disconnectUser());
+	try {
+		console.debug("Connection user...", { id, secret });
+		const newUser = FirebaseUser({ id, secret });
+		dispatch(
+			setUser({
+				access: { id, secret },
+				user: newUser,
+				info: await newUser.wait()
+			})
+		);
+		FIREBASE_CB = newUser.subscribe(
+			(snapshot: firebase.database.DataSnapshot) => {
+				const newInfo = snapshot.val() as UserInfo;
+				console.debug("[Firebase] Received user update...", newInfo);
+				dispatch(setUser({ user: newUser, info: newInfo }));
+			}
+		);
+	} catch (err) {
+		dispatch(displayError(extractErrorMessage(err)));
+		dispatch(setUser({ access: { id, secret: "" } }));
 	}
 };
 
@@ -86,14 +85,16 @@ export const disconnectUser = (): AsyncAction => async (dispatch, getState) => {
 			user
 		}
 	} = getState();
-	if (id || secret || user) {
-		console.debug("Disconnecting user...");
-		if (user) {
-			user.unsubscribe(FIREBASE_CB);
-			FIREBASE_CB = null;
-		}
-		dispatch(resetUser());
+	if (!id && !secret && !user) {
+		// Nothing to do
+		return;
 	}
+	console.debug("Disconnecting user...");
+	if (user) {
+		user.unsubscribe(FIREBASE_CB);
+		FIREBASE_CB = null;
+	}
+	dispatch(resetUser());
 };
 
 export const reconnectUser = (): AsyncAction => async (dispatch, getState) => {
@@ -102,8 +103,10 @@ export const reconnectUser = (): AsyncAction => async (dispatch, getState) => {
 			access: { id, secret }
 		}
 	} = getState();
-	if (id && secret) {
-		console.debug("Reconnecting user...", { id, secret });
-		dispatch(connectUser(id, secret));
+	if (!id || !secret) {
+		// Nothing to do
+		return;
 	}
+	console.debug("Reconnecting user...", { id, secret });
+	dispatch(connectUser(id, secret));
 };

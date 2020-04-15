@@ -4,7 +4,7 @@ import { RoomAction } from "../actions/room";
 import { RoomAccess, RoomInfo } from "../utils/rooms";
 import { CombinedColor } from "../utils/colorpicker";
 import { FirebaseRoom } from "../utils/firebase";
-import { MediaAccess } from "../utils/medias";
+import { ContextualizedTrackAccess, MediaAccess } from "../utils/medias";
 
 // ------------------------------------------------------------------
 
@@ -13,9 +13,8 @@ export type RoomData = {
 	color: CombinedColor;
 	info: RoomInfo | null;
 	medias: MediaAccess[];
-	playing: boolean;
-	position: number;
 	room: ReturnType<typeof FirebaseRoom> | null;
+	tracks: Array<ContextualizedTrackAccess>; // TODO expanded medias (containers are replaced by their tracks)
 };
 
 export type State = RoomData & {
@@ -30,9 +29,8 @@ const INITIAL_STATE: State = {
 	fetching: false,
 	info: null,
 	medias: [],
-	playing: false,
-	position: 0,
-	room: null
+	room: null,
+	tracks: []
 };
 
 // ------------------------------------------------------------------

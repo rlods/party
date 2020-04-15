@@ -34,16 +34,18 @@
 			align-items: center;
 			justify-content: space-between;
 
-			&:last-child {
-				align-self: stretch;
+			&.PlayerControlsSet {
+				min-width: 130px;
+
+				@media screen and (max-width: 150px) {
+					& {
+						align-self: stretch;
+					}
+				}
 			}
 
-			.Control {
-				margin-left: 2rem;
-
-				&:first-child {
-					margin-left: 0;
-				}
+			&.RoomControlsSet {
+				align-self: stretch;
 			}
 		}
 	}

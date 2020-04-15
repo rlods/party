@@ -7,7 +7,7 @@ import { IconButton } from "../Common/IconButton";
 import { copyToClipboard } from "../../utils/clipboard";
 import { Dispatch } from "../../actions";
 import { RootState } from "../../reducers";
-import { extractRoom } from "../../selectors/room";
+import { selectRoom } from "../../selectors/room";
 import { displayInfo } from "../../actions/messages";
 import { confirmModal } from "../../actions/modals";
 import { RoomInfo } from "../../utils/rooms";
@@ -19,7 +19,7 @@ export const Head = () => {
 	const dispatch = useDispatch<Dispatch>();
 	const { t } = useTranslation();
 	const history = useHistory();
-	const room = useSelector<RootState, RoomInfo | null>(extractRoom);
+	const room = useSelector<RootState, RoomInfo | null>(selectRoom);
 	const tracksCount = useSelector<RootState, number>(
 		state => state.room.medias.length
 	);

@@ -5,7 +5,7 @@ import classNames from "classnames";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 //
 import { Message } from "../../utils/messages";
-import { extractMessages } from "../../selectors/messages";
+import { selectMessages } from "../../selectors/messages";
 import { RootState } from "../../reducers";
 import "./Messages.scss";
 
@@ -13,7 +13,7 @@ import "./Messages.scss";
 
 export const Messages = () => {
 	const { t } = useTranslation();
-	const messages = useSelector<RootState, Message[]>(extractMessages);
+	const messages = useSelector<RootState, Message[]>(selectMessages);
 	return (
 		<div className="Messages">
 			<TransitionGroup>

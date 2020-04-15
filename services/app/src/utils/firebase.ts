@@ -4,7 +4,6 @@ import "firebase/database";
 import firebaseConfig from "../config/firebase";
 import { RoomInfo } from "./rooms";
 import { UserInfo } from "./users";
-import { sleep } from ".";
 
 // ------------------------------------------------------------------
 
@@ -56,16 +55,6 @@ export const FirebaseRoom = ({
 	const _info = _room.child("info");
 	const _members = app.members.child(id);
 	let _secret = secret || "";
-	let _values: RoomInfo = {
-		name: "dummy",
-		playing: false,
-		queue: {},
-		queue_position: 0,
-		timestamp: 0,
-		type: "dj"
-	};
-
-	const getInfo = () => _values;
 
 	const isLocked = () => !_secret;
 
@@ -83,8 +72,7 @@ export const FirebaseRoom = ({
 			_info.once("value", snapshot => {
 				const newValues = snapshot.val();
 				if (newValues) {
-					_values = newValues;
-					resolve(_values);
+					resolve(newValues);
 				} else {
 					reject(new Error("rooms.errors.invalid"));
 				}
@@ -118,30 +106,19 @@ export const FirebaseRoom = ({
 		playing,
 		queue,
 		queue_position
-	}: Partial<
-		Pick<RoomInfo, "name" | "playing" | "queue" | "queue_position">
-	>) => {
+	}: Pick<RoomInfo, "name" | "playing" | "queue" | "queue_position">) => {
 		console.debug("[Firebase] Updating room...", {
 			name,
 			playing,
 			queue,
 			queue_position
 		});
-		if (name !== void 0) {
-			_values.name = name;
-		}
-		if (playing !== void 0) {
-			_values.playing = playing;
-		}
-		if (queue !== void 0) {
-			_values.queue = queue;
-		}
-		if (queue_position !== void 0) {
-			_values.queue_position = queue_position;
-		}
 		await _room.set({
 			info: {
-				..._values,
+				name,
+				playing,
+				queue,
+				queue_position,
 				timestamp: firebase.database.ServerValue.TIMESTAMP
 			},
 			secret: _secret
@@ -149,7 +126,6 @@ export const FirebaseRoom = ({
 	};
 
 	return {
-		getInfo,
 		id,
 		isLocked,
 		setSecret,
@@ -184,8 +160,6 @@ export const FirebaseUser = ({
 		timestamp: 0
 	};
 
-	const getInfo = () => _values;
-
 	const isLocked = () => !_secret;
 
 	const setSecret = (newSecret: string) => {
@@ -203,7 +177,7 @@ export const FirebaseUser = ({
 				const newValues = snapshot.val();
 				if (newValues) {
 					_values = newValues;
-					resolve(_values);
+					resolve(newValues);
 				} else {
 					reject(new Error("users.errors.invalid"));
 				}
@@ -293,8 +267,7 @@ export const FirebaseUser = ({
 		wait,
 		subscribe,
 		unsubscribe,
-		update,
-		getInfo
+		update
 	};
 };
 
@@ -371,68 +344,4 @@ export const FirebaseParty = ({
 		init,
 		terminate
 	};
-};
-
-// ------------------------------------------------------------------
-// ------------------------------------------------------------------
-// ------------------------------------------------------------------
-
-export const testRoom = async () => {
-	const room = FirebaseRoom({ id: "r1", secret: "rs1" });
-	await room.update({ name: "R1" });
-	room.subscribe(info => console.debug("ROOM", info.val()));
-	room.subscribeMembers(
-		members => console.debug("ADDED", members.key),
-		members => console.debug("REMOVED", members.key)
-	);
-	await room.update({ name: "R1" });
-	await sleep(1000);
-	await room.update({
-		name: "R1b",
-		queue: {},
-		queue_position: 0
-	});
-};
-
-export const testUser = async () => {
-	const user = FirebaseUser({ id: "u1", secret: "us1" });
-	user.subscribe(info => console.debug("USER", info.val()));
-	await user.update({ name: "U1" });
-	await sleep(1000);
-	await user.update({ name: "U1b" });
-};
-
-export const testParty = async () => {
-	const room1 = FirebaseRoom({ id: "r1", secret: "rs1" });
-	await room1.update({ name: "R1" });
-	const room2 = FirebaseRoom({ id: "r2", secret: "rs2" });
-	await room2.update({ name: "R2" });
-	const user1 = FirebaseUser({ id: "u1", secret: "us1" });
-	await user1.update({ name: "U1" });
-	const user2 = FirebaseUser({ id: "u2", secret: "us2" });
-	await user2.update({ name: "U2" });
-
-	await sleep(2000);
-
-	const party1 = FirebaseParty({ id: "P1", room: room1 });
-	await party1.init();
-	const party2 = FirebaseParty({ id: "P2", room: room2 });
-	await party2.init();
-
-	await sleep(1000);
-	user1.enter(room1);
-	await sleep(1000);
-	user2.enter(room1);
-	await sleep(1000);
-	user1.enter(room2);
-	await sleep(1000);
-	user1.exit();
-	await sleep(1000);
-	user1.enter(room1);
-};
-
-export const test = () => {
-	// testRoom();
-	// testUser();
-	// testParty();
 };

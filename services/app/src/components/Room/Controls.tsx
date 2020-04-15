@@ -6,7 +6,7 @@ import { IconButton } from "../Common/IconButton";
 import { Progress } from "./Progress";
 import { Dispatch } from "../../actions";
 import { RootState } from "../../reducers";
-import { isRoomLocked } from "../../selectors/room";
+import { isRoomLocked, isRoomPlaying } from "../../selectors/room";
 import { lockRoom } from "../../actions/room";
 import { clearQueue, moveBackward, moveForward } from "../../actions/queue";
 import { stopPlayer, startPlayer } from "../../actions/player";
@@ -22,9 +22,7 @@ export const Controls = () => {
 		state => state.room.medias.length
 	);
 	const locked = useSelector<RootState, boolean>(isRoomLocked);
-	const playing = useSelector<RootState, boolean>(
-		state => state.room.playing
-	);
+	const playing = useSelector<RootState, boolean>(isRoomPlaying);
 	const onClear = useCallback(() => {
 		dispatch(
 			confirmModal(t("rooms.confirm_clear"), () => {
@@ -66,7 +64,7 @@ export const Controls = () => {
 	return (
 		<div className="Controls">
 			<div className="ControlsInner">
-				<div className="ControlsSet">
+				<div className="ControlsSet PlayerControlsSet">
 					<div className="Control">
 						<IconButton
 							disabled={locked || tracksCount === 0}
@@ -106,22 +104,7 @@ export const Controls = () => {
 					</div>
 				</div>
 				<Progress />
-				<div className="ControlsSet">
-					<div className="Control">
-						<IconButton
-							disabled={locked || tracksCount === 0}
-							onClick={onClear}
-							icon="trash"
-							title={t("rooms.clear")}
-						/>
-					</div>
-					<div className="Control">
-						<IconButton
-							onClick={onSearch}
-							icon="search"
-							title={t("medias.search")}
-						/>
-					</div>
+				<div className="ControlsSet RoomControlsSet">
 					<div className="Control">
 						{locked ? (
 							<IconButton
@@ -138,6 +121,21 @@ export const Controls = () => {
 								title={t("rooms.unlocked")}
 							/>
 						)}
+					</div>
+					<div className="Control">
+						<IconButton
+							onClick={onSearch}
+							icon="search"
+							title={t("medias.search")}
+						/>
+					</div>
+					<div className="Control">
+						<IconButton
+							disabled={locked || tracksCount === 0}
+							onClick={onClear}
+							icon="trash"
+							title={t("rooms.clear")}
+						/>
 					</div>
 				</div>
 			</div>

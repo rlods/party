@@ -8,7 +8,6 @@ import thunk from "redux-thunk";
 //
 import { rootReducer } from "./reducers";
 import { App } from "./pages/App";
-import { DEFAULT_API } from "./utils/deezer";
 import { QUEUE_PLAYER } from "./utils/player";
 import { initLocales } from "./utils/i18n";
 import { register as registerServiceWorker } from "./serviceWorker";
@@ -36,7 +35,6 @@ const init = async () => {
 		composeEnhancers(
 			applyMiddleware(
 				thunk.withExtraArgument({
-					deezer: DEFAULT_API,
 					player: QUEUE_PLAYER
 				})
 			)
