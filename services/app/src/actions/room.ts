@@ -5,13 +5,19 @@ import { createAction, AsyncAction } from ".";
 import { displayError } from "./messages";
 import { RoomInfo } from "../utils/rooms";
 import { FirebaseRoom } from "../utils/firebase";
-import { loadMedias } from "./medias";
-import { MediaAccess } from "../utils/medias";
-import history from "../utils/history";
+import { setMedias } from "./medias";
+import {
+	MediaAccess,
+	TrackAccess,
+	extractTracks,
+	ContextualizedTrackAccess
+} from "../utils/medias";
 import { extractErrorMessage } from "../utils/messages";
 import { RoomData } from "../reducers/room";
 import { pickColor } from "../utils/colorpicker";
 import { Player } from "../utils/player";
+import { loadNew } from "../utils/providers";
+import history from "../utils/history";
 
 // ------------------------------------------------------------------
 
@@ -26,8 +32,7 @@ const fetching = () => createAction("room/FETCHING");
 const success = () => createAction("room/FETCHED");
 const error = (error: AxiosError) => createAction("room/ERROR", error);
 const resetRoom = () => createAction("room/RESET");
-export const setRoom = (values: Partial<RoomData>) =>
-	createAction("room/SET", values);
+const setRoom = (values: Partial<RoomData>) => createAction("room/SET", values);
 
 // ------------------------------------------------------------------
 
@@ -38,7 +43,11 @@ export const createRoom = (
 	try {
 		const id = v4();
 		console.debug("Creating room...", { id, secret });
-		await FirebaseRoom({ id, secret }).update({ name });
+		await FirebaseRoom({ id, secret }).update({
+			name,
+			playing: false,
+			queue_position: 0
+		});
 		dispatch(enterRoom(id, secret));
 	} catch (err) {
 		dispatch(displayError(extractErrorMessage(err)));
@@ -54,23 +63,25 @@ export const enterRoom = (id: string, secret: string): AsyncAction => async (
 	const {
 		room: { room }
 	} = getState();
-	if (!room || room.id !== id) {
-		dispatch(exitRoom());
-		try {
-			console.debug("Entering room...", { id, secret });
-			const newRoom = FirebaseRoom({ id, secret });
-			dispatch(
-				setRoom({
-					access: { id, secret },
-					room: newRoom,
-					info: await newRoom.wait()
-				})
-			);
-			dispatch(_watchRoom(newRoom));
-			history.push(`/room/${id}?secret=${secret}`); // TODO: should push only if we're not already in it
-		} catch (err) {
-			dispatch(displayError(extractErrorMessage(err)));
-		}
+	if (room && room.id === id) {
+		// Nothing to do
+		return;
+	}
+	dispatch(exitRoom());
+	try {
+		console.debug("Entering room...", { id, secret });
+		const newRoom = FirebaseRoom({ id, secret });
+		dispatch(
+			setRoom({
+				access: { id, secret },
+				room: newRoom,
+				info: await newRoom.wait()
+			})
+		);
+		dispatch(_watchRoom(newRoom));
+		history.push(`/room/${id}?secret=${secret}`); // TODO: should push only if we're not already in it
+	} catch (err) {
+		dispatch(displayError(extractErrorMessage(err)));
 	}
 };
 
@@ -78,12 +89,14 @@ export const exitRoom = (): AsyncAction => async (dispatch, getState) => {
 	const {
 		room: { room }
 	} = getState();
-	if (room) {
-		console.debug("Exiting room...");
-		dispatch(_unwatchPlayer());
-		dispatch(_unwatchRoom(room));
-		dispatch(resetRoom());
+	if (!room) {
+		// Nothing to do
+		return;
 	}
+	console.debug("Exiting room...");
+	dispatch(_unwatchPlayer());
+	dispatch(_unwatchRoom(room));
+	dispatch(resetRoom());
 };
 
 // ------------------------------------------------------------------
@@ -95,12 +108,14 @@ export const lockRoom = (): AsyncAction => async (dispatch, getState) => {
 			access: { id, secret: oldSecret }
 		}
 	} = getState();
-	if (room && room.id === id && !!oldSecret) {
-		console.debug("Locking room...", { id });
-		room.setSecret("");
-		// TODO : not history.replace(`/room/${id}`); as it would trigger a page refresh
-		dispatch(setRoom({ access: { id, secret: "" } }));
+	if (!room || room.id !== id || !oldSecret) {
+		// Nothing to do
+		return;
 	}
+	console.debug("Locking room...", { id });
+	room.setSecret("");
+	// TODO : not history.replace(`/room/${id}`); as it would trigger a page refresh
+	dispatch(setRoom({ access: { id, secret: "" } }));
 };
 
 export const unlockRoom = (secret: string): AsyncAction => async (
@@ -113,12 +128,14 @@ export const unlockRoom = (secret: string): AsyncAction => async (
 			access: { id, secret: oldSecret }
 		}
 	} = getState();
-	if (room && room.id === id && !oldSecret) {
-		console.debug("Unlocking room...", { id, secret });
-		room.setSecret(secret);
-		// TODO : not history.replace(`/room/${id}?secret=${secret}`); as it would trigger a page refresh
-		dispatch(setRoom({ access: { id, secret } }));
+	if (!room || room.id !== id || oldSecret === secret) {
+		// Nothing to do
+		return;
 	}
+	console.debug("Unlocking room...", { id, secret });
+	room.setSecret(secret);
+	// TODO : not history.replace(`/room/${id}?secret=${secret}`); as it would trigger a page refresh
+	dispatch(setRoom({ access: { id, secret } }));
 };
 
 // ------------------------------------------------------------------
@@ -131,61 +148,68 @@ const _watchRoom = (
 	room: ReturnType<typeof FirebaseRoom>
 ): AsyncAction => async (dispatch, getState) => {
 	console.debug("Watching room...");
-	if (!ROOM_WATCHER) {
-		ROOM_WATCHER = room.subscribe(
-			(snapshot: firebase.database.DataSnapshot) => {
-				const {
-					room: { playing: oldPlaying }
-				} = getState();
-				const newInfo = snapshot.val() as RoomInfo;
-				console.debug("[Firebase] Received room update...", newInfo);
-				let medias: MediaAccess[] = [];
-				if (newInfo.queue) {
-					medias = Object.entries(newInfo.queue)
-						.sort(
-							(media1, media2) =>
-								Number(media1[0]) - Number(media2[0])
-						)
-						.map(media => media[1]);
-					dispatch(
-						loadMedias(
-							"deezer",
-							"track",
-							medias.map(media => media.id),
-							false,
-							false
-						)
-					);
-				}
-				if (oldPlaying !== newInfo.playing) {
-					if (newInfo.playing) {
-						dispatch(_watchPlayer());
-					} else {
-						dispatch(_unwatchPlayer());
-					}
-				}
-				dispatch(
-					setRoom({
-						medias,
-						playing: newInfo.playing,
-						position: newInfo.queue_position,
-						room,
-						info: newInfo
-					})
-				);
-			}
-		);
+	if (!!ROOM_WATCHER) {
+		// Nothing to do
+		return;
 	}
+	ROOM_WATCHER = room.subscribe(
+		async (snapshot: firebase.database.DataSnapshot) => {
+			// TODO: we could add a queue in case too much updates are received
+			const {
+				medias: { medias: oldMedias },
+				room: { info: oldInfo }
+			} = getState();
+			const newInfo = snapshot.val() as RoomInfo;
+			console.debug("[Firebase] Received room update...", newInfo);
+			let medias: MediaAccess[] = [];
+			if (newInfo.queue) {
+				medias = Object.entries(newInfo.queue)
+					.sort(
+						(media1, media2) =>
+							Number(media1[0]) - Number(media2[0])
+					)
+					.map(media => media[1]);
+			}
+			if (oldInfo!.playing !== newInfo.playing) {
+				if (newInfo.playing) {
+					dispatch(_watchPlayer());
+				} else {
+					dispatch(_unwatchPlayer());
+				}
+			}
+			let tracks: ContextualizedTrackAccess[] = [];
+			if (medias.length > 0) {
+				const { newMedias, newMediasAndTracks } = await loadNew(
+					medias,
+					oldMedias
+				);
+				if (newMediasAndTracks.length > 0) {
+					dispatch(setMedias(newMediasAndTracks));
+				}
+				tracks = extractTracks(medias, oldMedias, newMedias);
+			}
+			dispatch(
+				setRoom({
+					info: newInfo,
+					medias,
+					room,
+					tracks
+				})
+			);
+		}
+	);
 };
 
 const _unwatchRoom = (
 	room: ReturnType<typeof FirebaseRoom>
 ): AsyncAction => async () => {
-	if (ROOM_WATCHER) {
-		console.debug("Unwatching room...");
-		room.unsubscribe(ROOM_WATCHER);
-		ROOM_WATCHER = null;
+	if (!ROOM_WATCHER) {
+		// Nothing to do
+		return;
 	}
+	console.debug("Unwatching room...");
+	room.unsubscribe(ROOM_WATCHER);
+	ROOM_WATCHER = null;
 };
 
 // ------------------------------------------------------------------
@@ -196,34 +220,27 @@ let PLAYER_TIMER: NodeJS.Timeout | null = null;
 
 const _computeNextPosition = (
 	player: Player,
-	queueTrackPosition: number,
-	medias: MediaAccess[]
+	tracks: TrackAccess[],
+	trackIndex: number
 ) => {
-	let nextPosition = -1;
+	let nextIndex = -1;
 	const playingTrackID = player.getPlayingTrackID();
-	const playingTrackPosition = player.getPlayingTrackPosition();
-	if (playingTrackPosition !== queueTrackPosition) {
+	const playingTrackIndex = player.getPlayingTrackPosition() % tracks.length;
+	if (playingTrackIndex !== trackIndex) {
 		if (player.isPlaying()) {
 			// User has clicked an other track or added/removed a track in queue
-			if (
-				playingTrackID !== medias[queueTrackPosition % medias.length].id
-			) {
-				nextPosition = queueTrackPosition;
+			if (playingTrackID !== tracks[trackIndex].id) {
+				nextIndex = trackIndex;
 			}
 		} else {
 			// Not playing which means previous track has terminated
-			nextPosition =
-				playingTrackPosition >= 0
-					? playingTrackPosition
-					: queueTrackPosition;
+			nextIndex = playingTrackIndex >= 0 ? playingTrackIndex : trackIndex;
 		}
-	} else if (
-		playingTrackID !== medias[queueTrackPosition % medias.length].id
-	) {
+	} else if (playingTrackID !== tracks[trackIndex].id) {
 		// User has deleted playing track
-		nextPosition = queueTrackPosition;
+		nextIndex = trackIndex;
 	}
-	return nextPosition;
+	return nextIndex;
 };
 
 const _watchPlayer = (): AsyncAction => async (
@@ -234,46 +251,43 @@ const _watchPlayer = (): AsyncAction => async (
 	// Don't use setInterval because a step could be triggered before previous one terminated
 	PLAYER_TIMER = setTimeout(async () => {
 		const {
-			room: { medias: queueMedias, position },
+			room: { info, tracks },
 			medias: { medias }
 		} = getState();
-		if (queueMedias.length > 0) {
+		if (tracks.length > 0) {
 			// Detect and apply change to queue and player
-			const nextTrackPosition = _computeNextPosition(
+			const nextTrackIndex = _computeNextPosition(
 				player,
-				position,
-				queueMedias
+				tracks,
+				info!.queue_position
 			);
-			if (nextTrackPosition >= 0) {
-				const nextIndex = nextTrackPosition % queueMedias.length;
-				const nextAccess = queueMedias[nextIndex];
+			if (nextTrackIndex >= 0) {
+				const nextAccess = tracks[nextTrackIndex];
 				const nextTrack =
 					medias[nextAccess.provider][nextAccess.type][nextAccess.id];
 				console.debug("Detected play change...", {
-					nextIndex,
 					nextTrack,
-					nextTrackPosition
+					nextTrackIndex
 				});
 
-				if (nextTrack.type !== "track") {
-					console.warn("Found a non track media here, weird...");
-				} else {
-					try {
-						const [color] = await Promise.all([
-							pickColor(nextTrack.album.cover_small),
-							player.play(
-								nextTrackPosition,
-								nextTrack.id,
-								nextTrack.preview,
-								0
-							)
-						]);
-						dispatch(
-							setRoom({ color, position: nextTrackPosition })
-						);
-					} catch (err) {
-						dispatch(displayError(extractErrorMessage(err)));
-					}
+				try {
+					const [color] = await Promise.all([
+						pickColor(nextTrack.album.cover_small),
+						player.play(
+							nextTrackIndex,
+							nextTrack.id,
+							nextTrack.preview,
+							0
+						)
+					]);
+					dispatch(
+						setRoom({
+							color,
+							info: { ...info!, queue_position: nextTrackIndex } // for info update because of player change without firebase
+						})
+					);
+				} catch (err) {
+					dispatch(displayError(extractErrorMessage(err)));
 				}
 			}
 
@@ -282,7 +296,7 @@ const _watchPlayer = (): AsyncAction => async (
 		} else {
 			// Last track has been removed from queue by user
 			console.debug("No more tracks in queue...");
-			dispatch(setRoom({ playing: false }));
+			dispatch(setRoom({ info: { ...info!, playing: false } })); // for info update because of player change  without firebase
 			await player.stop();
 			PLAYER_TIMER = null;
 		}

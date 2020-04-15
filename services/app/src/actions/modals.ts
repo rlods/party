@@ -55,7 +55,9 @@ export const confirmModal = (
 	// TODO: open custom ConfirmModal instead of system popup
 	if (window.confirm(question)) {
 		onConfirmed();
-	} else if (onCanceled) {
+		return;
+	}
+	if (onCanceled) {
 		onCanceled();
 	}
 };

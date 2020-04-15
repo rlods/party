@@ -1,130 +1,168 @@
 import { AsyncAction } from ".";
-import { RoomQueue } from "../utils/rooms";
 import { displayError } from "./messages";
 import { lockRoom } from "./room";
-import { ProviderType } from "../utils/medias";
+import { MediaAccess, findContextFromTrackIndex } from "../utils/medias";
 import { extractErrorMessage } from "../utils/messages";
+import { createQueueMerging, createQueueRemoving } from "../utils/rooms";
 
 // ------------------------------------------------------------------
 
 export const clearQueue = (): AsyncAction => async (dispatch, getState) => {
 	const {
-		room: { room }
+		room: { info, room }
 	} = getState();
-	if (room && !room.isLocked()) {
-		try {
-			console.debug("Clearing queue...");
-			await room.update({ playing: false, queue: {}, queue_position: 0 });
-		} catch (err) {
-			dispatch(displayError(extractErrorMessage(err)));
-			dispatch(lockRoom());
-		}
-	} else {
+	if (!room || room.isLocked() || !info) {
 		dispatch(displayError("rooms.error.locked"));
+		return;
+	}
+	try {
+		console.debug("Clearing queue...");
+		await room.update({
+			...info,
+			playing: false,
+			queue: {},
+			queue_position: 0
+		});
+	} catch (err) {
+		dispatch(displayError(extractErrorMessage(err)));
+		dispatch(lockRoom());
 	}
 };
 
-export const appendInQueue = (
-	provider: ProviderType,
-	trackIds: string[]
+// ------------------------------------------------------------------
+
+export const appendToQueue = (newMedias: MediaAccess[]): AsyncAction => async (
+	dispatch,
+	getState
+) => {
+	const {
+		room: { info, medias: oldMedias, room }
+	} = getState();
+	if (!room || room.isLocked() || !info) {
+		dispatch(displayError("rooms.error.locked"));
+		return;
+	}
+	if (newMedias.length === 0) {
+		// Nothing to do
+		return;
+	}
+	try {
+		console.debug("Appending medias to queue...", {
+			newMedias
+		});
+		await room.update({
+			...info,
+			queue: createQueueMerging(oldMedias, newMedias)
+		});
+	} catch (err) {
+		dispatch(displayError(extractErrorMessage(err)));
+		dispatch(lockRoom());
+	}
+};
+
+// ------------------------------------------------------------------
+
+// TODO: DECOMPLEXIFY removeFromQueue
+export const removeFromQueue = (
+	removedTrackIndex: number
 ): AsyncAction => async (dispatch, getState) => {
 	const {
-		room: { medias: queueMedias, room }
+		medias: { medias: allMedias },
+		room: { info, medias, room, tracks }
 	} = getState();
-	if (room && !room.isLocked()) {
-		if (trackIds.length > 0) {
-			try {
-				console.debug("Appending queue...", { provider, trackIds });
-				const queue: RoomQueue = {};
-				[...queueMedias.map(media => media.id), ...trackIds].forEach(
-					(id, index) => {
-						queue[index] = {
-							id,
-							provider,
-							type: "track"
-						};
-					}
-				);
-				await room.update({ queue });
-			} catch (err) {
-				dispatch(displayError(extractErrorMessage(err)));
-				dispatch(lockRoom());
-			}
-		}
-	} else {
+	if (!room || room.isLocked() || !info) {
 		dispatch(displayError("rooms.error.locked"));
+		return;
+	}
+	const {
+		mediaFirstTrackIndex: removedMediaFirstTrackIndex,
+		mediaIndex: removedMediaIndex,
+		mediaSize: removedTrackCount
+	} = findContextFromTrackIndex(medias, removedTrackIndex, allMedias);
+	if (removedMediaIndex < 0) {
+		// Nothing to do
+		return;
+	}
+	const playingTrackIndex = info.queue_position;
+	try {
+		console.debug("Removing track from queue...", {
+			playingTrackIndex,
+			removedMediaIndex,
+			removedTrackCount,
+			removedTrackIndex,
+			removedMediaFirstTrackIndex
+		});
+		const queue = createQueueRemoving(medias, removedMediaIndex, 1);
+		if (Object.keys(queue).length === 0) {
+			console.debug("Removing last media from queue...");
+			await room.update({
+				...info,
+				playing: false,
+				queue: {},
+				queue_position: 0
+			});
+		} else if (playingTrackIndex < removedTrackIndex) {
+			await room.update({
+				...info,
+				queue
+			});
+		} else if (
+			playingTrackIndex >= removedMediaFirstTrackIndex &&
+			playingTrackIndex < removedMediaFirstTrackIndex + removedTrackCount
+		) {
+			await room.update({
+				...info,
+				queue,
+				queue_position:
+					removedMediaFirstTrackIndex + removedTrackCount ===
+					tracks.length
+						? removedMediaFirstTrackIndex - 1
+						: removedMediaFirstTrackIndex
+			});
+		} else {
+			await room.update({
+				...info,
+				queue,
+				queue_position: playingTrackIndex - removedTrackCount
+			});
+		}
+	} catch (err) {
+		dispatch(displayError(extractErrorMessage(err)));
+		dispatch(lockRoom());
 	}
 };
 
-export const removeFromQueue = (index: number): AsyncAction => async (
+// ------------------------------------------------------------------
+
+export const setQueuePosition = (newTrackIndex: number): AsyncAction => async (
 	dispatch,
 	getState
 ) => {
 	const {
-		room: { medias: queueMedias, position, room }
+		room: { info, room }
 	} = getState();
-	if (room && !room.isLocked()) {
-		if (index < queueMedias.length) {
-			try {
-				if (queueMedias.length > 1) {
-					console.debug("Removing track from queue...", { index });
-					const oldIndex = position % queueMedias.length;
-					const queue: RoomQueue = {};
-					const copy = [...queueMedias];
-					copy.splice(index, 1);
-					copy.forEach((mediaAccess, index) => {
-						queue[index] = mediaAccess;
-					});
-					if (index < oldIndex) {
-						await room.update({
-							queue,
-							queue_position: position - 1
-						});
-					} else {
-						await room.update({
-							queue
-						});
-					}
-				} else {
-					console.debug("Removing last track from queue...");
-					await room.update({
-						playing: false,
-						queue: {},
-						queue_position: 0
-					});
-				}
-			} catch (err) {
-				dispatch(displayError(extractErrorMessage(err)));
-				dispatch(lockRoom());
-			}
-		}
-	} else {
+	if (!room || room.isLocked() || !info) {
 		dispatch(displayError("rooms.error.locked"));
+		return;
 	}
-};
-
-export const setQueuePosition = (newPosition: number): AsyncAction => async (
-	dispatch,
-	getState
-) => {
-	const {
-		room: { position: oldPosition, room }
-	} = getState();
-	if (room && !room.isLocked()) {
-		if (oldPosition !== newPosition) {
-			try {
-				console.debug("Set queue position...", {
-					oldPosition,
-					newPosition
-				});
-				await room.update({ queue_position: newPosition });
-			} catch (err) {
-				dispatch(displayError(extractErrorMessage(err)));
-				dispatch(lockRoom());
-			}
-		}
-	} else {
-		dispatch(displayError("rooms.error.locked"));
+	const oldTrackIndex = info.queue_position;
+	if (oldTrackIndex === newTrackIndex) {
+		// Nothing to do
+		return;
+	}
+	try {
+		console.debug("Set queue position...", {
+			oldTrackIndex,
+			newTrackIndex
+		});
+		await room.update({
+			...info,
+			playing: true, // important
+			queue_position: newTrackIndex
+		});
+	} catch (err) {
+		dispatch(displayError(extractErrorMessage(err)));
+		dispatch(lockRoom());
 	}
 };
 
@@ -132,24 +170,32 @@ export const setQueuePosition = (newPosition: number): AsyncAction => async (
 
 export const moveBackward = (): AsyncAction => async (dispatch, getState) => {
 	const {
-		room: { medias: queueMedias, position }
+		room: { info, tracks }
 	} = getState();
-	if (queueMedias.length > 0) {
-		console.debug("Moving backward...");
-		dispatch(
-			setQueuePosition(
-				position > 0 ? position - 1 : queueMedias.length - 1
-			)
-		);
+	if (!info || tracks.length === 0) {
+		// Nothing to do
+		return;
 	}
+	console.debug("Moving backward...");
+	dispatch(
+		setQueuePosition(
+			info.queue_position > 0
+				? info.queue_position - 1
+				: tracks.length - 1
+		)
+	);
 };
+
+// ------------------------------------------------------------------
 
 export const moveForward = (): AsyncAction => async (dispatch, getState) => {
 	const {
-		room: { medias: queueMedias, position }
+		room: { info, tracks }
 	} = getState();
-	if (queueMedias.length > 0) {
-		console.debug("Moving forward...");
-		dispatch(setQueuePosition(position + 1));
+	if (!info || tracks.length === 0) {
+		// Nothing to do
+		return;
 	}
+	console.debug("Moving forward...");
+	dispatch(setQueuePosition((info.queue_position + 1) % tracks.length));
 };

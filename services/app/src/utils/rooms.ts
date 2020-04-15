@@ -24,3 +24,32 @@ export type RoomQueue = {
 
 export const createSharingUrl = (id: string) =>
 	`${window.location.origin}/#/room/${id}`;
+
+// ------------------------------------------------------------------
+
+export const createQueueMerging = (
+	accesses1: MediaAccess[],
+	accesses2: MediaAccess[]
+) => {
+	const queue: RoomQueue = {};
+	[...accesses1, ...accesses2].forEach((media, index) => {
+		queue[index] = media;
+	});
+	return queue;
+};
+
+// ------------------------------------------------------------------
+
+export const createQueueRemoving = (
+	accesses: MediaAccess[],
+	index: number,
+	count: number
+) => {
+	const queue: RoomQueue = {};
+	const copy = [...accesses];
+	copy.splice(index, count);
+	copy.forEach((mediaAccess, index) => {
+		queue[index] = mediaAccess;
+	});
+	return queue;
+};

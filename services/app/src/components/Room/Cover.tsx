@@ -29,9 +29,9 @@ export const Cover = React.memo(
 					style={image ? { backgroundImage: `url('${image}')` } : {}}
 					onClick={!playing ? onPlay : onStop}>
 					{!playing ? (
-						<Icon icon="play" title={t("player.play")} />
+						<Icon icon="play" size="S" title={t("player.play")} />
 					) : (
-						<Icon icon="pause" title={t("player.stop")} />
+						<Icon icon="pause" size="S" title={t("player.stop")} />
 					)}
 				</div>
 			);
@@ -41,7 +41,11 @@ export const Cover = React.memo(
 					className={classNames("Cover", { playing })}
 					style={image ? { backgroundImage: `url('${image}')` } : {}}>
 					{playing ? (
-						<Icon icon="music" title={t("player.playing")} />
+						<Icon
+							icon="music"
+							size="S"
+							title={t("player.playing")}
+						/>
 					) : null}
 				</div>
 			);

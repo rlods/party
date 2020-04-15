@@ -3,23 +3,21 @@ import { useTranslation } from "react-i18next";
 //
 import { Media } from "./Medias";
 import { IconButton } from "../Common/IconButton";
-import { Media as MediaData, MediaType } from "../../utils/medias";
+import { Track } from "../../utils/medias";
 
 // ------------------------------------------------------------------
 
 export const QueueItem = React.memo(
 	({
 		locked,
-		media,
-		mediaType,
+		track,
 		playing,
 		onPlay,
 		onRemove,
 		onStop
 	}: {
 		locked: boolean;
-		media: MediaData | null; // if null : stiil loading or cannot be loaded or to reload later because of rate limit
-		mediaType: MediaType;
+		track: Track | null; // if null : stiil loading or cannot be loaded or to reload later because of rate limit
 		playing: boolean;
 		onPlay: () => void;
 		onRemove: () => void;
@@ -29,9 +27,8 @@ export const QueueItem = React.memo(
 		return (
 			<div className="QueueItem">
 				<Media
-					media={media}
-					mediaType={mediaType}
-					playable={!!media && !locked}
+					media={track}
+					playable={!!track && !locked}
 					playing={playing}
 					onPlay={onPlay}
 					onStop={onStop}

@@ -1,22 +1,14 @@
 import { Reducer } from "redux";
 import { AxiosError } from "axios";
 import { MediasAction } from "../actions/medias";
-import { Track, Album, Playlist } from "../utils/medias";
+import { StructuredMedias } from "../utils/medias";
 
 // ------------------------------------------------------------------
 
 export type State = {
 	error: null | AxiosError;
 	fetching: boolean;
-	medias: {
-		// keys are ProvideType
-		deezer: {
-			// keys are MediaType
-			album: { [id: string]: Album };
-			playlist: { [id: string]: Playlist };
-			track: { [id: string]: Track };
-		};
-	};
+	medias: StructuredMedias;
 };
 
 const INITIAL_STATE: State = {
@@ -72,10 +64,8 @@ export const mediasReducer: Reducer<State, MediasAction> = (
 					}
 				}
 			};
-			for (const media of action.payload.medias) {
-				copy.medias[action.payload.provider][media.type][
-					media.id
-				] = media;
+			for (const media of action.payload) {
+				copy.medias[media.provider][media.type][media.id] = media;
 			}
 			return copy;
 		}

@@ -3,13 +3,7 @@ import { useTranslation } from "react-i18next";
 //
 import { Cover } from "./Cover";
 import { LoadingIcon } from "../Common/LoadingIcon";
-import {
-	Album,
-	Playlist,
-	Track,
-	Media as MediaData,
-	MediaType
-} from "../../utils/medias";
+import { Media as MediaData } from "../../utils/medias";
 import "./Medias.scss";
 
 // ------------------------------------------------------------------
@@ -18,7 +12,6 @@ export const Media = React.memo(
 	({
 		actions,
 		media,
-		mediaType,
 		playable,
 		playing,
 		onPlay,
@@ -26,7 +19,6 @@ export const Media = React.memo(
 	}: {
 		actions?: ReactNode;
 		media: MediaData | null;
-		mediaType: MediaType;
 		playable: boolean;
 		playing: boolean;
 		onPlay: () => void;
@@ -36,7 +28,6 @@ export const Media = React.memo(
 		if (!media) {
 			return (
 				<div className="Media">
-					{actions}
 					<Cover
 						playable={playable}
 						playing={playing}
@@ -47,49 +38,47 @@ export const Media = React.memo(
 					<div className="Metas">
 						<LoadingIcon size="M" />
 					</div>
+					{actions ? <div className="Actions">{actions}</div> : null}
 				</div>
 			);
-		} else if (mediaType === "album") {
-			const album = media as Album;
+		} else if (media.type === "album") {
 			return (
 				<div className="Media Album">
-					{actions}
 					<Cover
 						playable={playable}
 						playing={playing}
-						image={album.cover_small}
+						image={media.cover_small}
 						onPlay={onPlay}
 						onStop={onStop}
 					/>
 					<div className="Metas">
 						<div className="Meta AlbumTitle">
 							<a
-								href={album.link}
+								href={media.link}
 								target="_blank"
 								rel="noopener noreferrer">
-								{album.title}
+								{media.title}
 							</a>
 						</div>
 						<div className="Meta AlbumArtist">
 							<a
-								href={album.artist.link}
+								href={media.artist.link}
 								target="_blank"
 								rel="noopener noreferrer">
-								{t("medias.by", { artist: album.artist.name })}
+								{t("medias.by", { artist: media.artist.name })}
 							</a>
 						</div>
 					</div>
+					{actions ? <div className="Actions">{actions}</div> : null}
 				</div>
 			);
-		} else if (mediaType === "playlist") {
-			const playlist = media as Playlist;
+		} else if (media.type === "playlist") {
 			return (
 				<div className="Media Playlist">
-					{actions}
 					<Cover
 						playable={playable}
 						playing={playing}
-						image={playlist.picture_small}
+						image={media.picture_small}
 						onPlay={onPlay}
 						onStop={onStop}
 					/>
@@ -104,45 +93,45 @@ export const Media = React.memo(
 						</div>
 						<div className="Meta PlaylistCreator">
 							<a
-								href={playlist.user.link}
+								href={media.user.link}
 								target="_blank"
 								rel="noopener noreferrer">
-								{t("medias.by", { artist: playlist.user.name })}
+								{t("medias.by", { artist: media.user.name })}
 							</a>
 						</div>
 					</div>
+					{actions ? <div className="Actions">{actions}</div> : null}
 				</div>
 			);
-		} else if (mediaType === "track") {
-			const track = media as Track;
+		} else if (media.type === "track") {
 			return (
 				<div className="Media Track">
-					{actions}
 					<Cover
-						playable={playable && !!track.preview}
+						playable={playable && !!media.preview}
 						playing={playing}
-						image={track.album.cover_small}
+						image={media.album.cover_small}
 						onPlay={onPlay}
 						onStop={onStop}
 					/>
 					<div className="Metas">
 						<div className="Meta TrackTitle">
 							<a
-								href={track.link}
+								href={media.link}
 								target="_blank"
 								rel="noopener noreferrer">
-								{track.title}
+								{media.title}
 							</a>
 						</div>
 						<div className="Meta TrackArtist">
 							<a
-								href={track.artist.link}
+								href={media.artist.link}
 								target="_blank"
 								rel="noopener noreferrer">
-								{t("medias.by", { artist: track.artist.name })}
+								{t("medias.by", { artist: media.artist.name })}
 							</a>
 						</div>
 					</div>
+					{actions ? <div className="Actions">{actions}</div> : null}
 				</div>
 			);
 		} else {

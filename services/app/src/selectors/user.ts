@@ -1,3 +1,3 @@
 import { RootState } from "../reducers";
 
-export const extractUser = (state: RootState) => state.user.info;
+export const selectUser = (state: RootState) => state.user.info;
