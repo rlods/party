@@ -7,7 +7,7 @@ import { IconButton } from "../Common/IconButton";
 import { CancelButton } from "../Common/CancelButton";
 import { InputField } from "../Modals/ModalFields";
 import { Dispatch } from "../../actions";
-import { popModal } from "../../actions/modals";
+import { popModal } from "../../reducers/modals";
 import { displayError } from "../../actions/messages";
 import { enterRoom } from "../../actions/room";
 

@@ -1,27 +1,11 @@
-import { AxiosError } from "axios";
 import { v4 } from "uuid";
 //
-import { createAction, AsyncAction } from ".";
+import { AsyncAction } from ".";
 import { UserInfo } from "../utils/users";
 import { FirebaseUser } from "../utils/firebase";
 import { displayError } from "./messages";
 import { extractErrorMessage } from "../utils/messages";
-import { UserData } from "../reducers/user";
-
-// ------------------------------------------------------------------
-
-export type UserAction =
-	| ReturnType<typeof fetching>
-	| ReturnType<typeof success>
-	| ReturnType<typeof error>
-	| ReturnType<typeof resetUser>
-	| ReturnType<typeof setUser>;
-
-const fetching = () => createAction("user/FETCHING");
-const success = () => createAction("user/FETCHED");
-const error = (error: AxiosError) => createAction("user/ERROR", error);
-const resetUser = () => createAction("user/RESET");
-const setUser = (values: Partial<UserData>) => createAction("user/SET", values);
+import { setUser, resetUser } from "../reducers/user";
 
 // ------------------------------------------------------------------
 

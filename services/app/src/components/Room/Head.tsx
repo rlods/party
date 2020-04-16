@@ -12,7 +12,6 @@ import { displayInfo } from "../../actions/messages";
 import { confirmModal } from "../../actions/modals";
 import { RoomInfo } from "../../utils/rooms";
 import "./Head.scss";
-import { Icon } from "../Common/Icon";
 
 // ------------------------------------------------------------------
 

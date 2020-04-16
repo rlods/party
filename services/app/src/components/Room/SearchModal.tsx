@@ -16,7 +16,7 @@ import {
 } from "../../utils/medias";
 import { SearchResultCategory } from "./SearchResultCategory";
 import { Dispatch } from "../../actions";
-import { popModal } from "../../actions/modals";
+import { popModal } from "../../reducers/modals";
 import { previewMedia } from "../../actions/medias";
 import { isRoomLocked } from "../../selectors/room";
 import { RootState } from "../../reducers";

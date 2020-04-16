@@ -1,11 +1,9 @@
-import { AxiosError } from "axios";
 import { v4 } from "uuid";
 //
-import { createAction, AsyncAction, Dispatch } from ".";
+import { AsyncAction, Dispatch } from ".";
 import { displayError } from "./messages";
 import { RoomInfo } from "../utils/rooms";
 import { FirebaseRoom } from "../utils/firebase";
-import { setMedias } from "./medias";
 import {
 	MediaAccess,
 	TrackAccess,
@@ -13,27 +11,13 @@ import {
 	ContextualizedTrackAccess
 } from "../utils/medias";
 import { extractErrorMessage } from "../utils/messages";
-import { RoomData } from "../reducers/room";
 import { pickColor } from "../utils/colorpicker";
 import { Player } from "../utils/player";
 import { loadNew } from "../utils/providers";
-import history from "../utils/history";
 import { RootState } from "../reducers";
-
-// ------------------------------------------------------------------
-
-export type RoomAction =
-	| ReturnType<typeof fetching>
-	| ReturnType<typeof success>
-	| ReturnType<typeof error>
-	| ReturnType<typeof resetRoom>
-	| ReturnType<typeof setRoom>;
-
-const fetching = () => createAction("room/FETCHING");
-const success = () => createAction("room/FETCHED");
-const error = (error: AxiosError) => createAction("room/ERROR", error);
-const resetRoom = () => createAction("room/RESET");
-const setRoom = (values: Partial<RoomData>) => createAction("room/SET", values);
+import { setMedias } from "../reducers/medias";
+import { setRoom, resetRoom } from "../reducers/room";
+import history from "../utils/history";
 
 // ------------------------------------------------------------------
 

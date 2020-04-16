@@ -6,7 +6,7 @@ import { IconButton } from "../Common/IconButton";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../reducers";
 import { Dispatch } from "../../actions";
-import { popModal, closeModal } from "../../actions/modals";
+import { popModal, closeModal } from "../../reducers/modals";
 
 // ------------------------------------------------------------------
 

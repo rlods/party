@@ -1,7 +1,22 @@
 import { Reducer } from "redux";
 import { AxiosError } from "axios";
-import { MembersAction } from "../actions/members";
 import { Member } from "../utils/members";
+import { createAction } from "../actions";
+
+// ------------------------------------------------------------------
+
+type MembersAction =
+	| ReturnType<typeof fetching>
+	| ReturnType<typeof success>
+	| ReturnType<typeof error>
+	| ReturnType<typeof reset>;
+
+export const fetching = () => createAction("members/FETCHING");
+export const success = (members: Member[]) =>
+	createAction("members/FETCHED", members);
+export const error = (error: AxiosError) =>
+	createAction("members/ERROR", error);
+export const reset = () => createAction("members/RESET");
 
 // ------------------------------------------------------------------
 

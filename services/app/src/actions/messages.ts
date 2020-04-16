@@ -1,18 +1,6 @@
-import { createAction, AsyncAction } from ".";
-import { Message, MessageType } from "../utils/messages";
-
-// ------------------------------------------------------------------
-
-export type MessagesAction =
-	| ReturnType<typeof addMessage>
-	| ReturnType<typeof clearMessages>
-	| ReturnType<typeof removeMessage>;
-
-const addMessage = (message: Message) => createAction("message/ADD", message);
-
-const removeMessage = (id: number) => createAction("message/REMOVE", id);
-
-const clearMessages = () => createAction("message/RESET");
+import { AsyncAction } from ".";
+import { MessageType } from "../utils/messages";
+import { addMessage, removeMessage } from "../reducers/messages";
 
 // ------------------------------------------------------------------
 

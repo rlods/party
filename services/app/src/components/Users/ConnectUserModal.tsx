@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { FormModal } from "../Modals/FormModal";
 import { IconButton } from "../Common/IconButton";
 import { CancelButton } from "../Common/CancelButton";
-import { popModal, openModal } from "../../actions/modals";
+import { popModal, openModal } from "../../reducers/modals";
 import { displayError } from "../../actions/messages";
 import { connectUser } from "../../actions/user";
 import { Dispatch } from "../../actions";

@@ -16,7 +16,7 @@ import { selectTracks } from "../../selectors/medias";
 import { Track } from "../../utils/medias";
 import { startPlayer, stopPlayer } from "../../actions/player";
 import { setQueuePosition, removeFromQueue } from "../../actions/queue";
-import { openModal } from "../../actions/modals";
+import { openModal } from "../../reducers/modals";
 import "./Queue.scss";
 
 // ------------------------------------------------------------------

@@ -6,7 +6,7 @@ import { FormModal } from "../Modals/FormModal";
 import { IconButton } from "../Common/IconButton";
 import { CancelButton } from "../Common/CancelButton";
 import { Dispatch } from "../../actions";
-import { popModal } from "../../actions/modals";
+import { popModal } from "../../reducers/modals";
 import { unlockRoom } from "../../actions/room";
 import { SECRET_FIELD_SIZE, InputField } from "../Modals/ModalFields";
 

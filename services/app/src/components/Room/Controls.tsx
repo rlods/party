@@ -10,7 +10,8 @@ import { isRoomLocked, isRoomPlaying } from "../../selectors/room";
 import { lockRoom } from "../../actions/room";
 import { clearQueue, moveBackward, moveForward } from "../../actions/queue";
 import { stopPlayer, startPlayer } from "../../actions/player";
-import { confirmModal, openModal } from "../../actions/modals";
+import { confirmModal } from "../../actions/modals";
+import { openModal } from "../../reducers/modals";
 import "./Controls.scss";
 
 // ------------------------------------------------------------------

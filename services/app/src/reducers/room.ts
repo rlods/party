@@ -1,10 +1,26 @@
 import { Reducer } from "redux";
 import { AxiosError } from "axios";
-import { RoomAction } from "../actions/room";
 import { RoomAccess, RoomInfo } from "../utils/rooms";
 import { CombinedColor } from "../utils/colorpicker";
 import { FirebaseRoom } from "../utils/firebase";
 import { ContextualizedTrackAccess, MediaAccess } from "../utils/medias";
+import { createAction } from "../actions";
+
+// ------------------------------------------------------------------
+
+type RoomAction =
+	| ReturnType<typeof fetching>
+	| ReturnType<typeof success>
+	| ReturnType<typeof error>
+	| ReturnType<typeof resetRoom>
+	| ReturnType<typeof setRoom>;
+
+export const fetching = () => createAction("room/FETCHING");
+export const success = () => createAction("room/FETCHED");
+export const error = (error: AxiosError) => createAction("room/ERROR", error);
+export const resetRoom = () => createAction("room/RESET");
+export const setRoom = (values: Partial<RoomData>) =>
+	createAction("room/SET", values);
 
 // ------------------------------------------------------------------
 

@@ -11,7 +11,7 @@ import {
 	SECRET_FIELD_SIZE,
 	InputField
 } from "../Modals/ModalFields";
-import { popModal, openModal } from "../../actions/modals";
+import { popModal, openModal } from "../../reducers/modals";
 import { displayError } from "../../actions/messages";
 import { createUser } from "../../actions/user";
 import { Dispatch } from "../../actions";

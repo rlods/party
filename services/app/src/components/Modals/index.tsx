@@ -4,7 +4,7 @@ import { CSSTransition } from "react-transition-group";
 //
 import { Dispatch } from "../../actions";
 import { RootState } from "../../reducers";
-import { ModalPrereq, popModal } from "../../actions/modals";
+import { ModalPrereq, popModal } from "../../reducers/modals";
 import { ConfirmModal } from "./ConfirmModal";
 import { ConnectUserModal } from "../Users/ConnectUserModal";
 import { CreateRoomModal } from "../Room/CreateRoomModal";

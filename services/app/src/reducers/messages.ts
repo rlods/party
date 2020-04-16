@@ -1,6 +1,18 @@
 import { Reducer } from "redux";
-import { MessagesAction } from "../actions/messages";
 import { Message } from "../utils/messages";
+import { createAction } from "../actions";
+
+// ------------------------------------------------------------------
+
+type MessagesAction =
+	| ReturnType<typeof addMessage>
+	| ReturnType<typeof clearMessages>
+	| ReturnType<typeof removeMessage>;
+
+export const addMessage = (message: Message) =>
+	createAction("message/ADD", message);
+export const removeMessage = (id: number) => createAction("message/REMOVE", id);
+export const clearMessages = () => createAction("message/RESET");
 
 // ------------------------------------------------------------------
 

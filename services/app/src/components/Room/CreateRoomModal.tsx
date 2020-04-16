@@ -12,7 +12,7 @@ import {
 	InputField
 } from "../Modals/ModalFields";
 import { Dispatch } from "../../actions";
-import { popModal } from "../../actions/modals";
+import { popModal } from "../../reducers/modals";
 import { createRoom } from "../../actions/room";
 import { displayError } from "../../actions/messages";
 

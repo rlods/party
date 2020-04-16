@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 //
 import { IconButton } from "../components/Common/IconButton";
 import { RootState } from "../reducers";
-import { openModal } from "../actions/modals";
+import { openModal } from "../reducers/modals";
 import { disconnectUser } from "../actions/user";
 import "./Splash.scss";
 

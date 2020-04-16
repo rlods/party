@@ -1,6 +1,5 @@
 import { Reducer } from "redux";
 import { AxiosError } from "axios";
-import { UserAction } from "../actions/user";
 import {
 	deleteUserAccess,
 	saveUserAccess,
@@ -9,6 +8,23 @@ import {
 	UserInfo
 } from "../utils/users";
 import { FirebaseUser } from "../utils/firebase";
+import { createAction } from "../actions";
+
+// ------------------------------------------------------------------
+
+type UserAction =
+	| ReturnType<typeof fetching>
+	| ReturnType<typeof success>
+	| ReturnType<typeof error>
+	| ReturnType<typeof resetUser>
+	| ReturnType<typeof setUser>;
+
+export const fetching = () => createAction("user/FETCHING");
+export const success = () => createAction("user/FETCHED");
+export const error = (error: AxiosError) => createAction("user/ERROR", error);
+export const resetUser = () => createAction("user/RESET");
+export const setUser = (values: Partial<UserData>) =>
+	createAction("user/SET", values);
 
 // ------------------------------------------------------------------
 
