@@ -4,47 +4,180 @@ jest.mock("../jsonp");
 
 // ------------------------------------------------------------------
 
-import { DEFAULT_API, ApiSearchResult } from "../deezer";
+import {
+	DEFAULT_API,
+	ApiSearchResult,
+	ApiAlbum,
+	ApiPlaylist,
+	ApiTrack
+} from "../deezer";
 import { Album, Playlist, Track } from "../medias";
-import { ApiAlbum, ApiPlaylist, ApiTrack } from "../deezer";
+
+// ------------------------------------------------------------------
+
+let ALBUM_COUNTER = 0;
+let ARTIST_COUNTER = 0;
+let PLAYLIST_COUNTER = 0;
+let TRACK_COUNTER = 0;
+let USER_COUNTER = 0;
+
+const createFakeApiAlbum = (): ApiAlbum => {
+	const albumId = ALBUM_COUNTER++;
+	const artistId = ARTIST_COUNTER++;
+	return {
+		artist: {
+			id: artistId,
+			name: "",
+			picture_big: "",
+			picture_small: ""
+		},
+		cover_big: "",
+		cover_small: "",
+		id: albumId,
+		title: "",
+		tracks: {
+			data: [
+				{
+					album: {
+						cover_big: "",
+						cover_small: "",
+						id: albumId,
+						title: ""
+					},
+					artist: {
+						id: artistId,
+						name: "",
+						picture_big: "",
+						picture_small: ""
+					},
+					duration: 0,
+					id: TRACK_COUNTER++,
+					preview: "https://preview",
+					readable: true,
+					title: ""
+				}
+			]
+		}
+	};
+};
+
+const createFakeApiPlaylist = (): ApiPlaylist => {
+	const userId = USER_COUNTER++;
+	return {
+		creator: {
+			id: userId,
+			name: ""
+		},
+		id: PLAYLIST_COUNTER++,
+		picture_big: "",
+		picture_small: "",
+		public: true,
+		title: "",
+		tracks: {
+			data: [
+				{
+					album: {
+						cover_big: "",
+						cover_small: "",
+						id: ALBUM_COUNTER++,
+						title: ""
+					},
+					artist: {
+						id: ARTIST_COUNTER++,
+						name: "",
+						picture_big: "",
+						picture_small: ""
+					},
+					duration: 0,
+					id: TRACK_COUNTER++,
+					preview: "https://preview",
+					readable: true,
+					title: ""
+				}
+			]
+		},
+		user: {
+			id: userId,
+			name: ""
+		}
+	};
+};
+
+const createFakeApiTrack = (): ApiTrack => ({
+	album: {
+		cover_big: "",
+		cover_small: "",
+		id: ALBUM_COUNTER++,
+		title: ""
+	},
+	artist: {
+		id: ARTIST_COUNTER++,
+		name: "",
+		picture_big: "",
+		picture_small: ""
+	},
+	duration: 0,
+	id: TRACK_COUNTER++,
+	preview: "https://preview",
+	readable: true,
+	title: ""
+});
 
 // ------------------------------------------------------------------
 
 describe("Providers Utilities", () => {
-	it("load albums - valid", async () => {
+	it("loadAlbums - valid", async () => {
+		const album1 = createFakeApiAlbum();
 		const mockedJsonp = mocked(asyncJsonp, true);
 		mockedJsonp.mockImplementation((url, qs) =>
-			Promise.resolve<ApiAlbum>({
-				error: void 0,
-				artist: {
-					id: 43,
-					name: "",
-					picture_big: "",
-					picture_small: ""
-				},
-				cover_big: "",
-				cover_small: "",
-				id: 42,
-				title: "",
-				tracks: { data: [] }
-			})
+			Promise.resolve<ApiAlbum>(album1)
 		);
 		await expect(DEFAULT_API.loadAlbums(["42"])).resolves.toEqual<Album[]>([
 			{
 				artist: {
-					id: "43",
-					link: "https://www.deezer.com/artist/43",
+					id: `${album1.artist.id}`,
+					link: `https://www.deezer.com/artist/${album1.artist.id}`,
 					name: "",
 					picture_big: "",
 					picture_small: ""
 				},
 				cover_big: "",
 				cover_small: "",
-				id: "42",
-				link: "https://www.deezer.com/album/42",
+				id: `${album1.id}`,
+				link: `https://www.deezer.com/album/${album1.id}`,
 				provider: "deezer",
 				title: "",
-				tracks: [],
+				tracks: [
+					{
+						album: {
+							cover_big: "",
+							cover_small: "",
+							id: `${album1.tracks!.data[0].album.id}`,
+							link: `https://www.deezer.com/album/${
+								album1.tracks!.data[0].album.id
+							}`,
+							title: ""
+						},
+						artist: {
+							id: `${album1.tracks!.data[0].artist.id}`,
+							link: `https://www.deezer.com/artist/${
+								album1.tracks!.data[0].artist.id
+							}`,
+							name: "",
+							picture_big: "",
+							picture_small: ""
+						},
+						duration: 0,
+						id: `${album1.tracks!.data[0].id}`,
+						link: `https://www.deezer.com/track/${
+							album1.tracks!.data[0].id
+						}`,
+						preview: "https://preview",
+						provider: "deezer",
+						title: "",
+						type: "track"
+					}
+				],
 				type: "album"
 			}
 		]);
@@ -52,7 +185,13 @@ describe("Providers Utilities", () => {
 
 	// --------------------------------------------------------------
 
-	it("load albums - invalid", async () => {
+	it("loadAlbums - edge", async () => {
+		await expect(DEFAULT_API.loadAlbums([])).resolves.toEqual<Album[]>([]);
+	});
+
+	// --------------------------------------------------------------
+
+	it("loadAlbums - invalid", async () => {
 		const mockedJsonp = mocked(asyncJsonp, true);
 		mockedJsonp.mockImplementation((url, qs) =>
 			Promise.resolve<ApiAlbum>({
@@ -77,42 +216,59 @@ describe("Providers Utilities", () => {
 
 	// --------------------------------------------------------------
 
-	it("load playlists - valid", async () => {
+	it("loadPlaylists - valid", async () => {
+		const playlist1 = createFakeApiPlaylist();
 		const mockedJsonp = mocked(asyncJsonp, true);
 		mockedJsonp.mockImplementation((url, qs) =>
-			Promise.resolve<ApiPlaylist>({
-				error: void 0,
-				creator: {
-					id: 43,
-					name: ""
-				},
-				id: 42,
-				picture_big: "",
-				picture_small: "",
-				public: true,
-				title: "",
-				tracks: { data: [] },
-				user: {
-					id: 44,
-					name: ""
-				}
-			})
+			Promise.resolve<ApiPlaylist>(playlist1)
 		);
 		await expect(DEFAULT_API.loadPlaylists(["42"])).resolves.toEqual<
 			Playlist[]
 		>([
 			{
-				id: "42",
-				link: "https://www.deezer.com/playlist/42",
+				id: `${playlist1.id}`,
+				link: `https://www.deezer.com/playlist/${playlist1.id}`,
 				picture_big: "",
 				picture_small: "",
 				provider: "deezer",
 				title: "",
-				tracks: [],
+				tracks: [
+					{
+						album: {
+							cover_big: "",
+							cover_small: "",
+							id: `${playlist1.tracks!.data[0].album.id}`,
+							link: `https://www.deezer.com/album/${
+								playlist1.tracks!.data[0].album.id
+							}`,
+							title: ""
+						},
+						artist: {
+							id: `${playlist1.tracks!.data[0].artist.id}`,
+							link: `https://www.deezer.com/artist/${
+								playlist1.tracks!.data[0].artist.id
+							}`,
+							name: "",
+							picture_big: "",
+							picture_small: ""
+						},
+						duration: 0,
+						id: `${playlist1.tracks!.data[0].id}`,
+						link: `https://www.deezer.com/track/${
+							playlist1.tracks!.data[0].id
+						}`,
+						preview: "https://preview",
+						provider: "deezer",
+						title: "",
+						type: "track"
+					}
+				],
 				type: "playlist",
 				user: {
-					id: "43",
-					link: "https://www.deezer.com/profile/43",
+					id: `${playlist1.user!.id}`,
+					link: `https://www.deezer.com/profile/${
+						playlist1.user!.id
+					}`,
 					name: ""
 				}
 			}
@@ -121,50 +277,40 @@ describe("Providers Utilities", () => {
 
 	// --------------------------------------------------------------
 
-	it("load tracks - valid", async () => {
+	it("loadPlaylists - edge", async () => {
+		await expect(DEFAULT_API.loadPlaylists([])).resolves.toEqual<
+			Playlist[]
+		>([]);
+	});
+
+	// --------------------------------------------------------------
+
+	it("loadTracks - valid", async () => {
+		const track1 = createFakeApiTrack();
 		const mockedJsonp = mocked(asyncJsonp, true);
 		mockedJsonp.mockImplementation((url, qs) =>
-			Promise.resolve<ApiTrack>({
-				error: void 0,
-				album: {
-					cover_big: "",
-					cover_small: "",
-					id: 43,
-					title: ""
-				},
-				artist: {
-					id: 44,
-					name: "",
-					picture_big: "",
-					picture_small: ""
-				},
-				duration: 0,
-				id: 42,
-				preview: "",
-				readable: true,
-				title: ""
-			})
+			Promise.resolve<ApiTrack>(track1)
 		);
 		await expect(DEFAULT_API.loadTracks(["42"])).resolves.toEqual<Track[]>([
 			{
 				album: {
 					cover_big: "",
 					cover_small: "",
-					id: "43",
-					link: "https://www.deezer.com/album/43",
+					id: `${track1.album.id}`,
+					link: `https://www.deezer.com/album/${track1.album.id}`,
 					title: ""
 				},
 				artist: {
-					id: "44",
-					link: "https://www.deezer.com/artist/44",
+					id: `${track1.artist.id}`,
+					link: `https://www.deezer.com/artist/${track1.artist.id}`,
 					name: "",
 					picture_big: "",
 					picture_small: ""
 				},
 				duration: 0,
-				id: "42",
-				link: "https://www.deezer.com/track/42",
-				preview: "",
+				id: `${track1.id}`,
+				link: `https://www.deezer.com/track/${track1.id}`,
+				preview: "https://preview",
 				provider: "deezer",
 				title: "",
 				type: "track"
@@ -174,46 +320,175 @@ describe("Providers Utilities", () => {
 
 	// --------------------------------------------------------------
 
-	it("search albums - valid - TODO", async () => {
+	it("loadTracks - edge", async () => {
+		await expect(DEFAULT_API.loadTracks([])).resolves.toEqual<Track[]>([]);
+	});
+
+	// --------------------------------------------------------------
+
+	it("searchAlbums - valid - TODO", async () => {
+		const album1 = createFakeApiAlbum();
 		const mockedJsonp = mocked(asyncJsonp, true);
 		mockedJsonp.mockImplementation((url, qs) =>
 			Promise.resolve<ApiSearchResult<ApiAlbum>>({
-				data: [],
-				total: 0
+				data: [album1],
+				total: 1
 			})
 		);
 		await expect(
 			DEFAULT_API.searchAlbums("", { limit: 10 })
-		).resolves.toEqual<Album[]>([]);
+		).resolves.toEqual<Album[]>([
+			{
+				artist: {
+					id: `${album1.artist.id}`,
+					link: `https://www.deezer.com/artist/${album1.artist.id}`,
+					name: "",
+					picture_big: "",
+					picture_small: ""
+				},
+				cover_big: "",
+				cover_small: "",
+				id: `${album1.id}`,
+				link: `https://www.deezer.com/album/${album1.id}`,
+				provider: "deezer",
+				title: "",
+				tracks: [
+					{
+						album: {
+							cover_big: "",
+							cover_small: "",
+							id: `${album1.tracks!.data[0].album.id}`,
+							link: `https://www.deezer.com/album/${
+								album1.tracks!.data[0].album.id
+							}`,
+							title: ""
+						},
+						artist: {
+							id: `${album1.tracks!.data[0].artist.id}`,
+							link: `https://www.deezer.com/artist/${
+								album1.tracks!.data[0].artist.id
+							}`,
+							name: "",
+							picture_big: "",
+							picture_small: ""
+						},
+						duration: 0,
+						id: `${album1.tracks!.data[0].id}`,
+						link: `https://www.deezer.com/track/${
+							album1.tracks!.data[0].id
+						}`,
+						preview: "https://preview",
+						provider: "deezer",
+						title: "",
+						type: "track"
+					}
+				],
+				type: "album"
+			}
+		]);
 	});
 
 	// --------------------------------------------------------------
 
-	it("search playlists - valid - TODO", async () => {
+	it("searchPlaylists - valid - TODO", async () => {
+		const playlist1 = createFakeApiPlaylist();
 		const mockedJsonp = mocked(asyncJsonp, true);
 		mockedJsonp.mockImplementation((url, qs) =>
 			Promise.resolve<ApiSearchResult<ApiPlaylist>>({
-				data: [],
-				total: 0
+				data: [playlist1],
+				total: 1
 			})
 		);
 		await expect(
 			DEFAULT_API.searchPlaylists("", { limit: 10 })
-		).resolves.toEqual<Playlist[]>([]);
+		).resolves.toEqual<Playlist[]>([
+			{
+				id: `${playlist1.id}`,
+				link: `https://www.deezer.com/playlist/${playlist1.id}`,
+				picture_big: "",
+				picture_small: "",
+				provider: "deezer",
+				title: "",
+				tracks: [
+					{
+						album: {
+							cover_big: "",
+							cover_small: "",
+							id: `${playlist1.tracks!.data[0].album.id}`,
+							link: `https://www.deezer.com/album/${
+								playlist1.tracks!.data[0].album.id
+							}`,
+							title: ""
+						},
+						artist: {
+							id: `${playlist1.tracks!.data[0].artist.id}`,
+							link: `https://www.deezer.com/artist/${
+								playlist1.tracks!.data[0].artist.id
+							}`,
+							name: "",
+							picture_big: "",
+							picture_small: ""
+						},
+						duration: 0,
+						id: `${playlist1.tracks!.data[0].id}`,
+						link: `https://www.deezer.com/track/${
+							playlist1.tracks!.data[0].id
+						}`,
+						preview: "https://preview",
+						provider: "deezer",
+						title: "",
+						type: "track"
+					}
+				],
+				type: "playlist",
+				user: {
+					id: `${playlist1.user!.id}`,
+					link: `https://www.deezer.com/profile/${
+						playlist1.user!.id
+					}`,
+					name: ""
+				}
+			}
+		]);
 	});
 
 	// --------------------------------------------------------------
 
-	it("search tracks - valid - TODO", async () => {
+	it("searchTracks - valid - TODO", async () => {
+		const track1 = createFakeApiTrack();
 		const mockedJsonp = mocked(asyncJsonp, true);
 		mockedJsonp.mockImplementation((url, qs) =>
 			Promise.resolve<ApiSearchResult<ApiTrack>>({
-				data: [],
-				total: 0
+				data: [track1],
+				total: 1
 			})
 		);
 		await expect(
 			DEFAULT_API.searchTracks("", { limit: 10 })
-		).resolves.toEqual<Track[]>([]);
+		).resolves.toEqual<Track[]>([
+			{
+				album: {
+					cover_big: "",
+					cover_small: "",
+					id: `${track1.album.id}`,
+					link: `https://www.deezer.com/album/${track1.album.id}`,
+					title: ""
+				},
+				artist: {
+					id: `${track1.artist.id}`,
+					link: `https://www.deezer.com/artist/${track1.artist.id}`,
+					name: "",
+					picture_big: "",
+					picture_small: ""
+				},
+				duration: 0,
+				id: `${track1.id}`,
+				link: `https://www.deezer.com/track/${track1.id}`,
+				preview: "https://preview",
+				provider: "deezer",
+				title: "",
+				type: "track"
+			}
+		]);
 	});
 });

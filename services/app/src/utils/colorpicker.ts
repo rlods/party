@@ -40,7 +40,7 @@ export const pickColor = async (url: string) => {
 							: "light"
 				};
 			} catch (err) {
-				console.debug("An error prevented colorpicking", err);
+				console.error("An error prevented colorpicking", err);
 				CACHE[url] = res = DEFAULT_COLOR;
 			}
 		}

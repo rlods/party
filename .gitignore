@@ -3,5 +3,4 @@ env/__private__.env
 .volumes/
 dist/
 node_modules/
-coverage/
 secrets/

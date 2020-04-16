@@ -54,8 +54,8 @@ const loadAudioBufferWithCache = async (
 	url: string
 ): Promise<AudioBuffer> => {
 	if (!url) {
-		console.error("Track has invalid URL", { trackId });
-		throw new Error("Invalid URL");
+		console.error("Track URL is invalid", { trackId });
+		throw new Error("Track URL is invalid");
 	}
 	let buffer: AudioBuffer | null = null;
 	const index = AUDIO_BUFFER_CACHES.findIndex(item => item.url === url);
@@ -114,7 +114,7 @@ export type Player = {
 
 // ------------------------------------------------------------------
 
-const PlayerImpl = (chainPlay: boolean): Player => {
+const PlayerImpl = (): Player => {
 	let analyserNode: AnalyserNode | null = null;
 	let gainNode: GainNode | null = null;
 	let _node: AudioNode | null = null;
@@ -185,9 +185,6 @@ const PlayerImpl = (chainPlay: boolean): Player => {
 			console.debug("[Player] Audio terminated...");
 			_buffer = null;
 			_sourceNode = null;
-			if (chainPlay) {
-				_trackPosition++;
-			}
 		};
 		_sourceNode.playbackRate.value = 1.0;
 		_sourceNode.connect(getOrCreateNode());
@@ -225,6 +222,6 @@ const PlayerImpl = (chainPlay: boolean): Player => {
 
 // ------------------------------------------------------------------
 
-export const QUEUE_PLAYER = PlayerImpl(true);
+export const QUEUE_PLAYER = PlayerImpl();
 
-export const PREVIEW_PLAYER = PlayerImpl(false);
+export const PREVIEW_PLAYER = PlayerImpl();

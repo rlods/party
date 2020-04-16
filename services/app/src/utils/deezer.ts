@@ -203,7 +203,7 @@ const DeezerApiImpl = (): DeezerApi => {
 						// Quota limit exceeded
 						return null;
 					}
-					console.debug(
+					console.error(
 						"[Deezer] An error occured while loading media",
 						media.error
 					);
