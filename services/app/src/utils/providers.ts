@@ -46,7 +46,10 @@ export const load = async (accesses: MediaAccess[]): Promise<Media[]> => {
 export const loadNew = async (
 	accesses: MediaAccess[],
 	oldMedias: StructuredMedias
-) => {
+): Promise<{
+	newMedias: Media[];
+	newMediasAndTracks: Media[];
+}> => {
 	const newAccesses: MediaAccess[] = accesses
 		// Only not already loaded
 		.filter(access => !oldMedias[access.provider][access.type][access.id])

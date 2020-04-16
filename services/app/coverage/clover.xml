@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1587065591512" clover="3.2.0">
-  <project timestamp="1587065591513" name="All files">
-    <metrics statements="1311" coveredstatements="204" conditionals="529" coveredconditionals="69" methods="376" coveredmethods="52" elements="2216" coveredelements="325" complexity="0" loc="1311" ncloc="1311" packages="14" files="71" classes="71"/>
+<coverage generated="1587066897526" clover="3.2.0">
+  <project timestamp="1587066897527" name="All files">
+    <metrics statements="1317" coveredstatements="232" conditionals="535" coveredconditionals="78" methods="376" coveredmethods="59" elements="2228" coveredelements="369" complexity="0" loc="1317" ncloc="1317" packages="14" files="71" classes="71"/>
     <package name="src">
       <metrics statements="61" coveredstatements="0" conditionals="34" coveredconditionals="0" methods="18" coveredmethods="0"/>
       <file name="index.tsx" path="/home/node/app/services/app/src/index.tsx">
@@ -1022,7 +1022,7 @@
       </file>
     </package>
     <package name="src.utils">
-      <metrics statements="478" coveredstatements="192" conditionals="152" coveredconditionals="67" methods="117" coveredmethods="47"/>
+      <metrics statements="484" coveredstatements="220" conditionals="158" coveredconditionals="76" methods="117" coveredmethods="54"/>
       <file name="clipboard.ts" path="/home/node/app/services/app/src/utils/clipboard.ts">
         <metrics statements="18" coveredstatements="0" conditionals="6" coveredconditionals="0" methods="2" coveredmethods="0"/>
         <line num="2" count="0" type="stmt"/>
@@ -1063,25 +1063,25 @@
         <line num="48" count="4" type="stmt"/>
       </file>
       <file name="deezer.ts" path="/home/node/app/services/app/src/utils/deezer.ts">
-        <metrics statements="75" coveredstatements="72" conditionals="28" coveredconditionals="22" methods="29" coveredmethods="29"/>
-        <line num="7" count="1" type="stmt"/>
+        <metrics statements="81" coveredstatements="78" conditionals="34" coveredconditionals="28" methods="29" coveredmethods="29"/>
+        <line num="7" count="2" type="stmt"/>
         <line num="78" count="2" type="stmt"/>
         <line num="95" count="2" type="cond" truecount="2" falsecount="0"/>
         <line num="96" count="2" type="stmt"/>
-        <line num="101" count="1" type="stmt"/>
+        <line num="101" count="2" type="stmt"/>
         <line num="104" count="2" type="stmt"/>
         <line num="114" count="2" type="cond" truecount="2" falsecount="0"/>
         <line num="115" count="2" type="stmt"/>
-        <line num="125" count="1" type="stmt"/>
+        <line num="125" count="2" type="stmt"/>
         <line num="128" count="6" type="stmt"/>
-        <line num="173" count="1" type="stmt"/>
-        <line num="174" count="1" type="stmt"/>
-        <line num="176" count="1" type="stmt"/>
+        <line num="173" count="2" type="stmt"/>
+        <line num="174" count="2" type="stmt"/>
+        <line num="176" count="2" type="stmt"/>
         <line num="178" count="7" type="stmt"/>
         <line num="179" count="7" type="stmt"/>
-        <line num="182" count="1" type="stmt"/>
+        <line num="182" count="2" type="stmt"/>
         <line num="187" count="3" type="stmt"/>
-        <line num="194" count="1" type="stmt"/>
+        <line num="194" count="2" type="stmt"/>
         <line num="198" count="4" type="stmt"/>
         <line num="200" count="4" type="stmt"/>
         <line num="201" count="4" type="cond" truecount="2" falsecount="0"/>
@@ -1090,7 +1090,7 @@
         <line num="206" count="1" type="stmt"/>
         <line num="210" count="1" type="stmt"/>
         <line num="212" count="3" type="stmt"/>
-        <line num="216" count="1" type="stmt"/>
+        <line num="216" count="2" type="stmt"/>
         <line num="220" count="4" type="stmt"/>
         <line num="221" count="4" type="stmt"/>
         <line num="222" count="4" type="stmt"/>
@@ -1108,37 +1108,43 @@
         <line num="239" count="3" type="stmt"/>
         <line num="241" count="3" type="stmt"/>
         <line num="243" count="3" type="stmt"/>
-        <line num="246" count="1" type="stmt"/>
-        <line num="247" count="1" type="stmt"/>
-        <line num="252" count="1" type="stmt"/>
+        <line num="246" count="2" type="stmt"/>
+        <line num="250" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="251" count="2" type="stmt"/>
         <line num="253" count="1" type="stmt"/>
-        <line num="254" count="1" type="stmt"/>
-        <line num="255" count="1" type="stmt"/>
-        <line num="258" count="1" type="stmt"/>
-        <line num="259" count="1" type="stmt"/>
-        <line num="260" count="1" type="cond" truecount="2" falsecount="0"/>
-        <line num="261" count="1" type="stmt"/>
-        <line num="264" count="1" type="stmt"/>
-        <line num="265" count="3" type="cond" truecount="2" falsecount="0"/>
-        <line num="266" count="2" type="stmt"/>
-        <line num="267" count="2" type="stmt"/>
-        <line num="268" count="1" type="stmt"/>
-        <line num="270" count="1" type="stmt"/>
-        <line num="273" count="1" type="stmt"/>
-        <line num="274" count="2" type="cond" truecount="2" falsecount="0"/>
-        <line num="275" count="1" type="stmt"/>
-        <line num="276" count="1" type="stmt"/>
-        <line num="280" count="1" type="stmt"/>
-        <line num="281" count="1" type="stmt"/>
-        <line num="284" count="1" type="stmt"/>
-        <line num="287" count="1" type="stmt"/>
-        <line num="288" count="2" type="cond" truecount="2" falsecount="0"/>
-        <line num="289" count="1" type="stmt"/>
-        <line num="290" count="1" type="stmt"/>
-        <line num="291" count="1" type="stmt"/>
-        <line num="293" count="1" type="stmt"/>
+        <line num="258" count="2" type="stmt"/>
+        <line num="262" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="263" count="2" type="stmt"/>
+        <line num="265" count="1" type="stmt"/>
+        <line num="266" count="1" type="stmt"/>
+        <line num="267" count="1" type="stmt"/>
+        <line num="270" count="2" type="stmt"/>
+        <line num="274" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="275" count="2" type="stmt"/>
+        <line num="277" count="1" type="stmt"/>
+        <line num="278" count="1" type="cond" truecount="2" falsecount="0"/>
+        <line num="279" count="1" type="stmt"/>
+        <line num="282" count="2" type="stmt"/>
+        <line num="283" count="5" type="cond" truecount="2" falsecount="0"/>
+        <line num="284" count="3" type="stmt"/>
+        <line num="286" count="2" type="stmt"/>
+        <line num="287" count="2" type="stmt"/>
+        <line num="288" count="1" type="stmt"/>
+        <line num="291" count="2" type="stmt"/>
+        <line num="292" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="293" count="3" type="stmt"/>
+        <line num="295" count="1" type="stmt"/>
         <line num="296" count="1" type="stmt"/>
+        <line num="297" count="1" type="stmt"/>
+        <line num="298" count="1" type="stmt"/>
+        <line num="302" count="2" type="stmt"/>
+        <line num="303" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="304" count="3" type="stmt"/>
+        <line num="306" count="1" type="stmt"/>
+        <line num="307" count="1" type="stmt"/>
         <line num="308" count="1" type="stmt"/>
+        <line num="311" count="2" type="stmt"/>
+        <line num="323" count="2" type="stmt"/>
       </file>
       <file name="firebase.ts" path="/home/node/app/services/app/src/utils/firebase.ts">
         <metrics statements="134" coveredstatements="0" conditionals="29" coveredconditionals="0" methods="31" coveredmethods="0"/>
@@ -1281,25 +1287,25 @@
         <metrics statements="0" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
       </file>
       <file name="i18n.ts" path="/home/node/app/services/app/src/utils/i18n.ts">
-        <metrics statements="9" coveredstatements="0" conditionals="6" coveredconditionals="0" methods="5" coveredmethods="0"/>
-        <line num="9" count="0" type="stmt"/>
-        <line num="10" count="0" type="stmt"/>
-        <line num="14" count="0" type="stmt"/>
-        <line num="15" count="0" type="stmt"/>
-        <line num="16" count="0" type="stmt"/>
-        <line num="19" count="0" type="stmt"/>
-        <line num="34" count="0" type="stmt"/>
-        <line num="39" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="40" count="0" type="stmt"/>
+        <metrics statements="9" coveredstatements="8" conditionals="6" coveredconditionals="3" methods="5" coveredmethods="4"/>
+        <line num="13" count="1" type="stmt"/>
+        <line num="14" count="1" type="stmt"/>
+        <line num="18" count="1" type="stmt"/>
+        <line num="19" count="1" type="stmt"/>
+        <line num="20" count="1" type="stmt"/>
+        <line num="23" count="1" type="stmt"/>
+        <line num="38" count="0" type="stmt"/>
+        <line num="43" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="44" count="1" type="stmt"/>
       </file>
       <file name="index.ts" path="/home/node/app/services/app/src/utils/index.ts">
         <metrics statements="2" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="0"/>
-        <line num="1" count="1" type="stmt"/>
+        <line num="1" count="2" type="stmt"/>
         <line num="2" count="0" type="stmt"/>
       </file>
       <file name="jsonp.ts" path="/home/node/app/services/app/src/utils/jsonp.ts">
         <metrics statements="6" coveredstatements="1" conditionals="4" coveredconditionals="0" methods="3" coveredmethods="0"/>
-        <line num="5" count="1" type="stmt"/>
+        <line num="5" count="2" type="stmt"/>
         <line num="6" count="0" type="stmt"/>
         <line num="7" count="0" type="stmt"/>
         <line num="13" count="0" type="cond" truecount="0" falsecount="2"/>
@@ -1490,29 +1496,29 @@
         <line num="227" count="1" type="stmt"/>
       </file>
       <file name="providers.ts" path="/home/node/app/services/app/src/utils/providers.ts">
-        <metrics statements="22" coveredstatements="0" conditionals="5" coveredconditionals="0" methods="7" coveredmethods="0"/>
-        <line num="12" count="0" type="stmt"/>
-        <line num="15" count="0" type="stmt"/>
-        <line num="24" count="0" type="stmt"/>
+        <metrics statements="22" coveredstatements="14" conditionals="5" coveredconditionals="0" methods="7" coveredmethods="3"/>
+        <line num="12" count="1" type="stmt"/>
+        <line num="15" count="2" type="stmt"/>
+        <line num="24" count="2" type="stmt"/>
         <line num="25" count="0" type="stmt"/>
-        <line num="27" count="0" type="stmt"/>
-        <line num="36" count="0" type="stmt"/>
+        <line num="27" count="2" type="stmt"/>
+        <line num="36" count="2" type="stmt"/>
         <line num="38" count="0" type="stmt"/>
-        <line num="46" count="0" type="stmt"/>
-        <line num="50" count="0" type="stmt"/>
-        <line num="52" count="0" type="stmt"/>
-        <line num="56" count="0" type="stmt"/>
-        <line num="59" count="0" type="cond" truecount="0" falsecount="3"/>
-        <line num="64" count="0" type="stmt"/>
-        <line num="65" count="0" type="stmt"/>
-        <line num="66" count="0" type="stmt"/>
-        <line num="67" count="0" type="stmt"/>
-        <line num="68" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="69" count="0" type="stmt"/>
+        <line num="46" count="1" type="stmt"/>
+        <line num="53" count="1" type="stmt"/>
+        <line num="55" count="0" type="stmt"/>
+        <line num="59" count="0" type="stmt"/>
+        <line num="62" count="0" type="cond" truecount="0" falsecount="3"/>
+        <line num="67" count="1" type="stmt"/>
+        <line num="68" count="1" type="stmt"/>
+        <line num="69" count="1" type="stmt"/>
+        <line num="70" count="0" type="stmt"/>
+        <line num="71" count="0" type="cond" truecount="0" falsecount="2"/>
         <line num="72" count="0" type="stmt"/>
-        <line num="76" count="0" type="stmt"/>
-        <line num="80" count="0" type="stmt"/>
-        <line num="85" count="0" type="stmt"/>
+        <line num="75" count="1" type="stmt"/>
+        <line num="79" count="1" type="stmt"/>
+        <line num="83" count="1" type="stmt"/>
+        <line num="88" count="1" type="stmt"/>
       </file>
       <file name="rooms.ts" path="/home/node/app/services/app/src/utils/rooms.ts">
         <metrics statements="14" coveredstatements="14" conditionals="4" coveredconditionals="4" methods="4" coveredmethods="4"/>

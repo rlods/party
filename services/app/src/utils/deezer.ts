@@ -243,54 +243,69 @@ const DeezerApiImpl = (): DeezerApi => {
 		return medias as T[];
 	};
 
-	const searchAlbums = async (query: string, options?: SearchOptions) => {
+	const searchAlbums = async (
+		query: string,
+		options?: SearchOptions
+	): Promise<Album[]> => {
+		if (query.trim().length === 0) {
+			return [];
+		}
 		return (await _search<ApiAlbum>("album", query, options)).data.map(
 			ConvertAlbum
 		);
 	};
 
-	const searchPlaylists = async (query: string, options?: SearchOptions) => {
+	const searchPlaylists = async (
+		query: string,
+		options?: SearchOptions
+	): Promise<Playlist[]> => {
+		if (query.trim().length === 0) {
+			return [];
+		}
 		return (await _search<ApiPlaylist>("playlist", query, options)).data
 			.filter(playlist => playlist.public)
 			.map(playlist => ConvertPlaylist(playlist, playlist.user!));
 	};
 
-	const searchTracks = async (query: string, options?: SearchOptions) => {
+	const searchTracks = async (
+		query: string,
+		options?: SearchOptions
+	): Promise<Track[]> => {
+		if (query.trim().length === 0) {
+			return [];
+		}
 		return (await _search<ApiTrack>("track", query, options)).data
 			.filter(track => track.readable && track.preview)
 			.map(track => ConvertTrack(track, track.album));
 	};
 
 	const loadAlbums = async (ids: string[]): Promise<Album[]> => {
-		if (ids.length > 0) {
-			console.debug("[Deezer] Loading albums...", { ids });
-			const albums = await _loadWithRetry<ApiAlbum>("album", ids);
-			return albums.map(album => ConvertAlbum(album));
+		if (ids.length === 0) {
+			return [];
 		}
-		return [];
+		console.debug("[Deezer] Loading albums...", { ids });
+		const albums = await _loadWithRetry<ApiAlbum>("album", ids);
+		return albums.map(album => ConvertAlbum(album));
 	};
 
 	const loadPlaylists = async (ids: string[]): Promise<Playlist[]> => {
-		if (ids.length > 0) {
-			console.debug("[Deezer] Loading playlists...", { ids });
-			const playlists = await _loadWithRetry<ApiPlaylist>(
-				"playlist",
-				ids
-			);
-			return playlists.map(playlist =>
-				ConvertPlaylist(playlist, playlist.creator!)
-			);
+		if (ids.length === 0) {
+			return [];
 		}
-		return [];
+		console.debug("[Deezer] Loading playlists...", { ids });
+		const playlists = await _loadWithRetry<ApiPlaylist>("playlist", ids);
+		return playlists.map(playlist =>
+			ConvertPlaylist(playlist, playlist.creator!)
+		);
 	};
 
 	const loadTracks = async (ids: string[]): Promise<Track[]> => {
-		if (ids.length > 0) {
-			console.debug("[Deezer] Loading tracks...", { ids });
-			const tracks = await _loadWithRetry<ApiTrack>("track", ids);
-			return tracks.map(track => ConvertTrack(track, track.album));
+		if (ids.length === 0) {
+			return [];
 		}
-		return [];
+		console.debug("[Deezer] Loading tracks...", { ids });
+		const tracks = await _loadWithRetry<ApiTrack>("track", ids);
+		return tracks.map(track => ConvertTrack(track, track.album));
 	};
 
 	return {

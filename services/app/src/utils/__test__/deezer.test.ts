@@ -326,7 +326,7 @@ describe("Providers Utilities", () => {
 
 	// --------------------------------------------------------------
 
-	it("searchAlbums - valid - TODO", async () => {
+	it("searchAlbums - valid", async () => {
 		const album1 = createFakeApiAlbum();
 		const mockedJsonp = mocked(asyncJsonp, true);
 		mockedJsonp.mockImplementation((url, qs) =>
@@ -336,7 +336,7 @@ describe("Providers Utilities", () => {
 			})
 		);
 		await expect(
-			DEFAULT_API.searchAlbums("", { limit: 10 })
+			DEFAULT_API.searchAlbums("dummy", { limit: 10 })
 		).resolves.toEqual<Album[]>([
 			{
 				artist: {
@@ -390,7 +390,15 @@ describe("Providers Utilities", () => {
 
 	// --------------------------------------------------------------
 
-	it("searchPlaylists - valid - TODO", async () => {
+	it("searchAlbums - edge", async () => {
+		await expect(
+			DEFAULT_API.searchAlbums("", { limit: 10 })
+		).resolves.toEqual<Album[]>([]);
+	});
+
+	// --------------------------------------------------------------
+
+	it("searchPlaylists - valid", async () => {
 		const playlist1 = createFakeApiPlaylist();
 		const mockedJsonp = mocked(asyncJsonp, true);
 		mockedJsonp.mockImplementation((url, qs) =>
@@ -400,7 +408,7 @@ describe("Providers Utilities", () => {
 			})
 		);
 		await expect(
-			DEFAULT_API.searchPlaylists("", { limit: 10 })
+			DEFAULT_API.searchPlaylists("dummy", { limit: 10 })
 		).resolves.toEqual<Playlist[]>([
 			{
 				id: `${playlist1.id}`,
@@ -454,7 +462,15 @@ describe("Providers Utilities", () => {
 
 	// --------------------------------------------------------------
 
-	it("searchTracks - valid - TODO", async () => {
+	it("searchPlaylists - edge", async () => {
+		await expect(
+			DEFAULT_API.searchPlaylists("", { limit: 10 })
+		).resolves.toEqual<Playlist[]>([]);
+	});
+
+	// --------------------------------------------------------------
+
+	it("searchTracks - valid", async () => {
 		const track1 = createFakeApiTrack();
 		const mockedJsonp = mocked(asyncJsonp, true);
 		mockedJsonp.mockImplementation((url, qs) =>
@@ -464,7 +480,7 @@ describe("Providers Utilities", () => {
 			})
 		);
 		await expect(
-			DEFAULT_API.searchTracks("", { limit: 10 })
+			DEFAULT_API.searchTracks("dummy", { limit: 10 })
 		).resolves.toEqual<Track[]>([
 			{
 				album: {
@@ -490,5 +506,13 @@ describe("Providers Utilities", () => {
 				type: "track"
 			}
 		]);
+	});
+
+	// --------------------------------------------------------------
+
+	it("searchTracks - edge", async () => {
+		await expect(
+			DEFAULT_API.searchTracks("", { limit: 10 })
+		).resolves.toEqual<Track[]>([]);
 	});
 });

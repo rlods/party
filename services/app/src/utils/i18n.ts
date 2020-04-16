@@ -6,7 +6,11 @@ import fr from "../locales/fr";
 
 // --------------------------------------------------------------
 
-export const changeLanguage = (language: string) =>
+type Language = "en" | "fr";
+
+// --------------------------------------------------------------
+
+export const changeLanguage = (language: Language) =>
 	i18next.changeLanguage(language);
 
 // --------------------------------------------------------------
