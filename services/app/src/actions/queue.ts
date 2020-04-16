@@ -16,7 +16,7 @@ export const clearQueue = (): AsyncAction => async (dispatch, getState) => {
 		return;
 	}
 	try {
-		console.debug("Clearing queue...");
+		console.debug("[Queue] Clearing medias...");
 		await room.update({
 			...info,
 			playing: false,
@@ -47,7 +47,7 @@ export const appendToQueue = (newMedias: MediaAccess[]): AsyncAction => async (
 		return;
 	}
 	try {
-		console.debug("Appending medias to queue...", {
+		console.debug("[Queue] Appending medias...", {
 			newMedias
 		});
 		await room.update({
@@ -85,7 +85,7 @@ export const removeFromQueue = (
 	}
 	const playingTrackIndex = info.queue_position;
 	try {
-		console.debug("Removing track from queue...", {
+		console.debug("[Queue] Removing track...", {
 			playingTrackIndex,
 			removedMediaIndex,
 			removedTrackCount,
@@ -94,7 +94,7 @@ export const removeFromQueue = (
 		});
 		const queue = createQueueRemoving(medias, removedMediaIndex, 1);
 		if (Object.keys(queue).length === 0) {
-			console.debug("Removing last media from queue...");
+			console.debug("[Queue] Removing last media...");
 			await room.update({
 				...info,
 				playing: false,
@@ -151,7 +151,7 @@ export const setQueuePosition = (newTrackIndex: number): AsyncAction => async (
 		return;
 	}
 	try {
-		console.debug("Set queue position...", {
+		console.debug("[Queue] Set position...", {
 			oldTrackIndex,
 			newTrackIndex
 		});
@@ -176,7 +176,7 @@ export const moveBackward = (): AsyncAction => async (dispatch, getState) => {
 		// Nothing to do
 		return;
 	}
-	console.debug("Moving backward...");
+	console.debug("[Queue] Moving backward...");
 	dispatch(
 		setQueuePosition(
 			info.queue_position > 0
@@ -196,6 +196,6 @@ export const moveForward = (): AsyncAction => async (dispatch, getState) => {
 		// Nothing to do
 		return;
 	}
-	console.debug("Moving forward...");
+	console.debug("[Queue] Moving forward...");
 	dispatch(setQueuePosition((info.queue_position + 1) % tracks.length));
 };

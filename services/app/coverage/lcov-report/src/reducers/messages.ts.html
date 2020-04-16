@@ -22,30 +22,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">50% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/8</span>
+                <span class='fraction'>4/8</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">40% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/5</span>
+                <span class='fraction'>2/5</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">50% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/2</span>
+                <span class='fraction'>1/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">57.14% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/7</span>
+                <span class='fraction'>4/7</span>
             </div>
         
             
@@ -54,7 +54,7 @@
             Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
         </p>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line medium'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -91,23 +91,23 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { Reducer } from "redux";
@@ -118,23 +118,23 @@ import { Message } from "../utils/messages";
 &nbsp;
 export type State = Message[];
 &nbsp;
-export const INITIAL_STATE: State = <span class="cstat-no" title="statement not covered" >[];</span>
+export const INITIAL_STATE: State = [];
 &nbsp;
 // ------------------------------------------------------------------
 &nbsp;
-export const messagesReducer: Reducer&lt;State, MessagesAction&gt; = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(</span></span>
-	state = <span class="branch-0 cbranch-no" title="branch not covered" >INITIAL_STATE,</span>
+export const messagesReducer: Reducer&lt;State, MessagesAction&gt; = (
+	state = INITIAL_STATE,
 	action
 ): State =&gt; {
-<span class="cstat-no" title="statement not covered" >	switch (action.type) {</span>
-		case "message/ADD":
+	switch (action.type) {
+<span class="branch-0 cbranch-no" title="branch not covered" >		case "message/ADD":</span>
 <span class="cstat-no" title="statement not covered" >			return [action.payload, ...state];</span>
-		case "message/REMOVE":
+<span class="branch-1 cbranch-no" title="branch not covered" >		case "message/REMOVE":</span>
 <span class="cstat-no" title="statement not covered" >			return state.filter(<span class="fstat-no" title="function not covered" >ot</span>her =&gt; <span class="cstat-no" title="statement not covered" >other.id !== action.payload)</span>;</span>
-		case "message/RESET":
+<span class="branch-2 cbranch-no" title="branch not covered" >		case "message/RESET":</span>
 <span class="cstat-no" title="statement not covered" >			return INITIAL_STATE;</span>
 		default:
-<span class="cstat-no" title="statement not covered" >			return state;</span>
+			return state;
 	}
 };
 &nbsp;</pre></td></tr></table></pre>
@@ -144,7 +144,7 @@ export const messagesReducer: Reducer&lt;State, MessagesAction&gt; = <span class
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu Apr 16 2020 20:09:20 GMT+0000 (Coordinated Universal Time)
+                at Thu Apr 16 2020 22:09:38 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../prettify.js"></script>

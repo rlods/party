@@ -36,9 +36,9 @@ export const previewMedia = (access: MediaAccess): AsyncAction => async (
 		const { newMedias } = await loadNew([access], oldMedias);
 		const track = findPreview(access, oldMedias, newMedias);
 		if (!track) {
-			throw new Error("Cannot find track to preview...");
+			throw new Error("[Medias] Cannot find track to preview...");
 		}
-		console.debug("Previewing track...", { track });
+		console.debug("[Medias] Previewing track...", { track });
 		await PREVIEW_PLAYER.play(0, track.id, track.preview, 0);
 	} catch (err) {
 		dispatch(displayError(extractErrorMessage(err)));

@@ -18,7 +18,7 @@ export const startPlayer = (): AsyncAction => async (dispatch, getState) => {
 		return;
 	}
 	try {
-		console.debug("Starting player...");
+		console.debug("[Player] Starting...");
 		await room.update({
 			...info,
 			playing: true
@@ -44,7 +44,7 @@ export const stopPlayer = (): AsyncAction => async (dispatch, getState) => {
 		return;
 	}
 	try {
-		console.debug("Stopping player...");
+		console.debug("[Player] Stopping...");
 		await room.update({
 			...info,
 			playing: false

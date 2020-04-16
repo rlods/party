@@ -22,9 +22,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">33.33% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/21</span>
+                <span class='fraction'>7/21</span>
             </div>
         
             
@@ -36,16 +36,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">14.29% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/7</span>
+                <span class='fraction'>1/7</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">43.75% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/16</span>
+                <span class='fraction'>7/16</span>
             </div>
         
             
@@ -120,16 +120,16 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -166,16 +166,16 @@ export type MediasAction =
 	| ReturnType&lt;typeof resetMedias&gt;
 	| ReturnType&lt;typeof setMedias&gt;;
 &nbsp;
-const fetching = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >()</span> =&gt; <span class="cstat-no" title="statement not covered" >createAction("medias/FETCHING");</span></span>
-const success = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >()</span> =&gt; <span class="cstat-no" title="statement not covered" >createAction("medias/FETCHED");</span></span>
-const error = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(e</span>rror: AxiosError) =&gt; <span class="cstat-no" title="statement not covered" >createAction("medias/ERROR", error);</span></span>
-const resetMedias = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >()</span> =&gt; <span class="cstat-no" title="statement not covered" >createAction("medias/RESET");</span></span>
-export const setMedias = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(m</span>edias: Media[]) =&gt;</span>
-<span class="cstat-no" title="statement not covered" >	createAction("medias/SET", medias);</span>
+const fetching = <span class="fstat-no" title="function not covered" >()</span> =&gt; <span class="cstat-no" title="statement not covered" >createAction("medias/FETCHING");</span>
+const success = <span class="fstat-no" title="function not covered" >()</span> =&gt; <span class="cstat-no" title="statement not covered" >createAction("medias/FETCHED");</span>
+const error = <span class="fstat-no" title="function not covered" >(e</span>rror: AxiosError) =&gt; <span class="cstat-no" title="statement not covered" >createAction("medias/ERROR", error);</span>
+const resetMedias = <span class="fstat-no" title="function not covered" >()</span> =&gt; <span class="cstat-no" title="statement not covered" >createAction("medias/RESET");</span>
+export const setMedias = (medias: Media[]) =&gt;
+	createAction("medias/SET", medias);
 &nbsp;
 // ------------------------------------------------------------------
 &nbsp;
-export const previewMedia = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(a</span>ccess: MediaAccess): AsyncAction =&gt; <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >as</span>ync (</span></span>
+export const previewMedia = <span class="fstat-no" title="function not covered" >(a</span>ccess: MediaAccess): AsyncAction =&gt; <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >as</span>ync (</span>
 	dispatch,
 	getState
 ) =&gt; {
@@ -186,9 +186,9 @@ export const previewMedia = <span class="cstat-no" title="statement not covered"
 		const { newMedias } = <span class="cstat-no" title="statement not covered" >await loadNew([access], oldMedias);</span>
 		const track = <span class="cstat-no" title="statement not covered" >findPreview(access, oldMedias, newMedias);</span>
 <span class="cstat-no" title="statement not covered" >		if (!track) {</span>
-<span class="cstat-no" title="statement not covered" >			throw new Error("Cannot find track to preview...");</span>
+<span class="cstat-no" title="statement not covered" >			throw new Error("[Medias] Cannot find track to preview...");</span>
 		}
-<span class="cstat-no" title="statement not covered" >		console.debug("Previewing track...", { track });</span>
+<span class="cstat-no" title="statement not covered" >		console.debug("[Medias] Previewing track...", { track });</span>
 <span class="cstat-no" title="statement not covered" >		await PREVIEW_PLAYER.play(0, track.id, track.preview, 0);</span>
 	} catch (err) {
 <span class="cstat-no" title="statement not covered" >		dispatch(displayError(extractErrorMessage(err)));</span>
@@ -201,7 +201,7 @@ export const previewMedia = <span class="cstat-no" title="statement not covered"
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu Apr 16 2020 20:09:20 GMT+0000 (Coordinated Universal Time)
+                at Thu Apr 16 2020 22:09:38 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../prettify.js"></script>

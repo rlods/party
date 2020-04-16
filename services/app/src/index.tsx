@@ -2,15 +2,11 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import { Route, HashRouter } from "react-router-dom";
-import { composeWithDevTools } from "redux-devtools-extension";
-import { applyMiddleware, createStore, compose } from "redux";
-import thunk from "redux-thunk";
 //
-import { rootReducer } from "./reducers";
 import { App } from "./pages/App";
-import { QUEUE_PLAYER } from "./utils/player";
 import { initLocales } from "./utils/i18n";
 import { register as registerServiceWorker } from "./serviceWorker";
+import { initStore } from "./utils/redux";
 import "./index.scss";
 
 // ------------------------------------------------------------------
@@ -23,32 +19,13 @@ registerServiceWorker();
 // ------------------------------------------------------------------
 
 const init = async () => {
-	const composeEnhancers =
-		process.env.NODE_ENV === "development"
-			? composeWithDevTools({})
-			: compose;
-
 	initLocales();
-
-	const store = createStore(
-		rootReducer,
-		composeEnhancers(
-			applyMiddleware(
-				thunk.withExtraArgument({
-					player: QUEUE_PLAYER
-				})
-			)
-		)
-	);
-
-	// const dispatch: Dispatch = store.dispatch.bind(store);
-
-	return store;
+	return initStore();
 };
 
 // ------------------------------------------------------------------
 
-init().then(store => {
+init().then(({ store }) => {
 	ReactDOM.render(
 		<Provider store={store}>
 			<HashRouter>

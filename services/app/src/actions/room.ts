@@ -1,7 +1,7 @@
 import { AxiosError } from "axios";
 import { v4 } from "uuid";
 //
-import { createAction, AsyncAction } from ".";
+import { createAction, AsyncAction, Dispatch } from ".";
 import { displayError } from "./messages";
 import { RoomInfo } from "../utils/rooms";
 import { FirebaseRoom } from "../utils/firebase";
@@ -18,6 +18,7 @@ import { pickColor } from "../utils/colorpicker";
 import { Player } from "../utils/player";
 import { loadNew } from "../utils/providers";
 import history from "../utils/history";
+import { RootState } from "../reducers";
 
 // ------------------------------------------------------------------
 
@@ -42,7 +43,7 @@ export const createRoom = (
 ): AsyncAction => async dispatch => {
 	try {
 		const id = v4();
-		console.debug("Creating room...", { id, secret });
+		console.debug("[Room] Creating...", { id, secret });
 		await FirebaseRoom({ id, secret }).update({
 			name,
 			playing: false,
@@ -70,7 +71,7 @@ export const enterRoom = (id: string, secret: string): AsyncAction => async (
 	}
 	dispatch(exitRoom());
 	try {
-		console.debug("Entering room...", { id, secret });
+		console.debug("[Room] Entering...", { id, secret });
 		const newRoom = FirebaseRoom({ id, secret });
 		dispatch(
 			setRoom({
@@ -94,7 +95,7 @@ export const exitRoom = (): AsyncAction => async (dispatch, getState) => {
 		// Nothing to do
 		return;
 	}
-	console.debug("Exiting room...");
+	console.debug("[Room] Exiting...");
 	dispatch(_unwatchPlayer());
 	dispatch(_unwatchRoom(room));
 	dispatch(resetRoom());
@@ -113,7 +114,7 @@ export const lockRoom = (): AsyncAction => async (dispatch, getState) => {
 		// Nothing to do
 		return;
 	}
-	console.debug("Locking room...", { id });
+	console.debug("[Room] Locking...", { id });
 	room.setSecret("");
 	// TODO : not history.replace(`/room/${id}`); as it would trigger a page refresh
 	dispatch(setRoom({ access: { id, secret: "" } }));
@@ -133,7 +134,7 @@ export const unlockRoom = (secret: string): AsyncAction => async (
 		// Nothing to do
 		return;
 	}
-	console.debug("Unlocking room...", { id, secret });
+	console.debug("[Room] Unlocking...", { id, secret });
 	room.setSecret(secret);
 	// TODO : not history.replace(`/room/${id}?secret=${secret}`); as it would trigger a page refresh
 	dispatch(setRoom({ access: { id, secret } }));
@@ -147,8 +148,8 @@ let ROOM_WATCHER: any = null;
 
 const _watchRoom = (
 	room: ReturnType<typeof FirebaseRoom>
-): AsyncAction => async (dispatch, getState) => {
-	console.debug("Watching room...");
+): AsyncAction => async (dispatch, getState, { player }) => {
+	console.debug("[Room] Watching...");
 	if (!!ROOM_WATCHER) {
 		// Nothing to do
 		return;
@@ -157,11 +158,10 @@ const _watchRoom = (
 		async (snapshot: firebase.database.DataSnapshot) => {
 			// TODO: we could add a queue in case too much updates are received
 			const {
-				medias: { medias: oldMedias },
-				room: { info: oldInfo }
+				medias: { medias: oldMedias }
 			} = getState();
 			const newInfo = snapshot.val() as RoomInfo;
-			console.debug("[Firebase] Received room update...", newInfo);
+			console.debug("[Room] Received room update...", newInfo);
 			let medias: MediaAccess[] = [];
 			if (newInfo.queue) {
 				medias = Object.entries(newInfo.queue)
@@ -171,8 +171,11 @@ const _watchRoom = (
 					)
 					.map(media => media[1]);
 			}
-			if (oldInfo!.playing !== newInfo.playing) {
+			if (newInfo.playing !== player.isPlaying()) {
 				if (newInfo.playing) {
+					if (!!PLAYER_TIMER) {
+						console.debug("************ ARG ************");
+					}
 					dispatch(_watchPlayer());
 				} else {
 					dispatch(_unwatchPlayer());
@@ -249,7 +252,32 @@ const _watchPlayer = (): AsyncAction => async (
 	getState,
 	{ player }
 ) => {
-	// Don't use setInterval because a step could be triggered before previous one terminated
+	if (!PLAYER_TIMER) {
+		console.debug("[Room] Watching player... ********************");
+		_scheduleTimer(dispatch, getState, player, 250);
+	}
+};
+
+const _unwatchPlayer = (): AsyncAction => async (
+	dispatch,
+	getState,
+	{ player }
+) => {
+	if (PLAYER_TIMER) {
+		console.debug("[Room] Unwatching player... ********************");
+		clearTimeout(PLAYER_TIMER);
+		PLAYER_TIMER = null;
+	}
+	await player.stop();
+};
+
+// Don't use setInterval because a step could be triggered before previous one terminated
+const _scheduleTimer = (
+	dispatch: Dispatch,
+	getState: () => RootState,
+	player: Player,
+	ms: number
+) => {
 	PLAYER_TIMER = setTimeout(async () => {
 		const {
 			room: { info, tracks },
@@ -262,6 +290,7 @@ const _watchPlayer = (): AsyncAction => async (
 				tracks,
 				info!.queue_position
 			);
+
 			if (nextTrackIndex >= 0) {
 				const nextAccess = tracks[nextTrackIndex];
 				const nextTrack =
@@ -293,26 +322,14 @@ const _watchPlayer = (): AsyncAction => async (
 			}
 
 			// Reschedule time
-			dispatch(_watchPlayer());
+			// console.debug("[Room] Rescheduling");
+			_scheduleTimer(dispatch, getState, player, ms);
 		} else {
 			// Last track has been removed from queue by user
-			console.debug("No more tracks in queue...");
+			console.debug("[Room] No more tracks in queue...");
 			dispatch(setRoom({ info: { ...info!, playing: false } })); // for info update because of player change  without firebase
 			await player.stop();
 			PLAYER_TIMER = null;
 		}
-	}, 250);
-};
-
-const _unwatchPlayer = (): AsyncAction => async (
-	dispatch,
-	getState,
-	{ player }
-) => {
-	if (PLAYER_TIMER) {
-		console.debug("Unwatching player...");
-		clearTimeout(PLAYER_TIMER);
-		PLAYER_TIMER = null;
-	}
-	await player.stop();
+	}, ms);
 };

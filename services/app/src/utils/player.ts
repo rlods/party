@@ -26,12 +26,12 @@ export type Player = {
 // ------------------------------------------------------------------
 
 const PlayerImpl = (): Player => {
-	let analyserNode: AnalyserNode | null = null;
-	let gainNode: GainNode | null = null;
+	let _analyserNode: AnalyserNode | null = null;
+	let _gainNode: GainNode | null = null;
 	let _node: AudioNode | null = null;
-	let _buffer: AudioBuffer | null = null;
+	let _duration = 0;
 	let _sourceNode: AudioBufferSourceNode | null = null;
-	let _sourceNodeStartTime = 0;
+	let _startTime = 0;
 	let _trackId = "";
 	let _trackPosition = -1;
 
@@ -39,17 +39,17 @@ const PlayerImpl = (): Player => {
 		if (!_node) {
 			_node = getDestinationNode();
 
-			gainNode = createGainNode();
-			gainNode.gain.value = 1.0;
-			gainNode.connect(_node);
-			_node = gainNode;
+			_gainNode = createGainNode();
+			_gainNode.gain.value = 1.0;
+			_gainNode.connect(_node);
+			_node = _gainNode;
 
-			analyserNode = createAnalyzerNode();
-			analyserNode.fftSize = 128;
-			// analyserNode.minDecibels = -90;
-			// analyserNode.maxDecibels = -10;
-			analyserNode.connect(_node);
-			_node = analyserNode;
+			_analyserNode = createAnalyzerNode();
+			_analyserNode.fftSize = 128;
+			// _analyserNode.minDecibels = -90;
+			// _analyserNode.maxDecibels = -10;
+			_analyserNode.connect(_node);
+			_node = _analyserNode;
 		}
 		return _node;
 	};
@@ -62,8 +62,8 @@ const PlayerImpl = (): Player => {
 
 	// Percentage [0, 1]
 	const getPlayingTrackPercent = () => {
-		if (_buffer && _sourceNode) {
-			return (getCurrentTime() - _sourceNodeStartTime) / _buffer.duration;
+		if (_sourceNode) {
+			return (getCurrentTime() - _startTime) / _duration;
 		}
 		return 0;
 	};
@@ -75,28 +75,32 @@ const PlayerImpl = (): Player => {
 		offset: number
 	) => {
 		await stop();
-		_buffer = await getOrLoadAudioBuffer(trackUrl); // TODO: warning if loadBuffer takes long for some reason and user clicks stop before end, next part of this function will continue after stop have been requested
+		const buffer = await getOrLoadAudioBuffer(trackUrl); // TODO: warning if loadBuffer takes long for some reason and user clicks stop before end, next part of this function will continue after stop have been requested
 		console.debug("[Player] Starting audio...", {
 			trackPosition,
 			trackId,
 			trackUrl
 		});
+		_duration = buffer.duration;
 		_trackId = trackId;
 		_trackPosition = trackPosition;
 		_sourceNode = createSourceNode();
-		_sourceNode.buffer = _buffer;
+		_sourceNode.buffer = buffer;
 		_sourceNode.loop = false;
 		_sourceNode.loopStart = 0;
 		_sourceNode.loopEnd = 0;
 		_sourceNode.onended = () => {
 			console.debug("[Player] Audio terminated...");
-			_buffer = null;
+			_duration = 0;
 			_sourceNode = null;
+			_startTime = 0;
+			_trackId = "";
+			_trackPosition++;
 		};
 		_sourceNode.playbackRate.value = 1.0;
 		_sourceNode.connect(getOrCreateNode());
 		_sourceNode.start(0, offset); // A new BufferSource must be created for each start
-		_sourceNodeStartTime = getCurrentTime();
+		_startTime = getCurrentTime();
 	};
 
 	const stop = (): Promise<void> =>
@@ -108,8 +112,9 @@ const PlayerImpl = (): Player => {
 					resolve();
 				};
 				_sourceNode.stop();
+				_duration = 0;
 				_sourceNode = null;
-				_sourceNodeStartTime = 0;
+				_startTime = 0;
 				_trackId = "";
 				_trackPosition = -1;
 			} else {

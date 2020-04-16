@@ -22,9 +22,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">38.89% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/18</span>
+                <span class='fraction'>7/18</span>
             </div>
         
             
@@ -43,9 +43,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">58.33% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/12</span>
+                <span class='fraction'>7/12</span>
             </div>
         
             
@@ -101,31 +101,31 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { createAction, AsyncAction } from ".";
 import { Message, MessageType } from "../utils/messages";
 &nbsp;
@@ -136,17 +136,17 @@ export type MessagesAction =
 	| ReturnType&lt;typeof clearMessages&gt;
 	| ReturnType&lt;typeof removeMessage&gt;;
 &nbsp;
-const addMessage = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(m</span>essage: Message) =&gt; <span class="cstat-no" title="statement not covered" >createAction("message/ADD", message);</span></span>
+const addMessage = <span class="fstat-no" title="function not covered" >(m</span>essage: Message) =&gt; <span class="cstat-no" title="statement not covered" >createAction("message/ADD", message);</span>
 &nbsp;
-const removeMessage = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(i</span>d: number) =&gt; <span class="cstat-no" title="statement not covered" >createAction("message/REMOVE", id);</span></span>
+const removeMessage = <span class="fstat-no" title="function not covered" >(i</span>d: number) =&gt; <span class="cstat-no" title="statement not covered" >createAction("message/REMOVE", id);</span>
 &nbsp;
-const clearMessages = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >()</span> =&gt; <span class="cstat-no" title="statement not covered" >createAction("message/RESET");</span></span>
+const clearMessages = <span class="fstat-no" title="function not covered" >()</span> =&gt; <span class="cstat-no" title="statement not covered" >createAction("message/RESET");</span>
 &nbsp;
 // ------------------------------------------------------------------
 &nbsp;
-let MESSAGE_ID_GENERATOR: number = <span class="cstat-no" title="statement not covered" >0;</span>
+let MESSAGE_ID_GENERATOR: number = 0;
 &nbsp;
-export const displayMessage = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(</span></span>
+export const displayMessage = <span class="fstat-no" title="function not covered" >(</span>
 	type: MessageType,
 	text: string,
 	duration: number = <span class="branch-0 cbranch-no" title="branch not covered" >5000</span>
@@ -156,11 +156,11 @@ export const displayMessage = <span class="cstat-no" title="statement not covere
 <span class="cstat-no" title="statement not covered" >	setTimeout(<span class="fstat-no" title="function not covered" >()</span> =&gt; <span class="cstat-no" title="statement not covered" >dispatch(removeMessage(id)),</span> duration);</span>
 };
 &nbsp;
-export const displayError = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(t</span>ext: string): AsyncAction =&gt; <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(d</span>ispatch): any =&gt; {</span></span>
+export const displayError = <span class="fstat-no" title="function not covered" >(t</span>ext: string): AsyncAction =&gt; <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(d</span>ispatch): any =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >	dispatch(displayMessage("error", text, 3000));</span>
 };
 &nbsp;
-export const displayInfo = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(t</span>ext: string) =&gt; <span class="cstat-no" title="statement not covered" >displayMessage("info", text, 3000);</span></span>
+export const displayInfo = <span class="fstat-no" title="function not covered" >(t</span>ext: string) =&gt; <span class="cstat-no" title="statement not covered" >displayMessage("info", text, 3000);</span>
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -168,7 +168,7 @@ export const displayInfo = <span class="cstat-no" title="statement not covered" 
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu Apr 16 2020 20:09:20 GMT+0000 (Coordinated Universal Time)
+                at Thu Apr 16 2020 22:09:38 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../prettify.js"></script>

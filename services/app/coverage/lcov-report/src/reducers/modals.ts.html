@@ -22,30 +22,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">40% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/10</span>
+                <span class='fraction'>4/10</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">33.33% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/6</span>
+                <span class='fraction'>2/6</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/1</span>
+                <span class='fraction'>1/1</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">40% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/10</span>
+                <span class='fraction'>4/10</span>
             </div>
         
             
@@ -115,22 +115,17 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -143,13 +138,18 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { Reducer } from "redux";
@@ -163,33 +163,33 @@ export type ModalsState = {
 &nbsp;
 // ------------------------------------------------------------------
 &nbsp;
-export const initialState: ModalsState = <span class="cstat-no" title="statement not covered" >{</span>
+export const initialState: ModalsState = {
 	stack: []
 };
 &nbsp;
 // ------------------------------------------------------------------
 &nbsp;
-export const modalsReducer: Reducer&lt;ModalsState, ModalsAction&gt; = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(</span></span>
-	state = <span class="branch-0 cbranch-no" title="branch not covered" >initialState,</span>
+export const modalsReducer: Reducer&lt;ModalsState, ModalsAction&gt; = (
+	state = initialState,
 	action
 ): ModalsState =&gt; {
-<span class="cstat-no" title="statement not covered" >	switch (action.type) {</span>
-		case "modals/OPEN":
+	switch (action.type) {
+<span class="branch-0 cbranch-no" title="branch not covered" >		case "modals/OPEN":</span>
 <span class="cstat-no" title="statement not covered" >			return {</span>
 				...state,
 				stack: [action.payload]
 			};
-		case "modals/CLOSE":
+<span class="branch-1 cbranch-no" title="branch not covered" >		case "modals/CLOSE":</span>
 <span class="cstat-no" title="statement not covered" >			return {</span>
 				...state,
 				stack: []
 			};
-		case "modals/PUSH":
+<span class="branch-2 cbranch-no" title="branch not covered" >		case "modals/PUSH":</span>
 <span class="cstat-no" title="statement not covered" >			return {</span>
 				...state,
 				stack: [...state.stack, action.payload]
 			};
-		case "modals/POP":
+<span class="branch-3 cbranch-no" title="branch not covered" >		case "modals/POP":</span>
 			const copy = <span class="cstat-no" title="statement not covered" >[...state.stack];</span>
 <span class="cstat-no" title="statement not covered" >			copy.pop();</span>
 <span class="cstat-no" title="statement not covered" >			return {</span>
@@ -197,7 +197,7 @@ export const modalsReducer: Reducer&lt;ModalsState, ModalsAction&gt; = <span cla
 				stack: copy
 			};
 		default:
-<span class="cstat-no" title="statement not covered" >			return state;</span>
+			return state;
 	}
 };
 &nbsp;</pre></td></tr></table></pre>
@@ -207,7 +207,7 @@ export const modalsReducer: Reducer&lt;ModalsState, ModalsAction&gt; = <span cla
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu Apr 16 2020 20:09:20 GMT+0000 (Coordinated Universal Time)
+                at Thu Apr 16 2020 22:09:38 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../prettify.js"></script>
