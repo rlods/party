@@ -66,6 +66,8 @@ export default {
 		secret_is_invalid: "Le secret is invalide",
 		unlock: "Déverrouiller",
 		unlocked: "Déverrouillée (cliquer pour verrouiller)",
+		media_count: "{{count}} media",
+		media_count_plural: "{{count}} medias",
 		track_count: "{{count}} piste",
 		track_count_plural: "{{count}} pistes"
 	},

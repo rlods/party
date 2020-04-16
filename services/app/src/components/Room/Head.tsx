@@ -12,6 +12,7 @@ import { displayInfo } from "../../actions/messages";
 import { confirmModal } from "../../actions/modals";
 import { RoomInfo } from "../../utils/rooms";
 import "./Head.scss";
+import { Icon } from "../Common/Icon";
 
 // ------------------------------------------------------------------
 
@@ -20,8 +21,11 @@ export const Head = () => {
 	const { t } = useTranslation();
 	const history = useHistory();
 	const room = useSelector<RootState, RoomInfo | null>(selectRoom);
-	const tracksCount = useSelector<RootState, number>(
+	const mediasCount = useSelector<RootState, number>(
 		state => state.room.medias.length
+	);
+	const tracksCount = useSelector<RootState, number>(
+		state => state.room.tracks.length
 	);
 
 	const onCopy = useCallback(async () => {
@@ -51,10 +55,14 @@ export const Head = () => {
 				<div className="RoomMeta">
 					{room ? (
 						<>
-							<div className="RoomName">{room.name}</div>
-							<div className="RoomSize">
-								&nbsp;--&nbsp;
-								{t("rooms.track_count", { count: tracksCount })}
+							<div
+								className="RoomName"
+								title={`${t("rooms.media_count", {
+									count: mediasCount
+								})} / ${t("rooms.track_count", {
+									count: tracksCount
+								})}`}>
+								{room.name}
 							</div>
 						</>
 					) : null}

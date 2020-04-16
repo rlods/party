@@ -64,6 +64,8 @@ export default {
 		secret_is_invalid: "Secret is invalid",
 		unlock: "Unlock",
 		unlocked: "Unlocked (click to lock)",
+		media_count: "{{count}} media",
+		media_count_plural: "{{count}} medias",
 		track_count: "{{count}} track",
 		track_count_plural: "{{count}} tracks"
 	},
