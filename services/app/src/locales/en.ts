@@ -1,4 +1,10 @@
 export default {
+	audio: {
+		errors: {
+			cannot_decode_audio_data: "Audio buffer cannot be decoded",
+			cannot_load_audio_buffer: "Audio buffer loading failed"
+		}
+	},
 	splash: {
 		CGU: "CGU",
 		powered_with: "Powered with",
@@ -73,10 +79,6 @@ export default {
 		tracks: "Tracks"
 	},
 	player: {
-		errors: {
-			cannot_decode_audio_data: "Audio buffer cannot be decoded",
-			cannot_load_audio_buffer: "Audio buffer loading failed"
-		},
 		backward: "Backward",
 		forward: "Forward",
 		play: "Play",

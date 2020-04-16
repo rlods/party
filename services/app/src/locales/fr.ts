@@ -1,4 +1,10 @@
 export default {
+	audio: {
+		errors: {
+			cannot_decode_audio_data: "Le buffer audio ne peut pas être décodé",
+			cannot_load_audio_buffer: "Le buffer audio ne peut pas être chargé"
+		}
+	},
 	splash: {
 		CGU: "CGU",
 		powered_with: "boosté avec",
@@ -75,10 +81,6 @@ export default {
 		tracks: "Pistes"
 	},
 	player: {
-		errors: {
-			cannot_decode_audio_data: "Le buffer audio ne peut pas être décodé",
-			cannot_load_audio_buffer: "Le buffer audio ne peut pas être chargé"
-		},
 		backward: "Piste précédente",
 		forward: "Piste suivante",
 		play: "Lire",

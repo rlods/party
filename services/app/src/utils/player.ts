@@ -1,100 +1,11 @@
-// ------------------------------------------------------------------
-
-let AUDIO_CONTEXT: AudioContext | null = null;
-
-const getContext = () => {
-	if (!AUDIO_CONTEXT) {
-		AUDIO_CONTEXT = new (window.AudioContext ||
-			(window as any).webkitAudioContext)();
-	}
-	return AUDIO_CONTEXT;
-};
-
-const decodeAudioData = (encodedBuffer: ArrayBuffer): Promise<AudioBuffer> =>
-	new Promise((resolve, reject) =>
-		getContext().decodeAudioData(encodedBuffer, resolve, reject)
-	);
-
-const loadAudioBuffer = (trackId: string, url: string): Promise<AudioBuffer> =>
-	new Promise((resolve, reject) => {
-		const req = new XMLHttpRequest();
-		req.open("GET", url, true);
-		req.responseType = "arraybuffer";
-		req.addEventListener(
-			"error",
-			() => reject(new Error("player.errors.cannot_load_audio_buffer")),
-			false
-		);
-		req.addEventListener(
-			"load",
-			async () => {
-				try {
-					resolve(await decodeAudioData(req.response as ArrayBuffer));
-				} catch (error) {
-					console.debug(
-						"[Player] An error occurred while decoding audio data",
-						{
-							trackId,
-							url
-						}
-					);
-					reject(new Error("player.errors.cannot_decode_audio_data"));
-				}
-			},
-			false
-		);
-		req.send();
-	});
-
-const AUDIO_BUFFER_CACHES: Array<{ buffer: AudioBuffer; url: string }> = [];
-const AUDIO_BUFFER_CACHES_MAX_SIZE = 10;
-
-const loadAudioBufferWithCache = async (
-	trackId: string,
-	url: string
-): Promise<AudioBuffer> => {
-	if (!url) {
-		console.error("Track URL is invalid", { trackId });
-		throw new Error("Track URL is invalid");
-	}
-	let buffer: AudioBuffer | null = null;
-	const index = AUDIO_BUFFER_CACHES.findIndex(item => item.url === url);
-	if (index >= 0) {
-		// Found: extract old buffer, it will be repush at the end of cache
-		console.debug("[Player] Reusing cached audio buffer...", {
-			trackId,
-			url
-		});
-		buffer = AUDIO_BUFFER_CACHES.splice(index, 1)[0].buffer;
-	} else {
-		// Not Found
-		console.debug("[Player] Loading audio buffer...", { trackId, url });
-		buffer = await loadAudioBuffer(trackId, url);
-	}
-	AUDIO_BUFFER_CACHES.push({ buffer, url });
-	AUDIO_BUFFER_CACHES.splice(AUDIO_BUFFER_CACHES_MAX_SIZE);
-	return buffer;
-};
-
-// ------------------------------------------------------------------
-
-// Fix Safari and iOS Audio Context
-(() => {
-	const fixAudioContext = () => {
-		document.removeEventListener("click", fixAudioContext);
-		document.removeEventListener("touchstart", fixAudioContext);
-		console.debug("[Player] Fixing audio context...");
-		const context = getContext();
-		// Create empty buffer, connect to output, play sound
-		var buffer = context.createBuffer(1, 1, 22050);
-		var source = context.createBufferSource();
-		source.buffer = buffer;
-		source.connect(context.destination);
-		source.start(0);
-	};
-	document.addEventListener("click", fixAudioContext);
-	document.addEventListener("touchstart", fixAudioContext);
-})();
+import {
+	createAnalyzerNode,
+	createGainNode,
+	createSourceNode,
+	getCurrentTime,
+	getDestinationNode,
+	getOrLoadAudioBuffer
+} from "./audio";
 
 // ------------------------------------------------------------------
 
@@ -126,15 +37,14 @@ const PlayerImpl = (): Player => {
 
 	const getOrCreateNode = () => {
 		if (!_node) {
-			const context = getContext();
-			_node = context.destination;
+			_node = getDestinationNode();
 
-			gainNode = context.createGain();
+			gainNode = createGainNode();
 			gainNode.gain.value = 1.0;
 			gainNode.connect(_node);
 			_node = gainNode;
 
-			analyserNode = context.createAnalyser();
+			analyserNode = createAnalyzerNode();
 			analyserNode.fftSize = 128;
 			// analyserNode.minDecibels = -90;
 			// analyserNode.maxDecibels = -10;
@@ -153,10 +63,7 @@ const PlayerImpl = (): Player => {
 	// Percentage [0, 1]
 	const getPlayingTrackPercent = () => {
 		if (_buffer && _sourceNode) {
-			return (
-				(getContext().currentTime - _sourceNodeStartTime) /
-				_buffer.duration
-			);
+			return (getCurrentTime() - _sourceNodeStartTime) / _buffer.duration;
 		}
 		return 0;
 	};
@@ -168,7 +75,7 @@ const PlayerImpl = (): Player => {
 		offset: number
 	) => {
 		await stop();
-		_buffer = await loadAudioBufferWithCache(trackId, trackUrl); // TODO: warning if loadBuffer takes long for some reason and user clicks stop before end, next part of this function will continue after stop have been requested
+		_buffer = await getOrLoadAudioBuffer(trackUrl); // TODO: warning if loadBuffer takes long for some reason and user clicks stop before end, next part of this function will continue after stop have been requested
 		console.debug("[Player] Starting audio...", {
 			trackPosition,
 			trackId,
@@ -176,7 +83,7 @@ const PlayerImpl = (): Player => {
 		});
 		_trackId = trackId;
 		_trackPosition = trackPosition;
-		_sourceNode = getContext().createBufferSource();
+		_sourceNode = createSourceNode();
 		_sourceNode.buffer = _buffer;
 		_sourceNode.loop = false;
 		_sourceNode.loopStart = 0;
@@ -189,13 +96,13 @@ const PlayerImpl = (): Player => {
 		_sourceNode.playbackRate.value = 1.0;
 		_sourceNode.connect(getOrCreateNode());
 		_sourceNode.start(0, offset); // A new BufferSource must be created for each start
-		_sourceNodeStartTime = getContext().currentTime;
+		_sourceNodeStartTime = getCurrentTime();
 	};
 
 	const stop = (): Promise<void> =>
 		new Promise(resolve => {
 			if (null !== _sourceNode) {
-				console.debug("[Player] Stopping audio...");
+				console.debug("[Player] Stopping play...");
 				_sourceNode.onended = () => {
 					console.debug("[Player] Forced audio termination...");
 					resolve();
