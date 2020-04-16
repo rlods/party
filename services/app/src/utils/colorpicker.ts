@@ -31,16 +31,17 @@ export const pickColor = async (url: string) => {
 			try {
 				const image = await jimp.read(url);
 				const pixel = await image.resize(1, 1).getPixelColor(0, 0);
-				const bg = jimp.intToRGBA(pixel);
+				const { r, g, b } = jimp.intToRGBA(pixel);
 				CACHE[url] = res = {
-					bg,
+					bg: { r, g, b },
 					fg:
-						bg.r * 0.299 + bg.g * 0.587 + bg.b * 0.114 > 186
+						r * 0.299 + g * 0.587 + b * 0.114 > 186
 							? "dark"
 							: "light"
 				};
 			} catch (err) {
 				console.debug("An error prevented colorpicking", err);
+				CACHE[url] = res = DEFAULT_COLOR;
 			}
 		}
 	}

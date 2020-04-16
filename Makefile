@@ -46,6 +46,16 @@ lint: lint-app
 lint-app:
 	$(compose_dev_run) app npm run lint
 
+# TESTS
+tests:
+	$(compose_dev_run) app npm run test;
+tests-coverage:
+	$(compose_dev_run) app npm run test:coverage;
+tests-update:
+	$(compose_dev_run) app npm run test:update;
+tests-watch:
+	$(compose_dev_run) app npm run test:watch;
+
 # PROD
 prod:
 	rm -Rf $(shell pwd)/docs/*.* $(shell pwd)/docs/static/css/*.* $(shell pwd)/docs/static/js/*.*; \

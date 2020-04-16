@@ -1,8 +1,6 @@
-// import Axios from "axios";
-import jsonp from "jsonp";
-//
 import { sleep } from ".";
 import { SearchOptions, Album, MediaType, Playlist, Track } from "./medias";
+import { asyncJsonp } from "./jsonp";
 
 // ------------------------------------------------------------------
 
@@ -175,24 +173,10 @@ export type DeezerApi = {
 const DeezerApiImpl = (): DeezerApi => {
 	const API_BASE = "https://api.deezer.com";
 
-	const _asyncJsonp = <T>(url: string): Promise<T> =>
-		new Promise((resolve, reject) => {
-			jsonp(url, void 0, (err, data) => {
-				if (err) {
-					reject(new Error(err.message));
-				} else {
-					resolve(data);
-				}
-			});
-		});
-
-	const _call = async <T>(path: string, qs?: string) => {
+	const _call = async <T>(path: string, qs?: string): Promise<T> => {
 		// We have to rely on jsonp because the Deezer api is CORS restricted
-		const url = qs
-			? `${API_BASE}/${path}?${qs}&output=jsonp&callback=`
-			: `${API_BASE}/${path}?output=jsonp&callback=`;
-		console.debug("[Deezer] Requesting... ", { url });
-		return await _asyncJsonp<T>(url);
+		console.debug("[Deezer] Requesting... ", { path, qs });
+		return asyncJsonp(`${API_BASE}/${path}`, qs);
 	};
 
 	const _search = <T>(
@@ -214,7 +198,18 @@ const DeezerApiImpl = (): DeezerApi => {
 		Promise.all(
 			ids.map(async id => {
 				const media = await _call<T>(`${type}/${id}`);
-				return media.error ? null : media;
+				if (media.error) {
+					if (media.error.code === 4) {
+						// Quota limit exceeded
+						return null;
+					}
+					console.debug(
+						"[Deezer] An error occured while loading media",
+						media.error
+					);
+					throw new Error("An error occured while loading media");
+				}
+				return media;
 			})
 		);
 

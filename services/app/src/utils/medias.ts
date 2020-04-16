@@ -157,14 +157,14 @@ export const MEDIA_TYPE_DEFINITIONS: MediaTypeDefinition[] = [
 
 // ------------------------------------------------------------------
 
-export const findMediaInDict = (
+const findMediaInDict = (
 	access: MediaAccess,
 	medias: StructuredMedias
 ): Media | undefined => medias[access.provider][access.type][access.id];
 
 // ------------------------------------------------------------------
 
-export const findMediaInList = (
+const findMediaInList = (
 	access: MediaAccess,
 	medias: Media[]
 ): Media | undefined =>
@@ -181,15 +181,16 @@ export const findMedia = (
 	access: MediaAccess,
 	dist: StructuredMedias,
 	list: Media[]
-) => findMediaInDict(access, dist) || findMediaInList(access, list);
+): Media | undefined =>
+	findMediaInDict(access, dist) || findMediaInList(access, list);
 
 // ------------------------------------------------------------------
 
-export const findPreviewTrack = async (
+export const findPreview = (
 	access: MediaAccess,
 	oldMedias: StructuredMedias,
 	newMedias: Media[]
-) => {
+): Track | null => {
 	const media = findMedia(access, oldMedias, newMedias);
 	if (!media) {
 		return null;
@@ -216,14 +217,19 @@ export const extractTracks = (
 			tracks.push({
 				contextId: access.id,
 				contextType: access.type,
-				...access
+				id: access.id,
+				provider: access.provider,
+				type: access.type
 			});
 			continue;
 		}
 
 		const container = findMedia(access, oldMedias, newMedias);
+		if (!container) {
+			throw new Error("Media is unknown");
+		}
+
 		if (
-			container &&
 			container.type !== "track" &&
 			container.tracks &&
 			container.tracks.length > 0
@@ -253,6 +259,9 @@ export const findContextFromTrackIndex = (
 	mediaIndex: number;
 	mediaSize: number;
 } => {
+	if (trackIndex < 0) {
+		throw new Error("Track index is out of range");
+	}
 	let index = 0;
 	for (let mediaIndex = 0; mediaIndex < medias.length; ++mediaIndex) {
 		const media = medias[mediaIndex];
@@ -267,8 +276,11 @@ export const findContextFromTrackIndex = (
 			index++;
 		} else {
 			const container = findMediaInDict(media, allMedias);
+			if (!container) {
+				throw new Error("Media is unknown");
+			}
+
 			if (
-				container &&
 				container.type !== "track" &&
 				container.tracks &&
 				container.tracks.length > 0
@@ -287,9 +299,5 @@ export const findContextFromTrackIndex = (
 			}
 		}
 	}
-	return {
-		mediaFirstTrackIndex: -1,
-		mediaIndex: -1,
-		mediaSize: 0
-	};
+	throw new Error("Track index is out of range");
 };

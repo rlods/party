@@ -1,7 +1,7 @@
 import { AxiosError } from "axios";
 //
 import { createAction, AsyncAction } from ".";
-import { Media, MediaAccess, findPreviewTrack } from "../utils/medias";
+import { Media, MediaAccess, findPreview } from "../utils/medias";
 import { PREVIEW_PLAYER } from "../utils/player";
 import { loadNew } from "../utils/providers";
 
@@ -31,7 +31,7 @@ export const previewMedia = (access: MediaAccess): AsyncAction => async (
 		medias: { medias: oldMedias }
 	} = getState();
 	const { newMedias } = await loadNew([access], oldMedias);
-	const track = await findPreviewTrack(access, oldMedias, newMedias);
+	const track = findPreview(access, oldMedias, newMedias);
 	if (!track) {
 		console.debug("Cannot find track to preview...");
 		return;

@@ -1,63 +1,67 @@
 {
-  "name": "party-app",
-  "version": "0.0.0",
-  "private": true,
-  "scripts": {
-    "build": "react-scripts build",
-    "start": "PORT=8080 CHOKIDAR_USEPOLLING=true react-scripts start",
-    "serve": "serve -s build -p 8080",
-    "test": "PORT=8080 react-scripts test --verbose --forceExit --runInBand --detectOpenHandles --coverage --no-cache",
-    "test:watch": "PORT=8080 react-scripts test --verbose --forceExit --runInBand --detectOpenHandles --no-cache  --watchAll",
-    "lint": "./node_modules/.bin/eslint --ext js,ts,tsx ./src"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ],
-  "dependencies": {
-    "axios": "^0.19.2",
-    "classnames": "^2.2.6",
-    "cookies-js": "^1.2.3",
-    "firebase": "^7.13.2",
-    "i18next": "^19.3.4",
-    "jimp": "^0.10.0",
-    "jsonp": "^0.2.1",
-    "moment": "^2.24.0",
-    "qs": "^6.9.3",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
-    "react-fontawesome": "^1.6.1",
-    "react-helmet": "^5.2.1",
-    "react-i18next": "^11.3.4",
-    "react-redux": "^7.2.0",
-    "react-router-dom": "^5.1.2",
-    "react-scripts": "^3.4.1",
-    "react-transition-group": "^2.9.0",
-    "redux": "^4.0.5",
-    "redux-thunk": "^2.3.0",
-    "serve": "^10.1.2",
-    "uuid": "^7.0.2"
-  },
-  "devDependencies": {
-    "@types/classnames": "^2.2.10",
-    "@types/jsonp": "^0.2.0",
-    "@types/node": "^12.12.32",
-    "@types/qs": "^6.9.1",
-    "@types/react": "^16.9.5",
-    "@types/react-dom": "^16.9.1",
-    "@types/react-fontawesome": "^1.6.4",
-    "@types/react-helmet": "^5.0.14",
-    "@types/react-redux": "^7.1.4",
-    "@types/react-router-dom": "^5.1.0",
-    "@types/react-transition-group": "^2.9.0",
-    "@types/uuid": "^7.0.2",
-    "node-sass": "^4.13.1",
-    "redux-devtools-extension": "^2.13.8",
-    "typescript": "^3.8.3"
-  }
+	"name": "party-app",
+	"version": "0.0.0",
+	"private": true,
+	"scripts": {
+		"build": "./node_modules/.bin/react-scripts build",
+		"start": "PORT=8080 CHOKIDAR_USEPOLLING=true ./node_modules/.bin/react-scripts start",
+		"serve": "./node_modules/.bin/serve -s build -p 8080",
+		"test": "./node_modules/.bin/react-scripts test --verbose=true --forceExit=true --runInBand=true --detectOpenHandles=true --ci=true --watchAll=false",
+		"test:coverage": "./node_modules/.bin/react-scripts test --verbose=true --forceExit=true --runInBand=true --detectOpenHandles=true --ci=true --watchAll=false --coverage=true",
+		"test:update": "./node_modules/.bin/react-scripts test --verbose=true --forceExit=true --runInBand=true --detectOpenHandles=true --ci=true --watchAll=false --updateSnapshot=true",
+		"test:watch": "./node_modules/.bin/react-scripts test --verbose=true --forceExit=true --runInBand=true --detectOpenHandles=true --ci=true --watchAll=true",
+		"lint": "./node_modules/.bin/eslint --ext js,ts,tsx ./src"
+	},
+	"eslintConfig": {
+		"extends": "react-app"
+	},
+	"browserslist": [
+		">0.2%",
+		"not dead",
+		"not ie <= 11",
+		"not op_mini all"
+	],
+	"dependencies": {
+		"axios": "^0.19.2",
+		"classnames": "^2.2.6",
+		"cookies-js": "^1.2.3",
+		"firebase": "^7.13.2",
+		"i18next": "^19.3.4",
+		"jimp": "^0.10.0",
+		"jsonp": "^0.2.1",
+		"moment": "^2.24.0",
+		"qs": "^6.9.3",
+		"react": "^16.13.1",
+		"react-dom": "^16.13.1",
+		"react-fontawesome": "^1.6.1",
+		"react-helmet": "^5.2.1",
+		"react-i18next": "^11.3.4",
+		"react-redux": "^7.2.0",
+		"react-router-dom": "^5.1.2",
+		"react-scripts": "^3.4.1",
+		"react-transition-group": "^2.9.0",
+		"redux": "^4.0.5",
+		"redux-thunk": "^2.3.0",
+		"serve": "^10.1.2",
+		"uuid": "^7.0.2"
+	},
+	"devDependencies": {
+		"@types/classnames": "^2.2.10",
+		"@types/jest": "^25.2.1",
+		"@types/jsonp": "^0.2.0",
+		"@types/node": "^12.12.32",
+		"@types/qs": "^6.9.1",
+		"@types/react": "^16.9.5",
+		"@types/react-dom": "^16.9.1",
+		"@types/react-fontawesome": "^1.6.4",
+		"@types/react-helmet": "^5.0.14",
+		"@types/react-redux": "^7.1.4",
+		"@types/react-router-dom": "^5.1.0",
+		"@types/react-transition-group": "^2.9.0",
+		"@types/uuid": "^7.0.2",
+		"node-sass": "^4.13.1",
+		"redux-devtools-extension": "^2.13.8",
+		"ts-jest": "^25.3.1",
+		"typescript": "^3.8.3"
+	}
 }

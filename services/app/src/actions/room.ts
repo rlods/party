@@ -46,6 +46,7 @@ export const createRoom = (
 		await FirebaseRoom({ id, secret }).update({
 			name,
 			playing: false,
+			queue: {},
 			queue_position: 0
 		});
 		dispatch(enterRoom(id, secret));
