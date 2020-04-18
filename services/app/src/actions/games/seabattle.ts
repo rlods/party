@@ -5,7 +5,8 @@ import {
 	SeaBattleMovementType,
 	SeabattleBoatRotationMappings,
 	SeabattleBoatTranslationMappings,
-	SeabattleBoatRotationTransformationMappings
+	SeabattleBoatRotationTransformationMappings,
+	movementIsPossible
 } from "../../utils/games/seabattle";
 import { setBoatPosition } from "../../reducers/games/seabattle";
 
@@ -27,15 +28,14 @@ export const moveBoat = ({
 			}
 		} = getState();
 
-		if (boatIndex < 0 || boatIndex >= players[playerId].fleet.length) {
+		const { fleet } = players[playerId];
+		if (boatIndex < 0 || boatIndex >= fleet.length) {
 			return;
 		}
 
-		const {
-			direction: oldDirection,
-			position: oldPosition,
-			type
-		} = players[playerId].fleet[boatIndex];
+		const { direction: oldDirection, position: oldPosition, type } = fleet[
+			boatIndex
+		];
 
 		let newPosition = { ...oldPosition };
 		if (movement === "move-forward" || movement === "move-backward") {
@@ -59,13 +59,24 @@ export const moveBoat = ({
 				].y;
 		}
 
+		if (!movementIsPossible(fleet, boatIndex, newPosition, newDirection)) {
+			console.debug("[SeaBattle] Movement is not possible...", {
+				playerId,
+				boatIndex,
+				movement,
+				oldDirection,
+				newDirection,
+				oldPosition,
+				newPosition
+			});
+			return;
+		}
+
 		console.debug("[SeaBattle] Moving boat...", {
 			playerId,
 			boatIndex,
 			movement,
-			oldDirection,
 			newDirection,
-			oldPosition,
 			newPosition
 		});
 		dispatch(

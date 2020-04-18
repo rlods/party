@@ -1,3 +1,5 @@
+import { Boat } from "../../components/SeaBattle/Boats";
+
 export const GRID_CELL_COUNT = 10;
 export const GRID_CELL_UNIT_SIZE = 40;
 
@@ -182,4 +184,165 @@ export const SeabattleBoatTranslationMappings: {
 		"move-forward": { x: -1, y: 0 },
 		"move-backward": { x: 1, y: 0 }
 	}
+};
+
+const SeaBattleBoatLengthMappings = {
+	boat1: 1,
+	boat2: 2,
+	boat3: 3
+};
+
+// ------------------------------------------------------------------
+// ------------------------------------------------------------------
+// ------------------------------------------------------------------
+// ------------------------------------------------------------------
+
+const checkPositionInGrid = (
+	grid: number[][],
+	position: SeaBattleAssetPosition
+) => grid[position.y][position.x] === 0;
+
+const checkPositionInZone = (position: SeaBattleAssetPosition) =>
+	position.x >= 0 &&
+	position.x < GRID_CELL_COUNT &&
+	position.y >= 0 &&
+	position.y < GRID_CELL_COUNT;
+
+const checkZone = (
+	boat: SeaBattleBoatData,
+	newPosition: SeaBattleAssetPosition,
+	newDirection: SeaBattleDirection
+) => {
+	if (!checkPositionInZone(newPosition)) {
+		return false;
+	}
+	const offset = SeaBattleBoatLengthMappings[boat.type] - 1;
+	switch (newDirection) {
+		case "N":
+			return checkPositionInZone({
+				x: newPosition.x,
+				y: newPosition.y - offset
+			});
+		case "E":
+			return checkPositionInZone({
+				x: newPosition.x + offset,
+				y: newPosition.y
+			});
+		case "S":
+			return checkPositionInZone({
+				x: newPosition.x,
+				y: newPosition.y + offset
+			});
+		case "W":
+			return checkPositionInZone({
+				x: newPosition.x - offset,
+				y: newPosition.y
+			});
+	}
+};
+
+const checkCollisions = (
+	fleet: SeaBattleBoatData[],
+	movingBoat: SeaBattleBoatData,
+	newPosition: SeaBattleAssetPosition,
+	newDirection: SeaBattleDirection
+) => {
+	const grid = Array<number>(GRID_CELL_COUNT)
+		.fill(0)
+		.map(_ => Array<number>(GRID_CELL_COUNT).fill(0));
+	for (
+		let boatIndex = 0, boatCount = fleet.length;
+		boatIndex < boatCount;
+		++boatIndex
+	) {
+		const boat = fleet[boatIndex];
+		if (movingBoat === boat) {
+			continue; // Ignore moving boat
+		}
+		switch (boat.direction) {
+			case "N":
+				for (
+					let i = 0;
+					i < SeaBattleBoatLengthMappings[boat.type];
+					++i
+				) {
+					grid[boat.position.y - i][boat.position.x] += 1;
+				}
+				break;
+			case "E":
+				for (
+					let i = 0;
+					i < SeaBattleBoatLengthMappings[boat.type];
+					++i
+				) {
+					grid[boat.position.y][boat.position.x + i] += 1;
+				}
+				break;
+			case "S":
+				for (
+					let i = 0;
+					i < SeaBattleBoatLengthMappings[boat.type];
+					++i
+				) {
+					grid[boat.position.y + i][boat.position.x] += 1;
+				}
+				break;
+			case "W":
+				for (
+					let i = 0;
+					i < SeaBattleBoatLengthMappings[boat.type];
+					++i
+				) {
+					grid[boat.position.y][boat.position.x - i] += 1;
+				}
+				break;
+		}
+	}
+
+	// console.debug("[Seabattle] Collision grid", grid);
+
+	if (!checkPositionInGrid(grid, newPosition)) {
+		return false;
+	}
+	const offset = SeaBattleBoatLengthMappings[movingBoat.type] - 1;
+	switch (newDirection) {
+		case "N":
+			return checkPositionInGrid(grid, {
+				x: newPosition.x,
+				y: newPosition.y - offset
+			});
+		case "E":
+			return checkPositionInGrid(grid, {
+				x: newPosition.x + offset,
+				y: newPosition.y
+			});
+		case "S":
+			return checkPositionInGrid(grid, {
+				x: newPosition.x,
+				y: newPosition.y + offset
+			});
+		case "W":
+			return checkPositionInGrid(grid, {
+				x: newPosition.x - offset,
+				y: newPosition.y
+			});
+	}
+};
+
+export const movementIsPossible = (
+	fleet: SeaBattleBoatData[],
+	movingBoatIndex: number,
+	newPosition: SeaBattleAssetPosition,
+	newDirection: SeaBattleDirection
+) => {
+	const movingBoat = fleet[movingBoatIndex];
+	if (!checkZone(movingBoat, newPosition, newDirection)) {
+		console.debug("[Seabattle] Boat blocked by zone");
+		return false;
+	}
+	if (!checkCollisions(fleet, movingBoat, newPosition, newDirection)) {
+		console.debug("[Seabattle] Boat blocked by collision");
+		return false;
+	}
+	return true;
 };
