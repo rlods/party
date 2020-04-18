@@ -4,8 +4,9 @@ import {
 	StructuredMedias,
 	Album,
 	Playlist,
-	Track
-} from "./medias";
+	Track,
+	MediaType
+} from "../medias";
 import { DEFAULT_API } from "./deezer";
 
 // ------------------------------------------------------------------
@@ -99,20 +100,51 @@ export const loadNewMedias = async (
 
 export const searchMedias = async (
 	query: string,
-	options?: SearchOptions
+	options?: SearchOptions,
+	type?: MediaType
 ): Promise<SearchResults> => {
-	const [album, playlist, track] = await Promise.all([
-		DEFAULT_API.searchAlbums(query, options),
-		DEFAULT_API.searchPlaylists(query, options),
-		DEFAULT_API.searchTracks(query, options)
-	]);
-	return {
-		// keys are ProviderType
+	if (!type) {
+		const [album, playlist, track] = await Promise.all([
+			DEFAULT_API.searchAlbums(query, options),
+			DEFAULT_API.searchPlaylists(query, options),
+			DEFAULT_API.searchTracks(query, options)
+		]);
+		return {
+			// keys are ProviderType
+			deezer: {
+				// keys are MediaType
+				album: album,
+				playlist: playlist,
+				track: track
+			}
+		};
+	}
+	const results: SearchResults = {
 		deezer: {
-			// keys are MediaType
-			album: album,
-			playlist: playlist,
-			track: track
+			album: [],
+			playlist: [],
+			track: []
 		}
 	};
+	switch (type) {
+		case "album":
+			results.deezer.album = await DEFAULT_API.searchAlbums(
+				query,
+				options
+			);
+			break;
+		case "playlist":
+			results.deezer.playlist = await DEFAULT_API.searchPlaylists(
+				query,
+				options
+			);
+			break;
+		case "track":
+			results.deezer.track = await DEFAULT_API.searchTracks(
+				query,
+				options
+			);
+			break;
+	}
+	return results;
 };

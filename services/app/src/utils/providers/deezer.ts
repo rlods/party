@@ -1,7 +1,7 @@
-import { sleep } from ".";
-import { Album, MediaType, Playlist, Track } from "./medias";
-import { SearchOptions } from "./providers";
-import { asyncJsonp } from "./jsonp";
+import { sleep } from "../";
+import { Album, MediaType, Playlist, Track } from "../medias";
+import { SearchOptions } from "../providers";
+import { asyncJsonp } from "../jsonp";
 
 // ------------------------------------------------------------------
 

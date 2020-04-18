@@ -5,7 +5,6 @@ import { useTranslation } from "react-i18next";
 import { FormModal } from "../Modals/FormModal";
 import { IconButton } from "../Common/IconButton";
 import { CancelButton } from "../Common/CancelButton";
-import { DEFAULT_API } from "../../utils/deezer";
 import { searchMedias } from "../../utils/providers";
 import { Media } from "./Medias";
 import {
@@ -93,40 +92,15 @@ export const SearchModal = () => {
 
 	const onViewMore = useCallback(
 		async (type: MediaType) => {
-			const results: SearchResults = {
-				deezer: {
-					album: [],
-					playlist: [],
-					track: []
-				}
-			};
-			switch (type) {
-				case "album":
-					results.deezer.album = await DEFAULT_API.searchAlbums(
-						query,
-						{
-							limit: VIEW_MORE_RESULTS_COUNT
-						}
-					);
-					break;
-				case "playlist":
-					results.deezer.playlist = await DEFAULT_API.searchPlaylists(
-						query,
-						{
-							limit: VIEW_MORE_RESULTS_COUNT
-						}
-					);
-					break;
-				case "track":
-					results.deezer.track = await DEFAULT_API.searchTracks(
-						query,
-						{
-							limit: VIEW_MORE_RESULTS_COUNT
-						}
-					);
-					break;
-			}
-			setResults(results);
+			setResults(
+				await searchMedias(
+					query,
+					{
+						limit: VIEW_MORE_RESULTS_COUNT
+					},
+					type
+				)
+			);
 		},
 		[query, setResults]
 	);

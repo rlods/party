@@ -1,5 +1,5 @@
 import { mocked } from "ts-jest/utils";
-import { asyncJsonp } from "../jsonp";
+import { asyncJsonp } from "../../jsonp";
 jest.mock("../jsonp");
 
 // ------------------------------------------------------------------
@@ -11,7 +11,7 @@ import {
 	DeezerApiPlaylist,
 	DeezerApiTrack
 } from "../deezer";
-import { Album, Playlist, Track } from "../medias";
+import { Album, Playlist, Track } from "../../medias";
 
 // ------------------------------------------------------------------
 

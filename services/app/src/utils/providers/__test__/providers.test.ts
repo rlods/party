@@ -1,10 +1,5 @@
-import {
-	loadMedias,
-	loadNewMedias,
-	searchMedias,
-	SearchResults
-} from "../providers";
-import { Media } from "../medias";
+import { loadMedias, loadNewMedias, searchMedias, SearchResults } from "../";
+import { Media } from "../../medias";
 
 // ------------------------------------------------------------------
 
