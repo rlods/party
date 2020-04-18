@@ -81,7 +81,6 @@ export const SeaBattle = () => {
 			if (e.repeat) {
 				return;
 			}
-			console.log("TOTO", e.keyCode);
 			const player = players[activePlayer];
 			if (!player) {
 				return;

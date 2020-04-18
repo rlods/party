@@ -90,6 +90,9 @@ export type SeaBattleData = {
 };
 
 // ------------------------------------------------------------------
+// ------------------------------------------------------------------
+// ------------------------------------------------------------------
+// ------------------------------------------------------------------
 
 export const SeabattleBoatOrientationMappings: {
 	[type: string]: { [direction: string]: OrientedBoatType };
@@ -135,8 +138,33 @@ export const SeabattleBoatRotationMappings: {
 	}
 };
 
+export const SeabattleBoatRotationTransformationMappings: {
+	[type: string]: {
+		[direction: string]: SeaBattleAssetPosition;
+	};
+} = {
+	boat1: {
+		N: { x: 0, y: 0 },
+		E: { x: 0, y: 0 },
+		S: { x: 0, y: 0 },
+		W: { x: 0, y: 0 }
+	},
+	boat2: {
+		N: { x: 0, y: -1 },
+		E: { x: 1, y: 0 },
+		S: { x: 0, y: 1 },
+		W: { x: -1, y: 0 }
+	},
+	boat3: {
+		N: { x: 0, y: -2 },
+		E: { x: 2, y: 0 },
+		S: { x: 0, y: 2 },
+		W: { x: -2, y: 0 }
+	}
+};
+
 export const SeabattleBoatTranslationMappings: {
-	[direction: string]: { [rotation: string]: { x: number; y: number } };
+	[direction: string]: { [rotation: string]: SeaBattleAssetPosition };
 } = {
 	N: {
 		"move-forward": { x: 0, y: -1 },

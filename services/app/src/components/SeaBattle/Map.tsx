@@ -24,6 +24,7 @@ const getSVGPosition = (
 
 // ------------------------------------------------------------------
 
+// Order is important : Weapons under Boats under Hits
 export const Map = ({
 	data: { fleet, hits, weapons },
 	position,
@@ -84,22 +85,16 @@ export const Map = ({
 			onClick={e => onClick({ x: e.clientX, y: e.clientY })}
 			onMouseLeave={onLeave}
 			onMouseMove={e => onOver({ x: e.clientX, y: e.clientY })}>
-			<g>
-				<rect width="400" height="400" fill="url(#grid)" />
-				<Cell
-					color="#555"
-					position={activePos}
-					visibility={activeVis}
-				/>
-				<Cell color="#FF0" position={hoverPos} visibility={hoverVis} />
-			</g>
+			<rect width="400" height="400" fill="url(#grid)" />
+			<Cell color="#555" position={activePos} visibility={activeVis} />
+			<Cell color="#FF0" position={hoverPos} visibility={hoverVis} />
+			<Weapons weapons={weapons} />
 			<Fleet
 				fleet={fleet}
 				selectedBoat={selectedBoat}
 				setSelectedBoat={setSelectedBoat}
 			/>
 			<Hits hits={hits} />
-			<Weapons weapons={weapons} />
 		</svg>
 	);
 };
