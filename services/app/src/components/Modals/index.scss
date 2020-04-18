@@ -110,6 +110,10 @@
 						font-weight: bold;
 					}
 
+					label + * {
+						margin-top: 5px;
+					}
+
 					.XXX {
 						display: flex;
 						flex-direction: column;
@@ -117,24 +121,10 @@
 						padding: 0.25rem 0;
 					}
 
-					.ModalInput {
-						background-color: #eee;
-					}
-
 					input::-webkit-contacts-auto-fill-button {
 						color: #f00;
 						visibility: hidden;
 						display: none !important;
-					}
-
-					input[type="date"].ModalInput,
-					input[type="password"].ModalInput,
-					input[type="text"].ModalInput,
-					input[type="time"].ModalInput,
-					select.ModalInput {
-						height: 30px;
-						padding: 0 0.5rem;
-						border-radius: 0.25rem;
 					}
 
 					input:read-only {

@@ -92,3 +92,33 @@ export const SecretField = ({
 		</ModalField>
 	);
 };
+
+// ------------------------------------------------------------------
+
+export const SelectField = React.forwardRef(
+	(
+		props: {
+			label: string;
+			options: Array<{ id: string; label: string }>;
+		} & React.DetailedHTMLProps<
+			React.InputHTMLAttributes<HTMLSelectElement>,
+			HTMLSelectElement
+		>,
+		ref: React.Ref<HTMLSelectElement>
+	) => (
+		<ModalField>
+			<div className="XXX">
+				<label htmlFor={props.id}>{props.label}</label>
+				<select ref={ref} {...props}>
+					{props.options
+						.sort((a, b) => a.label.localeCompare(b.label))
+						.map(option => (
+							<option key={option.id} value={option.id}>
+								{option.label}
+							</option>
+						))}
+				</select>
+			</div>
+		</ModalField>
+	)
+);

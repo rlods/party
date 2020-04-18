@@ -7,7 +7,7 @@ import { IconButton } from "../Common/IconButton";
 import { CancelButton } from "../Common/CancelButton";
 import { InputField } from "../Modals/ModalFields";
 import { Dispatch } from "../../actions";
-import { popModal } from "../../reducers/modals";
+import { popModal, openModal } from "../../reducers/modals";
 import { displayError } from "../../actions/messages";
 import { enterRoom } from "../../actions/room";
 
@@ -36,6 +36,11 @@ export const JoinRoomModal = () => {
 		dispatch(popModal());
 	}, [dispatch, id]);
 
+	const onCreate = useCallback(
+		() => dispatch(openModal({ type: "CreateRoom", props: null })),
+		[dispatch]
+	);
+
 	return (
 		<FormModal
 			title={t("rooms.room_join")}
@@ -46,10 +51,16 @@ export const JoinRoomModal = () => {
 						disabled={id.trim().length === 0 || id.length !== 36}
 						title={t("rooms.join")}
 						kind="primary"
-						icon="plus"
+						icon="sign-in"
 						type="submit"
 					/>
 					<CancelButton onClick={onClose} />
+					<IconButton
+						title={t("rooms.create")}
+						kind="default"
+						icon="plus"
+						onClick={onCreate}
+					/>
 				</>
 			)}>
 			<InputField

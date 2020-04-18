@@ -8,11 +8,12 @@
 		flex-direction: column;
 		justify-content: flex-start;
 		align-items: center;
-		flex-grow: 1;
 		padding: 0.75rem;
+		height: 30vh;
 
 		.Description {
-			font-size: 14px;
+			line-height: 20px;
+			font-size: 10px;
 			text-align: center;
 		}
 
@@ -43,8 +44,8 @@
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
-		flex-grow: 1;
 		padding: 0.75rem;
+		height: 40vh;
 
 		.Menu {
 			display: flex;
@@ -60,8 +61,8 @@
 		flex-direction: column;
 		justify-content: flex-end;
 		align-items: center;
-		flex-grow: 1;
 		padding: 0.75rem;
+		height: 30vh;
 
 		.Menu {
 			display: flex;

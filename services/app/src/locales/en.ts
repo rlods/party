@@ -8,8 +8,7 @@ export default {
 	splash: {
 		CGU: "CGU",
 		powered_with: "Powered with",
-		description:
-			"Party is an experimentation to synchronize music listening with your online friends."
+		description: "Collaborative & Musical Games Experimentation"
 	},
 	users: {
 		errors: {
@@ -37,6 +36,11 @@ export default {
 			invalid: "Room is invalid",
 			locked: "Room is locked"
 		},
+		types: {
+			blind: "Blind Test",
+			dj: "DJ",
+			seabattle: "Sea Battle"
+		},
 		clear: "Clear all tracks",
 		confirm_clear: "Are you sure you want to remove all tracks?",
 		confirm_exit: "Are you sure you want to leave the room?",
@@ -49,7 +53,9 @@ export default {
 		id: "Room ID",
 		id_placeholder: "Room ID...",
 		key_placeholder: "Room Key...",
+		type_placeholder: "Room Type...",
 		key: "Room Key",
+		type: "Room Type",
 		join: "Join a Room",
 		link_copied_to_clipboard: "Room link has been copied to clipboard",
 		loading: "Loading...",

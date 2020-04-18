@@ -41,7 +41,7 @@ export const ConnectUserModal = () => {
 		dispatch(popModal());
 	}, [dispatch, id, secret]);
 
-	const onToggle = useCallback(
+	const onCreate = useCallback(
 		() => dispatch(openModal({ type: "CreateUser", props: null })),
 		[dispatch]
 	);
@@ -68,7 +68,7 @@ export const ConnectUserModal = () => {
 						title={t("users.create")}
 						kind="default"
 						icon="plus"
-						onClick={onToggle}
+						onClick={onCreate}
 					/>
 				</>
 			)}>

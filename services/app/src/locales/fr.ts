@@ -7,9 +7,8 @@ export default {
 	},
 	splash: {
 		CGU: "CGU",
-		powered_with: "boosté avec",
-		description:
-			"Party est une expérimentation d'écoute synchronisée de musiques avec vos amis en ligne."
+		powered_with: "Utilise",
+		description: "Expérimentation de jeux collaboratifs et musicaux"
 	},
 	users: {
 		errors: {
@@ -37,6 +36,11 @@ export default {
 			invalid: "La salle est invalide",
 			locked: "La salle est verrouillée"
 		},
+		types: {
+			blind: "Blind Test",
+			dj: "DJ",
+			seabattle: "Bataille Navale"
+		},
 		clear: "Supprimer toutes les pistes",
 		confirm_clear:
 			"Êtes-vous sûr(e) de vouloir supprimer toutes les pistes ?",
@@ -50,7 +54,9 @@ export default {
 		id: "Identifiant",
 		id_placeholder: "Identifiant...",
 		key_placeholder: "Clef...",
+		type_placeholder: "Type...",
 		key: "Clef",
+		type: "Type",
 		join: "Rejoindre une salle",
 		loading: "Chargement...",
 		link_copied_to_clipboard:

@@ -1,6 +1,6 @@
 import { MediaAccess } from "./medias";
 
-export type RoomType = "blind" | "dj";
+export type RoomType = "blind" | "dj" | "seabattle";
 
 export type RoomInfo = {
 	name: string;
