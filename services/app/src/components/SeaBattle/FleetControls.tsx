@@ -5,20 +5,20 @@ import { IconButton } from "../Common/IconButton";
 // ------------------------------------------------------------------
 
 export const FleetControls = ({
-	disabled,
+	disabled = false,
 	onMoveBackward,
 	onMoveForward,
 	onRotateLeft,
 	onRotateRight
 }: {
-	disabled: boolean;
+	disabled?: boolean;
 	onMoveBackward: () => void;
 	onMoveForward: () => void;
 	onRotateLeft: () => void;
 	onRotateRight: () => void;
 }) => {
 	return (
-		<div className="FleetControls">
+		<div className="SeaBattleControls SeaBattleFleetControls">
 			<IconButton
 				disabled={disabled}
 				icon="rotate-left"

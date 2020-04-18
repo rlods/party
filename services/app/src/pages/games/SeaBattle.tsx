@@ -3,15 +3,12 @@ import { useSelector, useDispatch } from "react-redux";
 //
 import { FleetControls } from "../../components/SeaBattle/FleetControls";
 import { Map } from "../../components/SeaBattle/Map";
-import { BattleAssets } from "../../components/SeaBattle/BattleAssets";
 import { RootState } from "../../reducers";
-import {
-	SeaBattlePlayerData,
-	GRID_CELL_UNIT_SIZE
-} from "../../utils/games/seabattle";
+import { SeaBattlePlayerData } from "../../utils/games/seabattle";
 import { Dispatch } from "../../actions";
 import { moveBoat } from "../../actions/games/seabattle";
 import { KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT } from "../../utils/keyboards";
+import { WeaponControls } from "../../components/SeaBattle/WeaponsControls";
 import "./SeaBattle.scss";
 
 // ------------------------------------------------------------------
@@ -78,6 +75,7 @@ export const SeaBattle = () => {
 
 	const onKeyDown = useCallback(
 		(e: KeyboardEvent) => {
+			e.preventDefault(); // to prevent scrolling with keyboard
 			if (e.repeat) {
 				return;
 			}
@@ -143,30 +141,24 @@ export const SeaBattle = () => {
 
 	return (
 		<div className="SeaBattle">
-			<FleetControls
-				disabled={selectedBoats[activePlayer] < 0}
-				onMoveForward={moveForward}
-				onMoveBackward={moveBackward}
-				onRotateLeft={rotateLeft}
-				onRotateRight={rotateRight}
-			/>
-			<svg viewBox="0 0 920 480">
-				<BattleAssets />
-				<>
-					{players.map((player, index) => (
-						<Map
-							key={index}
-							data={player}
-							position={{
-								x: GRID_CELL_UNIT_SIZE + 440 * index,
-								y: GRID_CELL_UNIT_SIZE
-							}}
-							selectedBoat={selectedBoats[index]}
-							setSelectedBoat={setSelectedBoats[index]}
-						/>
-					))}
-				</>
-			</svg>
+			<div className="Player current">
+				<FleetControls
+					disabled={selectedBoats[activePlayer] < 0}
+					onMoveForward={moveForward}
+					onMoveBackward={moveBackward}
+					onRotateLeft={rotateLeft}
+					onRotateRight={rotateRight}
+				/>
+				<Map
+					player={players[0]}
+					selectedBoat={selectedBoats[0]}
+					setSelectedBoat={setSelectedBoats[0]}
+				/>
+			</div>
+			<div className="Player other">
+				<WeaponControls disabled={selectedBoats[activePlayer] < 0} />
+				<Map player={players[1]} />
+			</div>
 		</div>
 	);
 };

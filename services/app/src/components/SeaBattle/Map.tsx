@@ -6,8 +6,10 @@ import { Fleet } from "./Fleet";
 import {
 	SeaBattleAssetPosition,
 	SeaBattlePlayerData,
-	SeaBattleAssetVisibility
+	SeaBattleAssetVisibility,
+	GRID_CELL_UNIT_SIZE
 } from "../../utils/games/seabattle";
+import { BattleAssets } from "./BattleAssets";
 
 // ------------------------------------------------------------------
 
@@ -26,15 +28,13 @@ const getSVGPosition = (
 
 // Order is important : Weapons under Boats under Hits
 export const Map = ({
-	data: { fleet, hits, weapons },
-	position,
+	player: { fleet, hits, weapons },
 	selectedBoat,
 	setSelectedBoat
 }: {
-	data: SeaBattlePlayerData;
-	position: SeaBattleAssetPosition;
-	selectedBoat: number;
-	setSelectedBoat: (index: number) => void;
+	player: SeaBattlePlayerData;
+	selectedBoat?: number;
+	setSelectedBoat?: (index: number) => void;
 }) => {
 	const svg = useRef<SVGSVGElement>(null);
 	const [activePos, setActiveCellPosition] = useState<SeaBattleAssetPosition>(
@@ -57,8 +57,8 @@ export const Map = ({
 	const onClick = useCallback((position: SeaBattleAssetPosition) => {
 		const { tx, ty } = getSVGPosition(svg.current!, position);
 		setActiveCellPosition({
-			x: Math.floor(tx / 40) * 40,
-			y: Math.floor(ty / 40) * 40
+			x: Math.floor(tx / GRID_CELL_UNIT_SIZE) * GRID_CELL_UNIT_SIZE,
+			y: Math.floor(ty / GRID_CELL_UNIT_SIZE) * GRID_CELL_UNIT_SIZE
 		});
 		setActiveCellVisibility("visible");
 	}, []);
@@ -70,22 +70,23 @@ export const Map = ({
 	const onOver = useCallback((position: SeaBattleAssetPosition) => {
 		const { tx, ty } = getSVGPosition(svg.current!, position);
 		setHoverCellPosition({
-			x: Math.floor(tx / 40) * 40,
-			y: Math.floor(ty / 40) * 40
+			x: Math.floor(tx / GRID_CELL_UNIT_SIZE) * GRID_CELL_UNIT_SIZE,
+			y: Math.floor(ty / GRID_CELL_UNIT_SIZE) * GRID_CELL_UNIT_SIZE
 		});
 		setHoverCellVisibility("visible");
 	}, []);
 
 	return (
 		<svg
-			width="400"
-			height="400"
+			width="100%"
+			height="100%"
+			viewBox="0 0 400 400"
 			ref={svg}
-			className="Map"
-			{...position}
+			className="SeaBattleMap"
 			onClick={e => onClick({ x: e.clientX, y: e.clientY })}
 			onMouseLeave={onLeave}
 			onMouseMove={e => onOver({ x: e.clientX, y: e.clientY })}>
+			<BattleAssets />
 			<rect width="400" height="400" fill="url(#grid)" />
 			<Cell color="#555" position={activePos} visibility={activeVis} />
 			<Cell color="#FF0" position={hoverPos} visibility={hoverVis} />

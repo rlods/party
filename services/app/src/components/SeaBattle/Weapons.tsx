@@ -11,7 +11,7 @@ import {
 
 export const Weapon = ({ type, ...asset }: SeaBattleWeaponData) => (
 	<Asset
-		className="Weapon"
+		className="SeaBattleWeapon"
 		type={type}
 		data={{
 			...asset,

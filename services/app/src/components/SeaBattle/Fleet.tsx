@@ -11,8 +11,8 @@ export const Fleet = ({
 	setSelectedBoat
 }: {
 	fleet: SeaBattleBoatData[];
-	selectedBoat: number;
-	setSelectedBoat: (index: number) => void;
+	selectedBoat?: number;
+	setSelectedBoat?: (index: number) => void;
 }) => {
 	return (
 		<>
@@ -20,13 +20,15 @@ export const Fleet = ({
 				<Boat
 					key={index}
 					boat={boat}
-					onClick={() => {
-						if (boat.status === "ok") {
-							setSelectedBoat(
-								index === selectedBoat ? -1 : index
-							);
-						}
-					}}
+					onClick={
+						setSelectedBoat && boat.status === "ok"
+							? () => {
+									setSelectedBoat(
+										index === selectedBoat ? -1 : index
+									);
+							  }
+							: void 0
+					}
 					selected={selectedBoat === index}
 				/>
 			))}

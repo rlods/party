@@ -1,5 +1,4 @@
 import React from "react";
-import classNames from "classnames";
 import {
 	SeaBattleAssetData,
 	SeaBattleAssetType
@@ -29,12 +28,12 @@ export const Asset = ({
 				onClick();
 			}
 		}}
-		className={classNames(className, type)}
+		className={className}
 		href={`#${type}`}
-		{...position}
 		rotate={rotate}
 		fill={color}
 		visibility={visibility}
+		{...position}
 	/>
 );
 

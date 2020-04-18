@@ -5,7 +5,8 @@ import { Asset } from "./Assets";
 import {
 	SeaBattleBoatData,
 	SeabattleBoatOrientationMappings,
-	GRID_CELL_UNIT_SIZE
+	GRID_CELL_UNIT_SIZE,
+	BoatsOffsetMappings
 } from "../../utils/games/seabattle";
 
 // ------------------------------------------------------------------
@@ -16,18 +17,25 @@ export const Boat = ({
 	selected
 }: {
 	boat: SeaBattleBoatData;
-	onClick: () => void;
+	onClick?: () => void;
 	selected: boolean;
 }) => (
 	<Asset
-		className={classNames("Boat", status, { selected })}
+		className={classNames("SeaBattleBoat", status, {
+			clickable: !!onClick,
+			selected
+		})}
 		onClick={onClick}
 		stopPropagation={true}
 		data={{
 			...asset,
 			position: {
-				x: 6 + asset.position.x * GRID_CELL_UNIT_SIZE,
-				y: 6 + asset.position.y * GRID_CELL_UNIT_SIZE
+				x:
+					BoatsOffsetMappings[type].x +
+					asset.position.x * GRID_CELL_UNIT_SIZE,
+				y:
+					BoatsOffsetMappings[type].y +
+					asset.position.y * GRID_CELL_UNIT_SIZE
 			}
 		}}
 		type={SeabattleBoatOrientationMappings[type][direction]}

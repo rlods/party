@@ -1,4 +1,5 @@
 import React from "react";
+import { GRID_CELL_UNIT_SIZE } from "../../utils/games/seabattle";
 
 // ------------------------------------------------------------------
 
@@ -52,10 +53,34 @@ export const BattleAssets = () => (
 		<use id="boat3-W" href="#boat3" transform="rotate(180, 14, 14)" />
 		<pattern id="grid" width="80" height="80" patternUnits="userSpaceOnUse">
 			<g>
-				<rect width="40" height="40" fill="#a6dbf8" x="0" y="0" />
-				<rect width="40" height="40" fill="#50a3db" x="40" y="0" />
-				<rect width="40" height="40" fill="#50a3db" x="0" y="40" />
-				<rect width="40" height="40" fill="#a6dbf8" x="40" y="40" />
+				<rect
+					width={GRID_CELL_UNIT_SIZE}
+					height={GRID_CELL_UNIT_SIZE}
+					fill="#a6dbf8"
+					x="0"
+					y="0"
+				/>
+				<rect
+					width={GRID_CELL_UNIT_SIZE}
+					height={GRID_CELL_UNIT_SIZE}
+					fill="#50a3db"
+					x={GRID_CELL_UNIT_SIZE}
+					y="0"
+				/>
+				<rect
+					width={GRID_CELL_UNIT_SIZE}
+					height={GRID_CELL_UNIT_SIZE}
+					fill="#50a3db"
+					x="0"
+					y={GRID_CELL_UNIT_SIZE}
+				/>
+				<rect
+					width={GRID_CELL_UNIT_SIZE}
+					height={GRID_CELL_UNIT_SIZE}
+					fill="#a6dbf8"
+					x={GRID_CELL_UNIT_SIZE}
+					y={GRID_CELL_UNIT_SIZE}
+				/>
 			</g>
 		</pattern>
 	</defs>

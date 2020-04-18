@@ -1,37 +1,41 @@
 .SeaBattle {
 	display: flex;
-	flex-direction: column;
-	justify-content: center;
+	flex-direction: row;
+	justify-content: space-around;
+	flex-wrap: wrap;
 	align-items: center;
-	height: 100vh;
-	max-height: 100vh;
+	min-height: 100vh;
 	padding: 0 50px;
 
-	.FleetControls {
+	.SeaBattleControls {
 		display: flex;
 		flex-direction: row;
 		justify-content: space-evenly;
-		width: 200px;
+		padding: 20px 0;
 	}
 
-	.Boat {
+	.SeaBattleBoat {
 		fill: #000;
+
+		&.clickable {
+			cursor: pointer;
+		}
+
+		&.ko {
+			fill: #e52524;
+		}
+
+		&.selected,
+		&.ok:hover {
+			fill: #777;
+		}
 	}
 
-	.Boat.ko {
-		fill: #e52524;
-	}
-
-	.Boat.selected,
-	.Boat.ok:hover {
-		fill: #777;
-	}
-
-	.Hit {
+	.SeaBattleHit {
 		pointer-events: none;
 	}
 
-	.Weapon {
+	.SeaBattleWeapon {
 		pointer-events: none;
 	}
 }

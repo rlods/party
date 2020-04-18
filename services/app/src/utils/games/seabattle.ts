@@ -1,5 +1,3 @@
-import { Boat } from "../../components/SeaBattle/Boats";
-
 export const GRID_CELL_COUNT = 10;
 export const GRID_CELL_UNIT_SIZE = 40;
 
@@ -56,11 +54,24 @@ export type OrientedBoatType =
 	| "boat3-S"
 	| "boat3-W";
 
+export const BoatsOffsetMappings = {
+	boat1: { x: 6, y: 6 },
+	boat2: { x: 6, y: 6 },
+	boat3: { x: 6, y: 6 }
+};
+
 // ------------------------------------------------------------------
 
 export type SeaBattleHitType = "hitted1" | "hitted2" | "missed1" | "missed2";
 
 export type SeaBattleHitData = SeaBattleAssetData & { type: SeaBattleHitType };
+
+export const HitsOffsetMappings = {
+	hitted1: { x: 10, y: 10 },
+	hitted2: { x: 10, y: 10 },
+	missed1: { x: 10, y: 10 },
+	missed2: { x: 10, y: 10 }
+};
 
 // ------------------------------------------------------------------
 
