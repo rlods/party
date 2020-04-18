@@ -1,0 +1,37 @@
+.Battle {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+	max-height: 100vh;
+	padding: 0 50px;
+
+	.FleetControls {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-evenly;
+		width: 200px;
+	}
+
+	.Boat {
+		fill: #000;
+	}
+
+	.Boat.ko {
+		fill: #e52524;
+	}
+
+	.Boat.selected,
+	.Boat.ok:hover {
+		fill: #555;
+	}
+
+	.Hit {
+		pointer-events: none;
+	}
+
+	.Weapon {
+		pointer-events: none;
+	}
+}
