@@ -10,16 +10,19 @@ import {
 // ------------------------------------------------------------------
 
 export const Boat = ({
-	direction = "E",
-	selected = false,
-	type,
-	status = "ok",
-	...props
-}: SeaBattleBoatData) => (
+	boat: { direction = "E", type, status = "ok", ...asset },
+	onClick,
+	selected
+}: {
+	boat: SeaBattleBoatData;
+	onClick: () => void;
+	selected: boolean;
+}) => (
 	<Asset
 		className={classNames("Boat", status, { selected })}
+		onClick={onClick}
 		stopPropagation={true}
+		data={asset}
 		type={SeabattleBoatOrientationMappings[type][direction]}
-		{...props}
 	/>
 );

@@ -9,12 +9,9 @@ export type SeaBattleAssetType =
 	| "cell-selection";
 
 export type SeaBattleAssetData = {
-	className?: string;
 	color?: string;
-	onClick?: () => void;
 	position: SeaBattleAssetPosition;
 	rotate?: string;
-	stopPropagation?: boolean;
 	visibility?: SeaBattleAssetVisibility;
 };
 
@@ -34,7 +31,6 @@ export type SeaBattleBoatType = "boat1" | "boat2" | "boat3";
 
 export type SeaBattleBoatData = SeaBattleAssetData & {
 	direction: SeaBattleDirection;
-	selected?: boolean;
 	status: SeaBattleBoatStatus;
 	type: SeaBattleBoatType;
 };

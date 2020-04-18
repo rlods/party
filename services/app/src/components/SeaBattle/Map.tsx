@@ -76,6 +76,8 @@ export const Map = ({
 
 	return (
 		<svg
+			width="400"
+			height="400"
 			ref={svg}
 			className="Map"
 			{...position}

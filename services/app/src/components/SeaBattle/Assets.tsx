@@ -8,15 +8,18 @@ import {
 // ------------------------------------------------------------------
 
 export const Asset = ({
+	data: { color, position, rotate, visibility },
 	className,
-	color,
 	onClick,
-	position,
-	rotate,
 	stopPropagation = false,
-	type,
-	visibility
-}: SeaBattleAssetData & { type: SeaBattleAssetType }) => (
+	type
+}: {
+	className?: string;
+	data: SeaBattleAssetData;
+	onClick?: () => void;
+	stopPropagation?: boolean;
+	type: SeaBattleAssetType;
+}) => (
 	<use
 		onClick={e => {
 			if (stopPropagation) {
@@ -37,6 +40,6 @@ export const Asset = ({
 
 // ------------------------------------------------------------------
 
-export const Cell = (props: SeaBattleAssetData) => (
-	<Asset type="cell-selection" {...props} />
+export const Cell = (data: SeaBattleAssetData) => (
+	<Asset type="cell-selection" data={data} />
 );

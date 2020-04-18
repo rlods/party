@@ -16,18 +16,18 @@ export const Fleet = ({
 }) => {
 	return (
 		<>
-			{fleet.map((props, index) => (
+			{fleet.map((boat, index) => (
 				<Boat
 					key={index}
+					boat={boat}
 					onClick={() => {
-						if (props.status === "ok") {
+						if (boat.status === "ok") {
 							setSelectedBoat(
 								index === selectedBoat ? -1 : index
 							);
 						}
 					}}
 					selected={selectedBoat === index}
-					{...props}
 				/>
 			))}
 		</>

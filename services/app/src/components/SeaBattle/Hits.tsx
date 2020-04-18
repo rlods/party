@@ -1,13 +1,12 @@
 import React from "react";
-import classNames from "classnames";
 //
 import { Asset } from "./Assets";
 import { SeaBattleHitData } from "../../utils/games/seabattle";
 
 // ------------------------------------------------------------------
 
-export const Hit = ({ type, ...props }: SeaBattleHitData) => (
-	<Asset className={classNames("Hit")} type={type} {...props} />
+export const Hit = ({ type, ...asset }: SeaBattleHitData) => (
+	<Asset className="Hit" type={type} data={asset} />
 );
 
 // ------------------------------------------------------------------
