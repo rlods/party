@@ -37,42 +37,43 @@ export const Map = ({
 	setSelectedBoat: (index: number) => void;
 }) => {
 	const svg = useRef<SVGSVGElement>(null);
-	const [activePos, setActivePos] = useState<SeaBattleAssetPosition>({
+	const [activePos, setActiveCellPosition] = useState<SeaBattleAssetPosition>(
+		{
+			x: 0,
+			y: 0
+		}
+	);
+	const [activeVis, setActiveCellVisibility] = useState<
+		SeaBattleAssetVisibility
+	>("hidden");
+	const [hoverPos, setHoverCellPosition] = useState<SeaBattleAssetPosition>({
 		x: 0,
 		y: 0
 	});
-	const [activeVis, setActiveVis] = useState<SeaBattleAssetVisibility>(
-		"hidden"
-	);
-	const [hoverPos, setHoverPos] = useState<SeaBattleAssetPosition>({
-		x: 0,
-		y: 0
-	});
-	const [hoverVis, setHoverVis] = useState<SeaBattleAssetVisibility>(
-		"hidden"
-	);
+	const [hoverVis, setHoverCellVisibility] = useState<
+		SeaBattleAssetVisibility
+	>("hidden");
 
 	const onClick = useCallback((position: SeaBattleAssetPosition) => {
 		const { tx, ty } = getSVGPosition(svg.current!, position);
-		setActivePos({
+		setActiveCellPosition({
 			x: Math.floor(tx / 40) * 40,
 			y: Math.floor(ty / 40) * 40
 		});
-		setActiveVis("visible");
+		setActiveCellVisibility("visible");
 	}, []);
 
 	const onLeave = useCallback(() => {
-		// setActiveVis("hidden");
-		setHoverVis("hidden");
+		setHoverCellVisibility("hidden");
 	}, []);
 
 	const onOver = useCallback((position: SeaBattleAssetPosition) => {
 		const { tx, ty } = getSVGPosition(svg.current!, position);
-		setHoverPos({
+		setHoverCellPosition({
 			x: Math.floor(tx / 40) * 40,
 			y: Math.floor(ty / 40) * 40
 		});
-		setHoverVis("visible");
+		setHoverCellVisibility("visible");
 	}, []);
 
 	return (
