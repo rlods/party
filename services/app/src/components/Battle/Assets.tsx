@@ -1,31 +1,11 @@
 import React from "react";
 import classNames from "classnames";
-//
-import { OrientedBoatType } from "./Boats";
-import { HitType } from "./Hits";
-import { WeaponType } from "./Weapons";
+import {
+	SeaBattleAssetData,
+	SeaBattleAssetType
+} from "../../utils/games/seabattle";
 
 // ------------------------------------------------------------------
-
-export type Position = { x: number; y: number };
-
-export type Visibility = "hidden" | "visible";
-
-export type AssetType =
-	| OrientedBoatType
-	| HitType
-	| WeaponType
-	| "cell-selection";
-
-export type AssetProps = {
-	className?: string;
-	color?: string;
-	onClick?: () => void;
-	position: Position;
-	rotate?: string;
-	stopPropagation?: boolean;
-	visibility?: Visibility;
-};
 
 export const Asset = ({
 	className,
@@ -36,7 +16,7 @@ export const Asset = ({
 	stopPropagation = false,
 	type,
 	visibility
-}: AssetProps & { type: AssetType }) => (
+}: SeaBattleAssetData & { type: SeaBattleAssetType }) => (
 	<use
 		onClick={e => {
 			if (stopPropagation) {
@@ -57,6 +37,6 @@ export const Asset = ({
 
 // ------------------------------------------------------------------
 
-export const Cell = (props: AssetProps) => (
+export const Cell = (props: SeaBattleAssetData) => (
 	<Asset type="cell-selection" {...props} />
 );

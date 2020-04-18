@@ -1,6 +1,7 @@
 import React from "react";
 //
-import { BoatProps, Boat } from "./Boats";
+import { Boat } from "./Boats";
+import { SeaBattleBoatData } from "../../utils/games/seabattle";
 
 // ------------------------------------------------------------------
 
@@ -9,7 +10,7 @@ export const Fleet = ({
 	selectedBoat,
 	setSelectedBoat
 }: {
-	fleet: BoatProps[];
+	fleet: SeaBattleBoatData[];
 	selectedBoat: number;
 	setSelectedBoat: (index: number) => void;
 }) => {

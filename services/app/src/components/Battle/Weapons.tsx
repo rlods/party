@@ -1,20 +1,17 @@
 import React from "react";
 import classNames from "classnames";
 //
-import { Asset, AssetProps } from "./Assets";
+import { Asset } from "./Assets";
+import { SeaBattleWeaponData } from "../../utils/games/seabattle";
 
 // ------------------------------------------------------------------
 
-export type WeaponType = "bullet1" | "bullet2" | "bullet3" | "mine";
-
-export type WeaponProps = AssetProps & { type: WeaponType };
-
-export const Weapon = ({ type, ...props }: WeaponProps) => (
+export const Weapon = ({ type, ...props }: SeaBattleWeaponData) => (
 	<Asset className={classNames("Weapon")} type={type} {...props} />
 );
 // ------------------------------------------------------------------
 
-export const Weapons = ({ weapons }: { weapons: WeaponProps[] }) => {
+export const Weapons = ({ weapons }: { weapons: SeaBattleWeaponData[] }) => {
 	return (
 		<>
 			{weapons.map((weapon, index) => (

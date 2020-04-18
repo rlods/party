@@ -1,21 +1,18 @@
 import React from "react";
 import classNames from "classnames";
 //
-import { Asset, AssetProps } from "./Assets";
+import { Asset } from "./Assets";
+import { SeaBattleHitData } from "../../utils/games/seabattle";
 
 // ------------------------------------------------------------------
 
-export type HitType = "hitted1" | "hitted2" | "missed1" | "missed2";
-
-export type HitProps = AssetProps & { type: HitType };
-
-export const Hit = ({ type, ...props }: HitProps) => (
+export const Hit = ({ type, ...props }: SeaBattleHitData) => (
 	<Asset className={classNames("Hit")} type={type} {...props} />
 );
 
 // ------------------------------------------------------------------
 
-export const Hits = ({ hits }: { hits: HitProps[] }) => {
+export const Hits = ({ hits }: { hits: SeaBattleHitData[] }) => {
 	return (
 		<>
 			{hits.map((hit, index) => (

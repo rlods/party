@@ -6,18 +6,14 @@ import { IconButton } from "../Common/IconButton";
 
 export const FleetControls = ({
 	disabled,
-	onMoveLeft,
-	onMoveUp,
-	onMoveDown,
-	onMoveRight,
+	onMoveBackward,
+	onMoveForward,
 	onRotateLeft,
 	onRotateRight
 }: {
 	disabled: boolean;
-	onMoveLeft: () => void;
-	onMoveUp: () => void;
-	onMoveDown: () => void;
-	onMoveRight: () => void;
+	onMoveBackward: () => void;
+	onMoveForward: () => void;
 	onRotateLeft: () => void;
 	onRotateRight: () => void;
 }) => {
@@ -31,27 +27,15 @@ export const FleetControls = ({
 			/>
 			<IconButton
 				disabled={disabled}
-				icon="arrow-left"
-				title="Move Left"
-				onClick={onMoveLeft}
-			/>
-			<IconButton
-				disabled={disabled}
 				icon="arrow-up"
-				title="Move Up"
-				onClick={onMoveUp}
+				title="Move Forward"
+				onClick={onMoveForward}
 			/>
 			<IconButton
 				disabled={disabled}
 				icon="arrow-down"
-				title="Move Down"
-				onClick={onMoveDown}
-			/>
-			<IconButton
-				disabled={disabled}
-				icon="arrow-right"
-				title="Move Right"
-				onClick={onMoveRight}
+				title="Move Backward"
+				onClick={onMoveBackward}
 			/>
 			<IconButton
 				disabled={disabled}

@@ -233,7 +233,7 @@ const DeezerApiImpl = (): DeezerApi => {
 		ids: string[]
 	): Promise<T[]> => {
 		let first = true;
-		const res: Array<T> = [];
+		const res: T[] = [];
 		let remainingIds = [...ids];
 		while (remainingIds.length > 0) {
 			if (!first) {

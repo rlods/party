@@ -1,13 +1,20 @@
 import React, { useCallback, useRef, useState } from "react";
-import { Visibility, Position, Cell } from "./Assets";
-import { Weapons, WeaponProps } from "./Weapons";
-import { Hits, HitProps } from "./Hits";
+import { Cell } from "./Assets";
+import { Weapons } from "./Weapons";
+import { Hits } from "./Hits";
 import { Fleet } from "./Fleet";
-import { BoatProps } from "./Boats";
+import {
+	SeaBattleAssetPosition,
+	SeaBattlePlayerData,
+	SeaBattleAssetVisibility
+} from "../../utils/games/seabattle";
 
 // ------------------------------------------------------------------
 
-const getSVGPosition = (svg: SVGSVGElement, { x, y }: Position) => {
+const getSVGPosition = (
+	svg: SVGSVGElement,
+	{ x, y }: SeaBattleAssetPosition
+) => {
 	var pt = svg.createSVGPoint();
 	pt.x = x;
 	pt.y = y;
@@ -17,30 +24,34 @@ const getSVGPosition = (svg: SVGSVGElement, { x, y }: Position) => {
 
 // ------------------------------------------------------------------
 
-export type MapData = {
-	fleet: BoatProps[];
-	hits: HitProps[];
-	weapons: WeaponProps[];
-};
-
 export const Map = ({
 	data: { fleet, hits, weapons },
 	position,
 	selectedBoat,
 	setSelectedBoat
 }: {
-	data: MapData;
-	position: Position;
+	data: SeaBattlePlayerData;
+	position: SeaBattleAssetPosition;
 	selectedBoat: number;
 	setSelectedBoat: (index: number) => void;
 }) => {
 	const svg = useRef<SVGSVGElement>(null);
-	const [activePos, setActivePos] = useState<Position>({ x: 0, y: 0 });
-	const [activeVis, setActiveVis] = useState<Visibility>("hidden");
-	const [hoverPos, setHoverPos] = useState<Position>({ x: 0, y: 0 });
-	const [hoverVis, setHoverVis] = useState<Visibility>("hidden");
+	const [activePos, setActivePos] = useState<SeaBattleAssetPosition>({
+		x: 0,
+		y: 0
+	});
+	const [activeVis, setActiveVis] = useState<SeaBattleAssetVisibility>(
+		"hidden"
+	);
+	const [hoverPos, setHoverPos] = useState<SeaBattleAssetPosition>({
+		x: 0,
+		y: 0
+	});
+	const [hoverVis, setHoverVis] = useState<SeaBattleAssetVisibility>(
+		"hidden"
+	);
 
-	const onClick = useCallback((position: Position) => {
+	const onClick = useCallback((position: SeaBattleAssetPosition) => {
 		const { tx, ty } = getSVGPosition(svg.current!, position);
 		setActivePos({
 			x: Math.floor(tx / 40) * 40,
@@ -54,7 +65,7 @@ export const Map = ({
 		setHoverVis("hidden");
 	}, []);
 
-	const onOver = useCallback((position: Position) => {
+	const onOver = useCallback((position: SeaBattleAssetPosition) => {
 		const { tx, ty } = getSVGPosition(svg.current!, position);
 		setHoverPos({
 			x: Math.floor(tx / 40) * 40,
