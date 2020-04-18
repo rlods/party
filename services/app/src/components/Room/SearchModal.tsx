@@ -6,14 +6,14 @@ import { FormModal } from "../Modals/FormModal";
 import { IconButton } from "../Common/IconButton";
 import { CancelButton } from "../Common/CancelButton";
 import { DEFAULT_API } from "../../utils/deezer";
-import { search } from "../../utils/providers";
+import { searchMedias } from "../../utils/providers";
 import { Media } from "./Medias";
 import {
 	MEDIA_TYPE_DEFINITIONS,
 	MediaType,
-	ProviderType,
-	SearchResults
+	ProviderType
 } from "../../utils/medias";
+import { SearchResults } from "../../utils/providers";
 import { SearchResultCategory } from "./SearchResultCategory";
 import { Dispatch } from "../../actions";
 import { popModal } from "../../reducers/modals";
@@ -60,7 +60,7 @@ export const SearchModal = () => {
 	const onSearch = useCallback(async () => {
 		if (query.trim().length > 0) {
 			setResults(
-				await search(query, {
+				await searchMedias(query, {
 					limit: SEARCH_RESULTS_COUNT
 				})
 			);

@@ -1,7 +1,7 @@
 import { AsyncAction } from ".";
 import { MediaAccess, findPreview } from "../utils/medias";
 import { PREVIEW_PLAYER } from "../utils/player";
-import { loadNew } from "../utils/providers";
+import { loadNewMedias } from "../utils/providers";
 import { displayError } from "./messages";
 import { extractErrorMessage } from "../utils/messages";
 
@@ -15,7 +15,7 @@ export const previewMedia = (access: MediaAccess): AsyncAction => async (
 		const {
 			medias: { medias: oldMedias }
 		} = getState();
-		const { newMedias } = await loadNew([access], oldMedias);
+		const { newMedias } = await loadNewMedias([access], oldMedias);
 		const track = findPreview(access, oldMedias, newMedias);
 		if (!track) {
 			throw new Error("[Medias] Cannot find track to preview...");

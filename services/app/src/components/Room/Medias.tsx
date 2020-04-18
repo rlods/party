@@ -41,13 +41,14 @@ export const Media = React.memo(
 					{actions ? <div className="Actions">{actions}</div> : null}
 				</div>
 			);
-		} else if (media.type === "album") {
+		}
+		if (media.type === "album") {
 			return (
 				<div className="Media Album">
 					<Cover
 						playable={playable}
 						playing={playing}
-						image={media.cover_small}
+						image={media.picture_small}
 						onPlay={onPlay}
 						onStop={onStop}
 					/>
@@ -72,7 +73,8 @@ export const Media = React.memo(
 					{actions ? <div className="Actions">{actions}</div> : null}
 				</div>
 			);
-		} else if (media.type === "playlist") {
+		}
+		if (media.type === "playlist") {
 			return (
 				<div className="Media Playlist">
 					<Cover
@@ -103,13 +105,14 @@ export const Media = React.memo(
 					{actions ? <div className="Actions">{actions}</div> : null}
 				</div>
 			);
-		} else if (media.type === "track") {
+		}
+		if (media.type === "track") {
 			return (
 				<div className="Media Track">
 					<Cover
 						playable={playable && !!media.preview}
 						playing={playing}
-						image={media.album.cover_small}
+						image={media.album.picture_small}
 						onPlay={onPlay}
 						onStop={onStop}
 					/>
@@ -134,8 +137,7 @@ export const Media = React.memo(
 					{actions ? <div className="Actions">{actions}</div> : null}
 				</div>
 			);
-		} else {
-			return null;
 		}
+		return null;
 	}
 );

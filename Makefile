@@ -19,6 +19,12 @@ endef
 # BUILD
 build:
 	$(compose_dev) build
+build-api:
+	$(compose_dev) build api
+build-api2:
+	$(compose_dev) build api2
+build-app:
+	$(compose_dev) build app
 
 # INSTALL
 install: install-app
@@ -27,11 +33,19 @@ install-app:
 
 # DEV
 start:
+	$(compose_dev) up api api2 app proxy
+start-api:
+	$(compose_dev) up api proxy
+start-api2:
+	$(compose_dev) up api2 proxy
+start-app:
 	$(compose_dev) up app proxy
 stop:
 	$(compose_dev) down
 
 # SHELL
+shell-api:
+	$(compose_dev_run) api /bin/sh
 shell-app:
 	$(compose_dev_run) app /bin/sh
 

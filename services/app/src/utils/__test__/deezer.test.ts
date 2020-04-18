@@ -6,10 +6,10 @@ jest.mock("../jsonp");
 
 import {
 	DEFAULT_API,
-	ApiSearchResult,
-	ApiAlbum,
-	ApiPlaylist,
-	ApiTrack
+	DeezerApiSearchResult,
+	DeezerApiAlbum,
+	DeezerApiPlaylist,
+	DeezerApiTrack
 } from "../deezer";
 import { Album, Playlist, Track } from "../medias";
 
@@ -21,7 +21,7 @@ let PLAYLIST_COUNTER = 0;
 let TRACK_COUNTER = 0;
 let USER_COUNTER = 0;
 
-const createFakeApiAlbum = (): ApiAlbum => {
+const createFakeApiAlbum = (): DeezerApiAlbum => {
 	const albumId = ALBUM_COUNTER++;
 	const artistId = ARTIST_COUNTER++;
 	return {
@@ -61,7 +61,7 @@ const createFakeApiAlbum = (): ApiAlbum => {
 	};
 };
 
-const createFakeApiPlaylist = (): ApiPlaylist => {
+const createFakeApiPlaylist = (): DeezerApiPlaylist => {
 	const userId = USER_COUNTER++;
 	return {
 		creator: {
@@ -103,7 +103,7 @@ const createFakeApiPlaylist = (): ApiPlaylist => {
 	};
 };
 
-const createFakeApiTrack = (): ApiTrack => ({
+const createFakeApiTrack = (): DeezerApiTrack => ({
 	album: {
 		cover_big: "",
 		cover_small: "",
@@ -130,7 +130,7 @@ describe("Providers Utilities", () => {
 		const album1 = createFakeApiAlbum();
 		const mockedJsonp = mocked(asyncJsonp, true);
 		mockedJsonp.mockImplementation((url, qs) =>
-			Promise.resolve<ApiAlbum>(album1)
+			Promise.resolve<DeezerApiAlbum>(album1)
 		);
 		await expect(DEFAULT_API.loadAlbums(["42"])).resolves.toEqual<Album[]>([
 			{
@@ -141,21 +141,21 @@ describe("Providers Utilities", () => {
 					picture_big: "",
 					picture_small: ""
 				},
-				cover_big: "",
-				cover_small: "",
 				id: `${album1.id}`,
 				link: `https://www.deezer.com/album/${album1.id}`,
+				picture_big: "",
+				picture_small: "",
 				provider: "deezer",
 				title: "",
 				tracks: [
 					{
 						album: {
-							cover_big: "",
-							cover_small: "",
 							id: `${album1.tracks!.data[0].album.id}`,
 							link: `https://www.deezer.com/album/${
 								album1.tracks!.data[0].album.id
 							}`,
+							picture_big: "",
+							picture_small: "",
 							title: ""
 						},
 						artist: {
@@ -194,7 +194,7 @@ describe("Providers Utilities", () => {
 	it("loadAlbums - invalid", async () => {
 		const mockedJsonp = mocked(asyncJsonp, true);
 		mockedJsonp.mockImplementation((url, qs) =>
-			Promise.resolve<ApiAlbum>({
+			Promise.resolve<DeezerApiAlbum>({
 				error: { code: 200, message: "toto", type: "toto" },
 				artist: {
 					id: 0,
@@ -209,9 +209,9 @@ describe("Providers Utilities", () => {
 				tracks: { data: [] }
 			})
 		);
-		await expect(DEFAULT_API.loadAlbums(["42"])).rejects.toThrowError(
-			"An error occured while loading media"
-		);
+		await expect(DEFAULT_API.loadAlbums(["42"])).resolves.toEqual<Album[]>(
+			[]
+		); // invalid albumds are just ignored
 	});
 
 	// --------------------------------------------------------------
@@ -220,7 +220,7 @@ describe("Providers Utilities", () => {
 		const playlist1 = createFakeApiPlaylist();
 		const mockedJsonp = mocked(asyncJsonp, true);
 		mockedJsonp.mockImplementation((url, qs) =>
-			Promise.resolve<ApiPlaylist>(playlist1)
+			Promise.resolve<DeezerApiPlaylist>(playlist1)
 		);
 		await expect(DEFAULT_API.loadPlaylists(["42"])).resolves.toEqual<
 			Playlist[]
@@ -235,12 +235,12 @@ describe("Providers Utilities", () => {
 				tracks: [
 					{
 						album: {
-							cover_big: "",
-							cover_small: "",
 							id: `${playlist1.tracks!.data[0].album.id}`,
 							link: `https://www.deezer.com/album/${
 								playlist1.tracks!.data[0].album.id
 							}`,
+							picture_big: "",
+							picture_small: "",
 							title: ""
 						},
 						artist: {
@@ -289,15 +289,15 @@ describe("Providers Utilities", () => {
 		const track1 = createFakeApiTrack();
 		const mockedJsonp = mocked(asyncJsonp, true);
 		mockedJsonp.mockImplementation((url, qs) =>
-			Promise.resolve<ApiTrack>(track1)
+			Promise.resolve<DeezerApiTrack>(track1)
 		);
 		await expect(DEFAULT_API.loadTracks(["42"])).resolves.toEqual<Track[]>([
 			{
 				album: {
-					cover_big: "",
-					cover_small: "",
 					id: `${track1.album.id}`,
 					link: `https://www.deezer.com/album/${track1.album.id}`,
+					picture_big: "",
+					picture_small: "",
 					title: ""
 				},
 				artist: {
@@ -330,7 +330,7 @@ describe("Providers Utilities", () => {
 		const album1 = createFakeApiAlbum();
 		const mockedJsonp = mocked(asyncJsonp, true);
 		mockedJsonp.mockImplementation((url, qs) =>
-			Promise.resolve<ApiSearchResult<ApiAlbum>>({
+			Promise.resolve<DeezerApiSearchResult<DeezerApiAlbum>>({
 				data: [album1],
 				total: 1
 			})
@@ -346,21 +346,21 @@ describe("Providers Utilities", () => {
 					picture_big: "",
 					picture_small: ""
 				},
-				cover_big: "",
-				cover_small: "",
 				id: `${album1.id}`,
 				link: `https://www.deezer.com/album/${album1.id}`,
+				picture_big: "",
+				picture_small: "",
 				provider: "deezer",
 				title: "",
 				tracks: [
 					{
 						album: {
-							cover_big: "",
-							cover_small: "",
 							id: `${album1.tracks!.data[0].album.id}`,
 							link: `https://www.deezer.com/album/${
 								album1.tracks!.data[0].album.id
 							}`,
+							picture_big: "",
+							picture_small: "",
 							title: ""
 						},
 						artist: {
@@ -402,7 +402,7 @@ describe("Providers Utilities", () => {
 		const playlist1 = createFakeApiPlaylist();
 		const mockedJsonp = mocked(asyncJsonp, true);
 		mockedJsonp.mockImplementation((url, qs) =>
-			Promise.resolve<ApiSearchResult<ApiPlaylist>>({
+			Promise.resolve<DeezerApiSearchResult<DeezerApiPlaylist>>({
 				data: [playlist1],
 				total: 1
 			})
@@ -420,12 +420,12 @@ describe("Providers Utilities", () => {
 				tracks: [
 					{
 						album: {
-							cover_big: "",
-							cover_small: "",
 							id: `${playlist1.tracks!.data[0].album.id}`,
 							link: `https://www.deezer.com/album/${
 								playlist1.tracks!.data[0].album.id
 							}`,
+							picture_big: "",
+							picture_small: "",
 							title: ""
 						},
 						artist: {
@@ -474,7 +474,7 @@ describe("Providers Utilities", () => {
 		const track1 = createFakeApiTrack();
 		const mockedJsonp = mocked(asyncJsonp, true);
 		mockedJsonp.mockImplementation((url, qs) =>
-			Promise.resolve<ApiSearchResult<ApiTrack>>({
+			Promise.resolve<DeezerApiSearchResult<DeezerApiTrack>>({
 				data: [track1],
 				total: 1
 			})
@@ -484,10 +484,10 @@ describe("Providers Utilities", () => {
 		).resolves.toEqual<Track[]>([
 			{
 				album: {
-					cover_big: "",
-					cover_small: "",
 					id: `${track1.album.id}`,
 					link: `https://www.deezer.com/album/${track1.album.id}`,
+					picture_big: "",
+					picture_small: "",
 					title: ""
 				},
 				artist: {

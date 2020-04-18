@@ -20,10 +20,10 @@ export const createFakeAlbum = (tracksCount = 0): Album => ({
 		picture_big: "",
 		picture_small: ""
 	},
-	cover_big: "",
-	cover_small: "",
 	id: `${ALBUM_COUNTER++}`,
 	link: "",
+	picture_big: "",
+	picture_small: "",
 	provider: "deezer",
 	title: "",
 	tracks: createFakeTracks(tracksCount),
@@ -48,10 +48,10 @@ export const createFakePlaylist = (tracksCount = 0): Playlist => ({
 
 export const createFakeTrack = (): Track => ({
 	album: {
-		cover_big: "",
-		cover_small: "",
 		id: "",
 		link: "",
+		picture_big: "",
+		picture_small: "",
 		title: ""
 	},
 	artist: {

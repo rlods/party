@@ -1,18 +1,25 @@
-import { load, loadNew, search } from "../providers";
-import { Media, SearchResults } from "../medias";
+import {
+	loadMedias,
+	loadNewMedias,
+	searchMedias,
+	SearchResults
+} from "../providers";
+import { Media } from "../medias";
 
 // ------------------------------------------------------------------
 
 describe("Providers Utilities", () => {
 	it("load - edge", async () => {
-		await expect(load([])).resolves.toEqual<Media[]>([]);
+		await expect(loadMedias([])).resolves.toEqual<Media[]>([]);
 	});
 
 	// --------------------------------------------------------------
 
-	it("loadNew - edge", async () => {
+	it("loadNewMedias - edge", async () => {
 		await expect(
-			loadNew([], { deezer: { album: {}, playlist: {}, track: {} } })
+			loadNewMedias([], {
+				deezer: { album: {}, playlist: {}, track: {} }
+			})
 		).resolves.toEqual<{
 			newMedias: Media[];
 			newMediasAndTracks: Media[];
@@ -25,10 +32,10 @@ describe("Providers Utilities", () => {
 	// --------------------------------------------------------------
 
 	it("search - edge", async () => {
-		await expect(search("", { limit: 10 })).resolves.toEqual<SearchResults>(
-			{
-				deezer: { album: [], playlist: [], track: [] }
-			}
-		);
+		await expect(searchMedias("", { limit: 10 })).resolves.toEqual<
+			SearchResults
+		>({
+			deezer: { album: [], playlist: [], track: [] }
+		});
 	});
 });

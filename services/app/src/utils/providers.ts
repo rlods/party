@@ -1,15 +1,32 @@
 import {
-	SearchOptions,
-	SearchResults,
 	Media,
 	MediaAccess,
-	StructuredMedias
+	StructuredMedias,
+	Album,
+	Playlist,
+	Track
 } from "./medias";
 import { DEFAULT_API } from "./deezer";
 
 // ------------------------------------------------------------------
 
-export const load = async (accesses: MediaAccess[]): Promise<Media[]> => {
+export type SearchOptions = {
+	limit?: number;
+};
+
+export type SearchResults = {
+	// keys are ProviderType
+	deezer: {
+		// keys are MediaType
+		album: Album[];
+		playlist: Playlist[];
+		track: Track[];
+	};
+};
+
+// ------------------------------------------------------------------
+
+export const loadMedias = async (accesses: MediaAccess[]): Promise<Media[]> => {
 	const ids: {
 		deezer: { album: string[]; playlist: string[]; track: string[] };
 	} = {
@@ -33,17 +50,21 @@ export const load = async (accesses: MediaAccess[]): Promise<Media[]> => {
 			track: await DEFAULT_API.loadTracks(ids.deezer.track)
 		}
 	};
-	return accesses.map(
-		access =>
-			medias[access.provider][access.type][
-				ids[access.provider][access.type].indexOf(access.id)
-			]
-	);
+	const flatten: Media[] = [];
+	for (const access of accesses) {
+		const media = (medias[access.provider][access.type] as Media[]).find(
+			other => other.id === access.id
+		);
+		if (media) {
+			flatten.push(media);
+		}
+	}
+	return flatten;
 };
 
 // ------------------------------------------------------------------
 
-export const loadNew = async (
+export const loadNewMedias = async (
 	accesses: MediaAccess[],
 	oldMedias: StructuredMedias
 ): Promise<{
@@ -64,19 +85,19 @@ export const loadNew = async (
 						other.type === value.type
 				)
 		);
-	const newMedias = await load(newAccesses);
+	const newMedias = await loadMedias(newAccesses);
 	const newMediasAndTracks: Media[] = [];
 	for (const media of newMedias) {
 		newMediasAndTracks.push(media);
 		if (media.type !== "track") {
-			newMediasAndTracks.push(...media.tracks!);
+			newMediasAndTracks.push(...media.tracks);
 		}
 	}
 	return { newMedias, newMediasAndTracks };
 };
 // ------------------------------------------------------------------
 
-export const search = async (
+export const searchMedias = async (
 	query: string,
 	options?: SearchOptions
 ): Promise<SearchResults> => {

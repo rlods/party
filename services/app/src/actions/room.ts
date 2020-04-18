@@ -13,7 +13,7 @@ import {
 import { extractErrorMessage } from "../utils/messages";
 import { pickColor } from "../utils/colorpicker";
 import { Player } from "../utils/player";
-import { loadNew } from "../utils/providers";
+import { loadNewMedias } from "../utils/providers";
 import { RootState } from "../reducers";
 import { setMedias } from "../reducers/medias";
 import { setRoom, resetRoom } from "../reducers/room";
@@ -167,7 +167,7 @@ const _watchRoom = (
 			}
 			let tracks: ContextualizedTrackAccess[] = [];
 			if (medias.length > 0) {
-				const { newMedias, newMediasAndTracks } = await loadNew(
+				const { newMedias, newMediasAndTracks } = await loadNewMedias(
 					medias,
 					oldMedias
 				);
@@ -286,7 +286,7 @@ const _scheduleTimer = (
 
 				try {
 					const [color] = await Promise.all([
-						pickColor(nextTrack.album.cover_small),
+						pickColor(nextTrack.album.picture_small),
 						player.play(
 							nextTrackIndex,
 							nextTrack.id,

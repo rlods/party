@@ -95,7 +95,7 @@ describe("Medias Utilities", () => {
 				},
 				[]
 			)
-		).toEqual(album1.tracks![0]);
+		).toEqual(album1.tracks[0]);
 
 		expect(
 			findPreview(
@@ -109,7 +109,7 @@ describe("Medias Utilities", () => {
 				},
 				[album1]
 			)
-		).toEqual(album1.tracks![0]);
+		).toEqual(album1.tracks[0]);
 
 		expect(
 			findPreview(
@@ -123,7 +123,7 @@ describe("Medias Utilities", () => {
 				},
 				[]
 			)
-		).toEqual(playlist1.tracks![0]);
+		).toEqual(playlist1.tracks[0]);
 
 		expect(
 			findPreview(
@@ -137,7 +137,7 @@ describe("Medias Utilities", () => {
 				},
 				[playlist1]
 			)
-		).toEqual(playlist1.tracks![0]);
+		).toEqual(playlist1.tracks[0]);
 
 		expect(
 			findPreview(
@@ -236,14 +236,14 @@ describe("Medias Utilities", () => {
 				[]
 			)
 		).toEqual<ContextualizedTrackAccess[]>([
-			...album1.tracks!.map<ContextualizedTrackAccess>(track => ({
+			...album1.tracks.map<ContextualizedTrackAccess>(track => ({
 				contextId: album1.id,
 				contextType: "album",
 				id: track.id,
 				provider: track.provider,
 				type: track.type
 			})),
-			...playlist1.tracks!.map<ContextualizedTrackAccess>(track => ({
+			...playlist1.tracks.map<ContextualizedTrackAccess>(track => ({
 				contextId: playlist1.id,
 				contextType: "playlist",
 				id: track.id,
@@ -272,14 +272,14 @@ describe("Medias Utilities", () => {
 				[album1, playlist1, track1]
 			)
 		).toEqual<ContextualizedTrackAccess[]>([
-			...album1.tracks!.map<ContextualizedTrackAccess>(track => ({
+			...album1.tracks.map<ContextualizedTrackAccess>(track => ({
 				contextId: album1.id,
 				contextType: "album",
 				id: track.id,
 				provider: track.provider,
 				type: track.type
 			})),
-			...playlist1.tracks!.map<ContextualizedTrackAccess>(track => ({
+			...playlist1.tracks.map<ContextualizedTrackAccess>(track => ({
 				contextId: playlist1.id,
 				contextType: "playlist",
 				id: track.id,
@@ -358,7 +358,7 @@ describe("Medias Utilities", () => {
 		}>({
 			mediaFirstTrackIndex: 2, // index of first track in context (playlist1)
 			mediaIndex: 1, // index of playlist1
-			mediaSize: playlist1.tracks!.length
+			mediaSize: playlist1.tracks.length
 		});
 
 		expect(
@@ -402,7 +402,7 @@ describe("Medias Utilities", () => {
 		).toThrowError("Track index is out of range");
 
 		expect(() =>
-			findContextFromTrackIndex([album1], album1.tracks!.length + 5, {
+			findContextFromTrackIndex([album1], album1.tracks.length + 5, {
 				deezer: {
 					album: { [album1.id]: album1 },
 					playlist: {},

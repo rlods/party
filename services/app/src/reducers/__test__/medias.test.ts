@@ -1,5 +1,5 @@
 import { initStore } from "../../utils/redux";
-import { setMedias } from "../../actions/medias";
+import { setMedias } from "../../reducers/medias";
 import { StructuredMedias } from "../../utils/medias";
 import {
 	createFakeAlbum,

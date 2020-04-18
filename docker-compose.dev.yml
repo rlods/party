@@ -1,6 +1,11 @@
 version: "3"
 
 services:
+  api:
+    command: CompileDaemon -log-prefix=false -build="go install -v ./..." -command="/go/bin/api"
+    volumes:
+      - ./services/api:/go/src/api:ro
+
   app:
     build:
       args:
@@ -9,16 +14,18 @@ services:
     command: npm run start
     tty: true
     volumes:
-      - ./services/app:/home/node/app/services/app:delegated
+      - ./services/app:/home/node/app/services/app:delegated # delegated for coverage generation
 
   proxy:
     build:
       context: ./docker/proxy
     volumes:
-      - ./docker/proxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:delegated
+      - ./docker/proxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
     ports:
       - 80:80
       - 1936:1936
     depends_on:
+      - api
+      - api2
       - app
     restart: on-failure

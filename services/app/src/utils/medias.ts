@@ -48,21 +48,31 @@ export type ContextualizedTrackAccess = {
 // ------------------------------------------------------------------
 
 export type Album = {
-	artist: {
-		id: string;
-		link: string;
-		name: string;
-		picture_big: string;
-		picture_small: string;
-	};
-	cover_big: string;
-	cover_small: string;
+	artist: Artist;
 	id: string;
 	link: string;
+	picture_big: string;
+	picture_small: string;
 	provider: ProviderType;
 	title: string;
-	tracks?: Track[];
+	tracks: Track[];
 	type: "album";
+};
+
+export type AlbumLight = {
+	id: string;
+	link: string;
+	picture_big: string;
+	picture_small: string;
+	title: string;
+};
+
+export type Artist = {
+	id: string;
+	link: string;
+	name: string;
+	picture_big: string;
+	picture_small: string;
 };
 
 export type Playlist = {
@@ -72,7 +82,7 @@ export type Playlist = {
 	picture_small: string;
 	provider: ProviderType;
 	title: string;
-	tracks?: Track[];
+	tracks: Track[];
 	type: "playlist";
 	user: {
 		id: string;
@@ -82,20 +92,8 @@ export type Playlist = {
 };
 
 export type Track = {
-	album: {
-		cover_big: string;
-		cover_small: string;
-		id: string;
-		link: string;
-		title: string;
-	};
-	artist: {
-		id: string;
-		name: string;
-		link: string;
-		picture_big: string;
-		picture_small: string;
-	};
+	album: AlbumLight;
+	artist: Artist;
 	duration: number;
 	id: string;
 	link: string;
@@ -116,22 +114,6 @@ export type StructuredMedias = {
 		album: { [id: string]: Album };
 		playlist: { [id: string]: Playlist };
 		track: { [id: string]: Track };
-	};
-};
-
-// ------------------------------------------------------------------
-
-export type SearchOptions = {
-	limit?: number;
-};
-
-export type SearchResults = {
-	// keys are ProviderType
-	deezer: {
-		// keys are MediaType
-		album: Album[];
-		playlist: Playlist[];
-		track: Track[];
 	};
 };
 

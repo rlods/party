@@ -1,4 +1,4 @@
-import * as jimp from "jimp";
+import { getImageMainColor } from "./images";
 
 // ------------------------------------------------------------------
 
@@ -29,9 +29,7 @@ export const pickColor = async (url: string) => {
 		res = CACHE[url];
 		if (!res) {
 			try {
-				const image = await jimp.read(url);
-				const pixel = await image.resize(1, 1).getPixelColor(0, 0);
-				const { r, g, b } = jimp.intToRGBA(pixel);
+				const { r, g, b } = await getImageMainColor(url);
 				CACHE[url] = res = {
 					bg: { r, g, b },
 					fg:

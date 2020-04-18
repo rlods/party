@@ -197,7 +197,9 @@
 <a name='L139'></a><a href='#L139'>139</a>
 <a name='L140'></a><a href='#L140'>140</a>
 <a name='L141'></a><a href='#L141'>141</a>
-<a name='L142'></a><a href='#L142'>142</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L142'></a><a href='#L142'>142</a>
+<a name='L143'></a><a href='#L143'>143</a>
+<a name='L144'></a><a href='#L144'>144</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -240,39 +242,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -335,7 +308,38 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React, { ReactNode } from "react";
@@ -381,13 +385,14 @@ export const Media = <span class="cstat-no" title="statement not covered" >React
 					{actions ? &lt;div className="Actions"&gt;{actions}&lt;/div&gt; : null}
 				&lt;/div&gt;
 			);
-		} else <span class="cstat-no" title="statement not covered" >if (media.type === "album") {</span>
+		}
+<span class="cstat-no" title="statement not covered" >		if (media.type === "album") {</span>
 <span class="cstat-no" title="statement not covered" >			return (</span>
 				&lt;div className="Media Album"&gt;
 					&lt;Cover
 						playable={playable}
 						playing={playing}
-						image={media.cover_small}
+						image={media.picture_small}
 						onPlay={onPlay}
 						onStop={onStop}
 					/&gt;
@@ -412,7 +417,8 @@ export const Media = <span class="cstat-no" title="statement not covered" >React
 					{actions ? &lt;div className="Actions"&gt;{actions}&lt;/div&gt; : null}
 				&lt;/div&gt;
 			);
-		} else <span class="cstat-no" title="statement not covered" >if (media.type === "playlist") {</span>
+		}
+<span class="cstat-no" title="statement not covered" >		if (media.type === "playlist") {</span>
 <span class="cstat-no" title="statement not covered" >			return (</span>
 				&lt;div className="Media Playlist"&gt;
 					&lt;Cover
@@ -443,13 +449,14 @@ export const Media = <span class="cstat-no" title="statement not covered" >React
 					{actions ? &lt;div className="Actions"&gt;{actions}&lt;/div&gt; : null}
 				&lt;/div&gt;
 			);
-		} else <span class="cstat-no" title="statement not covered" >if (media.type === "track") {</span>
+		}
+<span class="cstat-no" title="statement not covered" >		if (media.type === "track") {</span>
 <span class="cstat-no" title="statement not covered" >			return (</span>
 				&lt;div className="Media Track"&gt;
 					&lt;Cover
 						playable={playable &amp;&amp; !!media.preview}
 						playing={playing}
-						image={media.album.cover_small}
+						image={media.album.picture_small}
 						onPlay={onPlay}
 						onStop={onStop}
 					/&gt;
@@ -474,9 +481,8 @@ export const Media = <span class="cstat-no" title="statement not covered" >React
 					{actions ? &lt;div className="Actions"&gt;{actions}&lt;/div&gt; : null}
 				&lt;/div&gt;
 			);
-		} else {
-<span class="cstat-no" title="statement not covered" >			return null;</span>
 		}
+<span class="cstat-no" title="statement not covered" >		return null;</span>
 	}
 );
 &nbsp;</pre></td></tr></table></pre>
@@ -486,7 +492,7 @@ export const Media = <span class="cstat-no" title="statement not covered" >React
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu Apr 16 2020 22:09:38 GMT+0000 (Coordinated Universal Time)
+                at Sat Apr 18 2020 01:15:44 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../prettify.js"></script>
