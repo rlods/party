@@ -28,10 +28,12 @@ const getSVGPosition = (
 
 // Order is important : Weapons under Boats under Hits
 export const Map = ({
+	hideFleet = false,
 	player: { fleet, hits, weapons },
 	selectedBoat,
 	setSelectedBoat
 }: {
+	hideFleet?: boolean;
 	player: SeaBattlePlayerData;
 	selectedBoat?: number;
 	setSelectedBoat?: (index: number) => void;
@@ -91,11 +93,13 @@ export const Map = ({
 			<Cell color="#555" position={activePos} visibility={activeVis} />
 			<Cell color="#FF0" position={hoverPos} visibility={hoverVis} />
 			<Weapons weapons={weapons} />
-			<Fleet
-				fleet={fleet}
-				selectedBoat={selectedBoat}
-				setSelectedBoat={setSelectedBoat}
-			/>
+			{!hideFleet ? (
+				<Fleet
+					fleet={fleet}
+					selectedBoat={selectedBoat}
+					setSelectedBoat={setSelectedBoat}
+				/>
+			) : null}
 			<Hits hits={hits} />
 		</svg>
 	);

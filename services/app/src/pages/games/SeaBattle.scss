@@ -1,41 +1,52 @@
 .SeaBattle {
 	display: flex;
 	flex-direction: row;
-	justify-content: space-around;
+	justify-content: center;
 	flex-wrap: wrap;
 	align-items: center;
 	min-height: 100vh;
 	padding: 0 50px;
 
-	.SeaBattleControls {
-		display: flex;
-		flex-direction: row;
-		justify-content: space-evenly;
-		padding: 20px 0;
-	}
+	.SeaBattlePlayer {
+		flex-grow: 1;
+		padding: 0 20px;
 
-	.SeaBattleBoat {
-		fill: #000;
-
-		&.clickable {
-			cursor: pointer;
+		.SeaBattleControls {
+			display: flex;
+			flex-direction: row;
+			justify-content: space-evenly;
+			padding: 20px 0;
 		}
 
-		&.ko {
-			fill: #e52524;
+		.SeaBattleMap {
+			.SeaBattleBoat {
+				fill: #000;
+
+				&.clickable {
+					cursor: pointer;
+				}
+
+				&.ko {
+					fill: #e52524;
+				}
+
+				&.selected,
+				&.ok:hover {
+					fill: #777;
+				}
+			}
+
+			.SeaBattleHit {
+				pointer-events: none;
+			}
+
+			.SeaBattleWeapon {
+				pointer-events: none;
+			}
 		}
 
-		&.selected,
-		&.ok:hover {
-			fill: #777;
+		.SeaBattlePlayerInfo {
+			padding: 10px;
 		}
-	}
-
-	.SeaBattleHit {
-		pointer-events: none;
-	}
-
-	.SeaBattleWeapon {
-		pointer-events: none;
 	}
 }

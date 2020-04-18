@@ -3,6 +3,11 @@ import { GRID_CELL_UNIT_SIZE } from "../../utils/games/seabattle";
 
 // ------------------------------------------------------------------
 
+const SEA_COLOR1 = "#a6dbf8";
+const SEA_COLOR2 = "#50a3db";
+
+// ------------------------------------------------------------------
+
 export const BattleAssets = () => (
 	<defs>
 		<circle id="missed1" cx="10" cy="10" r="8" fill="#fff" />
@@ -56,28 +61,28 @@ export const BattleAssets = () => (
 				<rect
 					width={GRID_CELL_UNIT_SIZE}
 					height={GRID_CELL_UNIT_SIZE}
-					fill="#a6dbf8"
+					fill={SEA_COLOR1}
 					x="0"
 					y="0"
 				/>
 				<rect
 					width={GRID_CELL_UNIT_SIZE}
 					height={GRID_CELL_UNIT_SIZE}
-					fill="#50a3db"
+					fill={SEA_COLOR2}
 					x={GRID_CELL_UNIT_SIZE}
 					y="0"
 				/>
 				<rect
 					width={GRID_CELL_UNIT_SIZE}
 					height={GRID_CELL_UNIT_SIZE}
-					fill="#50a3db"
+					fill={SEA_COLOR2}
 					x="0"
 					y={GRID_CELL_UNIT_SIZE}
 				/>
 				<rect
 					width={GRID_CELL_UNIT_SIZE}
 					height={GRID_CELL_UNIT_SIZE}
-					fill="#a6dbf8"
+					fill={SEA_COLOR1}
 					x={GRID_CELL_UNIT_SIZE}
 					y={GRID_CELL_UNIT_SIZE}
 				/>
