@@ -1,3 +1,8 @@
+export const GRID_CELL_COUNT = 10;
+export const GRID_CELL_UNIT_SIZE = 40;
+
+// ------------------------------------------------------------------
+
 export type SeaBattleAssetPosition = { x: number; y: number };
 
 export type SeaBattleAssetVisibility = "hidden" | "visible";
@@ -61,6 +66,13 @@ export type SeaBattleWeaponType = "bullet1" | "bullet2" | "bullet3" | "mine";
 
 export type SeaBattleWeaponData = SeaBattleAssetData & {
 	type: SeaBattleWeaponType;
+};
+
+export const WeaponsOffsetMappings = {
+	bullet1: { x: 12, y: 16 },
+	bullet2: { x: 12, y: 16 },
+	bullet3: { x: 12, y: 16 },
+	mine: { x: 12, y: 12 }
 };
 
 // ------------------------------------------------------------------
@@ -127,19 +139,19 @@ export const SeabattleBoatTranslationMappings: {
 	[direction: string]: { [rotation: string]: { x: number; y: number } };
 } = {
 	N: {
-		"move-forward": { x: 0, y: -40 },
-		"move-backward": { x: 0, y: 40 }
+		"move-forward": { x: 0, y: -1 },
+		"move-backward": { x: 0, y: 1 }
 	},
 	E: {
-		"move-forward": { x: 40, y: 0 },
-		"move-backward": { x: -40, y: 0 }
+		"move-forward": { x: 1, y: 0 },
+		"move-backward": { x: -1, y: 0 }
 	},
 	S: {
-		"move-forward": { x: 0, y: 40 },
-		"move-backward": { x: 0, y: -40 }
+		"move-forward": { x: 0, y: 1 },
+		"move-backward": { x: 0, y: -1 }
 	},
 	W: {
-		"move-forward": { x: -40, y: 0 },
-		"move-backward": { x: 40, y: 0 }
+		"move-forward": { x: -1, y: 0 },
+		"move-backward": { x: 1, y: 0 }
 	}
 };

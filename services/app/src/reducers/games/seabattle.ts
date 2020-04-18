@@ -56,51 +56,51 @@ const INITIAL_STATE: State = {
 				{
 					type: "boat1",
 					direction: "E",
-					position: { x: 6, y: 6 },
+					position: { x: 0, y: 0 },
 					status: "ok"
 				},
 				{
 					type: "boat1",
 					direction: "E",
-					position: { x: 46, y: 6 },
+					position: { x: 1, y: 0 },
 					status: "ko"
 				},
 				{
 					type: "boat2",
 					direction: "E",
-					position: { x: 6, y: 46 },
+					position: { x: 0, y: 1 },
 					status: "ok"
 				},
 				{
 					type: "boat2",
 					direction: "E",
-					position: { x: 86, y: 46 },
+					position: { x: 2, y: 1 },
 					status: "ko"
 				},
 				{
 					type: "boat3",
 					direction: "E",
-					position: { x: 6, y: 86 },
+					position: { x: 0, y: 2 },
 					status: "ok"
 				},
 				{
 					type: "boat3",
 					direction: "E",
-					position: { x: 126, y: 86 },
+					position: { x: 3, y: 2 },
 					status: "ko"
 				}
 			],
 			hits: [
-				{ position: { x: 10, y: 50 }, type: "hitted1" },
-				{ position: { x: 10, y: 90 }, type: "hitted2" },
-				{ position: { x: 10, y: 130 }, type: "missed1" },
-				{ position: { x: 10, y: 170 }, type: "missed2" }
+				{ position: { x: 0, y: 1 }, type: "hitted1" },
+				{ position: { x: 0, y: 2 }, type: "hitted2" },
+				{ position: { x: 0, y: 3 }, type: "missed1" },
+				{ position: { x: 0, y: 4 }, type: "missed2" }
 			],
 			weapons: [
-				{ position: { x: 12, y: 216 }, type: "bullet1" },
-				{ position: { x: 12, y: 256 }, type: "bullet2" },
-				{ position: { x: 12, y: 296 }, type: "bullet3" },
-				{ position: { x: 12, y: 332 }, type: "mine" }
+				{ position: { x: 0, y: 5 }, type: "bullet1" },
+				{ position: { x: 0, y: 6 }, type: "bullet2" },
+				{ position: { x: 0, y: 7 }, type: "bullet3" },
+				{ position: { x: 0, y: 8 }, type: "mine" }
 			]
 		},
 		player2: {
@@ -108,51 +108,51 @@ const INITIAL_STATE: State = {
 				{
 					type: "boat1",
 					direction: "E",
-					position: { x: 6, y: 6 },
+					position: { x: 0, y: 0 },
 					status: "ok"
 				},
 				{
 					type: "boat1",
 					direction: "E",
-					position: { x: 46, y: 6 },
+					position: { x: 1, y: 0 },
 					status: "ko"
 				},
 				{
 					type: "boat2",
 					direction: "E",
-					position: { x: 6, y: 46 },
+					position: { x: 0, y: 1 },
 					status: "ok"
 				},
 				{
 					type: "boat2",
 					direction: "E",
-					position: { x: 86, y: 46 },
+					position: { x: 2, y: 1 },
 					status: "ko"
 				},
 				{
 					type: "boat3",
 					direction: "E",
-					position: { x: 6, y: 86 },
+					position: { x: 0, y: 2 },
 					status: "ok"
 				},
 				{
 					type: "boat3",
 					direction: "E",
-					position: { x: 126, y: 86 },
+					position: { x: 3, y: 2 },
 					status: "ko"
 				}
 			],
 			hits: [
-				{ position: { x: 10, y: 50 }, type: "hitted1" },
-				{ position: { x: 10, y: 90 }, type: "hitted2" },
-				{ position: { x: 10, y: 130 }, type: "missed1" },
-				{ position: { x: 10, y: 170 }, type: "missed2" }
+				{ position: { x: 0, y: 1 }, type: "hitted1" },
+				{ position: { x: 0, y: 2 }, type: "hitted2" },
+				{ position: { x: 0, y: 3 }, type: "missed1" },
+				{ position: { x: 0, y: 4 }, type: "missed2" }
 			],
 			weapons: [
-				{ position: { x: 12, y: 216 }, type: "bullet1" },
-				{ position: { x: 12, y: 256 }, type: "bullet2" },
-				{ position: { x: 12, y: 296 }, type: "bullet3" },
-				{ position: { x: 12, y: 332 }, type: "mine" }
+				{ position: { x: 0, y: 5 }, type: "bullet1" },
+				{ position: { x: 0, y: 6 }, type: "bullet2" },
+				{ position: { x: 0, y: 7 }, type: "bullet3" },
+				{ position: { x: 0, y: 8 }, type: "mine" }
 			]
 		}
 	}

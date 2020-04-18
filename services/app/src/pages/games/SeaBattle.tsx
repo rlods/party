@@ -5,7 +5,10 @@ import { FleetControls } from "../../components/SeaBattle/FleetControls";
 import { Map } from "../../components/SeaBattle/Map";
 import { BattleAssets } from "../../components/SeaBattle/BattleAssets";
 import { RootState } from "../../reducers";
-import { SeaBattlePlayerData } from "../../utils/games/seabattle";
+import {
+	SeaBattlePlayerData,
+	GRID_CELL_UNIT_SIZE
+} from "../../utils/games/seabattle";
 import { Dispatch } from "../../actions";
 import { moveBoat } from "../../actions/games/seabattle";
 import { KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT } from "../../utils/keyboards";
@@ -78,6 +81,7 @@ export const SeaBattle = () => {
 			if (e.repeat) {
 				return;
 			}
+			console.log("TOTO", e.keyCode);
 			const player = players[activePlayer];
 			if (!player) {
 				return;
@@ -154,7 +158,10 @@ export const SeaBattle = () => {
 						<Map
 							key={index}
 							data={player}
-							position={{ x: 40 + 440 * index, y: 40 }}
+							position={{
+								x: GRID_CELL_UNIT_SIZE + 440 * index,
+								y: GRID_CELL_UNIT_SIZE
+							}}
 							selectedBoat={selectedBoats[index]}
 							setSelectedBoat={setSelectedBoats[index]}
 						/>
