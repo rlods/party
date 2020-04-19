@@ -14,7 +14,9 @@ export const BattleAssets = () => (
 		<circle id="missed2" cx="10" cy="10" r="8" fill="#fff7" />
 		<circle id="hitted1" cx="10" cy="10" r="8" fill="#ffcf02" />
 		<circle id="hitted2" cx="10" cy="10" r="8" fill="#e52524" />
-		<path id="cell-selection" d="M0,0V40H40V0ZM36,36H4V4H36Z" />
+		<path id="cell" d="M0,0V40H40V0ZM36,36H4V4H36Z" />
+		<use id="cell-selected" href="#cell" fill="#FF0" />
+		<use id="cell-selection" href="#cell" fill="#555" />
 		<path
 			id="bullet1"
 			d="M16,4C16,8.46,0,8,0,8V0S16-.46,16,4Z"

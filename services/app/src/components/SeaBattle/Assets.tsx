@@ -1,7 +1,8 @@
 import React from "react";
 import {
 	SeaBattleAssetData,
-	SeaBattleAssetType
+	SeaBattleAssetType,
+	SeaBattleCellData
 } from "../../utils/games/seabattle";
 
 // ------------------------------------------------------------------
@@ -39,6 +40,6 @@ export const Asset = ({
 
 // ------------------------------------------------------------------
 
-export const Cell = (data: SeaBattleAssetData) => (
-	<Asset type="cell-selection" data={data} />
+export const Cell = ({ type, ...asset }: SeaBattleCellData) => (
+	<Asset className="SeaBattleCell" type={type} data={asset} />
 );

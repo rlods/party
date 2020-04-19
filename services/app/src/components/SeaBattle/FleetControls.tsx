@@ -24,7 +24,7 @@ export const FleetControls = ({
 	onRotateRight: () => void;
 }) => {
 	return (
-		<div className="SeaBattleControls SeaBattleFleetControls">
+		<div className="SeaBattleControls">
 			<IconButton
 				disabled={disabled}
 				icon="rotate-left"

@@ -7,11 +7,13 @@ export type SeaBattleAssetPosition = { x: number; y: number };
 
 export type SeaBattleAssetVisibility = "hidden" | "visible";
 
+export type SeaBattleCellType = "cell-selected" | "cell-selection";
+
 export type SeaBattleAssetType =
 	| OrientedBoatType
+	| SeaBattleCellType
 	| SeaBattleHitType
-	| SeaBattleWeaponType
-	| "cell-selection";
+	| SeaBattleWeaponType;
 
 export type SeaBattleAssetData = {
 	color?: string;
@@ -58,6 +60,12 @@ export const BoatsOffsetMappings = {
 	boat1: { x: 6, y: 6 },
 	boat2: { x: 6, y: 6 },
 	boat3: { x: 6, y: 6 }
+};
+
+// ------------------------------------------------------------------
+
+export type SeaBattleCellData = SeaBattleAssetData & {
+	type: SeaBattleCellType;
 };
 
 // ------------------------------------------------------------------

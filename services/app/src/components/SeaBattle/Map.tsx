@@ -10,19 +10,7 @@ import {
 	GRID_CELL_UNIT_SIZE
 } from "../../utils/games/seabattle";
 import { BattleAssets } from "./BattleAssets";
-
-// ------------------------------------------------------------------
-
-const getSVGPosition = (
-	svg: SVGSVGElement,
-	{ x, y }: SeaBattleAssetPosition
-) => {
-	var pt = svg.createSVGPoint();
-	pt.x = x;
-	pt.y = y;
-	pt = pt.matrixTransform(svg.getScreenCTM()!.inverse());
-	return { tx: pt.x, ty: pt.y };
-};
+import { getSVGPosition } from "../../utils/svg";
 
 // ------------------------------------------------------------------
 
@@ -39,20 +27,22 @@ export const Map = ({
 	setSelectedBoat?: (index: number) => void;
 }) => {
 	const svg = useRef<SVGSVGElement>(null);
-	const [activePos, setActiveCellPosition] = useState<SeaBattleAssetPosition>(
-		{
-			x: 0,
-			y: 0
-		}
-	);
-	const [activeVis, setActiveCellVisibility] = useState<
-		SeaBattleAssetVisibility
-	>("hidden");
-	const [hoverPos, setHoverCellPosition] = useState<SeaBattleAssetPosition>({
+	const [selectedPosition, setActiveCellPosition] = useState<
+		SeaBattleAssetPosition
+	>({
 		x: 0,
 		y: 0
 	});
-	const [hoverVis, setHoverCellVisibility] = useState<
+	const [selectedVisibility, setActiveCellVisibility] = useState<
+		SeaBattleAssetVisibility
+	>("hidden");
+	const [selectionPosition, setHoverCellPosition] = useState<
+		SeaBattleAssetPosition
+	>({
+		x: 0,
+		y: 0
+	});
+	const [selectionVisibility, setHoverCellVisibility] = useState<
 		SeaBattleAssetVisibility
 	>("hidden");
 
@@ -88,8 +78,16 @@ export const Map = ({
 			onMouseMove={e => onOver({ x: e.clientX, y: e.clientY })}>
 			<BattleAssets />
 			<rect width="400" height="400" fill="url(#grid)" />
-			<Cell color="#555" position={activePos} visibility={activeVis} />
-			<Cell color="#FF0" position={hoverPos} visibility={hoverVis} />
+			<Cell
+				type="cell-selected"
+				position={selectedPosition}
+				visibility={selectedVisibility}
+			/>
+			<Cell
+				type="cell-selection"
+				position={selectionPosition}
+				visibility={selectionVisibility}
+			/>
 			<Weapons weapons={weapons} />
 			{!hideFleet ? (
 				<Fleet
