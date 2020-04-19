@@ -6,38 +6,38 @@ import { addMessage, removeMessage } from "../reducers/messages";
 
 let MESSAGE_ID_GENERATOR: number = 0;
 
-export const displayMessage = ({
-	extra,
-	type,
-	text,
-	duration = 5000
-}: {
-	extra?: () => React.ReactNode;
-	type: MessageType;
-	text: string;
+type MessageCreationData = {
 	duration: number;
-}): AsyncAction => (dispatch): any => {
+	extra?: () => React.ReactNode;
+	text?: string;
+	weight?: number;
+};
+
+export const displayMessage = (
+	type: MessageType,
+	{ duration = 5000, extra, text, weight = 0 }: MessageCreationData
+): AsyncAction => (dispatch): any => {
 	const id = MESSAGE_ID_GENERATOR++;
 	dispatch(
-		addMessage({ extra, id, stamp: new Date().getTime(), text, type })
+		addMessage({
+			extra,
+			id,
+			stamp: new Date().getTime(),
+			text,
+			type,
+			weight
+		})
 	);
 	setTimeout(() => dispatch(removeMessage(id)), duration);
 };
 
 // ------------------------------------------------------------------
 
-export const displayError = (text: string): AsyncAction => (dispatch): any => {
-	dispatch(displayMessage({ type: "error", text, duration: 3000 }));
-};
+export const displayError = (text: string, duration = 3000) =>
+	displayMessage("error", { duration, text });
 
-export const displayInfo = (text: string) =>
-	displayMessage({ type: "info", text, duration: 3000 });
+export const displayInfo = (text: string, duration = 3000) =>
+	displayMessage("info", { duration, text });
 
-export const displaySuccess = (text: string) =>
-	displayMessage({ type: "success", text, duration: 3000 });
-
-export const displayExtra = (extra: () => React.ReactNode): AsyncAction => (
-	dispatch
-): any => {
-	dispatch(displayMessage({ type: "info", extra, text: "", duration: 5000 }));
-};
+export const displaySuccess = (text: string, duration = 3000) =>
+	displayMessage("success", { duration, text });

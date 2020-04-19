@@ -4,8 +4,9 @@ export type Message = {
 	extra?: () => React.ReactNode;
 	id: number;
 	stamp: number;
-	text: string;
+	text?: string;
 	type: MessageType;
+	weight: number;
 };
 
 export const extractErrorMessage = (err: any) =>
