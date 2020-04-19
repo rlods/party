@@ -188,7 +188,7 @@ export const SeaBattle = () => {
 			</div>
 			<div className="SeaBattlePlayer other">
 				<WeaponControls disabled={selectedBoats[activePlayer] < 0} />
-				<Map player={players[1]} hideFleet={true} />
+				<Map player={players[1]} hideActiveFleet={true} />
 			</div>
 		</div>
 	);
