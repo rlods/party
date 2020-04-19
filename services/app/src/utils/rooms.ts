@@ -1,5 +1,7 @@
 import { MediaAccess } from "./medias";
 
+export type PlayMode = "default" | "shuffle"; // TODO: Implement Shuffle mode
+
 export type RoomType = "blind" | "dj" | "seabattle";
 
 export const RoomTypes = [
@@ -12,6 +14,7 @@ export type RoomInfo = {
 	name: string;
 	queue?: RoomQueue;
 	queue_position: number;
+	play_mode: PlayMode;
 	playing: boolean;
 	timestamp: number;
 	type: RoomType;

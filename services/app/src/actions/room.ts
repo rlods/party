@@ -23,14 +23,16 @@ import history from "../utils/history";
 // ------------------------------------------------------------------
 
 const DEFAULT_QUEUE_INFO_BY_TYPE: {
-	[type: string]: Pick<RoomInfo, "playing" | "queue">;
+	[type: string]: Pick<RoomInfo, "playing" | "play_mode" | "queue">;
 } = {
 	dj: {
 		playing: false,
+		play_mode: "default",
 		queue: {}
 	},
 	seabattle: {
 		playing: true,
+		play_mode: "shuffle",
 		queue: {
 			0: {
 				id: "301013", // Pirates Of The Caribbean OST
@@ -54,10 +56,9 @@ export const createRoom = (
 
 		await FirebaseRoom({ id, secret }).update({
 			name,
-			playing: DEFAULT_QUEUE_INFO_BY_TYPE[type].playing,
-			queue: DEFAULT_QUEUE_INFO_BY_TYPE[type].queue,
 			queue_position: 0,
-			type
+			type,
+			...DEFAULT_QUEUE_INFO_BY_TYPE[type]
 		});
 		dispatch(enterRoom(id, secret));
 	} catch (err) {

@@ -104,16 +104,18 @@ export const FirebaseRoom = ({
 	const update = async ({
 		name,
 		playing,
+		play_mode,
 		queue,
 		queue_position,
 		type
 	}: Pick<
 		RoomInfo,
-		"name" | "playing" | "queue" | "queue_position" | "type"
+		"name" | "playing" | "play_mode" | "queue" | "queue_position" | "type"
 	>) => {
 		console.debug("[Firebase] Updating room...", {
 			name,
 			playing,
+			play_mode,
 			queue,
 			queue_position
 		});
@@ -121,6 +123,7 @@ export const FirebaseRoom = ({
 			info: {
 				name,
 				playing,
+				play_mode,
 				queue,
 				queue_position,
 				timestamp: firebase.database.ServerValue.TIMESTAMP,
@@ -290,6 +293,7 @@ export const FirebaseParty = ({
 	let _info: RoomInfo = {
 		name: "",
 		playing: false,
+		play_mode: "default",
 		queue: {},
 		queue_position: 0,
 		timestamp: 0,
