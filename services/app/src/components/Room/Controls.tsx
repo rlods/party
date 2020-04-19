@@ -8,14 +8,14 @@ import { Dispatch } from "../../actions";
 import { RootState } from "../../reducers";
 import { isRoomLocked, isRoomPlaying } from "../../selectors/room";
 import { lockRoom } from "../../actions/room";
+import { stopPlayer, startPlayer } from "../../actions/player";
+import { confirmModal } from "../../actions/modals";
+import { openModal } from "../../reducers/modals";
 import {
 	clearQueue,
 	moveToPreviousTrack,
 	moveToNextTrack
 } from "../../actions/queue";
-import { stopPlayer, startPlayer } from "../../actions/player";
-import { confirmModal } from "../../actions/modals";
-import { openModal } from "../../reducers/modals";
 import "./Controls.scss";
 
 // ------------------------------------------------------------------

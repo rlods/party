@@ -1,4 +1,5 @@
 import { decode } from "../encoder";
+import { KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT } from "../keyboards";
 
 // ------------------------------------------------------------------
 
@@ -188,6 +189,35 @@ export const SeabattleBoatRotationTransformationMappings: {
 		E: { x: 2, y: 0 },
 		S: { x: 0, y: 2 },
 		W: { x: -2, y: 0 }
+	}
+};
+
+export const SeabattleKeyboardMoveMappings: {
+	[direction: string]: { [key: string]: SeaBattleMovementType };
+} = {
+	N: {
+		[KEY_UP]: "move-forward",
+		[KEY_DOWN]: "move-backward",
+		[KEY_LEFT]: "rotate-left",
+		[KEY_RIGHT]: "rotate-right"
+	},
+	E: {
+		[KEY_UP]: "rotate-left",
+		[KEY_DOWN]: "rotate-right",
+		[KEY_LEFT]: "move-backward",
+		[KEY_RIGHT]: "move-forward"
+	},
+	S: {
+		[KEY_UP]: "move-backward",
+		[KEY_DOWN]: "move-forward",
+		[KEY_LEFT]: "rotate-right",
+		[KEY_RIGHT]: "rotate-left"
+	},
+	W: {
+		[KEY_UP]: "rotate-right",
+		[KEY_DOWN]: "rotate-left",
+		[KEY_LEFT]: "move-forward",
+		[KEY_RIGHT]: "move-backward"
 	}
 };
 

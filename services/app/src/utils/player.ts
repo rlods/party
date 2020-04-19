@@ -7,6 +7,7 @@ import {
 	getOrLoadAudioBuffer
 } from "./audio";
 import { PlayMode } from "./rooms";
+import { TrackAccess } from "./medias";
 
 // ------------------------------------------------------------------
 
@@ -145,6 +146,37 @@ const PlayerImpl = (): Player => {
 		play,
 		stop
 	};
+};
+
+// ------------------------------------------------------------------
+
+export const computePlayerNextPosition = (
+	playStarted: boolean,
+	playing: boolean,
+	playingTrackID: string,
+	playingTrackIndex: number,
+	tracks: TrackAccess[],
+	trackIndex: number
+) => {
+	if (!playStarted || tracks.length === 0) {
+		return -1;
+	}
+	let nextIndex = -1;
+	if (playingTrackIndex !== trackIndex) {
+		if (playing) {
+			// User has clicked an other track or added/removed a track in queue
+			if (playingTrackID !== tracks[trackIndex].id) {
+				nextIndex = trackIndex;
+			}
+		} else {
+			// Not playing which means previous track has terminated
+			nextIndex = playingTrackIndex >= 0 ? playingTrackIndex : trackIndex;
+		}
+	} else if (playingTrackID !== tracks[trackIndex].id) {
+		// User has deleted playing track
+		nextIndex = trackIndex;
+	}
+	return nextIndex;
 };
 
 // ------------------------------------------------------------------

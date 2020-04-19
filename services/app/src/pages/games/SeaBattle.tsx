@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { useTranslation } from "react-i18next";
 //
 import { PlayerControls } from "../../components/SeaBattle/PlayerControls";
 import { Map } from "../../components/SeaBattle/Map";
@@ -7,18 +8,18 @@ import { RootState } from "../../reducers";
 import {
 	extractBattleInfo,
 	MAX_PLAYER_COUNT,
+	SeabattleKeyboardMoveMappings,
 	SeaBattleMovementType
 } from "../../utils/games/seabattle";
 import { Dispatch } from "../../actions";
 import { moveBoat, joinBattle } from "../../actions/games/seabattle";
 import { KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT } from "../../utils/keyboards";
 import { OpponentControls } from "../../components/SeaBattle/OpponentControls";
-import { startPlayer } from "../../actions/player";
-import { setQueuePosition } from "../../actions/queue";
 import { generateRandomPosition } from "../../utils/player";
 import { selectTracksCount } from "../../selectors/medias";
 import { IconButton } from "../../components/Common/IconButton";
-import { useTranslation } from "react-i18next";
+import { setRoom } from "../../reducers/room";
+import { RoomInfo } from "../../utils/rooms";
 import "./SeaBattle.scss";
 
 // ------------------------------------------------------------------
@@ -29,10 +30,6 @@ export const SeaBattle = () => {
 	const [selectedBoatIndex, setSelectedBoat] = useState<number>(-1);
 	const [selectedOpponentIndex, setSelectedOpponent] = useState<number>(0);
 
-	const queueReady = useSelector<RootState, boolean>(
-		state => !!state.room.info
-	);
-
 	const userId = useSelector<RootState, string>(
 		state => state.user.access.id
 	);
@@ -41,6 +38,10 @@ export const SeaBattle = () => {
 
 	const extra = useSelector<RootState, string>(
 		state => state.room.info?.extra || ""
+	);
+
+	const roomInfo = useSelector<RootState, RoomInfo | null>(
+		state => state.room.info
 	);
 
 	const { battle, boat, opponent, opponents, player } = extractBattleInfo(
@@ -54,12 +55,19 @@ export const SeaBattle = () => {
 		dispatch(joinBattle());
 	}, [dispatch]);
 
-	useEffect(() => {
-		if (queueReady && tracksCount > 0) {
-			dispatch(setQueuePosition(generateRandomPosition() % tracksCount));
-			dispatch(startPlayer());
+	const onPlayNext = useCallback(() => {
+		if (!roomInfo || tracksCount === 0) {
+			return;
 		}
-	}, [dispatch, queueReady, tracksCount]);
+		dispatch(
+			setRoom({
+				info: {
+					...roomInfo,
+					queue_position: generateRandomPosition() % tracksCount
+				}
+			})
+		);
+	}, [dispatch, roomInfo, tracksCount]);
 
 	const onMove = useCallback(
 		(movement: SeaBattleMovementType) => {
@@ -89,35 +97,7 @@ export const SeaBattle = () => {
 			if (!player || !boat) {
 				return;
 			}
-			const MoveMappings: {
-				[direction: string]: { [key: string]: SeaBattleMovementType };
-			} = {
-				N: {
-					[KEY_UP]: "move-forward",
-					[KEY_DOWN]: "move-backward",
-					[KEY_LEFT]: "rotate-left",
-					[KEY_RIGHT]: "rotate-right"
-				},
-				E: {
-					[KEY_UP]: "rotate-left",
-					[KEY_DOWN]: "rotate-right",
-					[KEY_LEFT]: "move-backward",
-					[KEY_RIGHT]: "move-forward"
-				},
-				S: {
-					[KEY_UP]: "move-backward",
-					[KEY_DOWN]: "move-forward",
-					[KEY_LEFT]: "rotate-right",
-					[KEY_RIGHT]: "rotate-left"
-				},
-				W: {
-					[KEY_UP]: "rotate-right",
-					[KEY_DOWN]: "rotate-left",
-					[KEY_LEFT]: "move-forward",
-					[KEY_RIGHT]: "move-backward"
-				}
-			};
-			onMove(MoveMappings[boat.direction][e.keyCode]);
+			onMove(SeabattleKeyboardMoveMappings[boat.direction][e.keyCode]);
 		},
 		[onMove, battle, player, boat]
 	);
@@ -136,6 +116,7 @@ export const SeaBattle = () => {
 				<PlayerControls
 					boat={boat}
 					disabled={!boat}
+					onPlayNext={onPlayNext}
 					onMoveForward={() => onMove("move-forward")}
 					onMoveBackward={() => onMove("move-backward")}
 					onRotateLeft={() => onMove("rotate-left")}

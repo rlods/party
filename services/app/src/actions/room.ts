@@ -4,21 +4,21 @@ import { AsyncAction, Dispatch } from ".";
 import { displayError } from "./messages";
 import { RoomInfo, RoomType, generateRoomExtra } from "../utils/rooms";
 import { FirebaseRoom } from "../utils/firebase";
-import {
-	MediaAccess,
-	TrackAccess,
-	extractTracks,
-	ContextualizedTrackAccess
-} from "../utils/medias";
 import { extractErrorMessage } from "../utils/messages";
 import { pickColor } from "../utils/colorpicker";
 import { Player } from "../utils/player";
+import { computePlayerNextPosition } from "../utils/player";
 import { loadNewMedias } from "../utils/providers";
 import { RootState } from "../reducers";
 import { setMedias } from "../reducers/medias";
 import { setRoom, resetRoom } from "../reducers/room";
 import { displayMediaInfo } from "./medias";
 import history from "../utils/history";
+import {
+	MediaAccess,
+	extractTracks,
+	ContextualizedTrackAccess
+} from "../utils/medias";
 
 // ------------------------------------------------------------------
 
@@ -116,6 +116,7 @@ export const enterRoom = (id: string, secret: string): AsyncAction => async (
 			})
 		);
 		dispatch(_watchRoom(newRoom));
+		dispatch(_watchPlayer());
 		history.push(`/room/${id}?secret=${secret}`); // TODO: should push only if we're not already in it
 	} catch (err) {
 		dispatch(displayError(extractErrorMessage(err)));
@@ -210,16 +211,6 @@ const _watchRoom = (
 					)
 					.map(media => media[1]);
 			}
-			if (newInfo.playing !== player.isPlaying()) {
-				if (newInfo.playing) {
-					if (!!PLAYER_TIMER) {
-						console.debug("************ ARG ************");
-					}
-					dispatch(_watchPlayer());
-				} else {
-					dispatch(_unwatchPlayer());
-				}
-			}
 			let tracks: ContextualizedTrackAccess[] = [];
 			if (medias.length > 0) {
 				const { newMedias, newMediasAndTracks } = await loadNewMedias(
@@ -261,31 +252,6 @@ const _unwatchRoom = (
 
 let PLAYER_TIMER: NodeJS.Timeout | null = null;
 
-const _computeNextPosition = (
-	player: Player,
-	tracks: TrackAccess[],
-	trackIndex: number
-) => {
-	let nextIndex = -1;
-	const playingTrackID = player.getPlayingTrackID();
-	const playingTrackIndex = player.getPlayingTrackPosition() % tracks.length;
-	if (playingTrackIndex !== trackIndex) {
-		if (player.isPlaying()) {
-			// User has clicked an other track or added/removed a track in queue
-			if (playingTrackID !== tracks[trackIndex].id) {
-				nextIndex = trackIndex;
-			}
-		} else {
-			// Not playing which means previous track has terminated
-			nextIndex = playingTrackIndex >= 0 ? playingTrackIndex : trackIndex;
-		}
-	} else if (playingTrackID !== tracks[trackIndex].id) {
-		// User has deleted playing track
-		nextIndex = trackIndex;
-	}
-	return nextIndex;
-};
-
 const _watchPlayer = (): AsyncAction => async (
 	dispatch,
 	getState,
@@ -323,53 +289,51 @@ const _scheduleTimer = (
 			medias: { medias }
 		} = getState();
 
-		if (tracks.length === 0) {
-			// Last track has been removed from queue by user
-			console.debug("[Room] No more tracks in queue...");
-			dispatch(setRoom({ info: { ...info!, playing: false } })); // for info update because of player change  without firebase
-			await player.stop();
-			PLAYER_TIMER = null;
-			return;
-		}
+		if (info) {
+			// Detect and apply change to queue and player
+			const nextTrackIndex = computePlayerNextPosition(
+				info.playing,
+				player.isPlaying(),
+				player.getPlayingTrackID(),
+				player.getPlayingTrackPosition() % tracks.length,
+				tracks,
+				info.queue_position
+			);
 
-		// Detect and apply change to queue and player
-		const nextTrackIndex = _computeNextPosition(
-			player,
-			tracks,
-			info!.queue_position
-		);
+			if (nextTrackIndex >= 0) {
+				const nextAccess = tracks[nextTrackIndex];
+				const nextTrack =
+					medias[nextAccess.provider][nextAccess.type][nextAccess.id];
+				console.debug("Detected play change...", {
+					nextTrack,
+					nextTrackIndex
+				});
 
-		if (nextTrackIndex >= 0) {
-			const nextAccess = tracks[nextTrackIndex];
-			const nextTrack =
-				medias[nextAccess.provider][nextAccess.type][nextAccess.id];
-			console.debug("Detected play change...", {
-				nextTrack,
-				nextTrackIndex
-			});
-
-			try {
-				const [color] = await Promise.all([
-					pickColor(nextTrack.album.picture_small),
-					player.play(
-						nextTrackIndex,
-						nextTrack.id,
-						nextTrack.preview,
-						0,
-						{
-							playmode: info!.playmode
-						}
-					)
-				]);
-				dispatch(displayMediaInfo(nextTrack));
-				dispatch(
-					setRoom({
-						color,
-						info: { ...info!, queue_position: nextTrackIndex } // for info update because of player change without firebase
-					})
-				);
-			} catch (err) {
-				dispatch(displayError(extractErrorMessage(err)));
+				try {
+					const [color] = await Promise.all([
+						pickColor(nextTrack.album.picture_small),
+						player.play(
+							nextTrackIndex,
+							nextTrack.id,
+							nextTrack.preview,
+							0,
+							{
+								playmode: info.playmode
+							}
+						)
+					]);
+					dispatch(displayMediaInfo(nextTrack));
+					dispatch(
+						setRoom({
+							color,
+							info: { ...info, queue_position: nextTrackIndex } // for info update because of player change without firebase
+						})
+					);
+				} catch (err) {
+					dispatch(displayError(extractErrorMessage(err)));
+				}
+			} else if (!info.playing) {
+				player.stop();
 			}
 		}
 

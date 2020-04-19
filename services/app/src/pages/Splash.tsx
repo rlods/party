@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -7,6 +7,7 @@ import { IconButton } from "../components/Common/IconButton";
 import { RootState } from "../reducers";
 import { openModal } from "../reducers/modals";
 import { disconnectUser } from "../actions/user";
+import { clearMessages } from "../reducers/messages";
 import "./Splash.scss";
 
 // ------------------------------------------------------------------
@@ -31,6 +32,10 @@ export const Splash = () => {
 	const onDisconnect = useCallback(() => dispatch(disconnectUser()), [
 		dispatch
 	]);
+
+	useEffect(() => {
+		dispatch(clearMessages());
+	}, [dispatch]);
 
 	/*
 	<div className="PoweredWith">
