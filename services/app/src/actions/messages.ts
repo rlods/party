@@ -7,7 +7,8 @@ import { addMessage, removeMessage } from "../reducers/messages";
 let MESSAGE_ID_GENERATOR: number = 0;
 
 type MessageCreationData = {
-	duration: number;
+	autoclear?: boolean;
+	duration?: number;
 	extra?: () => React.ReactNode;
 	text?: string;
 	weight?: number;
@@ -15,7 +16,13 @@ type MessageCreationData = {
 
 export const displayMessage = (
 	type: MessageType,
-	{ duration = 5000, extra, text, weight = 0 }: MessageCreationData
+	{
+		autoclear = true,
+		duration = 3000,
+		extra,
+		text,
+		weight = 0
+	}: MessageCreationData
 ): AsyncAction => (dispatch): any => {
 	const id = MESSAGE_ID_GENERATOR++;
 	dispatch(
@@ -28,16 +35,17 @@ export const displayMessage = (
 			weight
 		})
 	);
-	setTimeout(() => dispatch(removeMessage(id)), duration);
+	if (autoclear) {
+		console.log("TOTO");
+		setTimeout(() => dispatch(removeMessage(id)), duration);
+	}
 };
 
 // ------------------------------------------------------------------
 
-export const displayError = (text: string, duration = 3000) =>
-	displayMessage("error", { duration, text });
+export const displayError = (text: string) => displayMessage("error", { text });
 
-export const displayInfo = (text: string, duration = 3000) =>
-	displayMessage("info", { duration, text });
+export const displayInfo = (text: string) => displayMessage("info", { text });
 
-export const displaySuccess = (text: string, duration = 3000) =>
-	displayMessage("success", { duration, text });
+export const displaySuccess = (text: string) =>
+	displayMessage("success", { text });
