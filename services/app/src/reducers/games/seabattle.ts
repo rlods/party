@@ -6,7 +6,7 @@ import { SeaBattleData } from "../../utils/games/seabattle";
 
 // ------------------------------------------------------------------
 
-type SeabattleAction =
+type SeaBattleAction =
 	| ReturnType<typeof fetching>
 	| ReturnType<typeof error>
 	| ReturnType<typeof reset>
@@ -35,9 +35,9 @@ const INITIAL_STATE: State = {
 
 // ------------------------------------------------------------------
 
-export const seabattleReducer: Reducer<State, SeabattleAction> = (
+export const seabattleReducer: Reducer<State, SeaBattleAction> = (
 	state = { ...INITIAL_STATE },
-	action: SeabattleAction
+	action: SeaBattleAction
 ): State => {
 	switch (action.type) {
 		case "games/seabattle/FETCHING":

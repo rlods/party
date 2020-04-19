@@ -1,6 +1,7 @@
 import { SeaBattleBoatLengthMappings } from "./mappings";
 import {
 	SeaBattleBoatData,
+	SeaBattleGrid,
 	SeaBattlePosition,
 	SeaBattleDirection,
 	GRID_CELL_COUNT
@@ -9,15 +10,19 @@ import {
 // ------------------------------------------------------------------
 
 export const checkPositionInGrid = (
-	grid: number[][],
+	grid: SeaBattleGrid,
 	position: SeaBattlePosition
 ) => grid[position.y][position.x] === 0;
+
+// ------------------------------------------------------------------
 
 export const checkPositionInZone = (position: SeaBattlePosition) =>
 	position.x >= 0 &&
 	position.x < GRID_CELL_COUNT &&
 	position.y >= 0 &&
 	position.y < GRID_CELL_COUNT;
+
+// ------------------------------------------------------------------
 
 export const checkZone = (
 	boat: SeaBattleBoatData,
@@ -52,13 +57,13 @@ export const checkZone = (
 	}
 };
 
-export const checkCollisions = (
+// ------------------------------------------------------------------
+
+export const generateGrid = (
 	fleet: SeaBattleBoatData[],
-	movingBoat: SeaBattleBoatData,
-	newPosition: SeaBattlePosition,
-	newDirection: SeaBattleDirection
-) => {
-	const grid = Array<number>(GRID_CELL_COUNT)
+	movingBoat?: SeaBattleBoatData
+): SeaBattleGrid => {
+	const grid: SeaBattleGrid = Array<number>(GRID_CELL_COUNT)
 		.fill(0)
 		.map(_ => Array<number>(GRID_CELL_COUNT).fill(0));
 	for (
@@ -109,9 +114,19 @@ export const checkCollisions = (
 				break;
 		}
 	}
+	return grid;
+};
 
-	// console.debug("[Seabattle] Collision grid", grid);
+// ------------------------------------------------------------------
 
+export const checkCollisions = (
+	fleet: SeaBattleBoatData[],
+	movingBoat: SeaBattleBoatData,
+	newPosition: SeaBattlePosition,
+	newDirection: SeaBattleDirection
+) => {
+	const grid = generateGrid(fleet, movingBoat);
+	// console.debug("[SeaBattle] Collision grid", grid);
 	if (!checkPositionInGrid(grid, newPosition)) {
 		return false;
 	}
@@ -184,6 +199,8 @@ export const checkCollisions = (
 	return true;
 };
 
+// ------------------------------------------------------------------
+
 export const movementIsPossible = (
 	fleet: SeaBattleBoatData[],
 	movingBoatIndex: number,
@@ -192,11 +209,11 @@ export const movementIsPossible = (
 ) => {
 	const movingBoat = fleet[movingBoatIndex];
 	if (!checkZone(movingBoat, newPosition, newDirection)) {
-		console.debug("[Seabattle] Boat blocked by zone");
+		console.debug("[SeaBattle] Boat blocked by zone");
 		return false;
 	}
 	if (!checkCollisions(fleet, movingBoat, newPosition, newDirection)) {
-		console.debug("[Seabattle] Boat blocked by collision");
+		console.debug("[SeaBattle] Boat blocked by collision");
 		return false;
 	}
 	return true;

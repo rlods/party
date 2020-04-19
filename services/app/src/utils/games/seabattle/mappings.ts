@@ -8,7 +8,7 @@ import { KEY_RIGHT, KEY_LEFT, KEY_DOWN, KEY_UP } from "../../keyboards";
 
 // ------------------------------------------------------------------
 
-export const SeabattleBoatOrientationMappings: {
+export const SeaBattleBoatOrientationMappings: {
 	[type: string]: { [direction: string]: OrientedBoatType };
 } = {
 	boat1: {
@@ -33,7 +33,7 @@ export const SeabattleBoatOrientationMappings: {
 
 // ------------------------------------------------------------------
 
-export const SeabattleBoatRotationMappings: {
+export const SeaBattleBoatRotationMappings: {
 	[direction: string]: { [rotation: string]: SeaBattleDirection };
 } = {
 	N: {
@@ -56,7 +56,7 @@ export const SeabattleBoatRotationMappings: {
 
 // ------------------------------------------------------------------
 
-export const SeabattleBoatRotationTransformationMappings: {
+export const SeaBattleBoatRotationTransformationMappings: {
 	[type: string]: {
 		[direction: string]: SeaBattlePosition;
 	};
@@ -83,7 +83,7 @@ export const SeabattleBoatRotationTransformationMappings: {
 
 // ------------------------------------------------------------------
 
-export const SeabattleKeyboardMoveMappings: {
+export const SeaBattleKeyboardMoveMappings: {
 	[direction: string]: { [key: string]: SeaBattleMovementType };
 } = {
 	N: {
@@ -114,7 +114,7 @@ export const SeabattleKeyboardMoveMappings: {
 
 // ------------------------------------------------------------------
 
-export const SeabattleBoatTranslationMappings: {
+export const SeaBattleBoatTranslationMappings: {
 	[direction: string]: { [rotation: string]: SeaBattlePosition };
 } = {
 	N: {

@@ -1,10 +1,15 @@
 import { decode } from "../../encoder";
+import { generateGrid } from "./collision";
 
 // ------------------------------------------------------------------
 
 export const GRID_CELL_COUNT = 10;
 export const GRID_CELL_UNIT_SIZE = 40;
 export const MAX_PLAYER_COUNT = 2;
+
+// ------------------------------------------------------------------
+
+export type SeaBattleGrid = number[][];
 
 // ------------------------------------------------------------------
 
@@ -222,4 +227,15 @@ export const extractBattleInfo = (
 		opponents,
 		player
 	};
+};
+
+// ------------------------------------------------------------------
+
+export const testHit = (
+	player: SeaBattlePlayerData,
+	opponent: SeaBattlePlayerData,
+	position: SeaBattlePosition
+) => {
+	const grid = generateGrid(opponent.fleet);
+	return grid[position.y][position.x] > 0;
 };

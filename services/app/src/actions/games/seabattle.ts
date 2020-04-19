@@ -9,9 +9,9 @@ import {
 	MAX_PLAYER_COUNT
 } from "../../utils/games/seabattle";
 import {
-	SeabattleBoatRotationMappings,
-	SeabattleBoatTranslationMappings,
-	SeabattleBoatRotationTransformationMappings
+	SeaBattleBoatRotationMappings,
+	SeaBattleBoatTranslationMappings,
+	SeaBattleBoatRotationTransformationMappings
 } from "../../utils/games/seabattle/mappings";
 import { movementIsPossible } from "../../utils/games/seabattle/collision";
 
@@ -96,21 +96,21 @@ export const moveBoat = ({
 		let newPosition = { ...oldPosition };
 		if (movement === "move-forward" || movement === "move-backward") {
 			newPosition.x +=
-				SeabattleBoatTranslationMappings[oldDirection][movement].x;
+				SeaBattleBoatTranslationMappings[oldDirection][movement].x;
 			newPosition.y +=
-				SeabattleBoatTranslationMappings[oldDirection][movement].y;
+				SeaBattleBoatTranslationMappings[oldDirection][movement].y;
 		}
 
 		let newDirection = oldDirection;
 		if (movement === "rotate-left" || movement === "rotate-right") {
 			newDirection =
-				SeabattleBoatRotationMappings[oldDirection][movement];
+				SeaBattleBoatRotationMappings[oldDirection][movement];
 			newPosition.x +=
-				SeabattleBoatRotationTransformationMappings[type][
+				SeaBattleBoatRotationTransformationMappings[type][
 					oldDirection
 				].x;
 			newPosition.y +=
-				SeabattleBoatRotationTransformationMappings[type][
+				SeaBattleBoatRotationTransformationMappings[type][
 					oldDirection
 				].y;
 		}

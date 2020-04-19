@@ -9,9 +9,10 @@ import {
 	extractBattleInfo,
 	MAX_PLAYER_COUNT,
 	SeaBattleMovementType,
-	SeaBattlePosition
+	SeaBattlePosition,
+	testHit
 } from "../../utils/games/seabattle";
-import { SeabattleKeyboardMoveMappings } from "../../utils/games/seabattle/mappings";
+import { SeaBattleKeyboardMoveMappings } from "../../utils/games/seabattle/mappings";
 import { Dispatch } from "../../actions";
 import { moveBoat, joinBattle } from "../../actions/games/seabattle";
 import { KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT } from "../../utils/keyboards";
@@ -22,6 +23,7 @@ import { IconButton } from "../../components/Common/IconButton";
 import { setRoom } from "../../reducers/room";
 import { RoomInfo } from "../../utils/rooms";
 import "./SeaBattle.scss";
+import { displaySuccess, displayError } from "../../actions/messages";
 
 // ------------------------------------------------------------------
 
@@ -98,14 +100,25 @@ export const SeaBattle = () => {
 			if (!player || !boat) {
 				return;
 			}
-			onMove(SeabattleKeyboardMoveMappings[boat.direction][e.keyCode]);
+			onMove(SeaBattleKeyboardMoveMappings[boat.direction][e.keyCode]);
 		},
 		[onMove, battle, player, boat]
 	);
 
-	const onOpponentCellClick = useCallback((position: SeaBattlePosition) => {
-		// console.debug("XXX", position);
-	}, []);
+	const onOpponentCellClick = useCallback(
+		(position: SeaBattlePosition) => {
+			if (!player || !opponent) {
+				console.debug("[SeaBattle] No player or opponent");
+				return;
+			}
+			if (!testHit(player, opponent, position)) {
+				dispatch(displayError("You've missed opponent boat"));
+				return;
+			}
+			dispatch(displaySuccess("You've hitted opponent boat"));
+		},
+		[dispatch, opponent, player]
+	);
 
 	useEffect(() => {
 		document.addEventListener("keydown", onKeyDown);

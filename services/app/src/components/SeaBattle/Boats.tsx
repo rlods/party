@@ -7,7 +7,7 @@ import {
 	GRID_CELL_UNIT_SIZE,
 	BoatsOffsetMappings
 } from "../../utils/games/seabattle";
-import { SeabattleBoatOrientationMappings } from "../../utils/games/seabattle/mappings";
+import { SeaBattleBoatOrientationMappings } from "../../utils/games/seabattle/mappings";
 
 // ------------------------------------------------------------------
 
@@ -38,6 +38,6 @@ export const Boat = ({
 					asset.position.y * GRID_CELL_UNIT_SIZE
 			}
 		}}
-		type={SeabattleBoatOrientationMappings[type][direction]}
+		type={SeaBattleBoatOrientationMappings[type][direction]}
 	/>
 );
