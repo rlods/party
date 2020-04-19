@@ -31,6 +31,11 @@ export default {
 		secret: "User Secret",
 		user_creation: "User Registration"
 	},
+	games: {
+		seabattle: {
+			movement_is_not_possible: "Movement is not possible..."
+		}
+	},
 	rooms: {
 		errors: {
 			invalid: "Room is invalid",

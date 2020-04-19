@@ -69,7 +69,7 @@ export const moveBoat = ({
 				oldPosition,
 				newPosition
 			});
-			dispatch(displayInfo("Boat movement is not possible..."));
+			dispatch(displayInfo("games.seabattle.movement_is_not_possible"));
 			return;
 		}
 
