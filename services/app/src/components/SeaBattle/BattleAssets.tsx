@@ -58,7 +58,11 @@ export const BattleAssets = () => (
 		<use id="boat3-N" href="#boat3" transform="rotate(-90, 14, 14)" />
 		<use id="boat3-S" href="#boat3" transform="rotate(90, 14, 14)" />
 		<use id="boat3-W" href="#boat3" transform="rotate(180, 14, 14)" />
-		<pattern id="grid" width="80" height="80" patternUnits="userSpaceOnUse">
+		<pattern
+			id="sea-grid"
+			width="80"
+			height="80"
+			patternUnits="userSpaceOnUse">
 			<g>
 				<rect
 					width={GRID_CELL_UNIT_SIZE}

@@ -77,7 +77,7 @@ export const Map = ({
 			onMouseLeave={onLeave}
 			onMouseMove={e => onOver({ x: e.clientX, y: e.clientY })}>
 			<BattleAssets />
-			<rect width="400" height="400" fill="url(#grid)" />
+			<rect width="400" height="400" fill="url(#sea-grid)" />
 			<Cell
 				type="cell-selected"
 				position={selectedPosition}

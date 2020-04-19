@@ -80,7 +80,6 @@ export const WeaponControls = ({ disabled = true }: { disabled?: boolean }) => {
 				onMouseLeave={onLeave}
 				onMouseMove={e => onOver({ x: e.clientX, y: e.clientY })}>
 				<BattleAssets />
-				<rect width="160" height="40" fill="url(#grid)" />
 				<Cell
 					type="cell-selected"
 					position={selectedPosition}
