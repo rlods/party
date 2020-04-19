@@ -3,15 +3,14 @@ import { Cell } from "./Assets";
 import { Weapons } from "./Weapons";
 import { Hits } from "./Hits";
 import { Fleet } from "./Fleet";
+import { BattleAssets } from "./BattleAssets";
+import { getSVGNormalizedPosition } from "../../utils/svg";
 import {
 	SeaBattlePosition,
 	SeaBattlePlayerData,
 	SeaBattleAssetVisibility,
-	GRID_CELL_UNIT_SIZE,
 	SeaBattleBoatData
 } from "../../utils/games/seabattle";
-import { BattleAssets } from "./BattleAssets";
-import { getSVGPosition } from "../../utils/svg";
 
 // ------------------------------------------------------------------
 
@@ -51,11 +50,10 @@ export const Map = ({
 
 	const onClick = useCallback(
 		(position: SeaBattlePosition) => {
-			const { tx, ty } = getSVGPosition(svg.current!, position);
-			const normalizedPosition: SeaBattlePosition = {
-				x: Math.floor(tx / GRID_CELL_UNIT_SIZE),
-				y: Math.floor(ty / GRID_CELL_UNIT_SIZE)
-			};
+			const normalizedPosition = getSVGNormalizedPosition(
+				svg.current!,
+				position
+			);
 			setSelectedPosition(normalizedPosition);
 			setSelectedVisibility("visible");
 			if (onCellClick) {
@@ -70,11 +68,11 @@ export const Map = ({
 	}, []);
 
 	const onOver = useCallback((position: SeaBattlePosition) => {
-		const { tx, ty } = getSVGPosition(svg.current!, position);
-		setSelectionPosition({
-			x: Math.floor(tx / GRID_CELL_UNIT_SIZE),
-			y: Math.floor(ty / GRID_CELL_UNIT_SIZE)
-		});
+		const normalizedPosition = getSVGNormalizedPosition(
+			svg.current!,
+			position
+		);
+		setSelectionPosition(normalizedPosition);
 		setSelectionVisibility("visible");
 	}, []);
 

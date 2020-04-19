@@ -96,6 +96,13 @@ export const HitsOffsetMappings = {
 
 export type SeaBattleWeaponType = "bullet1" | "bullet2" | "bullet3" | "mine";
 
+export const SeaBattleWeaponTypes: SeaBattleWeaponType[] = [
+	"bullet1",
+	"bullet2",
+	"bullet3",
+	"mine"
+];
+
 export type SeaBattleWeaponData = SeaBattleAssetData & {
 	count: number;
 	type: SeaBattleWeaponType;

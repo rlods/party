@@ -5,13 +5,6 @@ import { useTranslation } from "react-i18next";
 import { PlayerControls } from "../../components/SeaBattle/PlayerControls";
 import { Map } from "../../components/SeaBattle/Map";
 import { RootState } from "../../reducers";
-import {
-	extractBattleInfo,
-	MAX_PLAYER_COUNT,
-	SeaBattleMovementType,
-	SeaBattlePosition,
-	testHit
-} from "../../utils/games/seabattle";
 import { SeaBattleKeyboardMoveMappings } from "../../utils/games/seabattle/mappings";
 import { Dispatch } from "../../actions";
 import { moveBoat, joinBattle } from "../../actions/games/seabattle";
@@ -22,8 +15,16 @@ import { selectTracksCount } from "../../selectors/medias";
 import { IconButton } from "../../components/Common/IconButton";
 import { setRoom } from "../../reducers/room";
 import { RoomInfo } from "../../utils/rooms";
-import "./SeaBattle.scss";
 import { displaySuccess, displayError } from "../../actions/messages";
+import {
+	extractBattleInfo,
+	MAX_PLAYER_COUNT,
+	SeaBattleMovementType,
+	SeaBattlePosition,
+	testHit,
+	SeaBattleWeaponData
+} from "../../utils/games/seabattle";
+import "./SeaBattle.scss";
 
 // ------------------------------------------------------------------
 
@@ -189,6 +190,10 @@ export const SeaBattle = () => {
 									)
 							: void 0
 					}
+					onSelectWeapon={(weapon: SeaBattleWeaponData) => {
+						console.log(weapon);
+					}}
+					weapons={player?.weapons || []}
 				/>
 				<Map
 					player={opponent}
