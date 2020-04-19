@@ -80,11 +80,9 @@ export const Map = ({
 
 	return (
 		<svg
-			width="100%"
-			height="100%"
+			className="SeaBattleMap"
 			viewBox="0 0 400 400"
 			ref={svg}
-			className="SeaBattleMap"
 			onClick={e => onClick({ x: e.clientX, y: e.clientY })}
 			onMouseLeave={onLeave}
 			onMouseMove={e => onOver({ x: e.clientX, y: e.clientY })}>

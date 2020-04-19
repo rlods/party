@@ -105,8 +105,12 @@ export const FirebaseRoom = ({
 		name,
 		playing,
 		queue,
-		queue_position
-	}: Pick<RoomInfo, "name" | "playing" | "queue" | "queue_position">) => {
+		queue_position,
+		type
+	}: Pick<
+		RoomInfo,
+		"name" | "playing" | "queue" | "queue_position" | "type"
+	>) => {
 		console.debug("[Firebase] Updating room...", {
 			name,
 			playing,
@@ -119,7 +123,8 @@ export const FirebaseRoom = ({
 				playing,
 				queue,
 				queue_position,
-				timestamp: firebase.database.ServerValue.TIMESTAMP
+				timestamp: firebase.database.ServerValue.TIMESTAMP,
+				type
 			},
 			secret: _secret
 		});

@@ -51,7 +51,7 @@ export const connectUser = (id: string, secret: string): AsyncAction => async (
 		);
 		FIREBASE_CB = newUser.subscribe(
 			(snapshot: firebase.database.DataSnapshot) => {
-				const newInfo = snapshot.val() as UserInfo;
+				const newInfo = snapshot.val() as UserInfo | null;
 				console.debug("[User] Received user update...", newInfo);
 				dispatch(setUser({ user: newUser, info: newInfo }));
 			}

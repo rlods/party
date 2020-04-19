@@ -9,8 +9,8 @@ import { Dispatch } from "../../actions";
 import { moveBoat } from "../../actions/games/seabattle";
 import { KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT } from "../../utils/keyboards";
 import { WeaponControls } from "../../components/SeaBattle/WeaponsControls";
-import "./SeaBattle.scss";
 import { PlayerInfo } from "../../components/SeaBattle/PlayerInfo";
+import "./SeaBattle.scss";
 
 // ------------------------------------------------------------------
 
@@ -76,10 +76,16 @@ export const SeaBattle = () => {
 
 	const onKeyDown = useCallback(
 		(e: KeyboardEvent) => {
-			e.preventDefault(); // to prevent scrolling with keyboard
-			if (e.repeat) {
+			if (
+				e.repeat ||
+				(e.keyCode !== KEY_UP &&
+					e.keyCode !== KEY_DOWN &&
+					e.keyCode !== KEY_LEFT &&
+					e.keyCode !== KEY_RIGHT)
+			) {
 				return;
 			}
+			e.preventDefault(); // to prevent scrolling with keyboard
 			const player = players[activePlayer];
 			if (!player) {
 				return;
@@ -144,6 +150,13 @@ export const SeaBattle = () => {
 		<div className="SeaBattle">
 			<div className="SeaBattlePlayer current">
 				<FleetControls
+					boat={
+						selectedBoats[activePlayer] >= 0
+							? players[activePlayer].fleet[
+									selectedBoats[activePlayer]
+							  ]
+							: void 0
+					}
 					disabled={selectedBoats[activePlayer] < 0}
 					onMoveForward={moveForward}
 					onMoveBackward={moveBackward}

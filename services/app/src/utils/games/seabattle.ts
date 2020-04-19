@@ -197,10 +197,29 @@ export const SeabattleBoatTranslationMappings: {
 	}
 };
 
-const SeaBattleBoatLengthMappings = {
+export const SeaBattleBoatLengthMappings = {
 	boat1: 1,
 	boat2: 2,
 	boat3: 3
+};
+
+export const SeaBattleMovementIconMappings = {
+	N: {
+		forward: "arrow-up",
+		backward: "arrow-down"
+	},
+	E: {
+		forward: "arrow-right",
+		backward: "arrow-left"
+	},
+	S: {
+		forward: "arrow-down",
+		backward: "arrow-up"
+	},
+	W: {
+		forward: "arrow-left",
+		backward: "arrow-right"
+	}
 };
 
 // ------------------------------------------------------------------
@@ -315,29 +334,73 @@ const checkCollisions = (
 	if (!checkPositionInGrid(grid, newPosition)) {
 		return false;
 	}
-	const offset = SeaBattleBoatLengthMappings[movingBoat.type] - 1;
 	switch (newDirection) {
 		case "N":
-			return checkPositionInGrid(grid, {
-				x: newPosition.x,
-				y: newPosition.y - offset
-			});
+			for (
+				let i = 0;
+				i < SeaBattleBoatLengthMappings[movingBoat.type];
+				++i
+			) {
+				if (
+					!checkPositionInGrid(grid, {
+						x: newPosition.x,
+						y: newPosition.y - i
+					})
+				) {
+					return false;
+				}
+			}
+			break;
 		case "E":
-			return checkPositionInGrid(grid, {
-				x: newPosition.x + offset,
-				y: newPosition.y
-			});
+			for (
+				let i = 0;
+				i < SeaBattleBoatLengthMappings[movingBoat.type];
+				++i
+			) {
+				if (
+					!checkPositionInGrid(grid, {
+						x: newPosition.x + i,
+						y: newPosition.y
+					})
+				) {
+					return false;
+				}
+			}
+			break;
 		case "S":
-			return checkPositionInGrid(grid, {
-				x: newPosition.x,
-				y: newPosition.y + offset
-			});
+			for (
+				let i = 0;
+				i < SeaBattleBoatLengthMappings[movingBoat.type];
+				++i
+			) {
+				if (
+					!checkPositionInGrid(grid, {
+						x: newPosition.x,
+						y: newPosition.y + i
+					})
+				) {
+					return false;
+				}
+			}
+			break;
 		case "W":
-			return checkPositionInGrid(grid, {
-				x: newPosition.x - offset,
-				y: newPosition.y
-			});
+			for (
+				let i = 0;
+				i < SeaBattleBoatLengthMappings[movingBoat.type];
+				++i
+			) {
+				if (
+					!checkPositionInGrid(grid, {
+						x: newPosition.x - i,
+						y: newPosition.y
+					})
+				) {
+					return false;
+				}
+			}
+			break;
 	}
+	return true;
 };
 
 export const movementIsPossible = (

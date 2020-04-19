@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { Redirect, Route, Switch } from "react-router-dom";
 //
-import { SeaBattle } from "./games/SeaBattle";
 import { Room } from "./Room";
 import { Splash } from "./Splash";
 import { Modals } from "../components/Modals";
@@ -25,7 +24,6 @@ export const App = () => {
 			<Modals />
 			<Switch>
 				<Route exact={true} path="/room/:room_id" component={Room} />
-				<Route exact={true} path="/battle" component={SeaBattle} />
 				<Route exact={true} path="/" component={Splash} />
 				<Redirect to="/" />
 			</Switch>

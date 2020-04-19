@@ -3,22 +3,64 @@
 	flex-direction: row;
 	justify-content: center;
 	flex-wrap: wrap;
-	align-items: center;
-	min-height: 100vh;
-	padding: 0 50px;
+	flex-grow: 1;
+	align-items: stretch;
+	align-self: stretch;
+	overflow-x: hidden;
+	overflow-y: auto;
+	-webkit-overflow-scrolling: touch; /* https://css-tricks.com/snippets/css/momentum-scrolling-on-ios-overflow-elements/ */
+
+	&::-webkit-scrollbar {
+		width: 0.25rem;
+	}
+
+	&::-webkit-scrollbar-track {
+		background-color: transparent;
+	}
+
+	&::-webkit-scrollbar-thumb {
+		transition: background-color 300ms ease-in-out; /* not supported by scrollbar */
+		background-color: rgb(
+			0,
+			0,
+			0
+		); /* color will be overriden in Room.scss */
+	}
 
 	.SeaBattlePlayer {
+		display: flex;
+		flex-direction: column;
+		justify-content: flex-start;
+		align-items: center;
 		flex-grow: 1;
-		padding: 0 20px;
+		flex-shrink: 0;
 
 		.SeaBattleControls {
 			display: flex;
+			align-self: center;
 			flex-direction: row;
-			justify-content: space-evenly;
-			padding: 20px 0;
+			justify-content: space-around;
+			padding: 20px 0 10px 0;
+			width: 200px;
+		}
+
+		.SeaBattlePlayerInfo {
+			text-align: center;
 		}
 
 		.SeaBattleMap {
+			border: 10px solid #fff;
+
+			height: calc(100vh - 170px);
+			width: calc(100vh - 170px);
+
+			@media screen and (max-width: 500px) {
+				& {
+					height: 90vw;
+					width: 90vw;
+				}
+			}
+
 			.SeaBattleBoat {
 				fill: #000;
 
@@ -36,17 +78,10 @@
 				}
 			}
 
-			.SeaBattleHit {
-				pointer-events: none;
-			}
-
+			.SeaBattleHit,
 			.SeaBattleWeapon {
 				pointer-events: none;
 			}
-		}
-
-		.SeaBattlePlayerInfo {
-			padding: 10px;
 		}
 	}
 }

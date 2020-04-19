@@ -2,7 +2,7 @@ import { v4 } from "uuid";
 //
 import { AsyncAction, Dispatch } from ".";
 import { displayError } from "./messages";
-import { RoomInfo } from "../utils/rooms";
+import { RoomInfo, RoomType } from "../utils/rooms";
 import { FirebaseRoom } from "../utils/firebase";
 import {
 	MediaAccess,
@@ -23,7 +23,8 @@ import history from "../utils/history";
 
 export const createRoom = (
 	name: string,
-	secret: string
+	secret: string,
+	type: RoomType
 ): AsyncAction => async dispatch => {
 	try {
 		const id = v4();
@@ -32,7 +33,8 @@ export const createRoom = (
 			name,
 			playing: false,
 			queue: {},
-			queue_position: 0
+			queue_position: 0,
+			type
 		});
 		dispatch(enterRoom(id, secret));
 	} catch (err) {
@@ -144,8 +146,11 @@ const _watchRoom = (
 			const {
 				medias: { medias: oldMedias }
 			} = getState();
-			const newInfo = snapshot.val() as RoomInfo;
-			console.debug("[Room] Received room update...", newInfo);
+			const newInfo = snapshot.val() as RoomInfo | null;
+			console.debug("[Room] Received room update...", { newInfo });
+			if (!newInfo) {
+				return;
+			}
 			let medias: MediaAccess[] = [];
 			if (newInfo.queue) {
 				medias = Object.entries(newInfo.queue)

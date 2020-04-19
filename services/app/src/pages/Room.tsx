@@ -11,6 +11,8 @@ import { RootState } from "../reducers";
 import { CombinedColor } from "../utils/colorpicker";
 import { exitRoom, enterRoom } from "../actions/room";
 import { Dispatch } from "../actions";
+import { RoomInfo } from "../utils/rooms";
+import { SeaBattle } from "./games/SeaBattle";
 import "./Room.scss";
 
 // ------------------------------------------------------------------
@@ -19,6 +21,9 @@ export const Room = () => {
 	const dispatch = useDispatch<Dispatch>();
 	const { fg, bg } = useSelector<RootState, CombinedColor>(
 		state => state.room.color
+	);
+	const info = useSelector<RootState, RoomInfo | null>(
+		state => state.room.info
 	);
 
 	const { search } = useLocation();
@@ -46,8 +51,24 @@ export const Room = () => {
 	return (
 		<div className={classNames("Room")}>
 			<Head />
-			<Queue />
-			<Controls />
+			{(() => {
+				if (!info) {
+					return null;
+				}
+				switch (info.type) {
+					case "blind":
+						return null;
+					case "dj":
+						return (
+							<>
+								<Queue />
+								<Controls />
+							</>
+						);
+					case "seabattle":
+						return <SeaBattle />;
+				}
+			})()}
 		</div>
 	);
 };

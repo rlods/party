@@ -50,10 +50,10 @@ export const CreateRoomModal = () => {
 			dispatch(displayError("rooms.secret_is_invalid"));
 			return;
 		}
-		dispatch(createRoom(name, secret));
+		dispatch(createRoom(name, secret, type));
 		dispatch(popModal());
 		ROOM_COUNTER++;
-	}, [dispatch, name, secret]);
+	}, [dispatch, name, secret, type]);
 
 	const onJoin = useCallback(
 		() => dispatch(openModal({ type: "JoinRoom", props: null })),

@@ -1,16 +1,22 @@
 import React from "react";
 //
 import { IconButton } from "../Common/IconButton";
+import {
+	SeaBattleBoatData,
+	SeaBattleMovementIconMappings
+} from "../../utils/games/seabattle";
 
 // ------------------------------------------------------------------
 
 export const FleetControls = ({
+	boat,
 	disabled = false,
 	onMoveBackward,
 	onMoveForward,
 	onRotateLeft,
 	onRotateRight
 }: {
+	boat?: SeaBattleBoatData;
 	disabled?: boolean;
 	onMoveBackward: () => void;
 	onMoveForward: () => void;
@@ -27,15 +33,23 @@ export const FleetControls = ({
 			/>
 			<IconButton
 				disabled={disabled}
-				icon="arrow-up"
-				title="Move Forward"
-				onClick={onMoveForward}
+				icon={
+					boat?.direction
+						? SeaBattleMovementIconMappings[boat.direction].backward
+						: "arrow-down"
+				}
+				title="Move Backward"
+				onClick={onMoveBackward}
 			/>
 			<IconButton
 				disabled={disabled}
-				icon="arrow-down"
-				title="Move Backward"
-				onClick={onMoveBackward}
+				icon={
+					boat?.direction
+						? SeaBattleMovementIconMappings[boat.direction].forward
+						: "arrow-up"
+				}
+				title="Move Forward"
+				onClick={onMoveForward}
 			/>
 			<IconButton
 				disabled={disabled}
