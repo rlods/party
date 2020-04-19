@@ -39,7 +39,7 @@ export const joinBattle = (): AsyncAction => async (dispatch, getState) => {
 	try {
 		console.debug("[SeaBattle] Joining battle...", { userId });
 		const battle = decode<SeaBattleData>(info.extra);
-		const map = battle.maps[userId];
+		const map = battle.maps.find(other => other.userId === userId);
 		if (map) {
 			return; // User is already in the battle
 		}
@@ -84,8 +84,14 @@ export const moveBoat = ({
 	try {
 		const battle = decode<SeaBattleData>(info.extra);
 
-		const map = battle.maps[userId];
+		const map = battle.maps.find(other => other.userId === userId);
 		if (!map) {
+			console.debug("[SeaBattle] Cannot find map for current user");
+			return;
+		}
+
+		if (map !== battle.maps[battle.currentMapIndex]) {
+			dispatch(displayError("This is not your turn"));
 			return;
 		}
 
@@ -156,6 +162,8 @@ export const moveBoat = ({
 			newPosition
 		});
 
+		battle.currentMapIndex =
+			(battle.currentMapIndex + 1) % battle.maps.length;
 		boat.angle = newAngle;
 		boat.position = newPosition;
 

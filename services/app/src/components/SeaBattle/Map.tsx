@@ -21,6 +21,7 @@ export const Map = ({
 		fleet: [],
 		hits: [],
 		weapons: {},
+		userId: "",
 		opponentsWeapons: []
 	},
 	selectedBoatIndex,
