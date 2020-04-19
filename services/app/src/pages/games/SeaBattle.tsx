@@ -175,6 +175,7 @@ export const SeaBattle = () => {
 				<OpponentControls
 					disabled={!opponent}
 					opponentsCount={opponents?.length || 0}
+					opponentIndex={selectedOpponentIndex}
 					onSelectPreviousOpponent={
 						opponents && opponents.length > 0
 							? () =>

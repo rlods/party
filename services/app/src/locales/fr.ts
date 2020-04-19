@@ -29,11 +29,13 @@ export default {
 		secret_is_invalid: "Le secret est invalide",
 		secret_placeholder: "Secret...",
 		secret: "Secret",
-		user_creation: "Création d'un utilisateur"
+		user_creation: "Création d'un utilisateur",
+		not_connected: "Aucun utilisateur identifié"
 	},
 	games: {
 		seabattle: {
-			movement_is_not_possible: "Ce déplacement est impossible !"
+			movement_is_not_possible: "Ce déplacement est impossible !",
+			opponent_index: "Ennemi {{index}}"
 		}
 	},
 	rooms: {

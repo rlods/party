@@ -8,21 +8,23 @@ import { WeaponSelection } from "./WeaponSelection";
 export const OpponentControls = ({
 	disabled = true,
 	opponentsCount,
+	opponentIndex,
 	onSelectPreviousOpponent,
 	onSelectNextOpponent
 }: {
 	disabled?: boolean;
 	opponentsCount: number;
+	opponentIndex: number;
 	onSelectPreviousOpponent?: () => void;
 	onSelectNextOpponent?: () => void;
 }) => (
 	<div className="SeaBattleControls">
-		{opponentsCount > 1 ? (
-			<OpponentSelection
-				onSelectPreviousOpponent={onSelectPreviousOpponent}
-				onSelectNextOpponent={onSelectNextOpponent}
-			/>
-		) : null}
+		<OpponentSelection
+			opponentsCount={opponentsCount}
+			opponentIndex={opponentIndex}
+			onSelectPreviousOpponent={onSelectPreviousOpponent}
+			onSelectNextOpponent={onSelectNextOpponent}
+		/>
 		<WeaponSelection />
 	</div>
 );

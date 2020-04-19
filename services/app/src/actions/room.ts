@@ -71,7 +71,7 @@ export const createRoom = (
 		}
 	} = getState();
 	if (!userId) {
-		dispatch(displayError("No user connected"));
+		dispatch(displayError("users.not_connected"));
 		return;
 	}
 	try {
