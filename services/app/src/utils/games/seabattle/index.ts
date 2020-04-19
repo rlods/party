@@ -1,5 +1,6 @@
 import { decode } from "../../encoder";
 import { generateGrid } from "./collision";
+import { augmentedArrayIndexAccess } from "../../";
 
 // ------------------------------------------------------------------
 
@@ -23,7 +24,7 @@ export type SeaBattleCellType =
 	| "cell-selection";
 
 export type SeaBattleAssetType =
-	| OrientedBoatType
+	| SeaBattleBoatType
 	| SeaBattleCellType
 	| SeaBattleHitType
 	| SeaBattleWeaponType;
@@ -34,7 +35,12 @@ export type SeaBattleAssetData = {
 
 // ------------------------------------------------------------------
 
-export type SeaBattleDirection = "N" | "E" | "S" | "W";
+export type SeaBattleDirection = "E" | "S" | "W" | "N";
+
+export const SeaBattleDirections: SeaBattleDirection[] = ["E", "S", "W", "N"]; // order is important for AngleToDirection
+
+export const AngleToDirection = (angle: number): SeaBattleDirection =>
+	augmentedArrayIndexAccess(SeaBattleDirections, angle);
 
 export type SeaBattleMovementType =
 	| "move-forward"
@@ -47,24 +53,10 @@ export type SeaBattleBoatStatus = "ok" | "ko";
 export type SeaBattleBoatType = "boat1" | "boat2" | "boat3";
 
 export type SeaBattleBoatData = SeaBattleAssetData & {
-	direction: SeaBattleDirection;
+	angle: number;
 	status: SeaBattleBoatStatus;
 	type: SeaBattleBoatType;
 };
-
-export type OrientedBoatType =
-	| "boat1-N"
-	| "boat1-E"
-	| "boat1-S"
-	| "boat1-W"
-	| "boat2-N"
-	| "boat2-E"
-	| "boat2-S"
-	| "boat2-W"
-	| "boat3-N"
-	| "boat3-E"
-	| "boat3-S"
-	| "boat3-W";
 
 export const BoatsOffsetMappings = {
 	boat1: { x: 6, y: 6 },
@@ -156,37 +148,37 @@ export const generateFleet = (battle: SeaBattleData, userId: string) => {
 		fleet: [
 			{
 				type: "boat1",
-				direction: "E",
+				angle: 0,
 				position: { x: 0, y: 0 },
 				status: "ok"
 			},
 			{
 				type: "boat1",
-				direction: "E",
+				angle: 0,
 				position: { x: 1, y: 0 },
 				status: "ko"
 			},
 			{
 				type: "boat2",
-				direction: "E",
+				angle: 0,
 				position: { x: 0, y: 1 },
 				status: "ok"
 			},
 			{
 				type: "boat2",
-				direction: "E",
+				angle: 0,
 				position: { x: 2, y: 1 },
 				status: "ko"
 			},
 			{
 				type: "boat3",
-				direction: "E",
+				angle: 0,
 				position: { x: 0, y: 2 },
 				status: "ok"
 			},
 			{
 				type: "boat3",
-				direction: "E",
+				angle: 0,
 				position: { x: 3, y: 2 },
 				status: "ko"
 			}

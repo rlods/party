@@ -47,26 +47,14 @@ export const BattleAssets = () => (
 			fill="#000000"
 		/>
 		<path id="boat1" d="M28,14C28,19,14,28,14,28H0V0H14S28,9.05,28,14Z" />
-		<use id="boat1-E" href="#boat1" />
-		<use id="boat1-N" href="#boat1" transform="rotate(-90, 14, 14)" />
-		<use id="boat1-S" href="#boat1" transform="rotate(90, 14, 14)" />
-		<use id="boat1-W" href="#boat1" transform="rotate(180, 14, 14)" />
 		<path
 			id="boat2"
 			d="M68,14C68,19,51.89,28,51.89,28H0V0H51.89S68,9.05,68,14Z"
 		/>
-		<use id="boat2-E" href="#boat2" />
-		<use id="boat2-N" href="#boat2" transform="rotate(-90, 14, 14)" />
-		<use id="boat2-S" href="#boat2" transform="rotate(90, 14, 14)" />
-		<use id="boat2-W" href="#boat2" transform="rotate(180, 14, 14)" />
 		<path
 			id="boat3"
 			d="M108,14C108,19,91.24,28,91.24,28H0V0H91.24S108,9.05,108,14Z"
 		/>
-		<use id="boat3-E" href="#boat3" />
-		<use id="boat3-N" href="#boat3" transform="rotate(-90, 14, 14)" />
-		<use id="boat3-S" href="#boat3" transform="rotate(90, 14, 14)" />
-		<use id="boat3-W" href="#boat3" transform="rotate(180, 14, 14)" />
 		<pattern
 			id="sea-grid"
 			width="80"

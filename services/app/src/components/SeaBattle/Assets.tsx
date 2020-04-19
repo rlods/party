@@ -13,6 +13,7 @@ export const Asset = ({
 	className,
 	onClick,
 	stopPropagation = false,
+	transform,
 	type,
 	visibility
 }: {
@@ -20,6 +21,7 @@ export const Asset = ({
 	data: SeaBattleAssetData;
 	onClick?: () => void;
 	stopPropagation?: boolean;
+	transform?: string;
 	type: SeaBattleAssetType;
 	visibility?: string;
 }) => (
@@ -34,6 +36,7 @@ export const Asset = ({
 		}}
 		className={className}
 		href={`#${type}`}
+		transform={transform}
 		visibility={visibility}
 		{...position}
 	/>

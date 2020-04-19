@@ -1,7 +1,10 @@
 import React from "react";
 //
 import { IconButton } from "../Common/IconButton";
-import { SeaBattleBoatData } from "../../utils/games/seabattle";
+import {
+	SeaBattleBoatData,
+	AngleToDirection
+} from "../../utils/games/seabattle";
 import { SeaBattleMovementIconMappings } from "../../utils/games/seabattle/mappings";
 import { useTranslation } from "react-i18next";
 
@@ -37,8 +40,10 @@ export const PlayerControls = ({
 			<IconButton
 				disabled={disabled}
 				icon={
-					boat?.direction
-						? SeaBattleMovementIconMappings[boat.direction].backward
+					boat
+						? SeaBattleMovementIconMappings[
+								AngleToDirection(boat.angle)
+						  ].backward
 						: "arrow-down"
 				}
 				title="Move Backward"
@@ -53,8 +58,10 @@ export const PlayerControls = ({
 			<IconButton
 				disabled={disabled}
 				icon={
-					boat?.direction
-						? SeaBattleMovementIconMappings[boat.direction].forward
+					boat
+						? SeaBattleMovementIconMappings[
+								AngleToDirection(boat.angle)
+						  ].forward
 						: "arrow-up"
 				}
 				title="Move Forward"

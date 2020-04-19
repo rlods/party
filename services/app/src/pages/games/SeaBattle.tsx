@@ -22,7 +22,8 @@ import {
 	SeaBattleMovementType,
 	SeaBattlePosition,
 	testHit,
-	SeaBattleWeaponType
+	SeaBattleWeaponType,
+	AngleToDirection
 } from "../../utils/games/seabattle";
 import "./SeaBattle.scss";
 
@@ -116,7 +117,11 @@ export const SeaBattle = () => {
 			if (!player || !boat) {
 				return;
 			}
-			onMove(SeaBattleKeyboardMoveMappings[boat.direction][e.keyCode]);
+			onMove(
+				SeaBattleKeyboardMoveMappings[AngleToDirection(boat.angle)][
+					e.keyCode
+				]
+			);
 		},
 		[onMove, battle, player, boat]
 	);

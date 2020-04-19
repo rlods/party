@@ -7,12 +7,11 @@ import {
 	GRID_CELL_UNIT_SIZE,
 	BoatsOffsetMappings
 } from "../../utils/games/seabattle";
-import { SeaBattleBoatOrientationMappings } from "../../utils/games/seabattle/mappings";
 
 // ------------------------------------------------------------------
 
 export const Boat = ({
-	boat: { direction = "E", type, status = "ok", ...asset },
+	boat: { angle, type, status = "ok", ...asset },
 	onClick,
 	selected
 }: {
@@ -30,14 +29,15 @@ export const Boat = ({
 		data={{
 			...asset,
 			position: {
-				x:
-					BoatsOffsetMappings[type].x +
-					asset.position.x * GRID_CELL_UNIT_SIZE,
-				y:
-					BoatsOffsetMappings[type].y +
-					asset.position.y * GRID_CELL_UNIT_SIZE
+				x: 0,
+				y: 0
 			}
 		}}
-		type={SeaBattleBoatOrientationMappings[type][direction]}
+		transform={`translate(${
+			BoatsOffsetMappings[type].x + asset.position.x * GRID_CELL_UNIT_SIZE
+		}, ${
+			BoatsOffsetMappings[type].y + asset.position.y * GRID_CELL_UNIT_SIZE
+		}) rotate(${angle * 90}, 14, 14)`}
+		type={type}
 	/>
 );

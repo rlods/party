@@ -6,10 +6,10 @@ import {
 	SeaBattleMovementType,
 	SeaBattleData,
 	generateFleet,
-	MAX_PLAYER_COUNT
+	MAX_PLAYER_COUNT,
+	AngleToDirection
 } from "../../utils/games/seabattle";
 import {
-	SeaBattleBoatRotationMappings,
 	SeaBattleBoatTranslationMappings,
 	SeaBattleBoatRotationTransformationMappings
 } from "../../utils/games/seabattle/mappings";
@@ -89,9 +89,12 @@ export const moveBoat = ({
 			return;
 		}
 
-		const { direction: oldDirection, position: oldPosition, type } = fleet[
+		const { angle: oldAngle, position: oldPosition, type } = fleet[
 			boatIndex
 		];
+
+		const oldDirection = AngleToDirection(oldAngle);
+
 		let newPosition = { ...oldPosition };
 		if (movement === "move-forward" || movement === "move-backward") {
 			newPosition.x +=
@@ -100,10 +103,16 @@ export const moveBoat = ({
 				SeaBattleBoatTranslationMappings[oldDirection][movement].y;
 		}
 
+		let newAngle = oldAngle;
 		let newDirection = oldDirection;
 		if (movement === "rotate-left" || movement === "rotate-right") {
-			newDirection =
-				SeaBattleBoatRotationMappings[oldDirection][movement];
+			if (movement === "rotate-left") {
+				newAngle--;
+			}
+			if (movement === "rotate-right") {
+				newAngle++;
+			}
+			newDirection = AngleToDirection(newAngle);
 			newPosition.x +=
 				SeaBattleBoatRotationTransformationMappings[type][
 					oldDirection
@@ -137,7 +146,7 @@ export const moveBoat = ({
 			newPosition
 		});
 
-		boat.direction = newDirection;
+		boat.angle = newAngle;
 		boat.position = newPosition;
 
 		await room.update({

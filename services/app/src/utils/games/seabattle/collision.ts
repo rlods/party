@@ -4,55 +4,56 @@ import {
 	SeaBattleGrid,
 	SeaBattlePosition,
 	SeaBattleDirection,
-	GRID_CELL_COUNT
+	GRID_CELL_COUNT,
+	AngleToDirection
 } from ".";
 
 // ------------------------------------------------------------------
 
 export const checkPositionInGrid = (
 	grid: SeaBattleGrid,
-	position: SeaBattlePosition
-) => grid[position.y][position.x] === 0;
+	pos: SeaBattlePosition
+) => grid[pos.y][pos.x] === 0;
 
 // ------------------------------------------------------------------
 
-export const checkPositionInZone = (position: SeaBattlePosition) =>
-	position.x >= 0 &&
-	position.x < GRID_CELL_COUNT &&
-	position.y >= 0 &&
-	position.y < GRID_CELL_COUNT;
+export const checkPositionInZone = (pos: SeaBattlePosition) =>
+	pos.x >= 0 &&
+	pos.x < GRID_CELL_COUNT &&
+	pos.y >= 0 &&
+	pos.y < GRID_CELL_COUNT;
 
 // ------------------------------------------------------------------
 
 export const checkZone = (
 	boat: SeaBattleBoatData,
-	newPosition: SeaBattlePosition,
-	newDirection: SeaBattleDirection
+	newPos: SeaBattlePosition,
+	newDir: SeaBattleDirection
 ) => {
-	if (!checkPositionInZone(newPosition)) {
+	if (!checkPositionInZone(newPos)) {
 		return false;
 	}
 	const offset = SeaBattleBoatLengthMappings[boat.type] - 1;
-	switch (newDirection) {
+	switch (newDir) {
 		case "N":
 			return checkPositionInZone({
-				x: newPosition.x,
-				y: newPosition.y - offset
+				x: newPos.x,
+				y: newPos.y - offset
 			});
 		case "E":
 			return checkPositionInZone({
-				x: newPosition.x + offset,
-				y: newPosition.y
+				x: newPos.x + offset,
+				y: newPos.y
 			});
 		case "S":
 			return checkPositionInZone({
-				x: newPosition.x,
-				y: newPosition.y + offset
+				x: newPos.x,
+				y: newPos.y + offset
 			});
 		case "W":
 			return checkPositionInZone({
-				x: newPosition.x - offset,
-				y: newPosition.y
+				x: newPos.x - offset,
+				y: newPos.y
 			});
 	}
 };
@@ -75,7 +76,7 @@ export const generateGrid = (
 		if (movingBoat === boat) {
 			continue; // Ignore moving boat
 		}
-		switch (boat.direction) {
+		switch (AngleToDirection(boat.angle)) {
 			case "N":
 				for (
 					let i = 0;
@@ -121,26 +122,23 @@ export const generateGrid = (
 
 export const checkCollisions = (
 	fleet: SeaBattleBoatData[],
-	movingBoat: SeaBattleBoatData,
-	newPosition: SeaBattlePosition,
-	newDirection: SeaBattleDirection
+	boat: SeaBattleBoatData,
+	newPos: SeaBattlePosition,
+	newDir: SeaBattleDirection
 ) => {
-	const grid = generateGrid(fleet, movingBoat);
+	const grid = generateGrid(fleet, boat);
 	// console.debug("[SeaBattle] Collision grid", grid);
-	if (!checkPositionInGrid(grid, newPosition)) {
+	if (!checkPositionInGrid(grid, newPos)) {
 		return false;
 	}
-	switch (newDirection) {
+	const boatLength = SeaBattleBoatLengthMappings[boat.type];
+	switch (newDir) {
 		case "N":
-			for (
-				let i = 0;
-				i < SeaBattleBoatLengthMappings[movingBoat.type];
-				++i
-			) {
+			for (let i = 0; i < boatLength; ++i) {
 				if (
 					!checkPositionInGrid(grid, {
-						x: newPosition.x,
-						y: newPosition.y - i
+						x: newPos.x,
+						y: newPos.y - i
 					})
 				) {
 					return false;
@@ -148,15 +146,11 @@ export const checkCollisions = (
 			}
 			break;
 		case "E":
-			for (
-				let i = 0;
-				i < SeaBattleBoatLengthMappings[movingBoat.type];
-				++i
-			) {
+			for (let i = 0; i < boatLength; ++i) {
 				if (
 					!checkPositionInGrid(grid, {
-						x: newPosition.x + i,
-						y: newPosition.y
+						x: newPos.x + i,
+						y: newPos.y
 					})
 				) {
 					return false;
@@ -164,15 +158,11 @@ export const checkCollisions = (
 			}
 			break;
 		case "S":
-			for (
-				let i = 0;
-				i < SeaBattleBoatLengthMappings[movingBoat.type];
-				++i
-			) {
+			for (let i = 0; i < boatLength; ++i) {
 				if (
 					!checkPositionInGrid(grid, {
-						x: newPosition.x,
-						y: newPosition.y + i
+						x: newPos.x,
+						y: newPos.y + i
 					})
 				) {
 					return false;
@@ -180,15 +170,11 @@ export const checkCollisions = (
 			}
 			break;
 		case "W":
-			for (
-				let i = 0;
-				i < SeaBattleBoatLengthMappings[movingBoat.type];
-				++i
-			) {
+			for (let i = 0; i < boatLength; ++i) {
 				if (
 					!checkPositionInGrid(grid, {
-						x: newPosition.x - i,
-						y: newPosition.y
+						x: newPos.x - i,
+						y: newPos.y
 					})
 				) {
 					return false;
@@ -204,14 +190,14 @@ export const checkCollisions = (
 export const movementIsPossible = (
 	fleet: SeaBattleBoatData[],
 	boat: SeaBattleBoatData,
-	newPosition: SeaBattlePosition,
-	newDirection: SeaBattleDirection
+	newPos: SeaBattlePosition,
+	newDir: SeaBattleDirection
 ) => {
-	if (!checkZone(boat, newPosition, newDirection)) {
+	if (!checkZone(boat, newPos, newDir)) {
 		console.debug("[SeaBattle] Boat blocked by zone");
 		return false;
 	}
-	if (!checkCollisions(fleet, boat, newPosition, newDirection)) {
+	if (!checkCollisions(fleet, boat, newPos, newDir)) {
 		console.debug("[SeaBattle] Boat blocked by collision");
 		return false;
 	}

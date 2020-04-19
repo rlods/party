@@ -101,6 +101,8 @@
 				&.ok:hover {
 					fill: #555;
 				}
+
+				transition: transform 300ms ease-in-out;
 			}
 
 			.SeaBattleBoat:not(.clickable),

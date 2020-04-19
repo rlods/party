@@ -1,58 +1,5 @@
-import {
-	OrientedBoatType,
-	SeaBattlePosition,
-	SeaBattleDirection,
-	SeaBattleMovementType
-} from ".";
+import { SeaBattlePosition, SeaBattleMovementType } from ".";
 import { KEY_RIGHT, KEY_LEFT, KEY_DOWN, KEY_UP } from "../../keyboards";
-
-// ------------------------------------------------------------------
-
-export const SeaBattleBoatOrientationMappings: {
-	[type: string]: { [direction: string]: OrientedBoatType };
-} = {
-	boat1: {
-		N: "boat1-N",
-		E: "boat1-E",
-		S: "boat1-S",
-		W: "boat1-W"
-	},
-	boat2: {
-		N: "boat2-N",
-		E: "boat2-E",
-		S: "boat2-S",
-		W: "boat2-W"
-	},
-	boat3: {
-		N: "boat3-N",
-		E: "boat3-E",
-		S: "boat3-S",
-		W: "boat3-W"
-	}
-};
-
-// ------------------------------------------------------------------
-
-export const SeaBattleBoatRotationMappings: {
-	[direction: string]: { [rotation: string]: SeaBattleDirection };
-} = {
-	N: {
-		"rotate-left": "W",
-		"rotate-right": "E"
-	},
-	E: {
-		"rotate-left": "N",
-		"rotate-right": "S"
-	},
-	S: {
-		"rotate-left": "E",
-		"rotate-right": "W"
-	},
-	W: {
-		"rotate-left": "S",
-		"rotate-right": "N"
-	}
-};
 
 // ------------------------------------------------------------------
 
