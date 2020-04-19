@@ -4,6 +4,7 @@ import { decode } from "../encoder";
 
 export const GRID_CELL_COUNT = 10;
 export const GRID_CELL_UNIT_SIZE = 40;
+export const MAX_PLAYER_COUNT = 2;
 
 // ------------------------------------------------------------------
 
@@ -436,106 +437,64 @@ export const movementIsPossible = (
 };
 
 export const generateBattle = (userId: string): SeaBattleData => {
-	console.debug("[SeaBattle] Genering battle", {
+	console.debug("[SeaBattle] Genering battle...");
+	const battle: SeaBattleData = {
+		players: {}
+	};
+	generateFleet(battle, userId);
+	return battle;
+};
+
+export const generateFleet = (battle: SeaBattleData, userId: string) => {
+	console.debug("[SeaBattle] Genering fleet...", {
 		userId
 	});
-	return {
-		players: {
-			[userId]: {
-				fleet: [
-					{
-						type: "boat1",
-						direction: "E",
-						position: { x: 0, y: 0 },
-						status: "ok"
-					},
-					{
-						type: "boat1",
-						direction: "E",
-						position: { x: 1, y: 0 },
-						status: "ko"
-					},
-					{
-						type: "boat2",
-						direction: "E",
-						position: { x: 0, y: 1 },
-						status: "ok"
-					},
-					{
-						type: "boat2",
-						direction: "E",
-						position: { x: 2, y: 1 },
-						status: "ko"
-					},
-					{
-						type: "boat3",
-						direction: "E",
-						position: { x: 0, y: 2 },
-						status: "ok"
-					},
-					{
-						type: "boat3",
-						direction: "E",
-						position: { x: 3, y: 2 },
-						status: "ko"
-					}
-				],
-				hits: [
-					{ position: { x: 0, y: 1 }, type: "hitted1" },
-					{ position: { x: 0, y: 2 }, type: "hitted2" },
-					{ position: { x: 0, y: 3 }, type: "missed1" },
-					{ position: { x: 0, y: 4 }, type: "missed2" }
-				],
-				weapons: [{ count: 1, position: { x: 0, y: 5 }, type: "mine" }]
+	battle.players[userId] = {
+		fleet: [
+			{
+				type: "boat1",
+				direction: "E",
+				position: { x: 0, y: 0 },
+				status: "ok"
 			},
-			player2: {
-				fleet: [
-					{
-						type: "boat1",
-						direction: "E",
-						position: { x: 0, y: 0 },
-						status: "ok"
-					},
-					{
-						type: "boat1",
-						direction: "E",
-						position: { x: 1, y: 0 },
-						status: "ko"
-					},
-					{
-						type: "boat2",
-						direction: "E",
-						position: { x: 0, y: 1 },
-						status: "ok"
-					},
-					{
-						type: "boat2",
-						direction: "E",
-						position: { x: 2, y: 1 },
-						status: "ko"
-					},
-					{
-						type: "boat3",
-						direction: "E",
-						position: { x: 0, y: 2 },
-						status: "ok"
-					},
-					{
-						type: "boat3",
-						direction: "E",
-						position: { x: 3, y: 2 },
-						status: "ko"
-					}
-				],
-				hits: [
-					{ position: { x: 0, y: 1 }, type: "hitted1" },
-					{ position: { x: 0, y: 2 }, type: "hitted2" },
-					{ position: { x: 0, y: 3 }, type: "missed1" },
-					{ position: { x: 0, y: 4 }, type: "missed2" }
-				],
-				weapons: [{ count: 1, position: { x: 0, y: 5 }, type: "mine" }]
+			{
+				type: "boat1",
+				direction: "E",
+				position: { x: 1, y: 0 },
+				status: "ko"
+			},
+			{
+				type: "boat2",
+				direction: "E",
+				position: { x: 0, y: 1 },
+				status: "ok"
+			},
+			{
+				type: "boat2",
+				direction: "E",
+				position: { x: 2, y: 1 },
+				status: "ko"
+			},
+			{
+				type: "boat3",
+				direction: "E",
+				position: { x: 0, y: 2 },
+				status: "ok"
+			},
+			{
+				type: "boat3",
+				direction: "E",
+				position: { x: 3, y: 2 },
+				status: "ko"
 			}
-		}
+		],
+		hits: [
+			{ position: { x: 0, y: 1 }, type: "hitted1" },
+			{ position: { x: 0, y: 2 }, type: "hitted2" },
+			{ position: { x: 0, y: 3 }, type: "missed1" },
+			{ position: { x: 0, y: 4 }, type: "missed2" }
+		],
+		weapons: [{ count: 1, position: { x: 0, y: 5 }, type: "mine" }]
 	};
 };
 

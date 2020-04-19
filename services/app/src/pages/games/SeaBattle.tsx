@@ -4,21 +4,27 @@ import { useSelector, useDispatch } from "react-redux";
 import { PlayerControls } from "../../components/SeaBattle/PlayerControls";
 import { Map } from "../../components/SeaBattle/Map";
 import { RootState } from "../../reducers";
-import { extractBattleInfo } from "../../utils/games/seabattle";
+import {
+	extractBattleInfo,
+	MAX_PLAYER_COUNT
+} from "../../utils/games/seabattle";
 import { Dispatch } from "../../actions";
-import { moveBoat } from "../../actions/games/seabattle";
+import { moveBoat, joinBattle } from "../../actions/games/seabattle";
 import { KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT } from "../../utils/keyboards";
 import { OpponentControls } from "../../components/SeaBattle/OpponentControls";
 import { startPlayer } from "../../actions/player";
 import { setQueuePosition } from "../../actions/queue";
 import { generateRandomPosition } from "../../utils/player";
 import { selectTracksCount } from "../../selectors/medias";
+import { IconButton } from "../../components/Common/IconButton";
+import { useTranslation } from "react-i18next";
 import "./SeaBattle.scss";
 
 // ------------------------------------------------------------------
 
 export const SeaBattle = () => {
 	const dispatch = useDispatch<Dispatch>();
+	const { t } = useTranslation();
 	const [selectedBoatIndex, setSelectedBoat] = useState<number>(-1);
 	const [selectedOpponentIndex, setSelectedOpponent] = useState<number>(0);
 
@@ -42,6 +48,10 @@ export const SeaBattle = () => {
 		selectedBoatIndex,
 		selectedOpponentIndex
 	);
+
+	const onJoinBattle = useCallback(() => {
+		dispatch(joinBattle());
+	}, [dispatch]);
 
 	useEffect(() => {
 		if (queueReady && tracksCount > 0) {
@@ -165,11 +175,30 @@ export const SeaBattle = () => {
 					onRotateLeft={rotateLeft}
 					onRotateRight={rotateRight}
 				/>
-				<Map
-					player={player}
-					selectedBoat={boat}
-					setSelectedBoat={setSelectedBoat}
-				/>
+				{player ? (
+					<Map
+						player={player}
+						selectedBoat={boat}
+						setSelectedBoat={setSelectedBoat}
+					/>
+				) : (
+					<div className="SeaBattleJoin">
+						{opponents && opponents.length >= MAX_PLAYER_COUNT ? (
+							<span>{t("games.max_players_count")}</span>
+						) : (
+							<>
+								<span>{t("games.watch_or_join")}</span>
+								<IconButton
+									icon="sign-in"
+									title={t("games.seabattle.join_battle")}
+									size="L"
+									displayTitle={true}
+									onClick={onJoinBattle}
+								/>
+							</>
+						)}
+					</div>
+				)}
 			</div>
 			<div className="SeaBattlePlayer other">
 				<OpponentControls

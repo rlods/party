@@ -35,8 +35,11 @@ export default {
 	games: {
 		seabattle: {
 			movement_is_not_possible: "This movement is not possible!",
-			opponent_index: "Opponent {{index}}"
-		}
+			opponent_index: "Opponent {{index}}",
+			join_battle: "Join the battle"
+		},
+		max_players_count: "Maximum players number has been already reached",
+		watch_or_join: "You can watch or..."
 	},
 	rooms: {
 		errors: {

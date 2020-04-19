@@ -21,7 +21,7 @@ export const OpponentSelection = ({
 	return opponentsCount > 0 ? (
 		<div className="SeaBattleOpponentSelection">
 			<IconButton
-				disabled={true}
+				disabled={opponentsCount <= 1}
 				icon="caret-left"
 				title="Previous enemy"
 				onClick={onSelectPreviousOpponent}
@@ -32,7 +32,7 @@ export const OpponentSelection = ({
 				})}
 			</span>
 			<IconButton
-				disabled={true}
+				disabled={opponentsCount <= 1}
 				icon="caret-right"
 				title="Next enemy"
 				onClick={onSelectNextOpponent}
