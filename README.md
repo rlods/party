@@ -1,1 +1,3 @@
-# party
+# Party
+
+Collaborative & Musical Games Experimentation
