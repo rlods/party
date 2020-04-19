@@ -11,6 +11,11 @@
 }
 
 .Message {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+
 	background-color: #fff;
 	padding: 0.5rem;
 	margin-top: 0.5rem;
@@ -20,6 +25,13 @@
 
 	max-width: 90vw;
 	min-width: 300px;
+
+	.MessageBody {
+	}
+
+	.MessageActions {
+		margin-left: 5px;
+	}
 }
 
 .Message-error {
@@ -28,6 +40,11 @@
 }
 
 .Message-info {
+	background-color: #fff;
+	color: #000;
+}
+
+.Message-success {
 	background-color: #28a745;
 	color: #fff;
 }

@@ -1,5 +1,5 @@
 import { AsyncAction } from "..";
-import { displayError, displayInfo } from "../messages";
+import { displayError } from "../messages";
 import { extractErrorMessage } from "../../utils/messages";
 import {
 	SeaBattleMovementType,
@@ -69,7 +69,7 @@ export const moveBoat = ({
 				oldPosition,
 				newPosition
 			});
-			dispatch(displayInfo("games.seabattle.movement_is_not_possible"));
+			dispatch(displayError("games.seabattle.movement_is_not_possible"));
 			return;
 		}
 

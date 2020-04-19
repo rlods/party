@@ -101,6 +101,7 @@ export default {
 		stop: "Arrêter"
 	},
 	cancel: "Annuler",
+	clear: "Supprimer",
 	copy_to_clipboard: "Copier dans le presse-papier",
 	secret_copied_to_clipboard: "Le secret a été copié dans le presse-papier"
 };

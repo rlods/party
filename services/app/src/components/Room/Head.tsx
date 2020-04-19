@@ -8,7 +8,7 @@ import { copyToClipboard } from "../../utils/clipboard";
 import { Dispatch } from "../../actions";
 import { RootState } from "../../reducers";
 import { selectRoom } from "../../selectors/room";
-import { displayInfo } from "../../actions/messages";
+import { displaySuccess } from "../../actions/messages";
 import { confirmModal } from "../../actions/modals";
 import { RoomInfo } from "../../utils/rooms";
 import "./Head.scss";
@@ -29,7 +29,7 @@ export const Head = () => {
 
 	const onCopy = useCallback(async () => {
 		await copyToClipboard(document.location.href.split("?")[0]);
-		dispatch(displayInfo("rooms.link_copied_to_clipboard"));
+		dispatch(displaySuccess("rooms.link_copied_to_clipboard"));
 	}, [dispatch]);
 
 	const onExit = useCallback(() => {

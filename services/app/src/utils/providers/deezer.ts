@@ -178,7 +178,7 @@ export type DeezerApi = {
 // ------------------------------------------------------------------
 
 const DeezerApiImpl = (): DeezerApi => {
-	const _call = async <T>(path: string, qs?: string): Promise<T> => {
+	const _call = <T>(path: string, qs?: string): Promise<T> => {
 		// We have to rely on jsonp because the Deezer api is CORS restricted
 		console.debug("[Deezer] Requesting... ", { path, qs });
 		return asyncJsonp(`${API_BASE}/${path}`, qs);

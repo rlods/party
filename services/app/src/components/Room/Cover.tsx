@@ -16,8 +16,8 @@ export const Cover = React.memo(
 		onStop
 	}: {
 		image: string;
-		onPlay: () => void;
-		onStop: () => void;
+		onPlay?: () => void;
+		onStop?: () => void;
 		playable: boolean;
 		playing: boolean;
 	}) => {

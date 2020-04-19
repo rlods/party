@@ -8,6 +8,12 @@ import "./Medias.scss";
 
 // ------------------------------------------------------------------
 
+export const renderMediaInToaster = (media: MediaData): React.ReactNode => {
+	return <Media media={media} playable={false} playing={true} />;
+};
+
+// ------------------------------------------------------------------
+
 export const Media = React.memo(
 	({
 		actions,
@@ -21,8 +27,8 @@ export const Media = React.memo(
 		media: MediaData | null;
 		playable: boolean;
 		playing: boolean;
-		onPlay: () => void;
-		onStop: () => void;
+		onPlay?: () => void;
+		onStop?: () => void;
 	}) => {
 		const { t } = useTranslation();
 		if (!media) {

@@ -1,6 +1,7 @@
-export type MessageType = "error" | "info";
+export type MessageType = "error" | "info" | "success";
 
 export type Message = {
+	extra?: () => React.ReactNode;
 	id: number;
 	stamp: number;
 	text: string;

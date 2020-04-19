@@ -1,9 +1,15 @@
 import { AsyncAction } from ".";
-import { MediaAccess, findPreview } from "../utils/medias";
+import { MediaAccess, findPreview, Media } from "../utils/medias";
 import { PREVIEW_PLAYER } from "../utils/player";
 import { loadNewMedias } from "../utils/providers";
-import { displayError } from "./messages";
+import { displayError, displayExtra } from "./messages";
 import { extractErrorMessage } from "../utils/messages";
+import { renderMediaInToaster } from "../components/Room/Medias";
+
+// ------------------------------------------------------------------
+
+export const displayMediaInfo = (media: Media): AsyncAction => async dispatch =>
+	dispatch(displayExtra(() => renderMediaInToaster(media)));
 
 // ------------------------------------------------------------------
 

@@ -99,6 +99,7 @@ export default {
 		stop: "Stop"
 	},
 	cancel: "Cancel",
+	clear: "Clear",
 	copy_to_clipboard: "Copy to Clipboard",
 	secret_copied_to_clipboard: "Secret has been copied to clipboard"
 };

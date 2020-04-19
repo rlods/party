@@ -17,7 +17,29 @@ import { loadNewMedias } from "../utils/providers";
 import { RootState } from "../reducers";
 import { setMedias } from "../reducers/medias";
 import { setRoom, resetRoom } from "../reducers/room";
+import { displayMediaInfo } from "./medias";
 import history from "../utils/history";
+
+// ------------------------------------------------------------------
+
+const DEFAULT_QUEUE_INFO_BY_TYPE: {
+	[type: string]: Pick<RoomInfo, "playing" | "queue">;
+} = {
+	dj: {
+		playing: false,
+		queue: {}
+	},
+	seabattle: {
+		playing: true,
+		queue: {
+			0: {
+				id: "301013", // Pirates Of The Caribbean OST
+				provider: "deezer",
+				type: "album"
+			}
+		}
+	}
+};
 
 // ------------------------------------------------------------------
 
@@ -29,10 +51,11 @@ export const createRoom = (
 	try {
 		const id = v4();
 		console.debug("[Room] Creating...", { id, secret });
+
 		await FirebaseRoom({ id, secret }).update({
 			name,
-			playing: false,
-			queue: {},
+			playing: DEFAULT_QUEUE_INFO_BY_TYPE[type].playing,
+			queue: DEFAULT_QUEUE_INFO_BY_TYPE[type].queue,
 			queue_position: 0,
 			type
 		});
@@ -299,6 +322,7 @@ const _scheduleTimer = (
 							0
 						)
 					]);
+					dispatch(displayMediaInfo(nextTrack));
 					dispatch(
 						setRoom({
 							color,
