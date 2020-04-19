@@ -36,10 +36,15 @@ export default {
 		seabattle: {
 			movement_is_not_possible: "This movement is not possible!",
 			opponent_index: "Opponent {{index}}",
-			join_battle: "Join the battle"
+			join_battle: "Join the battle",
+			missed_opponent: "You've missed opponent boat",
+			hitted_opponent: "You've hitted opponent boat",
+			no_weapon_selected: "Select a weapon to attack",
+			weapon_not_available: "Selected weapon is not available"
 		},
 		max_players_count: "Maximum players number has been already reached",
 		no_opponents: "No opponents",
+		no_opponents_to_attack: "There is no opponent to attack...",
 		watch_or_join: "You can watch or..."
 	},
 	rooms: {

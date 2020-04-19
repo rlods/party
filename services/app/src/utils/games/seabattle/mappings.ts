@@ -8,6 +8,7 @@ export const SeaBattleBoatRotationTransformationMappings: {
 		[direction: string]: SeaBattlePosition;
 	};
 } = {
+	// Keys are boat types
 	boat1: {
 		N: { x: 0, y: 0 },
 		E: { x: 0, y: 0 },

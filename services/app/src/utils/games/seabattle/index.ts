@@ -1,5 +1,4 @@
 import { decode } from "../../encoder";
-import { generateGrid } from "./collision";
 import { augmentedArrayIndexAccess } from "../../";
 
 // ------------------------------------------------------------------
@@ -60,6 +59,7 @@ export type SeaBattleBoatData = SeaBattleAssetData & {
 };
 
 export const BoatsOffsetMappings = {
+	// Keys are boat types
 	boat1: { x: 6, y: 6 },
 	boat2: { x: 6, y: 6 },
 	boat3: { x: 6, y: 6 }
@@ -74,15 +74,15 @@ export type SeaBattleCellData = SeaBattleAssetData & {
 
 // ------------------------------------------------------------------
 
-export type SeaBattleHitType = "hitted1" | "hitted2" | "missed1" | "missed2";
+export type SeaBattleHitType = "hitted1" | "hitted2" | "missed";
 
 export type SeaBattleHitData = SeaBattleAssetData & { type: SeaBattleHitType };
 
 export const HitsOffsetMappings = {
+	// Keys are hits types
 	hitted1: { x: 10, y: 10 },
 	hitted2: { x: 10, y: 10 },
-	missed1: { x: 10, y: 10 },
-	missed2: { x: 10, y: 10 }
+	missed: { x: 10, y: 10 }
 };
 
 // ------------------------------------------------------------------
@@ -102,6 +102,7 @@ export type SeaBattleWeaponData = SeaBattleAssetData & {
 };
 
 export const WeaponsOffsetMappings = {
+	// Keys are weapon types
 	bullet1: { x: 12, y: 16 },
 	bullet2: { x: 12, y: 16 },
 	bullet3: { x: 12, y: 16 },
@@ -116,6 +117,7 @@ export type SeaBattleMapData = {
 	opponentsWeapons: SeaBattleWeaponData[]; // Weapons placed by opponents
 	userId: string;
 	weapons: {
+		// Keys are weapon types
 		[type: string]: number;
 	};
 };
@@ -187,16 +189,33 @@ export const generateFleet = (battle: SeaBattleData, userId: string) => {
 			}
 		],
 		hits: [
+			/*
 			{ position: { x: 0, y: 1 }, type: "hitted1" },
 			{ position: { x: 0, y: 2 }, type: "hitted2" },
-			{ position: { x: 0, y: 3 }, type: "missed1" },
-			{ position: { x: 0, y: 4 }, type: "missed2" }
+			{ position: { x: 0, y: 3 }, type: "missed" }
+			*/
 		],
-		opponentsWeapons: [],
+		opponentsWeapons: [
+			/*
+			{position: { x: 0, y: 5 }, opponentId: '', type:'mine'}
+			*/
+		],
 		userId,
-		weapons: { mine: 1 }
+		weapons: {
+			// Keys are weapon types
+			// Following counts are abitrary choices to validate/adjust ^_^ (TODO)
+			bullet1: 100,
+			bullet2: 6,
+			bullet3: 3,
+			mine: 3
+		}
 	});
 };
+
+// ------------------------------------------------------------------
+
+export const extractOpponentMaps = (maps: SeaBattleMapData[], userId: string) =>
+	Object.values(maps).filter(other => other.userId !== userId);
 
 // ------------------------------------------------------------------
 
@@ -204,66 +223,41 @@ export const extractBattleInfo = ({
 	extra,
 	userId,
 	boatIndex,
-	opponentIndex,
 	weaponType
 }: {
 	extra: string;
 	userId: string;
 	boatIndex: number;
-	opponentIndex: number;
 	weaponType?: SeaBattleWeaponType;
 }): {
-	battle?: SeaBattleData;
 	boat?: SeaBattleBoatData;
-	opponentMap?: SeaBattleMapData;
 	opponentMaps?: SeaBattleMapData[];
 	playerMap?: SeaBattleMapData;
-	weaponCount: number;
 } => {
-	let battle: SeaBattleData | undefined = void 0;
 	let boat: SeaBattleBoatData | undefined = void 0;
-	let opponentMap: SeaBattleMapData | undefined = void 0;
 	let opponentMaps: SeaBattleMapData[] | undefined = void 0;
 	let playerMap: SeaBattleMapData | undefined = void 0;
-	let weaponCount = 0;
 	if (extra) {
-		battle = decode<SeaBattleData>(extra);
+		const battle = decode<SeaBattleData>(extra);
 		if (userId) {
 			playerMap = battle.maps.find(other => other.userId === userId);
 			if (playerMap) {
 				if (boatIndex >= 0 && boatIndex < playerMap.fleet.length) {
 					boat = playerMap.fleet[boatIndex];
 				}
-				if (weaponType) {
-					weaponCount = playerMap.weapons[weaponType] || 0;
-				}
 			}
 		}
-		opponentMaps = Object.values(battle.maps).filter(
-			other => other !== playerMap
-		);
-		if (opponentIndex >= 0 && opponentIndex < opponentMaps.length) {
-			opponentMap = opponentMaps[opponentIndex];
-		}
+		opponentMaps = extractOpponentMaps(battle.maps, userId);
 	}
 	return {
-		battle,
 		boat,
-		opponentMap,
 		opponentMaps,
-		playerMap,
-		weaponCount
+		playerMap
 	};
 };
 
 // ------------------------------------------------------------------
 
-export const testHit = (
-	player: SeaBattleMapData,
-	opponent: SeaBattleMapData,
-	position: SeaBattlePosition,
-	weaponCount: number
-) => {
-	const grid = generateGrid(opponent.fleet);
-	return grid[position.y][position.x] > 0;
+export const passBatonToNextPlayer = (battle: SeaBattleData) => {
+	battle.currentMapIndex = (battle.currentMapIndex + 1) % battle.maps.length;
 };

@@ -10,8 +10,7 @@ const SEA_COLOR2 = "#50a3db";
 
 export const BattleAssets = () => (
 	<defs>
-		<circle id="missed1" cx="10" cy="10" r="8" fill="#fff" />
-		<circle id="missed2" cx="10" cy="10" r="8" fill="#fff7" />
+		<circle id="missed" cx="10" cy="10" r="8" fill="#fff" />
 		<circle id="hitted1" cx="10" cy="10" r="8" fill="#ffcf02" />
 		<circle id="hitted2" cx="10" cy="10" r="8" fill="#e52524" />
 		<polygon

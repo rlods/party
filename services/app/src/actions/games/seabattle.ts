@@ -1,5 +1,5 @@
 import { AsyncAction } from "..";
-import { displayError } from "../messages";
+import { displayError, displaySuccess, displayInfo } from "../messages";
 import { extractErrorMessage } from "../../utils/messages";
 import { decode, encode } from "../../utils/encoder";
 import {
@@ -8,13 +8,20 @@ import {
 	generateFleet,
 	AngleToDirection,
 	MAX_PLAYER_COUNT,
-	INVALID_MOVE_MESSAGE_TAG
+	INVALID_MOVE_MESSAGE_TAG,
+	SeaBattlePosition,
+	SeaBattleWeaponType,
+	extractOpponentMaps,
+	passBatonToNextPlayer
 } from "../../utils/games/seabattle";
 import {
 	SeaBattleBoatTranslationMappings,
 	SeaBattleBoatRotationTransformationMappings
 } from "../../utils/games/seabattle/mappings";
-import { movementIsPossible } from "../../utils/games/seabattle/collision";
+import {
+	movementIsPossible,
+	generateGrid
+} from "../../utils/games/seabattle/collision";
 import { clearMessages } from "../../reducers/messages";
 import { openModal } from "../../reducers/modals";
 
@@ -84,19 +91,19 @@ export const moveBoat = ({
 	try {
 		const battle = decode<SeaBattleData>(info.extra);
 
-		const map = battle.maps.find(other => other.userId === userId);
-		if (!map) {
+		const playerMap = battle.maps.find(other => other.userId === userId);
+		if (!playerMap) {
 			console.debug("[SeaBattle] Cannot find map for current user");
 			return;
 		}
-
-		if (map !== battle.maps[battle.currentMapIndex]) {
+		if (playerMap !== battle.maps[battle.currentMapIndex]) {
 			dispatch(displayError("This is not your turn"));
 			return;
 		}
 
-		const { fleet } = map;
+		const { fleet } = playerMap;
 		if (boatIndex < 0 || boatIndex >= fleet.length) {
+			console.debug("[SeaBattle] No boat selected");
 			return;
 		}
 
@@ -162,11 +169,101 @@ export const moveBoat = ({
 			newPosition
 		});
 
-		battle.currentMapIndex =
-			(battle.currentMapIndex + 1) % battle.maps.length;
+		// Alter battle
 		boat.angle = newAngle;
 		boat.position = newPosition;
+		passBatonToNextPlayer(battle);
+		await room.update({
+			...info,
+			extra: encode(battle)
+		});
 
+		dispatch(clearMessages(INVALID_MOVE_MESSAGE_TAG));
+	} catch (err) {
+		dispatch(displayError(extractErrorMessage(err)));
+	}
+};
+
+// ------------------------------------------------------------------
+
+export const attackOpponent = ({
+	opponentIndex,
+	position,
+	weaponType
+}: {
+	opponentIndex: number;
+	position: SeaBattlePosition;
+	weaponType: SeaBattleWeaponType;
+}): AsyncAction => async (dispatch, getState) => {
+	const {
+		room: { info, room },
+		user: {
+			access: { id: userId }
+		}
+	} = getState();
+	if (!room || room.isLocked() || !info) {
+		dispatch(displayError("rooms.error.locked"));
+		return;
+	}
+	if (!userId) {
+		console.debug("[SeaBattle] Not connected");
+		dispatch(openModal({ type: "CreateUser", props: null }));
+		return;
+	}
+	try {
+		const battle = decode<SeaBattleData>(info.extra);
+
+		const playerMap = battle.maps.find(other => other.userId === userId);
+		if (!playerMap) {
+			console.debug("[SeaBattle] Cannot find map for current user");
+			return;
+		}
+		if (playerMap !== battle.maps[battle.currentMapIndex]) {
+			dispatch(displayError("This is not your turn"));
+			return;
+		}
+
+		const weaponCount = playerMap.weapons[weaponType];
+		if (weaponCount <= 0) {
+			dispatch(displayInfo("games.seabattle.weapon_not_available"));
+			return;
+		}
+
+		const opponentMaps = extractOpponentMaps(battle.maps, userId);
+		if (opponentIndex < 0 || opponentIndex >= opponentMaps.length) {
+			console.debug("[SeaBattle] Cannot find opponent map");
+			return;
+		}
+		const opponentMap = opponentMaps[opponentIndex];
+		if (opponentMap.userId === userId) {
+			console.debug("[SeaBattle] Invalid opponent map");
+			return;
+		}
+
+		console.debug("[SeaBattle] Attacking opponent...", {
+			opponentIndex,
+			position,
+			weaponType
+		});
+
+		const grid = generateGrid(opponentMap.fleet);
+
+		// Alter battle
+		if (grid[position.y][position.x] === 0) {
+			dispatch(displayError("games.seabattle.missed_opponent"));
+			opponentMap.hits.push({
+				position,
+				type: "missed"
+			});
+		} else {
+			dispatch(displaySuccess("games.seabattle.hitted_opponent"));
+			opponentMap.hits.push({
+				position,
+				type: "hitted1"
+			});
+		}
+		playerMap.weapons[weaponType]--;
+		passBatonToNextPlayer(battle);
 		await room.update({
 			...info,
 			extra: encode(battle)

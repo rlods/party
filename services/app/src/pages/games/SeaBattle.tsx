@@ -7,7 +7,11 @@ import { Map } from "../../components/SeaBattle/Map";
 import { RootState } from "../../reducers";
 import { SeaBattleKeyboardMoveMappings } from "../../utils/games/seabattle/mappings";
 import { Dispatch } from "../../actions";
-import { moveBoat, joinBattle } from "../../actions/games/seabattle";
+import {
+	moveBoat,
+	joinBattle,
+	attackOpponent
+} from "../../actions/games/seabattle";
 import { KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT } from "../../utils/keyboards";
 import { OpponentControls } from "../../components/SeaBattle/OpponentControls";
 import { generateRandomPosition } from "../../utils/player";
@@ -15,26 +19,25 @@ import { selectTracksCount } from "../../selectors/medias";
 import { IconButton } from "../../components/Common/IconButton";
 import { setRoom } from "../../reducers/room";
 import { RoomInfo } from "../../utils/rooms";
-import { displaySuccess, displayError } from "../../actions/messages";
 import {
 	extractBattleInfo,
 	MAX_PLAYER_COUNT,
 	SeaBattleMovementType,
 	SeaBattlePosition,
-	testHit,
 	SeaBattleWeaponType,
 	AngleToDirection
 } from "../../utils/games/seabattle";
 import "./SeaBattle.scss";
+import { displayInfo } from "../../actions/messages";
 
 // ------------------------------------------------------------------
 
 export const SeaBattle = () => {
 	const dispatch = useDispatch<Dispatch>();
 	const { t } = useTranslation();
-	const [selectedBoatIndex, setSelectedBoatIndex] = useState<number>(-1);
-	const [selectedOpponentIndex, setSelectedOpponent] = useState<number>(0);
-	const [selectedWeaponType, setSelectedWeaponType] = useState<
+	const [boatIndex, setSelectedBoatIndex] = useState<number>(-1);
+	const [opponentIndex, setSelectedOpponent] = useState<number>(0);
+	const [weaponType, setSelectedWeaponType] = useState<
 		SeaBattleWeaponType | undefined
 	>();
 
@@ -52,19 +55,11 @@ export const SeaBattle = () => {
 		state => state.room.info
 	);
 
-	const {
-		battle,
-		boat,
-		opponentMap,
-		opponentMaps,
-		playerMap,
-		weaponCount
-	} = extractBattleInfo({
+	const { boat, opponentMaps, playerMap } = extractBattleInfo({
 		extra,
 		userId,
-		boatIndex: selectedBoatIndex,
-		opponentIndex: selectedOpponentIndex,
-		weaponType: selectedWeaponType
+		boatIndex,
+		weaponType
 	});
 
 	const onJoinBattle = useCallback(() => {
@@ -87,24 +82,19 @@ export const SeaBattle = () => {
 
 	const onMove = useCallback(
 		(movement: SeaBattleMovementType) => {
-			if (selectedBoatIndex < 0) {
-				console.debug("[SeaBattle] No boat selected");
-				return;
-			}
 			dispatch(
 				moveBoat({
-					boatIndex: selectedBoatIndex,
+					boatIndex,
 					movement
 				})
 			);
 		},
-		[dispatch, selectedBoatIndex]
+		[dispatch, boatIndex]
 	);
 
 	const onKeyDown = useCallback(
 		(e: KeyboardEvent) => {
 			if (
-				!battle ||
 				e.repeat ||
 				(e.keyCode !== KEY_UP &&
 					e.keyCode !== KEY_DOWN &&
@@ -114,7 +104,7 @@ export const SeaBattle = () => {
 				return;
 			}
 			e.preventDefault(); // to prevent scrolling with keyboard
-			if (!playerMap || !boat) {
+			if (!boat) {
 				return;
 			}
 			onMove(
@@ -123,30 +113,23 @@ export const SeaBattle = () => {
 				]
 			);
 		},
-		[onMove, battle, playerMap, boat]
+		[onMove, boat]
 	);
 
 	const onOpponentCellClick = useCallback(
 		(position: SeaBattlePosition) => {
-			if (!playerMap || !opponentMap) {
-				console.debug("[SeaBattle] No player or opponent");
+			if (!opponentMaps || opponentMaps.length === 0) {
+				dispatch(displayInfo("games.no_opponents_to_attack"));
 				return;
 			}
-			if (!selectedWeaponType) {
-				console.debug("[SeaBattle] No weapon selected");
+			if (!weaponType) {
+				dispatch(displayInfo("games.seabattle.no_weapon_selected"));
 				return;
 			}
-			if (!weaponCount) {
-				console.debug("[SeaBattle] No more weapon available");
-				return;
-			}
-			if (!testHit(playerMap, opponentMap, position, weaponCount)) {
-				dispatch(displayError("You've missed opponent boat"));
-				return;
-			}
-			dispatch(displaySuccess("You've hitted opponent boat"));
+
+			dispatch(attackOpponent({ opponentIndex, position, weaponType }));
 		},
-		[dispatch, opponentMap, playerMap, weaponCount, selectedWeaponType]
+		[dispatch, opponentIndex, opponentMaps, weaponType]
 	);
 
 	useEffect(() => {
@@ -162,7 +145,7 @@ export const SeaBattle = () => {
 			<div className="SeaBattlePlayer current">
 				<PlayerControls
 					boat={boat}
-					disabled={selectedBoatIndex < 0}
+					disabled={!boat}
 					onPlayNext={onPlayNext}
 					onMoveForward={() => onMove("move-forward")}
 					onMoveBackward={() => onMove("move-backward")}
@@ -172,7 +155,7 @@ export const SeaBattle = () => {
 				{playerMap ? (
 					<Map
 						map={playerMap}
-						selectedBoatIndex={selectedBoatIndex}
+						selectedBoatIndex={boatIndex}
 						onSelectBoatIndex={setSelectedBoatIndex}
 					/>
 				) : (
@@ -198,14 +181,14 @@ export const SeaBattle = () => {
 			<div className="SeaBattlePlayer other">
 				<OpponentControls
 					opponentsCount={opponentMaps?.length || 0}
-					opponentIndex={selectedOpponentIndex}
+					opponentIndex={opponentIndex}
 					onSelectPreviousOpponent={
 						opponentMaps && opponentMaps.length > 0
 							? () =>
 									setSelectedOpponent(
-										selectedOpponentIndex === 0
+										opponentIndex === 0
 											? opponentMaps.length - 1
-											: selectedOpponentIndex - 1
+											: opponentIndex - 1
 									)
 							: void 0
 					}
@@ -213,7 +196,7 @@ export const SeaBattle = () => {
 						opponentMaps && opponentMaps.length > 0
 							? () =>
 									setSelectedOpponent(
-										(selectedOpponentIndex + 1) %
+										(opponentIndex + 1) %
 											opponentMaps?.length
 									)
 							: void 0
@@ -222,7 +205,11 @@ export const SeaBattle = () => {
 					weapons={playerMap?.weapons || {}}
 				/>
 				<Map
-					map={opponentMap}
+					map={
+						opponentMaps && opponentMaps.length > 0
+							? opponentMaps[opponentIndex]
+							: void 0
+					}
 					hideActiveFleet={true}
 					onCellClick={onOpponentCellClick}
 				/>

@@ -24,6 +24,7 @@ import { openModal } from "../reducers/modals";
 // ------------------------------------------------------------------
 
 const DEFAULT_QUEUE_INFO_BY_TYPE: {
+	// Keys are room types
 	[type: string]: Pick<RoomInfo, "playing" | "playmode" | "queue">;
 } = {
 	dj: {
