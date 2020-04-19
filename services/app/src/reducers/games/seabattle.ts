@@ -96,12 +96,7 @@ const INITIAL_STATE: State = {
 				{ position: { x: 0, y: 3 }, type: "missed1" },
 				{ position: { x: 0, y: 4 }, type: "missed2" }
 			],
-			weapons: [
-				{ position: { x: 0, y: 5 }, type: "bullet1" },
-				{ position: { x: 0, y: 6 }, type: "bullet2" },
-				{ position: { x: 0, y: 7 }, type: "bullet3" },
-				{ position: { x: 0, y: 8 }, type: "mine" }
-			]
+			weapons: [{ position: { x: 0, y: 5 }, type: "mine" }]
 		},
 		player2: {
 			fleet: [
@@ -148,12 +143,7 @@ const INITIAL_STATE: State = {
 				{ position: { x: 0, y: 3 }, type: "missed1" },
 				{ position: { x: 0, y: 4 }, type: "missed2" }
 			],
-			weapons: [
-				{ position: { x: 0, y: 5 }, type: "bullet1" },
-				{ position: { x: 0, y: 6 }, type: "bullet2" },
-				{ position: { x: 0, y: 7 }, type: "bullet3" },
-				{ position: { x: 0, y: 8 }, type: "mine" }
-			]
+			weapons: [{ position: { x: 0, y: 5 }, type: "mine" }]
 		}
 	}
 };
