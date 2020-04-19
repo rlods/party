@@ -1,6 +1,6 @@
 import { mocked } from "ts-jest/utils";
 import { asyncJsonp } from "../../jsonp";
-jest.mock("../jsonp");
+jest.mock("../../jsonp");
 
 // ------------------------------------------------------------------
 

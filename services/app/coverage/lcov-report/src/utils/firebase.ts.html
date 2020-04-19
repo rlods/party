@@ -403,7 +403,25 @@
 <a name='L345'></a><a href='#L345'>345</a>
 <a name='L346'></a><a href='#L346'>346</a>
 <a name='L347'></a><a href='#L347'>347</a>
-<a name='L348'></a><a href='#L348'>348</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L348'></a><a href='#L348'>348</a>
+<a name='L349'></a><a href='#L349'>349</a>
+<a name='L350'></a><a href='#L350'>350</a>
+<a name='L351'></a><a href='#L351'>351</a>
+<a name='L352'></a><a href='#L352'>352</a>
+<a name='L353'></a><a href='#L353'>353</a>
+<a name='L354'></a><a href='#L354'>354</a>
+<a name='L355'></a><a href='#L355'>355</a>
+<a name='L356'></a><a href='#L356'>356</a>
+<a name='L357'></a><a href='#L357'>357</a>
+<a name='L358'></a><a href='#L358'>358</a>
+<a name='L359'></a><a href='#L359'>359</a>
+<a name='L360'></a><a href='#L360'>360</a>
+<a name='L361'></a><a href='#L361'>361</a>
+<a name='L362'></a><a href='#L362'>362</a>
+<a name='L363'></a><a href='#L363'>363</a>
+<a name='L364'></a><a href='#L364'>364</a>
+<a name='L365'></a><a href='#L365'>365</a>
+<a name='L366'></a><a href='#L366'>366</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -512,13 +530,28 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -530,6 +563,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -688,6 +723,7 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -754,7 +790,7 @@
 import "firebase/database";
 //
 import firebaseConfig from "../config/firebase";
-import { RoomInfo } from "./rooms";
+import { RoomInfo, DEFAULT_PLAY_MODE, DEFAULT_ROOM_TYPE } from "./rooms";
 import { UserInfo } from "./users";
 &nbsp;
 // ------------------------------------------------------------------
@@ -854,24 +890,41 @@ export const FirebaseRoom = <span class="cstat-no" title="statement not covered"
 	};
 &nbsp;
 	const update = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >as</span>ync ({</span>
+		extra,
 		name,
 		playing,
+		playmode,
 		queue,
-		queue_position
-	}: Pick&lt;RoomInfo, "name" | "playing" | "queue" | "queue_position"&gt;) =&gt; {
+		queue_position,
+		type
+	}: Pick&lt;
+		RoomInfo,
+		| "extra"
+		| "name"
+		| "playing"
+		| "playmode"
+		| "queue"
+		| "queue_position"
+		| "type"
+	&gt;) =&gt; {
 <span class="cstat-no" title="statement not covered" >		console.debug("[Firebase] Updating room...", {</span>
+			extra: !!extra,
 			name,
 			playing,
+			playmode,
 			queue,
 			queue_position
 		});
 <span class="cstat-no" title="statement not covered" >		await _room.set({</span>
 			info: {
+				extra,
 				name,
 				playing,
+				playmode,
 				queue,
 				queue_position,
-				timestamp: firebase.database.ServerValue.TIMESTAMP
+				timestamp: firebase.database.ServerValue.TIMESTAMP,
+				type
 			},
 			secret: _secret
 		});
@@ -1035,12 +1088,13 @@ export const FirebaseParty = <span class="cstat-no" title="statement not covered
 	const _members: string[] = <span class="cstat-no" title="statement not covered" >[];</span>
 	const _users: { [id: string]: ReturnType&lt;typeof FirebaseUser&gt; } = <span class="cstat-no" title="statement not covered" >{};</span>
 	let _info: RoomInfo = <span class="cstat-no" title="statement not covered" >{</span>
+		extra: "",
 		name: "",
 		playing: false,
-		queue: {},
+		playmode: DEFAULT_PLAY_MODE,
 		queue_position: 0,
 		timestamp: 0,
-		type: "dj"
+		type: DEFAULT_ROOM_TYPE
 	};
 &nbsp;
 	const _onAdded = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(a</span>dded: firebase.database.DataSnapshot) =&gt; {</span>
@@ -1104,7 +1158,7 @@ export const FirebaseParty = <span class="cstat-no" title="statement not covered
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Sat Apr 18 2020 01:15:44 GMT+0000 (Coordinated Universal Time)
+                at Sun Apr 19 2020 17:43:37 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../prettify.js"></script>

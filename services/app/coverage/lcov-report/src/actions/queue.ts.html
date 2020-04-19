@@ -24,14 +24,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/75</span>
+                <span class='fraction'>0/78</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/46</span>
+                <span class='fraction'>0/48</span>
             </div>
         
             
@@ -45,7 +45,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/70</span>
+                <span class='fraction'>0/73</span>
             </div>
         
             
@@ -257,7 +257,19 @@
 <a name='L199'></a><a href='#L199'>199</a>
 <a name='L200'></a><a href='#L200'>200</a>
 <a name='L201'></a><a href='#L201'>201</a>
-<a name='L202'></a><a href='#L202'>202</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L202'></a><a href='#L202'>202</a>
+<a name='L203'></a><a href='#L203'>203</a>
+<a name='L204'></a><a href='#L204'>204</a>
+<a name='L205'></a><a href='#L205'>205</a>
+<a name='L206'></a><a href='#L206'>206</a>
+<a name='L207'></a><a href='#L207'>207</a>
+<a name='L208'></a><a href='#L208'>208</a>
+<a name='L209'></a><a href='#L209'>209</a>
+<a name='L210'></a><a href='#L210'>210</a>
+<a name='L211'></a><a href='#L211'>211</a>
+<a name='L212'></a><a href='#L212'>212</a>
+<a name='L213'></a><a href='#L213'>213</a>
+<a name='L214'></a><a href='#L214'>214</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -266,6 +278,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -428,8 +441,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -448,15 +464,23 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { AsyncAction } from ".";
 import { displayError } from "./messages";
@@ -464,6 +488,7 @@ import { lockRoom } from "./room";
 import { MediaAccess, findContextFromTrackIndex } from "../utils/medias";
 import { extractErrorMessage } from "../utils/messages";
 import { createQueueMerging, createQueueRemoving } from "../utils/rooms";
+import { generateRandomPosition } from "../utils/player";
 &nbsp;
 // ------------------------------------------------------------------
 &nbsp;
@@ -628,7 +653,10 @@ export const setQueuePosition = <span class="cstat-no" title="statement not cove
 &nbsp;
 // ------------------------------------------------------------------
 &nbsp;
-export const moveBackward = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >()</span>: AsyncAction =&gt; <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >as</span>ync (dispatch, getState) =&gt; {</span></span>
+export const moveToPreviousTrack = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >()</span>: AsyncAction =&gt; <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >as</span>ync (</span></span>
+	dispatch,
+	getState
+) =&gt; {
 	const {
 		room: { info, tracks }
 	} = <span class="cstat-no" title="statement not covered" >getState();</span>
@@ -648,7 +676,10 @@ export const moveBackward = <span class="cstat-no" title="statement not covered"
 &nbsp;
 // ------------------------------------------------------------------
 &nbsp;
-export const moveForward = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >()</span>: AsyncAction =&gt; <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >as</span>ync (dispatch, getState) =&gt; {</span></span>
+export const moveToNextTrack = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >()</span>: AsyncAction =&gt; <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >as</span>ync (</span></span>
+	dispatch,
+	getState
+) =&gt; {
 	const {
 		room: { info, tracks }
 	} = <span class="cstat-no" title="statement not covered" >getState();</span>
@@ -656,8 +687,13 @@ export const moveForward = <span class="cstat-no" title="statement not covered" 
 		// Nothing to do
 <span class="cstat-no" title="statement not covered" >		return;</span>
 	}
-<span class="cstat-no" title="statement not covered" >	console.debug("[Queue] Moving forward...");</span>
-<span class="cstat-no" title="statement not covered" >	dispatch(setQueuePosition((info.queue_position + 1) % tracks.length));</span>
+<span class="cstat-no" title="statement not covered" >	if (info.playmode === "shuffle") {</span>
+<span class="cstat-no" title="statement not covered" >		console.debug("[Queue] Randomizing next track...");</span>
+<span class="cstat-no" title="statement not covered" >		dispatch(setQueuePosition(generateRandomPosition() % tracks.length));</span>
+	} else {
+<span class="cstat-no" title="statement not covered" >		console.debug("[Queue] Moving forward...");</span>
+<span class="cstat-no" title="statement not covered" >		dispatch(setQueuePosition((info.queue_position + 1) % tracks.length));</span>
+	}
 };
 &nbsp;</pre></td></tr></table></pre>
 
@@ -666,7 +702,7 @@ export const moveForward = <span class="cstat-no" title="statement not covered" 
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Sat Apr 18 2020 01:15:44 GMT+0000 (Coordinated Universal Time)
+                at Sun Apr 19 2020 17:43:37 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../prettify.js"></script>
