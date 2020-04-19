@@ -58,7 +58,7 @@ export const SeaBattle = () => {
 		opponent,
 		opponents,
 		player,
-		weapon
+		weaponCount
 	} = extractBattleInfo({
 		extra,
 		userId,
@@ -132,21 +132,21 @@ export const SeaBattle = () => {
 				console.debug("[SeaBattle] No player or opponent");
 				return;
 			}
-			if (!weapon) {
+			if (!selectedWeaponType) {
 				console.debug("[SeaBattle] No weapon selected");
 				return;
 			}
-			if (!weapon.count) {
+			if (!weaponCount) {
 				console.debug("[SeaBattle] No more weapon available");
 				return;
 			}
-			if (!testHit(player, opponent, weapon, position)) {
+			if (!testHit(player, opponent, position, weaponCount)) {
 				dispatch(displayError("You've missed opponent boat"));
 				return;
 			}
 			dispatch(displaySuccess("You've hitted opponent boat"));
 		},
-		[dispatch, opponent, player, weapon]
+		[dispatch, opponent, player, weaponCount, selectedWeaponType]
 	);
 
 	useEffect(() => {
@@ -218,7 +218,7 @@ export const SeaBattle = () => {
 							: void 0
 					}
 					onSelectWeaponType={setSelectedWeaponType}
-					weapons={player?.weapons || []}
+					weapons={player?.weapons || {}}
 				/>
 				<Map
 					player={opponent}

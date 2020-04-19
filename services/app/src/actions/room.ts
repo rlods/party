@@ -19,6 +19,7 @@ import {
 	extractTracks,
 	ContextualizedTrackAccess
 } from "../utils/medias";
+import { openModal } from "../reducers/modals";
 
 // ------------------------------------------------------------------
 
@@ -71,7 +72,8 @@ export const createRoom = (
 		}
 	} = getState();
 	if (!userId) {
-		dispatch(displayError("users.not_connected"));
+		console.debug("[SeaBattle] Not connected");
+		dispatch(openModal({ type: "CreateUser", props: null }));
 		return;
 	}
 	try {

@@ -16,6 +16,7 @@ import {
 } from "../../utils/games/seabattle/mappings";
 import { movementIsPossible } from "../../utils/games/seabattle/collision";
 import { clearMessages } from "../../reducers/messages";
+import { openModal } from "../../reducers/modals";
 
 // ------------------------------------------------------------------
 
@@ -31,7 +32,8 @@ export const joinBattle = (): AsyncAction => async (dispatch, getState) => {
 		return;
 	}
 	if (!userId) {
-		dispatch(displayError("users.not_connected"));
+		console.debug("[SeaBattle] Not connected");
+		dispatch(openModal({ type: "CreateUser", props: null }));
 		return;
 	}
 	try {
@@ -75,7 +77,8 @@ export const moveBoat = ({
 		return;
 	}
 	if (!userId) {
-		dispatch(displayError("users.not_connected"));
+		console.debug("[SeaBattle] Not connected");
+		dispatch(openModal({ type: "CreateUser", props: null }));
 		return;
 	}
 	try {

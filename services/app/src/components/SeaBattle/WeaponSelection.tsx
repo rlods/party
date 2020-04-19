@@ -7,10 +7,8 @@ import { Weapons } from "./Weapons";
 import {
 	SeaBattleAssetVisibility,
 	SeaBattlePosition,
-	SeaBattleWeaponData,
 	SeaBattleWeaponTypes,
-	SeaBattleWeaponType,
-	countWeapons
+	SeaBattleWeaponType
 } from "../../utils/games/seabattle";
 
 // ------------------------------------------------------------------
@@ -20,7 +18,7 @@ export const WeaponSelection = ({
 	weapons
 }: {
 	onSelect: (type?: SeaBattleWeaponType) => void;
-	weapons: SeaBattleWeaponData[];
+	weapons: { [type: string]: number };
 }) => {
 	const svg = useRef<SVGSVGElement>(null);
 
@@ -83,7 +81,7 @@ export const WeaponSelection = ({
 			/>
 			<Weapons
 				weapons={SeaBattleWeaponTypes.map((type, index) => ({
-					count: 1,
+					opponentId: "",
 					position: { x: index, y: 0 },
 					type
 				}))}
@@ -93,9 +91,7 @@ export const WeaponSelection = ({
 					key={index}
 					type="cell-crossed"
 					position={{ x: index, y: 0 }}
-					visibility={
-						countWeapons(weapons, type) === 0 ? "visible" : "hidden"
-					}
+					visibility={!weapons[type] ? "visible" : "hidden"}
 				/>
 			))}
 		</svg>

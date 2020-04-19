@@ -17,7 +17,12 @@ import {
 export const Map = ({
 	hideActiveFleet = false,
 	onCellClick,
-	player: { fleet, hits, weapons } = { fleet: [], hits: [], weapons: [] },
+	player: { fleet, hits, opponentsWeapons } = {
+		fleet: [],
+		hits: [],
+		weapons: {},
+		opponentsWeapons: []
+	},
 	selectedBoatIndex,
 	onSelectBoatIndex
 }: {
@@ -99,7 +104,7 @@ export const Map = ({
 				position={selectedPos}
 				visibility={selectedVis}
 			/>
-			<Weapons weapons={weapons} />
+			<Weapons weapons={opponentsWeapons} />
 			<Fleet
 				hideActiveFleet={hideActiveFleet}
 				fleet={fleet}

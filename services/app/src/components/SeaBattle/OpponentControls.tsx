@@ -2,10 +2,7 @@ import React from "react";
 //
 import { OpponentSelection } from "./OpponentSelection";
 import { WeaponSelection } from "./WeaponSelection";
-import {
-	SeaBattleWeaponData,
-	SeaBattleWeaponType
-} from "../../utils/games/seabattle";
+import { SeaBattleWeaponType } from "../../utils/games/seabattle";
 
 // ------------------------------------------------------------------
 
@@ -22,7 +19,7 @@ export const OpponentControls = ({
 	onSelectPreviousOpponent?: () => void;
 	onSelectNextOpponent?: () => void;
 	onSelectWeaponType: (type?: SeaBattleWeaponType) => void;
-	weapons: SeaBattleWeaponData[];
+	weapons: { [type: string]: number };
 }) => (
 	<div className="SeaBattleControls">
 		<OpponentSelection
