@@ -2,23 +2,26 @@ import React from "react";
 import {
 	SeaBattleAssetData,
 	SeaBattleAssetType,
-	SeaBattleCellData
+	SeaBattleCellData,
+	GRID_CELL_UNIT_SIZE
 } from "../../utils/games/seabattle";
 
 // ------------------------------------------------------------------
 
 export const Asset = ({
-	data: { color, position, rotate, visibility },
+	data: { position },
 	className,
 	onClick,
 	stopPropagation = false,
-	type
+	type,
+	visibility
 }: {
 	className?: string;
 	data: SeaBattleAssetData;
 	onClick?: () => void;
 	stopPropagation?: boolean;
 	type: SeaBattleAssetType;
+	visibility?: string;
 }) => (
 	<use
 		onClick={e => {
@@ -31,8 +34,6 @@ export const Asset = ({
 		}}
 		className={className}
 		href={`#${type}`}
-		rotate={rotate}
-		fill={color}
 		visibility={visibility}
 		{...position}
 	/>
@@ -40,6 +41,17 @@ export const Asset = ({
 
 // ------------------------------------------------------------------
 
-export const Cell = ({ type, ...asset }: SeaBattleCellData) => (
-	<Asset className="SeaBattleCell" type={type} data={asset} />
+export const Cell = ({ type, visibility, ...asset }: SeaBattleCellData) => (
+	<Asset
+		className="SeaBattleCell"
+		type={type}
+		visibility={visibility}
+		data={{
+			...asset,
+			position: {
+				x: asset.position.x * GRID_CELL_UNIT_SIZE,
+				y: asset.position.y * GRID_CELL_UNIT_SIZE
+			}
+		}}
+	/>
 );

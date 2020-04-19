@@ -14,9 +14,18 @@ export const BattleAssets = () => (
 		<circle id="missed2" cx="10" cy="10" r="8" fill="#fff7" />
 		<circle id="hitted1" cx="10" cy="10" r="8" fill="#ffcf02" />
 		<circle id="hitted2" cx="10" cy="10" r="8" fill="#e52524" />
+		<polygon
+			id="crossed"
+			points="11.98 8.08 20.07 0 24 3.9 15.92 11.98 24 20.07 20.07 24 11.98 15.92 3.9 24 0 20.07 8.08 11.98 0 3.9 3.9 0 11.98 8.08"
+			fillRule="evenodd"
+		/>
 		<path id="cell" d="M0,0V40H40V0ZM36,36H4V4H36Z" />
 		<use id="cell-selected" href="#cell" fill="#FF0" />
 		<use id="cell-selection" href="#cell" fill="#555" />
+		<g id="cell-crossed">
+			<use href="#cell" fill="#e52524" />
+			<use href="#crossed" fill="#e52524" x="8" y="8" />
+		</g>
 		<path
 			id="bullet1"
 			d="M16,4C16,8.46,0,8,0,8V0S16-.46,16,4Z"

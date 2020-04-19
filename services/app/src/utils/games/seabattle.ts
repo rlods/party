@@ -7,7 +7,10 @@ export type SeaBattleAssetPosition = { x: number; y: number };
 
 export type SeaBattleAssetVisibility = "hidden" | "visible";
 
-export type SeaBattleCellType = "cell-selected" | "cell-selection";
+export type SeaBattleCellType =
+	| "cell-crossed"
+	| "cell-selected"
+	| "cell-selection";
 
 export type SeaBattleAssetType =
 	| OrientedBoatType
@@ -16,10 +19,7 @@ export type SeaBattleAssetType =
 	| SeaBattleWeaponType;
 
 export type SeaBattleAssetData = {
-	color?: string;
 	position: SeaBattleAssetPosition;
-	rotate?: string;
-	visibility?: SeaBattleAssetVisibility;
 };
 
 // ------------------------------------------------------------------
@@ -66,6 +66,7 @@ export const BoatsOffsetMappings = {
 
 export type SeaBattleCellData = SeaBattleAssetData & {
 	type: SeaBattleCellType;
+	visibility?: SeaBattleAssetVisibility;
 };
 
 // ------------------------------------------------------------------
@@ -86,6 +87,7 @@ export const HitsOffsetMappings = {
 export type SeaBattleWeaponType = "bullet1" | "bullet2" | "bullet3" | "mine";
 
 export type SeaBattleWeaponData = SeaBattleAssetData & {
+	count: number;
 	type: SeaBattleWeaponType;
 };
 

@@ -38,8 +38,8 @@ export const WeaponControls = ({ disabled = true }: { disabled?: boolean }) => {
 	const onClick = useCallback((position: SeaBattleAssetPosition) => {
 		const { tx, ty } = getSVGPosition(svg.current!, position);
 		setSelectedPosition({
-			x: Math.floor(tx / GRID_CELL_UNIT_SIZE) * GRID_CELL_UNIT_SIZE,
-			y: Math.floor(ty / GRID_CELL_UNIT_SIZE) * GRID_CELL_UNIT_SIZE
+			x: Math.floor(tx / GRID_CELL_UNIT_SIZE),
+			y: Math.floor(ty / GRID_CELL_UNIT_SIZE)
 		});
 		setSelectedVisibility("visible");
 	}, []);
@@ -47,8 +47,8 @@ export const WeaponControls = ({ disabled = true }: { disabled?: boolean }) => {
 	const onOver = useCallback((position: SeaBattleAssetPosition) => {
 		const { tx, ty } = getSVGPosition(svg.current!, position);
 		setSelectionPosition({
-			x: Math.floor(tx / GRID_CELL_UNIT_SIZE) * GRID_CELL_UNIT_SIZE,
-			y: Math.floor(ty / GRID_CELL_UNIT_SIZE) * GRID_CELL_UNIT_SIZE
+			x: Math.floor(tx / GRID_CELL_UNIT_SIZE),
+			y: Math.floor(ty / GRID_CELL_UNIT_SIZE)
 		});
 		setSelectionVisibility("visible");
 	}, []);
@@ -58,10 +58,10 @@ export const WeaponControls = ({ disabled = true }: { disabled?: boolean }) => {
 	}, []);
 
 	const weapons: SeaBattleWeaponData[] = [
-		{ position: { x: 0, y: 0 }, type: "bullet1" },
-		{ position: { x: 1, y: 0 }, type: "bullet2" },
-		{ position: { x: 2, y: 0 }, type: "bullet3" },
-		{ position: { x: 3, y: 0 }, type: "mine" }
+		{ count: 1, position: { x: 0, y: 0 }, type: "bullet1" },
+		{ count: 1, position: { x: 1, y: 0 }, type: "bullet2" },
+		{ count: 1, position: { x: 2, y: 0 }, type: "bullet3" },
+		{ count: 1, position: { x: 3, y: 0 }, type: "mine" }
 	];
 
 	return (
@@ -92,6 +92,13 @@ export const WeaponControls = ({ disabled = true }: { disabled?: boolean }) => {
 					visibility={selectedVisibility}
 				/>
 				<Weapons weapons={weapons} />
+				{weapons.map((weapon, index) => (
+					<Cell
+						type="cell-crossed"
+						position={{ x: index, y: 0 }}
+						visibility={weapon.count === 0 ? "visible" : "hidden"}
+					/>
+				))}
 			</svg>
 			<IconButton
 				disabled={true}

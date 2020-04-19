@@ -49,8 +49,8 @@ export const Map = ({
 	const onClick = useCallback((position: SeaBattleAssetPosition) => {
 		const { tx, ty } = getSVGPosition(svg.current!, position);
 		setSelectedPosition({
-			x: Math.floor(tx / GRID_CELL_UNIT_SIZE) * GRID_CELL_UNIT_SIZE,
-			y: Math.floor(ty / GRID_CELL_UNIT_SIZE) * GRID_CELL_UNIT_SIZE
+			x: Math.floor(tx / GRID_CELL_UNIT_SIZE),
+			y: Math.floor(ty / GRID_CELL_UNIT_SIZE)
 		});
 		setSelectedVisibility("visible");
 	}, []);
@@ -62,8 +62,8 @@ export const Map = ({
 	const onOver = useCallback((position: SeaBattleAssetPosition) => {
 		const { tx, ty } = getSVGPosition(svg.current!, position);
 		setSelectionPosition({
-			x: Math.floor(tx / GRID_CELL_UNIT_SIZE) * GRID_CELL_UNIT_SIZE,
-			y: Math.floor(ty / GRID_CELL_UNIT_SIZE) * GRID_CELL_UNIT_SIZE
+			x: Math.floor(tx / GRID_CELL_UNIT_SIZE),
+			y: Math.floor(ty / GRID_CELL_UNIT_SIZE)
 		});
 		setSelectionVisibility("visible");
 	}, []);
