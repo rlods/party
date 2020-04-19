@@ -3,7 +3,7 @@ import React, { useRef, useCallback, useState } from "react";
 import { getSVGPosition } from "../../utils/svg";
 import {
 	SeaBattleAssetVisibility,
-	SeaBattleAssetPosition,
+	SeaBattlePosition,
 	GRID_CELL_UNIT_SIZE,
 	SeaBattleWeaponData
 } from "../../utils/games/seabattle";
@@ -16,25 +16,23 @@ import { Weapons } from "./Weapons";
 export const WeaponSelection = () => {
 	const svg = useRef<SVGSVGElement>(null);
 
-	const [selectedPosition, setSelectedPosition] = useState<
-		SeaBattleAssetPosition
-	>({
-		x: 0,
-		y: 0
-	});
+	const [selectedPosition, setSelectedPosition] = useState<SeaBattlePosition>(
+		{
+			x: 0,
+			y: 0
+		}
+	);
 	const [selectedVisibility, setSelectedVisibility] = useState<
 		SeaBattleAssetVisibility
 	>("hidden");
-	const [selectionPos, setSelectionPosition] = useState<
-		SeaBattleAssetPosition
-	>({
+	const [selectionPos, setSelectionPosition] = useState<SeaBattlePosition>({
 		x: 0,
 		y: 0
 	});
 	const [selectionVisibility, setSelectionVisibility] = useState<
 		SeaBattleAssetVisibility
 	>("hidden");
-	const onClick = useCallback((position: SeaBattleAssetPosition) => {
+	const onClick = useCallback((position: SeaBattlePosition) => {
 		const { tx, ty } = getSVGPosition(svg.current!, position);
 		setSelectedPosition({
 			x: Math.floor(tx / GRID_CELL_UNIT_SIZE),
@@ -43,7 +41,7 @@ export const WeaponSelection = () => {
 		setSelectedVisibility("visible");
 	}, []);
 
-	const onOver = useCallback((position: SeaBattleAssetPosition) => {
+	const onOver = useCallback((position: SeaBattlePosition) => {
 		const { tx, ty } = getSVGPosition(svg.current!, position);
 		setSelectionPosition({
 			x: Math.floor(tx / GRID_CELL_UNIT_SIZE),

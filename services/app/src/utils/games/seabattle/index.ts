@@ -8,7 +8,7 @@ export const MAX_PLAYER_COUNT = 2;
 
 // ------------------------------------------------------------------
 
-export type SeaBattleAssetPosition = { x: number; y: number };
+export type SeaBattlePosition = { x: number; y: number };
 
 export type SeaBattleAssetVisibility = "hidden" | "visible";
 
@@ -24,7 +24,7 @@ export type SeaBattleAssetType =
 	| SeaBattleWeaponType;
 
 export type SeaBattleAssetData = {
-	position: SeaBattleAssetPosition;
+	position: SeaBattlePosition;
 };
 
 // ------------------------------------------------------------------

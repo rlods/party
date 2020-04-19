@@ -4,7 +4,7 @@ import { Weapons } from "./Weapons";
 import { Hits } from "./Hits";
 import { Fleet } from "./Fleet";
 import {
-	SeaBattleAssetPosition,
+	SeaBattlePosition,
 	SeaBattlePlayerData,
 	SeaBattleAssetVisibility,
 	GRID_CELL_UNIT_SIZE,
@@ -18,27 +18,29 @@ import { getSVGPosition } from "../../utils/svg";
 // Order is important : Weapons under Boats under Hits
 export const Map = ({
 	hideActiveFleet = false,
+	onCellClick,
 	player: { fleet, hits, weapons } = { fleet: [], hits: [], weapons: [] },
 	selectedBoat,
 	setSelectedBoat
 }: {
 	hideActiveFleet?: boolean;
+	onCellClick?: (position: SeaBattlePosition) => void;
 	player?: SeaBattlePlayerData;
 	selectedBoat?: SeaBattleBoatData;
 	setSelectedBoat?: (index: number) => void;
 }) => {
 	const svg = useRef<SVGSVGElement>(null);
-	const [selectedPosition, setSelectedPosition] = useState<
-		SeaBattleAssetPosition
-	>({
-		x: 0,
-		y: 0
-	});
+	const [selectedPosition, setSelectedPosition] = useState<SeaBattlePosition>(
+		{
+			x: 0,
+			y: 0
+		}
+	);
 	const [selectedVisibility, setSelectedVisibility] = useState<
 		SeaBattleAssetVisibility
 	>("hidden");
 	const [selectionPosition, setSelectionPosition] = useState<
-		SeaBattleAssetPosition
+		SeaBattlePosition
 	>({
 		x: 0,
 		y: 0
@@ -47,20 +49,27 @@ export const Map = ({
 		SeaBattleAssetVisibility
 	>("hidden");
 
-	const onClick = useCallback((position: SeaBattleAssetPosition) => {
-		const { tx, ty } = getSVGPosition(svg.current!, position);
-		setSelectedPosition({
-			x: Math.floor(tx / GRID_CELL_UNIT_SIZE),
-			y: Math.floor(ty / GRID_CELL_UNIT_SIZE)
-		});
-		setSelectedVisibility("visible");
-	}, []);
+	const onClick = useCallback(
+		(position: SeaBattlePosition) => {
+			const { tx, ty } = getSVGPosition(svg.current!, position);
+			const normalizedPosition: SeaBattlePosition = {
+				x: Math.floor(tx / GRID_CELL_UNIT_SIZE),
+				y: Math.floor(ty / GRID_CELL_UNIT_SIZE)
+			};
+			setSelectedPosition(normalizedPosition);
+			setSelectedVisibility("visible");
+			if (onCellClick) {
+				onCellClick(normalizedPosition);
+			}
+		},
+		[onCellClick]
+	);
 
 	const onLeave = useCallback(() => {
 		setSelectionVisibility("hidden");
 	}, []);
 
-	const onOver = useCallback((position: SeaBattleAssetPosition) => {
+	const onOver = useCallback((position: SeaBattlePosition) => {
 		const { tx, ty } = getSVGPosition(svg.current!, position);
 		setSelectionPosition({
 			x: Math.floor(tx / GRID_CELL_UNIT_SIZE),

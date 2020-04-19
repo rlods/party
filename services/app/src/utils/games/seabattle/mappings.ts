@@ -1,6 +1,6 @@
 import {
 	OrientedBoatType,
-	SeaBattleAssetPosition,
+	SeaBattlePosition,
 	SeaBattleDirection,
 	SeaBattleMovementType
 } from ".";
@@ -58,7 +58,7 @@ export const SeabattleBoatRotationMappings: {
 
 export const SeabattleBoatRotationTransformationMappings: {
 	[type: string]: {
-		[direction: string]: SeaBattleAssetPosition;
+		[direction: string]: SeaBattlePosition;
 	};
 } = {
 	boat1: {
@@ -115,7 +115,7 @@ export const SeabattleKeyboardMoveMappings: {
 // ------------------------------------------------------------------
 
 export const SeabattleBoatTranslationMappings: {
-	[direction: string]: { [rotation: string]: SeaBattleAssetPosition };
+	[direction: string]: { [rotation: string]: SeaBattlePosition };
 } = {
 	N: {
 		"move-forward": { x: 0, y: -1 },

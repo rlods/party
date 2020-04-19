@@ -1,7 +1,7 @@
 import { SeaBattleBoatLengthMappings } from "./mappings";
 import {
 	SeaBattleBoatData,
-	SeaBattleAssetPosition,
+	SeaBattlePosition,
 	SeaBattleDirection,
 	GRID_CELL_COUNT
 } from ".";
@@ -10,10 +10,10 @@ import {
 
 export const checkPositionInGrid = (
 	grid: number[][],
-	position: SeaBattleAssetPosition
+	position: SeaBattlePosition
 ) => grid[position.y][position.x] === 0;
 
-export const checkPositionInZone = (position: SeaBattleAssetPosition) =>
+export const checkPositionInZone = (position: SeaBattlePosition) =>
 	position.x >= 0 &&
 	position.x < GRID_CELL_COUNT &&
 	position.y >= 0 &&
@@ -21,7 +21,7 @@ export const checkPositionInZone = (position: SeaBattleAssetPosition) =>
 
 export const checkZone = (
 	boat: SeaBattleBoatData,
-	newPosition: SeaBattleAssetPosition,
+	newPosition: SeaBattlePosition,
 	newDirection: SeaBattleDirection
 ) => {
 	if (!checkPositionInZone(newPosition)) {
@@ -55,7 +55,7 @@ export const checkZone = (
 export const checkCollisions = (
 	fleet: SeaBattleBoatData[],
 	movingBoat: SeaBattleBoatData,
-	newPosition: SeaBattleAssetPosition,
+	newPosition: SeaBattlePosition,
 	newDirection: SeaBattleDirection
 ) => {
 	const grid = Array<number>(GRID_CELL_COUNT)
@@ -187,7 +187,7 @@ export const checkCollisions = (
 export const movementIsPossible = (
 	fleet: SeaBattleBoatData[],
 	movingBoatIndex: number,
-	newPosition: SeaBattleAssetPosition,
+	newPosition: SeaBattlePosition,
 	newDirection: SeaBattleDirection
 ) => {
 	const movingBoat = fleet[movingBoatIndex];

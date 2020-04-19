@@ -8,7 +8,8 @@ import { RootState } from "../../reducers";
 import {
 	extractBattleInfo,
 	MAX_PLAYER_COUNT,
-	SeaBattleMovementType
+	SeaBattleMovementType,
+	SeaBattlePosition
 } from "../../utils/games/seabattle";
 import { SeabattleKeyboardMoveMappings } from "../../utils/games/seabattle/mappings";
 import { Dispatch } from "../../actions";
@@ -102,6 +103,10 @@ export const SeaBattle = () => {
 		[onMove, battle, player, boat]
 	);
 
+	const onOpponentCellClick = useCallback((position: SeaBattlePosition) => {
+		// console.debug("XXX", position);
+	}, []);
+
 	useEffect(() => {
 		document.addEventListener("keydown", onKeyDown);
 
@@ -172,7 +177,11 @@ export const SeaBattle = () => {
 							: void 0
 					}
 				/>
-				<Map player={opponent} hideActiveFleet={true} />
+				<Map
+					player={opponent}
+					hideActiveFleet={true}
+					onCellClick={onOpponentCellClick}
+				/>
 			</div>
 		</div>
 	);
