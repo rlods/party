@@ -110,7 +110,7 @@ export const WeaponsOffsetMappings = {
 
 // ------------------------------------------------------------------
 
-export type SeaBattlePlayerData = {
+export type SeaBattleMapData = {
 	fleet: SeaBattleBoatData[];
 	hits: SeaBattleHitData[];
 	opponentsWeapons: SeaBattleWeaponData[]; // Weapons placed by opponents
@@ -122,7 +122,7 @@ export type SeaBattlePlayerData = {
 // ------------------------------------------------------------------
 
 export type SeaBattleData = {
-	players: { [id: string]: SeaBattlePlayerData };
+	maps: { [id: string]: SeaBattleMapData };
 };
 
 // ------------------------------------------------------------------
@@ -130,7 +130,7 @@ export type SeaBattleData = {
 export const generateBattle = (userId: string): SeaBattleData => {
 	console.debug("[SeaBattle] Genering battle...");
 	const battle: SeaBattleData = {
-		players: {}
+		maps: {}
 	};
 	generateFleet(battle, userId);
 	return battle;
@@ -140,7 +140,7 @@ export const generateFleet = (battle: SeaBattleData, userId: string) => {
 	console.debug("[SeaBattle] Genering fleet...", {
 		userId
 	});
-	battle.players[userId] = {
+	battle.maps[userId] = {
 		fleet: [
 			{
 				type: "boat1",
@@ -207,43 +207,43 @@ export const extractBattleInfo = ({
 }): {
 	battle?: SeaBattleData;
 	boat?: SeaBattleBoatData;
-	opponent?: SeaBattlePlayerData;
-	opponents?: SeaBattlePlayerData[];
-	player?: SeaBattlePlayerData;
+	opponentMap?: SeaBattleMapData;
+	opponentMaps?: SeaBattleMapData[];
+	playerMap?: SeaBattleMapData;
 	weaponCount: number;
 } => {
 	let battle: SeaBattleData | undefined = void 0;
 	let boat: SeaBattleBoatData | undefined = void 0;
-	let opponent: SeaBattlePlayerData | undefined = void 0;
-	let opponents: SeaBattlePlayerData[] | undefined = void 0;
-	let player: SeaBattlePlayerData | undefined = void 0;
+	let opponentMap: SeaBattleMapData | undefined = void 0;
+	let opponentMaps: SeaBattleMapData[] | undefined = void 0;
+	let playerMap: SeaBattleMapData | undefined = void 0;
 	let weaponCount = 0;
 	if (extra) {
 		battle = decode<SeaBattleData>(extra);
 		if (userId) {
-			player = battle.players[userId];
-			if (player) {
-				if (boatIndex >= 0 && boatIndex < player.fleet.length) {
-					boat = player.fleet[boatIndex];
+			playerMap = battle.maps[userId];
+			if (playerMap) {
+				if (boatIndex >= 0 && boatIndex < playerMap.fleet.length) {
+					boat = playerMap.fleet[boatIndex];
 				}
 				if (weaponType) {
-					weaponCount = player.weapons[weaponType] || 0;
+					weaponCount = playerMap.weapons[weaponType] || 0;
 				}
 			}
 		}
-		opponents = Object.values(battle.players).filter(
-			other => other !== player
+		opponentMaps = Object.values(battle.maps).filter(
+			other => other !== playerMap
 		);
-		if (opponentIndex >= 0 && opponentIndex < opponents.length) {
-			opponent = opponents[opponentIndex];
+		if (opponentIndex >= 0 && opponentIndex < opponentMaps.length) {
+			opponentMap = opponentMaps[opponentIndex];
 		}
 	}
 	return {
 		battle,
 		boat,
-		opponent,
-		opponents,
-		player,
+		opponentMap,
+		opponentMaps,
+		playerMap,
 		weaponCount
 	};
 };
@@ -251,8 +251,8 @@ export const extractBattleInfo = ({
 // ------------------------------------------------------------------
 
 export const testHit = (
-	player: SeaBattlePlayerData,
-	opponent: SeaBattlePlayerData,
+	player: SeaBattleMapData,
+	opponent: SeaBattleMapData,
 	position: SeaBattlePosition,
 	weaponCount: number
 ) => {

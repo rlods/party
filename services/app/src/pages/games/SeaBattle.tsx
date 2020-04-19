@@ -55,9 +55,9 @@ export const SeaBattle = () => {
 	const {
 		battle,
 		boat,
-		opponent,
-		opponents,
-		player,
+		opponentMap,
+		opponentMaps,
+		playerMap,
 		weaponCount
 	} = extractBattleInfo({
 		extra,
@@ -114,7 +114,7 @@ export const SeaBattle = () => {
 				return;
 			}
 			e.preventDefault(); // to prevent scrolling with keyboard
-			if (!player || !boat) {
+			if (!playerMap || !boat) {
 				return;
 			}
 			onMove(
@@ -123,12 +123,12 @@ export const SeaBattle = () => {
 				]
 			);
 		},
-		[onMove, battle, player, boat]
+		[onMove, battle, playerMap, boat]
 	);
 
 	const onOpponentCellClick = useCallback(
 		(position: SeaBattlePosition) => {
-			if (!player || !opponent) {
+			if (!playerMap || !opponentMap) {
 				console.debug("[SeaBattle] No player or opponent");
 				return;
 			}
@@ -140,13 +140,13 @@ export const SeaBattle = () => {
 				console.debug("[SeaBattle] No more weapon available");
 				return;
 			}
-			if (!testHit(player, opponent, position, weaponCount)) {
+			if (!testHit(playerMap, opponentMap, position, weaponCount)) {
 				dispatch(displayError("You've missed opponent boat"));
 				return;
 			}
 			dispatch(displaySuccess("You've hitted opponent boat"));
 		},
-		[dispatch, opponent, player, weaponCount, selectedWeaponType]
+		[dispatch, opponentMap, playerMap, weaponCount, selectedWeaponType]
 	);
 
 	useEffect(() => {
@@ -169,15 +169,16 @@ export const SeaBattle = () => {
 					onRotateLeft={() => onMove("rotate-left")}
 					onRotateRight={() => onMove("rotate-right")}
 				/>
-				{player ? (
+				{playerMap ? (
 					<Map
-						player={player}
+						map={playerMap}
 						selectedBoatIndex={selectedBoatIndex}
 						onSelectBoatIndex={setSelectedBoatIndex}
 					/>
 				) : (
 					<div className="SeaBattleJoin">
-						{opponents && opponents.length >= MAX_PLAYER_COUNT ? (
+						{opponentMaps &&
+						opponentMaps.length >= MAX_PLAYER_COUNT ? (
 							<span>{t("games.max_players_count")}</span>
 						) : (
 							<>
@@ -196,32 +197,32 @@ export const SeaBattle = () => {
 			</div>
 			<div className="SeaBattlePlayer other">
 				<OpponentControls
-					opponentsCount={opponents?.length || 0}
+					opponentsCount={opponentMaps?.length || 0}
 					opponentIndex={selectedOpponentIndex}
 					onSelectPreviousOpponent={
-						opponents && opponents.length > 0
+						opponentMaps && opponentMaps.length > 0
 							? () =>
 									setSelectedOpponent(
 										selectedOpponentIndex === 0
-											? opponents.length - 1
+											? opponentMaps.length - 1
 											: selectedOpponentIndex - 1
 									)
 							: void 0
 					}
 					onSelectNextOpponent={
-						opponents && opponents.length > 0
+						opponentMaps && opponentMaps.length > 0
 							? () =>
 									setSelectedOpponent(
 										(selectedOpponentIndex + 1) %
-											opponents?.length
+											opponentMaps?.length
 									)
 							: void 0
 					}
 					onSelectWeaponType={setSelectedWeaponType}
-					weapons={player?.weapons || {}}
+					weapons={playerMap?.weapons || {}}
 				/>
 				<Map
-					player={opponent}
+					map={opponentMap}
 					hideActiveFleet={true}
 					onCellClick={onOpponentCellClick}
 				/>

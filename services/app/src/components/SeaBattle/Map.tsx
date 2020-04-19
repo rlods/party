@@ -7,7 +7,7 @@ import { BattleAssets } from "./BattleAssets";
 import { getSVGNormalizedPosition } from "../../utils/svg";
 import {
 	SeaBattlePosition,
-	SeaBattlePlayerData,
+	SeaBattleMapData,
 	SeaBattleAssetVisibility
 } from "../../utils/games/seabattle";
 
@@ -17,7 +17,7 @@ import {
 export const Map = ({
 	hideActiveFleet = false,
 	onCellClick,
-	player: { fleet, hits, opponentsWeapons } = {
+	map: { fleet, hits, opponentsWeapons } = {
 		fleet: [],
 		hits: [],
 		weapons: {},
@@ -28,7 +28,7 @@ export const Map = ({
 }: {
 	hideActiveFleet?: boolean;
 	onCellClick?: (position: SeaBattlePosition) => void;
-	player?: SeaBattlePlayerData;
+	map?: SeaBattleMapData;
 	selectedBoatIndex?: number;
 	onSelectBoatIndex?: (index: number) => void;
 }) => {

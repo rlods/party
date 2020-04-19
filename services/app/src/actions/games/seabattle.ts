@@ -39,11 +39,11 @@ export const joinBattle = (): AsyncAction => async (dispatch, getState) => {
 	try {
 		console.debug("[SeaBattle] Joining battle...", { userId });
 		const battle = decode<SeaBattleData>(info.extra);
-		const player = battle.players[userId];
-		if (player) {
+		const map = battle.maps[userId];
+		if (map) {
 			return; // User is already in the battle
 		}
-		if (Object.keys(battle.players).length >= MAX_PLAYER_COUNT) {
+		if (Object.keys(battle.maps).length >= MAX_PLAYER_COUNT) {
 			dispatch(displayError("games.max_players_count"));
 			return;
 		}
@@ -84,13 +84,13 @@ export const moveBoat = ({
 	try {
 		const battle = decode<SeaBattleData>(info.extra);
 
-		const player = battle.players[userId];
-		if (!player) {
+		const map = battle.maps[userId];
+		if (!map) {
 			return;
 		}
 
-		const { fleet } = player;
-		if (boatIndex < 0 || boatIndex >= player.fleet.length) {
+		const { fleet } = map;
+		if (boatIndex < 0 || boatIndex >= fleet.length) {
 			return;
 		}
 

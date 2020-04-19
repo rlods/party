@@ -30,7 +30,7 @@ export type State = {
 const INITIAL_STATE: State = {
 	error: null,
 	fetching: false,
-	battle: { players: {} }
+	battle: { maps: {} }
 };
 
 // ------------------------------------------------------------------
