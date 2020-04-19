@@ -4,7 +4,6 @@ import { extractErrorMessage } from "../../utils/messages";
 import { decode, encode } from "../../utils/encoder";
 import {
 	SeaBattleMovementType,
-	movementIsPossible,
 	SeaBattleData,
 	generateFleet,
 	MAX_PLAYER_COUNT
@@ -14,6 +13,7 @@ import {
 	SeabattleBoatTranslationMappings,
 	SeabattleBoatRotationTransformationMappings
 } from "../../utils/games/seabattle/mappings";
+import { movementIsPossible } from "../../utils/games/seabattle/collision";
 
 // ------------------------------------------------------------------
 
