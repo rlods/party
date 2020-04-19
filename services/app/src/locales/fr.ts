@@ -33,7 +33,7 @@ export default {
 	},
 	games: {
 		seabattle: {
-			movement_is_not_possible: "Ce déplacement est impossible..."
+			movement_is_not_possible: "Ce déplacement est impossible !"
 		}
 	},
 	rooms: {

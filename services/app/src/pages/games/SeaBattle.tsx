@@ -9,7 +9,6 @@ import { Dispatch } from "../../actions";
 import { moveBoat } from "../../actions/games/seabattle";
 import { KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT } from "../../utils/keyboards";
 import { WeaponControls } from "../../components/SeaBattle/WeaponsControls";
-import { PlayerInfo } from "../../components/SeaBattle/PlayerInfo";
 import "./SeaBattle.scss";
 
 // ------------------------------------------------------------------
@@ -168,12 +167,10 @@ export const SeaBattle = () => {
 					selectedBoat={selectedBoats[0]}
 					setSelectedBoat={setSelectedBoats[0]}
 				/>
-				<PlayerInfo info="Your Map" />
 			</div>
 			<div className="SeaBattlePlayer other">
 				<WeaponControls disabled={selectedBoats[activePlayer] < 0} />
 				<Map player={players[1]} hideFleet={true} />
-				<PlayerInfo info="Opponent's Map" />
 			</div>
 		</div>
 	);

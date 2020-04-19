@@ -16,7 +16,7 @@ import { Dispatch } from "../../actions";
 import { popModal, openModal } from "../../reducers/modals";
 import { createRoom } from "../../actions/room";
 import { displayError } from "../../actions/messages";
-import { RoomType } from "../../utils/rooms";
+import { RoomType, RoomTypes } from "../../utils/rooms";
 
 // ------------------------------------------------------------------
 
@@ -108,11 +108,10 @@ export const CreateRoomModal = () => {
 				id="modal-type"
 				label={t("rooms.type")}
 				placeholder={t("rooms.type_placeholder")}
-				options={[
-					{ id: "blind", label: t("rooms.types.blind") },
-					{ id: "dj", label: t("rooms.types.dj") },
-					{ id: "seabattle", label: t("rooms.types.seabattle") }
-				]}
+				options={RoomTypes.map(type => ({
+					id: type,
+					label: t(`rooms.types.${type}`)
+				}))}
 				value={type}
 				onChange={e => setType(e.target.value as RoomType)}
 			/>
