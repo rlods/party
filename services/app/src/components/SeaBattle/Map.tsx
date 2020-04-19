@@ -27,45 +27,45 @@ export const Map = ({
 	setSelectedBoat?: (index: number) => void;
 }) => {
 	const svg = useRef<SVGSVGElement>(null);
-	const [selectedPosition, setActiveCellPosition] = useState<
+	const [selectedPosition, setSelectedPosition] = useState<
 		SeaBattleAssetPosition
 	>({
 		x: 0,
 		y: 0
 	});
-	const [selectedVisibility, setActiveCellVisibility] = useState<
+	const [selectedVisibility, setSelectedVisibility] = useState<
 		SeaBattleAssetVisibility
 	>("hidden");
-	const [selectionPosition, setHoverCellPosition] = useState<
+	const [selectionPosition, setSelectionPosition] = useState<
 		SeaBattleAssetPosition
 	>({
 		x: 0,
 		y: 0
 	});
-	const [selectionVisibility, setHoverCellVisibility] = useState<
+	const [selectionVisibility, setSelectionVisibility] = useState<
 		SeaBattleAssetVisibility
 	>("hidden");
 
 	const onClick = useCallback((position: SeaBattleAssetPosition) => {
 		const { tx, ty } = getSVGPosition(svg.current!, position);
-		setActiveCellPosition({
+		setSelectedPosition({
 			x: Math.floor(tx / GRID_CELL_UNIT_SIZE) * GRID_CELL_UNIT_SIZE,
 			y: Math.floor(ty / GRID_CELL_UNIT_SIZE) * GRID_CELL_UNIT_SIZE
 		});
-		setActiveCellVisibility("visible");
+		setSelectedVisibility("visible");
 	}, []);
 
 	const onLeave = useCallback(() => {
-		setHoverCellVisibility("hidden");
+		setSelectionVisibility("hidden");
 	}, []);
 
 	const onOver = useCallback((position: SeaBattleAssetPosition) => {
 		const { tx, ty } = getSVGPosition(svg.current!, position);
-		setHoverCellPosition({
+		setSelectionPosition({
 			x: Math.floor(tx / GRID_CELL_UNIT_SIZE) * GRID_CELL_UNIT_SIZE,
 			y: Math.floor(ty / GRID_CELL_UNIT_SIZE) * GRID_CELL_UNIT_SIZE
 		});
-		setHoverCellVisibility("visible");
+		setSelectionVisibility("visible");
 	}, []);
 
 	return (
@@ -79,14 +79,14 @@ export const Map = ({
 			<BattleAssets />
 			<rect width="400" height="400" fill="url(#sea-grid)" />
 			<Cell
-				type="cell-selected"
-				position={selectedPosition}
-				visibility={selectedVisibility}
-			/>
-			<Cell
 				type="cell-selection"
 				position={selectionPosition}
 				visibility={selectionVisibility}
+			/>
+			<Cell
+				type="cell-selected"
+				position={selectedPosition}
+				visibility={selectedVisibility}
 			/>
 			<Weapons weapons={weapons} />
 			{!hideFleet ? (

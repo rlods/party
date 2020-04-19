@@ -78,6 +78,7 @@
 				}
 			}
 
+			.SeaBattleBoat:not(.clickable),
 			.SeaBattleHit,
 			.SeaBattleWeapon {
 				pointer-events: none;

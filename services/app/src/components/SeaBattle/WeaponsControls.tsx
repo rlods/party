@@ -16,45 +16,45 @@ import { Weapons } from "./Weapons";
 
 export const WeaponControls = ({ disabled = true }: { disabled?: boolean }) => {
 	const svg = useRef<SVGSVGElement>(null);
-	const [selectedPosition, setActiveCellPosition] = useState<
+	const [selectedPosition, setSelectedPosition] = useState<
 		SeaBattleAssetPosition
 	>({
 		x: 0,
 		y: 0
 	});
-	const [selectedVisibility, setActiveCellVisibility] = useState<
+	const [selectedVisibility, setSelectedVisibility] = useState<
 		SeaBattleAssetVisibility
 	>("hidden");
-	const [selectionPos, setHoverCellPosition] = useState<
+	const [selectionPos, setSelectionPosition] = useState<
 		SeaBattleAssetPosition
 	>({
 		x: 0,
 		y: 0
 	});
-	const [selectionVisibility, setHoverCellVisibility] = useState<
+	const [selectionVisibility, setSelectionVisibility] = useState<
 		SeaBattleAssetVisibility
 	>("hidden");
 
 	const onClick = useCallback((position: SeaBattleAssetPosition) => {
 		const { tx, ty } = getSVGPosition(svg.current!, position);
-		setActiveCellPosition({
+		setSelectedPosition({
 			x: Math.floor(tx / GRID_CELL_UNIT_SIZE) * GRID_CELL_UNIT_SIZE,
 			y: Math.floor(ty / GRID_CELL_UNIT_SIZE) * GRID_CELL_UNIT_SIZE
 		});
-		setActiveCellVisibility("visible");
+		setSelectedVisibility("visible");
 	}, []);
 
 	const onOver = useCallback((position: SeaBattleAssetPosition) => {
 		const { tx, ty } = getSVGPosition(svg.current!, position);
-		setHoverCellPosition({
+		setSelectionPosition({
 			x: Math.floor(tx / GRID_CELL_UNIT_SIZE) * GRID_CELL_UNIT_SIZE,
 			y: Math.floor(ty / GRID_CELL_UNIT_SIZE) * GRID_CELL_UNIT_SIZE
 		});
-		setHoverCellVisibility("visible");
+		setSelectionVisibility("visible");
 	}, []);
 
 	const onLeave = useCallback(() => {
-		setHoverCellVisibility("hidden");
+		setSelectionVisibility("hidden");
 	}, []);
 
 	const weapons: SeaBattleWeaponData[] = [
@@ -81,14 +81,14 @@ export const WeaponControls = ({ disabled = true }: { disabled?: boolean }) => {
 				onMouseMove={e => onOver({ x: e.clientX, y: e.clientY })}>
 				<BattleAssets />
 				<Cell
-					type="cell-selected"
-					position={selectedPosition}
-					visibility={selectedVisibility}
-				/>
-				<Cell
 					type="cell-selection"
 					position={selectionPos}
 					visibility={selectionVisibility}
+				/>
+				<Cell
+					type="cell-selected"
+					position={selectedPosition}
+					visibility={selectedVisibility}
 				/>
 				<Weapons weapons={weapons} />
 			</svg>
