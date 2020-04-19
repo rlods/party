@@ -29,6 +29,7 @@ import {
 } from "../../utils/games/seabattle";
 import "./SeaBattle.scss";
 import { displayInfo } from "../../actions/messages";
+import { openModal } from "../../reducers/modals";
 
 // ------------------------------------------------------------------
 
@@ -116,6 +117,11 @@ export const SeaBattle = () => {
 		[onMove, boat]
 	);
 
+	const onConnectUser = useCallback(
+		() => dispatch(openModal({ type: "CreateUser", props: null })),
+		[dispatch]
+	);
+
 	const onOpponentCellClick = useCallback(
 		(position: SeaBattlePosition) => {
 			if (!opponentMaps || opponentMaps.length === 0) {
@@ -163,6 +169,17 @@ export const SeaBattle = () => {
 						{opponentMaps &&
 						opponentMaps.length >= MAX_PLAYER_COUNT ? (
 							<span>{t("games.max_players_count")}</span>
+						) : !userId ? (
+							<>
+								<span>{t("games.connect_to_join")}</span>
+								<IconButton
+									icon="sign-in"
+									title={t("users.connect")}
+									size="L"
+									displayTitle={true}
+									onClick={onConnectUser}
+								/>
+							</>
 						) : (
 							<>
 								<span>{t("games.watch_or_join")}</span>

@@ -12,7 +12,8 @@ import {
 	SeaBattlePosition,
 	SeaBattleWeaponType,
 	extractOpponentMaps,
-	passBatonToNextPlayer
+	passBatonToNextPlayer,
+	checkUserHasBatton
 } from "../../utils/games/seabattle";
 import {
 	SeaBattleBoatTranslationMappings,
@@ -79,6 +80,7 @@ export const moveBoat = ({
 			access: { id: userId }
 		}
 	} = getState();
+	dispatch(clearMessages(INVALID_MOVE_MESSAGE_TAG));
 	if (!room || room.isLocked() || !info) {
 		dispatch(displayError("rooms.error.locked"));
 		return;
@@ -96,7 +98,8 @@ export const moveBoat = ({
 			console.debug("[SeaBattle] Cannot find map for current user");
 			return;
 		}
-		if (playerMap !== battle.maps[battle.currentMapIndex]) {
+
+		if (!checkUserHasBatton(battle, userId)) {
 			dispatch(displayError("This is not your turn"));
 			return;
 		}
@@ -178,7 +181,12 @@ export const moveBoat = ({
 			extra: encode(battle)
 		});
 
-		dispatch(clearMessages(INVALID_MOVE_MESSAGE_TAG));
+		dispatch(
+			displayInfo(
+				"games.seabattle.you_played_your_turn",
+				INVALID_MOVE_MESSAGE_TAG
+			)
+		);
 	} catch (err) {
 		dispatch(displayError(extractErrorMessage(err)));
 	}
@@ -201,6 +209,7 @@ export const attackOpponent = ({
 			access: { id: userId }
 		}
 	} = getState();
+	dispatch(clearMessages(INVALID_MOVE_MESSAGE_TAG));
 	if (!room || room.isLocked() || !info) {
 		dispatch(displayError("rooms.error.locked"));
 		return;
@@ -218,7 +227,7 @@ export const attackOpponent = ({
 			console.debug("[SeaBattle] Cannot find map for current user");
 			return;
 		}
-		if (playerMap !== battle.maps[battle.currentMapIndex]) {
+		if (!checkUserHasBatton(battle, userId)) {
 			dispatch(displayError("This is not your turn"));
 			return;
 		}
@@ -269,7 +278,12 @@ export const attackOpponent = ({
 			extra: encode(battle)
 		});
 
-		dispatch(clearMessages(INVALID_MOVE_MESSAGE_TAG));
+		dispatch(
+			displayInfo(
+				"games.seabattle.you_played_your_turn",
+				INVALID_MOVE_MESSAGE_TAG
+			)
+		);
 	} catch (err) {
 		dispatch(displayError(extractErrorMessage(err)));
 	}

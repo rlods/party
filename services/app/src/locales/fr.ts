@@ -40,11 +40,13 @@ export default {
 			missed_opponent: "Vous avez raté l'ennemi",
 			hitted_opponent: "Vous avez touché l'ennemi",
 			no_weapon_selected: "Sélectionnez une arme pour attaquer",
-			weapon_not_available: "L'arme sélectionnée n'est plus disponible"
+			weapon_not_available: "L'arme sélectionnée n'est plus disponible",
+			you_played_your_turn: "Vous avez joué votre tour"
 		},
 		max_players_count: "Le nombre maximal de joueurs est déjà atteint",
 		no_opponents: "Aucun ennemi",
 		no_opponents_to_attack: "Il n'y aucun ennemi à attaquer ...",
+		connect_to_join: "Vous devez vous connecter pour participer ...",
 		watch_or_join: "Vous pouvez regarder ou ..."
 	},
 	rooms: {

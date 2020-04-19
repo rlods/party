@@ -40,11 +40,13 @@ export default {
 			missed_opponent: "You've missed opponent boat",
 			hitted_opponent: "You've hitted opponent boat",
 			no_weapon_selected: "Select a weapon to attack",
-			weapon_not_available: "Selected weapon is not available"
+			weapon_not_available: "Selected weapon is not available",
+			you_played_your_turn: "You played your turn"
 		},
 		max_players_count: "Maximum players number has been already reached",
 		no_opponents: "No opponents",
 		no_opponents_to_attack: "There is no opponent to attack...",
+		connect_to_join: "You have to connect to join...",
 		watch_or_join: "You can watch or..."
 	},
 	rooms: {

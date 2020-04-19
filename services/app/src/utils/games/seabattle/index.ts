@@ -141,6 +141,13 @@ export const generateBattle = (userId: string): SeaBattleData => {
 	return battle;
 };
 
+const FleetDefaultSet = {
+	// Keys are boat types
+	boat1: 4,
+	boat2: 3,
+	boat3: 2
+};
+
 export const generateFleet = (battle: SeaBattleData, userId: string) => {
 	const oldMap = battle.maps.find(other => other.userId === userId);
 	if (oldMap) {
@@ -149,45 +156,24 @@ export const generateFleet = (battle: SeaBattleData, userId: string) => {
 	console.debug("[SeaBattle] Genering fleet...", {
 		userId
 	});
-	battle.maps.push({
-		fleet: [
-			{
-				type: "boat1",
-				angle: 0,
-				position: { x: 0, y: 0 },
-				status: "ok"
-			},
-			{
-				type: "boat1",
-				angle: 0,
-				position: { x: 1, y: 0 },
-				status: "ko"
-			},
-			{
-				type: "boat2",
-				angle: 0,
-				position: { x: 0, y: 1 },
-				status: "ok"
-			},
-			{
-				type: "boat2",
-				angle: 0,
-				position: { x: 2, y: 1 },
-				status: "ko"
-			},
-			{
-				type: "boat3",
-				angle: 0,
-				position: { x: 0, y: 2 },
-				status: "ok"
-			},
-			{
-				type: "boat3",
-				angle: 0,
-				position: { x: 3, y: 2 },
-				status: "ko"
+
+	let totalCount = 0;
+	const fleet: SeaBattleBoatData[] = [];
+	Object.entries(FleetDefaultSet)
+		.reverse()
+		.forEach(([type, count]) => {
+			for (let i = 0; i < count; ++i) {
+				fleet.push({
+					type: type as SeaBattleBoatType,
+					angle: 0,
+					position: { x: 0, y: totalCount++ },
+					status: "ok"
+				});
 			}
-		],
+		});
+
+	battle.maps.push({
+		fleet,
 		hits: [
 			/*
 			{ position: { x: 0, y: 1 }, type: "hitted1" },
@@ -257,6 +243,9 @@ export const extractBattleInfo = ({
 };
 
 // ------------------------------------------------------------------
+
+export const checkUserHasBatton = (battle: SeaBattleData, userId: string) =>
+	battle.maps[battle.currentMapIndex]?.userId === userId;
 
 export const passBatonToNextPlayer = (battle: SeaBattleData) => {
 	battle.currentMapIndex = (battle.currentMapIndex + 1) % battle.maps.length;

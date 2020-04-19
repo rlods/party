@@ -48,7 +48,8 @@ export const displayMessage = (
 export const displayError = (text: string, tag?: string) =>
 	displayMessage("error", { tag, text });
 
-export const displayInfo = (text: string) => displayMessage("info", { text });
+export const displayInfo = (text: string, tag?: string) =>
+	displayMessage("info", { tag, text });
 
 export const displaySuccess = (text: string) =>
 	displayMessage("success", { text });
