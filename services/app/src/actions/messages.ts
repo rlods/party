@@ -10,6 +10,7 @@ type MessageCreationData = {
 	autoclear?: boolean;
 	duration?: number;
 	extra?: () => React.ReactNode;
+	tag?: string;
 	text?: string;
 	weight?: number;
 };
@@ -20,6 +21,7 @@ export const displayMessage = (
 		autoclear = true,
 		duration = 3000,
 		extra,
+		tag,
 		text,
 		weight = 0
 	}: MessageCreationData
@@ -30,6 +32,7 @@ export const displayMessage = (
 			extra,
 			id,
 			stamp: new Date().getTime(),
+			tag,
 			text,
 			type,
 			weight
@@ -42,7 +45,8 @@ export const displayMessage = (
 
 // ------------------------------------------------------------------
 
-export const displayError = (text: string) => displayMessage("error", { text });
+export const displayError = (text: string, tag?: string) =>
+	displayMessage("error", { tag, text });
 
 export const displayInfo = (text: string) => displayMessage("info", { text });
 

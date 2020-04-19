@@ -4,6 +4,7 @@ export type Message = {
 	extra?: () => React.ReactNode;
 	id: number;
 	stamp: number;
+	tag?: string;
 	text?: string;
 	type: MessageType;
 	weight: number;

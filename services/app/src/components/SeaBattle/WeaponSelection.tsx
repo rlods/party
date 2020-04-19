@@ -16,50 +16,49 @@ import {
 // ------------------------------------------------------------------
 
 export const WeaponSelection = ({
-	onSelectWeaponType,
+	onSelect,
 	weapons
 }: {
-	onSelectWeaponType: (type?: SeaBattleWeaponType) => void;
+	onSelect: (type?: SeaBattleWeaponType) => void;
 	weapons: SeaBattleWeaponData[];
 }) => {
 	const svg = useRef<SVGSVGElement>(null);
 
-	const [selectedPosition, setSelectedPosition] = useState<number>(-1);
-	const [selectedVisibility, setSelectedVisibility] = useState<
-		SeaBattleAssetVisibility
-	>("hidden");
+	const [selectedPos, setSelectedPos] = useState<number>(-1);
+	const [selectedVis, setSelectedVis] = useState<SeaBattleAssetVisibility>(
+		"hidden"
+	);
 
-	const [selectionPosition, setSelectionPosition] = useState<number>(-1);
-	const [selectionVisibility, setSelectionVisibility] = useState<
-		SeaBattleAssetVisibility
-	>("hidden");
+	const [selectionPos, setSelectionPos] = useState<number>(-1);
+	const [selectionVis, setSelectionVis] = useState<SeaBattleAssetVisibility>(
+		"hidden"
+	);
 
 	const onClick = useCallback(
 		(position: SeaBattlePosition) => {
 			const { x } = getSVGNormalizedPosition(svg.current!, position);
-			if (selectedPosition === x) {
+			if (selectedPos === x) {
 				// Reset
-				setSelectedPosition(-1);
-				setSelectedVisibility("hidden");
-				onSelectWeaponType(void 0);
-				return;
+				setSelectedPos(-1);
+				setSelectedVis("hidden");
+				onSelect(void 0);
+			} else {
+				// Set
+				setSelectedPos(x);
+				setSelectedVis("visible");
+				onSelect(SeaBattleWeaponTypes[x]);
 			}
-			// Set
-			setSelectedPosition(x);
-			setSelectedVisibility("visible");
-			onSelectWeaponType(SeaBattleWeaponTypes[x]);
 		},
-		[onSelectWeaponType, selectedPosition]
+		[onSelect, selectedPos]
 	);
 
-	const onOver = useCallback((position: SeaBattlePosition) => {
-		const { x } = getSVGNormalizedPosition(svg.current!, position);
-		setSelectionPosition(x);
-		setSelectionVisibility("visible");
+	const onLeave = useCallback(() => {
+		setSelectionVis("hidden");
 	}, []);
 
-	const onLeave = useCallback(() => {
-		setSelectionVisibility("hidden");
+	const onOver = useCallback((position: SeaBattlePosition) => {
+		setSelectionPos(getSVGNormalizedPosition(svg.current!, position).x);
+		setSelectionVis("visible");
 	}, []);
 
 	return (
@@ -74,13 +73,13 @@ export const WeaponSelection = ({
 			<rect width="400" height="400" fill="url(#sea-grid)" />
 			<Cell
 				type="cell-selection"
-				position={{ x: selectionPosition, y: 0 }}
-				visibility={selectionVisibility}
+				position={{ x: selectionPos, y: 0 }}
+				visibility={selectionVis}
 			/>
 			<Cell
 				type="cell-selected"
-				position={{ x: selectedPosition, y: 0 }}
-				visibility={selectedVisibility}
+				position={{ x: selectedPos, y: 0 }}
+				visibility={selectedVis}
 			/>
 			<Weapons
 				weapons={SeaBattleWeaponTypes.map((type, index) => ({

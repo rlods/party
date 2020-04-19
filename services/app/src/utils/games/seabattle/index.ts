@@ -7,6 +7,7 @@ import { augmentedArrayIndexAccess } from "../../";
 export const GRID_CELL_COUNT = 10;
 export const GRID_CELL_UNIT_SIZE = 40;
 export const MAX_PLAYER_COUNT = 2;
+export const INVALID_MOVE_MESSAGE_TAG = "invalid_move";
 
 // ------------------------------------------------------------------
 

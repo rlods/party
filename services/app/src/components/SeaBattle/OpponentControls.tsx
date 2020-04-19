@@ -31,9 +31,6 @@ export const OpponentControls = ({
 			onSelectPreviousOpponent={onSelectPreviousOpponent}
 			onSelectNextOpponent={onSelectNextOpponent}
 		/>
-		<WeaponSelection
-			onSelectWeaponType={onSelectWeaponType}
-			weapons={weapons}
-		/>
+		<WeaponSelection onSelect={onSelectWeaponType} weapons={weapons} />
 	</div>
 );

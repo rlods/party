@@ -39,6 +39,7 @@ export default {
 			join_battle: "Join the battle"
 		},
 		max_players_count: "Maximum players number has been already reached",
+		no_opponents: "No opponents",
 		watch_or_join: "You can watch or..."
 	},
 	rooms: {

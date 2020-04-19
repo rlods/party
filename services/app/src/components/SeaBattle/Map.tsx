@@ -28,51 +28,55 @@ export const Map = ({
 	onSelectBoatIndex?: (index: number) => void;
 }) => {
 	const svg = useRef<SVGSVGElement>(null);
-	const [selectedPosition, setSelectedPosition] = useState<SeaBattlePosition>(
-		{
-			x: 0,
-			y: 0
-		}
-	);
-	const [selectedVisibility, setSelectedVisibility] = useState<
-		SeaBattleAssetVisibility
-	>("hidden");
-	const [selectionPosition, setSelectionPosition] = useState<
-		SeaBattlePosition
-	>({
+
+	const [selectedPos, setSelectedPos] = useState<SeaBattlePosition>({
 		x: 0,
 		y: 0
 	});
-	const [selectionVisibility, setSelectionVisibility] = useState<
-		SeaBattleAssetVisibility
-	>("hidden");
+	const [selectedVis, setSelectedVis] = useState<SeaBattleAssetVisibility>(
+		"hidden"
+	);
+
+	const [selectionPos, setSelectionPos] = useState<SeaBattlePosition>({
+		x: 0,
+		y: 0
+	});
+	const [selectionVis, setSelectionVis] = useState<SeaBattleAssetVisibility>(
+		"hidden"
+	);
 
 	const onClick = useCallback(
 		(position: SeaBattlePosition) => {
-			const normalizedPosition = getSVGNormalizedPosition(
+			const normalizedPos = getSVGNormalizedPosition(
 				svg.current!,
 				position
 			);
-			setSelectedPosition(normalizedPosition);
-			setSelectedVisibility("visible");
+			if (
+				selectedPos.x === normalizedPos.x &&
+				selectedPos.y === normalizedPos.y
+			) {
+				// Reset
+				setSelectedPos({ x: 0, y: 0 });
+				setSelectedVis("hidden");
+			} else {
+				// Set
+				setSelectedPos(normalizedPos);
+				setSelectedVis("visible");
+			}
 			if (onCellClick) {
-				onCellClick(normalizedPosition);
+				onCellClick(normalizedPos);
 			}
 		},
-		[onCellClick]
+		[onCellClick, selectedPos]
 	);
 
 	const onLeave = useCallback(() => {
-		setSelectionVisibility("hidden");
+		setSelectionVis("hidden");
 	}, []);
 
 	const onOver = useCallback((position: SeaBattlePosition) => {
-		const normalizedPosition = getSVGNormalizedPosition(
-			svg.current!,
-			position
-		);
-		setSelectionPosition(normalizedPosition);
-		setSelectionVisibility("visible");
+		setSelectionPos(getSVGNormalizedPosition(svg.current!, position));
+		setSelectionVis("visible");
 	}, []);
 
 	return (
@@ -87,13 +91,13 @@ export const Map = ({
 			<rect width="400" height="400" fill="url(#sea-grid)" />
 			<Cell
 				type="cell-selection"
-				position={selectionPosition}
-				visibility={selectionVisibility}
+				position={selectionPos}
+				visibility={selectionVis}
 			/>
 			<Cell
 				type="cell-selected"
-				position={selectedPosition}
-				visibility={selectedVisibility}
+				position={selectedPos}
+				visibility={selectedVis}
 			/>
 			<Weapons weapons={weapons} />
 			<Fleet

@@ -40,7 +40,9 @@ export const OpponentSelection = ({
 		</div>
 	) : (
 		<div className="SeaBattleOpponentSelection">
-			<span className="SeaBattleOpponentSelectionLabel">No opponent</span>
+			<span className="SeaBattleOpponentSelectionLabel">
+				{t("games.no_opponents")}
+			</span>
 		</div>
 	);
 };

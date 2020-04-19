@@ -12,7 +12,8 @@ type MessagesAction =
 export const addMessage = (message: Message) =>
 	createAction("message/ADD", message);
 export const removeMessage = (id: number) => createAction("message/REMOVE", id);
-export const clearMessages = () => createAction("message/RESET");
+export const clearMessages = (tag?: string) =>
+	createAction("message/RESET", { tag });
 
 // ------------------------------------------------------------------
 
@@ -32,7 +33,9 @@ export const messagesReducer: Reducer<State, MessagesAction> = (
 		case "message/REMOVE":
 			return state.filter(other => other.id !== action.payload);
 		case "message/RESET":
-			return INITIAL_STATE;
+			return !action.payload.tag
+				? INITIAL_STATE
+				: state.filter(message => message.tag !== action.payload.tag);
 		default:
 			return state;
 	}

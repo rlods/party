@@ -6,14 +6,16 @@ import {
 	SeaBattleMovementType,
 	SeaBattleData,
 	generateFleet,
+	AngleToDirection,
 	MAX_PLAYER_COUNT,
-	AngleToDirection
+	INVALID_MOVE_MESSAGE_TAG
 } from "../../utils/games/seabattle";
 import {
 	SeaBattleBoatTranslationMappings,
 	SeaBattleBoatRotationTransformationMappings
 } from "../../utils/games/seabattle/mappings";
 import { movementIsPossible } from "../../utils/games/seabattle/collision";
+import { clearMessages } from "../../reducers/messages";
 
 // ------------------------------------------------------------------
 
@@ -133,7 +135,12 @@ export const moveBoat = ({
 				oldPosition,
 				newPosition
 			});
-			dispatch(displayError("games.seabattle.movement_is_not_possible"));
+			dispatch(
+				displayError(
+					"games.seabattle.movement_is_not_possible",
+					INVALID_MOVE_MESSAGE_TAG
+				)
+			);
 			return;
 		}
 
@@ -153,6 +160,8 @@ export const moveBoat = ({
 			...info,
 			extra: encode(battle)
 		});
+
+		dispatch(clearMessages(INVALID_MOVE_MESSAGE_TAG));
 	} catch (err) {
 		dispatch(displayError(extractErrorMessage(err)));
 	}
