@@ -6,7 +6,8 @@ import { Map } from "../../components/SeaBattle/Map";
 import { RootState } from "../../reducers";
 import {
 	extractBattleInfo,
-	MAX_PLAYER_COUNT
+	MAX_PLAYER_COUNT,
+	SeaBattleMovementType
 } from "../../utils/games/seabattle";
 import { Dispatch } from "../../actions";
 import { moveBoat, joinBattle } from "../../actions/games/seabattle";
@@ -60,41 +61,17 @@ export const SeaBattle = () => {
 		}
 	}, [dispatch, queueReady, tracksCount]);
 
-	const moveForward = useCallback(() => {
-		dispatch(
-			moveBoat({
-				boatIndex: selectedBoatIndex,
-				movement: "move-forward"
-			})
-		);
-	}, [dispatch, selectedBoatIndex]);
-
-	const moveBackward = useCallback(() => {
-		dispatch(
-			moveBoat({
-				boatIndex: selectedBoatIndex,
-				movement: "move-backward"
-			})
-		);
-	}, [dispatch, selectedBoatIndex]);
-
-	const rotateLeft = useCallback(() => {
-		dispatch(
-			moveBoat({
-				boatIndex: selectedBoatIndex,
-				movement: "rotate-left"
-			})
-		);
-	}, [dispatch, selectedBoatIndex]);
-
-	const rotateRight = useCallback(() => {
-		dispatch(
-			moveBoat({
-				boatIndex: selectedBoatIndex,
-				movement: "rotate-right"
-			})
-		);
-	}, [dispatch, selectedBoatIndex]);
+	const onMove = useCallback(
+		(movement: SeaBattleMovementType) => {
+			dispatch(
+				moveBoat({
+					boatIndex: selectedBoatIndex,
+					movement
+				})
+			);
+		},
+		[dispatch, selectedBoatIndex]
+	);
 
 	const onKeyDown = useCallback(
 		(e: KeyboardEvent) => {
@@ -113,47 +90,36 @@ export const SeaBattle = () => {
 				return;
 			}
 			const MoveMappings: {
-				[direction: string]: { [key: string]: () => void };
+				[direction: string]: { [key: string]: SeaBattleMovementType };
 			} = {
 				N: {
-					[KEY_UP]: moveForward,
-					[KEY_DOWN]: moveBackward,
-					[KEY_LEFT]: rotateLeft,
-					[KEY_RIGHT]: rotateRight
+					[KEY_UP]: "move-forward",
+					[KEY_DOWN]: "move-backward",
+					[KEY_LEFT]: "rotate-left",
+					[KEY_RIGHT]: "rotate-right"
 				},
 				E: {
-					[KEY_UP]: rotateLeft,
-					[KEY_DOWN]: rotateRight,
-					[KEY_LEFT]: moveBackward,
-					[KEY_RIGHT]: moveForward
+					[KEY_UP]: "rotate-left",
+					[KEY_DOWN]: "rotate-right",
+					[KEY_LEFT]: "move-backward",
+					[KEY_RIGHT]: "move-forward"
 				},
 				S: {
-					[KEY_UP]: moveBackward,
-					[KEY_DOWN]: moveForward,
-					[KEY_LEFT]: rotateRight,
-					[KEY_RIGHT]: rotateLeft
+					[KEY_UP]: "move-backward",
+					[KEY_DOWN]: "move-forward",
+					[KEY_LEFT]: "rotate-right",
+					[KEY_RIGHT]: "rotate-left"
 				},
 				W: {
-					[KEY_UP]: rotateRight,
-					[KEY_DOWN]: rotateLeft,
-					[KEY_LEFT]: moveForward,
-					[KEY_RIGHT]: moveBackward
+					[KEY_UP]: "rotate-right",
+					[KEY_DOWN]: "rotate-left",
+					[KEY_LEFT]: "move-forward",
+					[KEY_RIGHT]: "move-backward"
 				}
 			};
-			const move = MoveMappings[boat.direction][e.keyCode];
-			if (move) {
-				move();
-			}
+			onMove(MoveMappings[boat.direction][e.keyCode]);
 		},
-		[
-			moveForward,
-			moveBackward,
-			rotateLeft,
-			rotateRight,
-			battle,
-			player,
-			boat
-		]
+		[onMove, battle, player, boat]
 	);
 
 	useEffect(() => {
@@ -170,10 +136,10 @@ export const SeaBattle = () => {
 				<PlayerControls
 					boat={boat}
 					disabled={!boat}
-					onMoveForward={moveForward}
-					onMoveBackward={moveBackward}
-					onRotateLeft={rotateLeft}
-					onRotateRight={rotateRight}
+					onMoveForward={() => onMove("move-forward")}
+					onMoveBackward={() => onMove("move-backward")}
+					onRotateLeft={() => onMove("rotate-left")}
+					onRotateRight={() => onMove("rotate-right")}
 				/>
 				{player ? (
 					<Map
