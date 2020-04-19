@@ -4,6 +4,7 @@ import { lockRoom } from "./room";
 import { MediaAccess, findContextFromTrackIndex } from "../utils/medias";
 import { extractErrorMessage } from "../utils/messages";
 import { createQueueMerging, createQueueRemoving } from "../utils/rooms";
+import { generateRandomPosition } from "../utils/player";
 
 // ------------------------------------------------------------------
 
@@ -196,6 +197,11 @@ export const moveForward = (): AsyncAction => async (dispatch, getState) => {
 		// Nothing to do
 		return;
 	}
-	console.debug("[Queue] Moving forward...");
-	dispatch(setQueuePosition((info.queue_position + 1) % tracks.length));
+	if (info.playmode === "shuffle") {
+		console.debug("[Queue] Randomizing next track...");
+		dispatch(setQueuePosition(generateRandomPosition() % tracks.length));
+	} else {
+		console.debug("[Queue] Moving forward...");
+		dispatch(setQueuePosition((info.queue_position + 1) % tracks.length));
+	}
 };

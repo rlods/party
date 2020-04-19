@@ -11,11 +11,12 @@ export const RoomTypes = [
 ];
 
 export type RoomInfo = {
+	extra: string;
 	name: string;
 	queue?: RoomQueue;
 	queue_position: number;
-	play_mode: PlayMode;
 	playing: boolean;
+	playmode: PlayMode;
 	timestamp: number;
 	type: RoomType;
 };

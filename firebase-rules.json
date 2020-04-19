@@ -36,12 +36,15 @@
 				".validate": "newData.hasChildren(['info', 'secret'])",
 				"info": {
 					".read": true,
-					".validate": "newData.hasChildren(['name', 'playing', 'play_mode', 'queue_position', 'timestamp', 'type'])",
+					".validate": "newData.hasChildren(['name', 'playing', 'playmode', 'queue_position', 'timestamp', 'type'])",
+					"extra": {
+						".validate": "newData.isString()"
+					},
 					"name": {
 						".validate": "newData.isString() && newData.val().length >= 2 && newData.val().length <= 100"
 					},
 					"playing": { ".validate": "newData.isBoolean()" },
-					"play_mode": {
+					"playmode": {
 						".validate": "newData.isString() && newData.val().length > 0 && newData.val().length < 20"
 					},
 					"queue": {

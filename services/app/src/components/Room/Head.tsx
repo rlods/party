@@ -11,6 +11,7 @@ import { selectRoom } from "../../selectors/room";
 import { displaySuccess } from "../../actions/messages";
 import { confirmModal } from "../../actions/modals";
 import { RoomInfo } from "../../utils/rooms";
+import { selectTracksCount } from "../../selectors/medias";
 import "./Head.scss";
 
 // ------------------------------------------------------------------
@@ -23,9 +24,7 @@ export const Head = () => {
 	const mediasCount = useSelector<RootState, number>(
 		state => state.room.medias.length
 	);
-	const tracksCount = useSelector<RootState, number>(
-		state => state.room.tracks.length
-	);
+	const tracksCount = useSelector<RootState, number>(selectTracksCount);
 
 	const onCopy = useCallback(async () => {
 		await copyToClipboard(document.location.href.split("?")[0]);

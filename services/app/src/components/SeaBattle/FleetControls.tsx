@@ -1,10 +1,15 @@
-import React from "react";
+import React, { useCallback } from "react";
 //
 import { IconButton } from "../Common/IconButton";
 import {
 	SeaBattleBoatData,
 	SeaBattleMovementIconMappings
 } from "../../utils/games/seabattle";
+import { useSelector, useDispatch } from "react-redux";
+import { moveForward } from "../../actions/queue";
+import { Dispatch } from "../../actions";
+import { useTranslation } from "react-i18next";
+import { RootState } from "../../reducers";
 
 // ------------------------------------------------------------------
 
@@ -23,6 +28,14 @@ export const FleetControls = ({
 	onRotateLeft: () => void;
 	onRotateRight: () => void;
 }) => {
+	const { t } = useTranslation();
+	const dispatch = useDispatch<Dispatch>();
+	const tracksCount = useSelector<RootState, number>(
+		state => state.room.medias.length
+	);
+
+	const nextTrack = useCallback(() => dispatch(moveForward()), [dispatch]);
+
 	return (
 		<div className="SeaBattleControls">
 			<IconButton
@@ -40,6 +53,13 @@ export const FleetControls = ({
 				}
 				title="Move Backward"
 				onClick={onMoveBackward}
+			/>
+			<IconButton
+				disabled={tracksCount === 0}
+				icon="step-forward"
+				onClick={nextTrack}
+				size="M"
+				title={t("player.forward")}
 			/>
 			<IconButton
 				disabled={disabled}

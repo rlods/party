@@ -19,3 +19,5 @@ export const selectTracks = (state: RootState): Array<Track | null> => {
 	}
 	return res;
 };
+
+export const selectTracksCount = (state: RootState) => state.room.tracks.length;

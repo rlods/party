@@ -23,19 +23,34 @@ import history from "../utils/history";
 // ------------------------------------------------------------------
 
 const DEFAULT_QUEUE_INFO_BY_TYPE: {
-	[type: string]: Pick<RoomInfo, "playing" | "play_mode" | "queue">;
+	[type: string]: Pick<RoomInfo, "playing" | "playmode" | "queue">;
 } = {
 	dj: {
 		playing: false,
-		play_mode: "default",
+		playmode: "default",
 		queue: {}
 	},
 	seabattle: {
 		playing: true,
-		play_mode: "shuffle",
+		playmode: "shuffle",
 		queue: {
 			0: {
 				id: "301013", // Pirates Of The Caribbean OST
+				provider: "deezer",
+				type: "album"
+			},
+			1: {
+				id: "7358507", // Stalingrad OST
+				provider: "deezer",
+				type: "album"
+			},
+			2: {
+				id: "558976", // Master & Commander OST
+				provider: "deezer",
+				type: "album"
+			},
+			3: {
+				id: "87375582", // Le chant du loup OST
 				provider: "deezer",
 				type: "album"
 			}
@@ -55,6 +70,7 @@ export const createRoom = (
 		console.debug("[Room] Creating...", { id, secret });
 
 		await FirebaseRoom({ id, secret }).update({
+			extra: "",
 			name,
 			queue_position: 0,
 			type,
@@ -296,54 +312,59 @@ const _scheduleTimer = (
 			room: { info, tracks },
 			medias: { medias }
 		} = getState();
-		if (tracks.length > 0) {
-			// Detect and apply change to queue and player
-			const nextTrackIndex = _computeNextPosition(
-				player,
-				tracks,
-				info!.queue_position
-			);
 
-			if (nextTrackIndex >= 0) {
-				const nextAccess = tracks[nextTrackIndex];
-				const nextTrack =
-					medias[nextAccess.provider][nextAccess.type][nextAccess.id];
-				console.debug("Detected play change...", {
-					nextTrack,
-					nextTrackIndex
-				});
-
-				try {
-					const [color] = await Promise.all([
-						pickColor(nextTrack.album.picture_small),
-						player.play(
-							nextTrackIndex,
-							nextTrack.id,
-							nextTrack.preview,
-							0
-						)
-					]);
-					dispatch(displayMediaInfo(nextTrack));
-					dispatch(
-						setRoom({
-							color,
-							info: { ...info!, queue_position: nextTrackIndex } // for info update because of player change without firebase
-						})
-					);
-				} catch (err) {
-					dispatch(displayError(extractErrorMessage(err)));
-				}
-			}
-
-			// Reschedule time
-			// console.debug("[Room] Rescheduling");
-			_scheduleTimer(dispatch, getState, player, ms);
-		} else {
+		if (tracks.length === 0) {
 			// Last track has been removed from queue by user
 			console.debug("[Room] No more tracks in queue...");
 			dispatch(setRoom({ info: { ...info!, playing: false } })); // for info update because of player change  without firebase
 			await player.stop();
 			PLAYER_TIMER = null;
+			return;
 		}
+
+		// Detect and apply change to queue and player
+		const nextTrackIndex = _computeNextPosition(
+			player,
+			tracks,
+			info!.queue_position
+		);
+
+		if (nextTrackIndex >= 0) {
+			const nextAccess = tracks[nextTrackIndex];
+			const nextTrack =
+				medias[nextAccess.provider][nextAccess.type][nextAccess.id];
+			console.debug("Detected play change...", {
+				nextTrack,
+				nextTrackIndex
+			});
+
+			try {
+				const [color] = await Promise.all([
+					pickColor(nextTrack.album.picture_small),
+					player.play(
+						nextTrackIndex,
+						nextTrack.id,
+						nextTrack.preview,
+						0,
+						{
+							playmode: info!.playmode
+						}
+					)
+				]);
+				dispatch(displayMediaInfo(nextTrack));
+				dispatch(
+					setRoom({
+						color,
+						info: { ...info!, queue_position: nextTrackIndex } // for info update because of player change without firebase
+					})
+				);
+			} catch (err) {
+				dispatch(displayError(extractErrorMessage(err)));
+			}
+		}
+
+		// Reschedule time
+		// console.debug("[Room] Rescheduling");
+		_scheduleTimer(dispatch, getState, player, ms);
 	}, ms);
 };

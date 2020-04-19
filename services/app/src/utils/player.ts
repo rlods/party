@@ -6,6 +6,11 @@ import {
 	getDestinationNode,
 	getOrLoadAudioBuffer
 } from "./audio";
+import { PlayMode } from "./rooms";
+
+// ------------------------------------------------------------------
+
+export const generateRandomPosition = () => Math.floor(Math.random() * 1000000);
 
 // ------------------------------------------------------------------
 
@@ -18,7 +23,10 @@ export type Player = {
 		trackPosition: number,
 		trackId: string,
 		trackUrl: string,
-		offset: number
+		offset: number,
+		options?: {
+			playmode: PlayMode;
+		}
 	) => Promise<void>;
 	stop: () => Promise<void>;
 };
@@ -72,7 +80,10 @@ const PlayerImpl = (): Player => {
 		trackPosition: number,
 		trackId: string,
 		trackUrl: string,
-		offset: number
+		offset: number,
+		options?: {
+			playmode: PlayMode;
+		}
 	) => {
 		await stop();
 		const buffer = await getOrLoadAudioBuffer(trackUrl); // TODO: warning if loadBuffer takes long for some reason and user clicks stop before end, next part of this function will continue after stop have been requested
@@ -95,7 +106,11 @@ const PlayerImpl = (): Player => {
 			_sourceNode = null;
 			_startTime = 0;
 			_trackId = "";
-			_trackPosition++;
+			if (options?.playmode === "shuffle") {
+				_trackPosition += generateRandomPosition();
+			} else {
+				_trackPosition++;
+			}
 		};
 		_sourceNode.playbackRate.value = 1.0;
 		_sourceNode.connect(getOrCreateNode());

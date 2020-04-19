@@ -9,7 +9,11 @@ import { Dispatch } from "../../actions";
 import { moveBoat } from "../../actions/games/seabattle";
 import { KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT } from "../../utils/keyboards";
 import { WeaponControls } from "../../components/SeaBattle/WeaponsControls";
+import { startPlayer } from "../../actions/player";
+import { setQueuePosition } from "../../actions/queue";
+import { generateRandomPosition } from "../../utils/player";
 import "./SeaBattle.scss";
+import { selectTracksCount } from "../../selectors/medias";
 
 // ------------------------------------------------------------------
 
@@ -17,6 +21,12 @@ export const SeaBattle = () => {
 	const dispatch = useDispatch<Dispatch>();
 	const [selectedBoat1, setSelectedBoat1] = useState<number>(-1);
 	const [selectedBoat2, setSelectedBoat2] = useState<number>(-1);
+
+	const queueReady = useSelector<RootState, boolean>(
+		state => !!state.room.info
+	);
+
+	const tracksCount = useSelector<RootState, number>(selectTracksCount);
 
 	const player1 = useSelector<RootState, SeaBattlePlayerData>(
 		state => state.games.seabattle.players.player1
@@ -32,6 +42,14 @@ export const SeaBattle = () => {
 		setSelectedBoat2
 	];
 	const activePlayer = 0;
+
+	useEffect(() => {
+		if (queueReady && tracksCount > 0) {
+			const x = generateRandomPosition() % tracksCount;
+			dispatch(setQueuePosition(x));
+			dispatch(startPlayer());
+		}
+	}, [dispatch, queueReady, tracksCount]);
 
 	const moveForward = useCallback(() => {
 		dispatch(
