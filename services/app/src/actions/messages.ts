@@ -36,7 +36,6 @@ export const displayMessage = (
 		})
 	);
 	if (autoclear) {
-		console.log("TOTO");
 		setTimeout(() => dispatch(removeMessage(id)), duration);
 	}
 };
