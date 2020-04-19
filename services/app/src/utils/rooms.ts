@@ -6,6 +6,10 @@ export type PlayMode = "default" | "shuffle"; // TODO: Implement Shuffle mode
 
 export type RoomType = "blind" | "dj" | "seabattle";
 
+export const DEFAULT_PLAY_MODE: PlayMode = "default";
+
+export const DEFAULT_ROOM_TYPE: RoomType = "dj";
+
 export const RoomTypes = [
 	// "blind",
 	"dj",
@@ -55,7 +59,6 @@ export const createQueueRemoving = (
 	if (index < 0 || index >= accesses.length) {
 		throw new Error("Media index is out of range");
 	}
-
 	const queue: RoomQueue = {};
 	const copy = [...accesses];
 	copy.splice(index, count);

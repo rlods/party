@@ -2,7 +2,7 @@ import * as firebase from "firebase/app";
 import "firebase/database";
 //
 import firebaseConfig from "../config/firebase";
-import { RoomInfo } from "./rooms";
+import { RoomInfo, DEFAULT_PLAY_MODE, DEFAULT_ROOM_TYPE } from "./rooms";
 import { UserInfo } from "./users";
 
 // ------------------------------------------------------------------
@@ -303,10 +303,10 @@ export const FirebaseParty = ({
 		extra: "",
 		name: "",
 		playing: false,
-		playmode: "default",
+		playmode: DEFAULT_PLAY_MODE,
 		queue_position: 0,
 		timestamp: 0,
-		type: "dj"
+		type: DEFAULT_ROOM_TYPE
 	};
 
 	const _onAdded = (added: firebase.database.DataSnapshot) => {
