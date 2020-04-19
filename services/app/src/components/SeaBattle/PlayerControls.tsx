@@ -13,7 +13,7 @@ import { RootState } from "../../reducers";
 
 // ------------------------------------------------------------------
 
-export const FleetControls = ({
+export const PlayerControls = ({
 	boat,
 	disabled = false,
 	onMoveBackward,

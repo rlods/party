@@ -1,3 +1,7 @@
+import { decode } from "../encoder";
+
+// ------------------------------------------------------------------
+
 export const GRID_CELL_COUNT = 10;
 export const GRID_CELL_UNIT_SIZE = 40;
 
@@ -532,5 +536,42 @@ export const generateBattle = (userId: string): SeaBattleData => {
 				weapons: [{ count: 1, position: { x: 0, y: 5 }, type: "mine" }]
 			}
 		}
+	};
+};
+
+// ------------------------------------------------------------------
+
+export const extractBattleInfo = (
+	extra: string,
+	userId: string,
+	boatIndex: number,
+	opponentIndex: number
+) => {
+	let battle: SeaBattleData | undefined = void 0;
+	let player: SeaBattlePlayerData | undefined = void 0;
+	let opponent: SeaBattlePlayerData | undefined = void 0;
+	let opponents: SeaBattlePlayerData[] | undefined = void 0;
+	let boat: SeaBattleBoatData | undefined = void 0;
+	if (extra) {
+		battle = decode<SeaBattleData>(extra);
+		if (userId) {
+			player = battle.players[userId];
+			if (boatIndex >= 0 && boatIndex < player.fleet.length) {
+				boat = player.fleet[boatIndex];
+			}
+		}
+		opponents = Object.values(battle.players).filter(
+			other => other !== player
+		);
+		if (opponentIndex >= 0 && opponentIndex < opponents.length) {
+			opponent = opponents[opponentIndex];
+		}
+	}
+	return {
+		battle,
+		boat,
+		opponent,
+		opponents,
+		player
 	};
 };

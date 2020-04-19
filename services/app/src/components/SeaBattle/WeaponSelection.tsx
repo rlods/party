@@ -1,6 +1,5 @@
 import React, { useRef, useCallback, useState } from "react";
 //
-import { IconButton } from "../Common/IconButton";
 import { getSVGPosition } from "../../utils/svg";
 import {
 	SeaBattleAssetVisibility,
@@ -14,8 +13,9 @@ import { Weapons } from "./Weapons";
 
 // ------------------------------------------------------------------
 
-export const WeaponControls = ({ disabled = true }: { disabled?: boolean }) => {
+export const WeaponSelection = () => {
 	const svg = useRef<SVGSVGElement>(null);
+
 	const [selectedPosition, setSelectedPosition] = useState<
 		SeaBattleAssetPosition
 	>({
@@ -34,7 +34,6 @@ export const WeaponControls = ({ disabled = true }: { disabled?: boolean }) => {
 	const [selectionVisibility, setSelectionVisibility] = useState<
 		SeaBattleAssetVisibility
 	>("hidden");
-
 	const onClick = useCallback((position: SeaBattleAssetPosition) => {
 		const { tx, ty } = getSVGPosition(svg.current!, position);
 		setSelectedPosition({
@@ -65,48 +64,34 @@ export const WeaponControls = ({ disabled = true }: { disabled?: boolean }) => {
 	];
 
 	return (
-		<div className="SeaBattleControls">
-			<IconButton
-				disabled={true}
-				icon="caret-up"
-				title="Previous enemy"
-				onClick={() => {}}
+		<svg
+			className="SeaBattleWeaponSelection"
+			viewBox="0 0 160 40"
+			ref={svg}
+			onClick={e => onClick({ x: e.clientX, y: e.clientY })}
+			onMouseLeave={onLeave}
+			onMouseMove={e => onOver({ x: e.clientX, y: e.clientY })}>
+			<BattleAssets />
+			<rect width="400" height="400" fill="url(#sea-grid)" />
+			<Cell
+				type="cell-selection"
+				position={selectionPos}
+				visibility={selectionVisibility}
 			/>
-			<svg
-				className="SeaBattleWeaponControls"
-				viewBox="0 0 160 40"
-				ref={svg}
-				onClick={e => onClick({ x: e.clientX, y: e.clientY })}
-				onMouseLeave={onLeave}
-				onMouseMove={e => onOver({ x: e.clientX, y: e.clientY })}>
-				<BattleAssets />
-				<rect width="400" height="400" fill="url(#sea-grid)" />
-				<Cell
-					type="cell-selection"
-					position={selectionPos}
-					visibility={selectionVisibility}
-				/>
-				<Cell
-					type="cell-selected"
-					position={selectedPosition}
-					visibility={selectedVisibility}
-				/>
-				<Weapons weapons={weapons} />
-				{weapons.map((weapon, index) => (
-					<Cell
-						key={index}
-						type="cell-crossed"
-						position={{ x: index, y: 0 }}
-						visibility={weapon.count === 0 ? "visible" : "hidden"}
-					/>
-				))}
-			</svg>
-			<IconButton
-				disabled={true}
-				icon="caret-down"
-				title="Next enemy"
-				onClick={() => {}}
+			<Cell
+				type="cell-selected"
+				position={selectedPosition}
+				visibility={selectedVisibility}
 			/>
-		</div>
+			<Weapons weapons={weapons} />
+			{weapons.map((weapon, index) => (
+				<Cell
+					key={index}
+					type="cell-crossed"
+					position={{ x: index, y: 0 }}
+					visibility={weapon.count === 0 ? "visible" : "hidden"}
+				/>
+			))}
+		</svg>
 	);
 };

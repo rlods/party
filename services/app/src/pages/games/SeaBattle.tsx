@@ -1,23 +1,18 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 //
-import { FleetControls } from "../../components/SeaBattle/FleetControls";
+import { PlayerControls } from "../../components/SeaBattle/PlayerControls";
 import { Map } from "../../components/SeaBattle/Map";
 import { RootState } from "../../reducers";
-import {
-	SeaBattleData,
-	SeaBattlePlayerData,
-	SeaBattleBoatData
-} from "../../utils/games/seabattle";
+import { extractBattleInfo } from "../../utils/games/seabattle";
 import { Dispatch } from "../../actions";
 import { moveBoat } from "../../actions/games/seabattle";
 import { KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT } from "../../utils/keyboards";
-import { WeaponControls } from "../../components/SeaBattle/WeaponsControls";
+import { OpponentControls } from "../../components/SeaBattle/OpponentControls";
 import { startPlayer } from "../../actions/player";
 import { setQueuePosition } from "../../actions/queue";
 import { generateRandomPosition } from "../../utils/player";
 import { selectTracksCount } from "../../selectors/medias";
-import { decode } from "../../utils/encoder";
 import "./SeaBattle.scss";
 
 // ------------------------------------------------------------------
@@ -25,42 +20,32 @@ import "./SeaBattle.scss";
 export const SeaBattle = () => {
 	const dispatch = useDispatch<Dispatch>();
 	const [selectedBoatIndex, setSelectedBoat] = useState<number>(-1);
+	const [selectedOpponentIndex, setSelectedOpponent] = useState<number>(0);
 
 	const queueReady = useSelector<RootState, boolean>(
 		state => !!state.room.info
 	);
 
-	const playerId = useSelector<RootState, string | undefined>(
+	const userId = useSelector<RootState, string>(
 		state => state.user.access.id
 	);
 
 	const tracksCount = useSelector<RootState, number>(selectTracksCount);
 
-	const extra = useSelector<RootState, string | undefined>(
-		state => state.room.info?.extra
+	const extra = useSelector<RootState, string>(
+		state => state.room.info?.extra || ""
 	);
 
-	let battle: SeaBattleData | undefined = void 0;
-	let player: SeaBattlePlayerData | undefined = void 0;
-	let boat: SeaBattleBoatData | undefined = void 0;
-
-	if (extra) {
-		battle = decode<SeaBattleData>(extra);
-		if (playerId) {
-			player = battle.players[playerId];
-			if (
-				selectedBoatIndex >= 0 &&
-				selectedBoatIndex < player.fleet.length
-			) {
-				boat = player.fleet[selectedBoatIndex];
-			}
-		}
-	}
+	const { battle, boat, opponent, opponents, player } = extractBattleInfo(
+		extra,
+		userId,
+		selectedBoatIndex,
+		selectedOpponentIndex
+	);
 
 	useEffect(() => {
 		if (queueReady && tracksCount > 0) {
-			const x = generateRandomPosition() % tracksCount;
-			dispatch(setQueuePosition(x));
+			dispatch(setQueuePosition(generateRandomPosition() % tracksCount));
 			dispatch(startPlayer());
 		}
 	}, [dispatch, queueReady, tracksCount]);
@@ -172,7 +157,7 @@ export const SeaBattle = () => {
 	return (
 		<div className="SeaBattle">
 			<div className="SeaBattlePlayer current">
-				<FleetControls
+				<PlayerControls
 					boat={boat}
 					disabled={!boat}
 					onMoveForward={moveForward}
@@ -187,11 +172,30 @@ export const SeaBattle = () => {
 				/>
 			</div>
 			<div className="SeaBattlePlayer other">
-				<WeaponControls disabled={!battle} />
-				<Map
-					player={battle?.players["player2"]}
-					hideActiveFleet={true}
+				<OpponentControls
+					disabled={!opponent}
+					opponentsCount={opponents?.length || 0}
+					onSelectPreviousOpponent={
+						opponents && opponents.length > 0
+							? () =>
+									setSelectedOpponent(
+										selectedOpponentIndex === 0
+											? opponents.length - 1
+											: selectedOpponentIndex - 1
+									)
+							: void 0
+					}
+					onSelectNextOpponent={
+						opponents && opponents.length > 0
+							? () =>
+									setSelectedOpponent(
+										(selectedOpponentIndex + 1) %
+											opponents?.length
+									)
+							: void 0
+					}
 				/>
+				<Map player={opponent} hideActiveFleet={true} />
 			</div>
 		</div>
 	);
