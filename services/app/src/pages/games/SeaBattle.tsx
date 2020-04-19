@@ -22,7 +22,7 @@ import {
 	SeaBattleMovementType,
 	SeaBattlePosition,
 	testHit,
-	SeaBattleWeaponData
+	SeaBattleWeaponType
 } from "../../utils/games/seabattle";
 import "./SeaBattle.scss";
 
@@ -31,8 +31,11 @@ import "./SeaBattle.scss";
 export const SeaBattle = () => {
 	const dispatch = useDispatch<Dispatch>();
 	const { t } = useTranslation();
-	const [selectedBoatIndex, setSelectedBoat] = useState<number>(-1);
+	const [selectedBoatIndex, setSelectedBoatIndex] = useState<number>(-1);
 	const [selectedOpponentIndex, setSelectedOpponent] = useState<number>(0);
+	const [selectedWeaponType, setSelectedWeaponType] = useState<
+		SeaBattleWeaponType | undefined
+	>();
 
 	const userId = useSelector<RootState, string>(
 		state => state.user.access.id
@@ -48,12 +51,20 @@ export const SeaBattle = () => {
 		state => state.room.info
 	);
 
-	const { battle, boat, opponent, opponents, player } = extractBattleInfo(
+	const {
+		battle,
+		boat,
+		opponent,
+		opponents,
+		player,
+		weapon
+	} = extractBattleInfo({
 		extra,
 		userId,
-		selectedBoatIndex,
-		selectedOpponentIndex
-	);
+		boatIndex: selectedBoatIndex,
+		opponentIndex: selectedOpponentIndex,
+		weaponType: selectedWeaponType
+	});
 
 	const onJoinBattle = useCallback(() => {
 		dispatch(joinBattle());
@@ -75,6 +86,10 @@ export const SeaBattle = () => {
 
 	const onMove = useCallback(
 		(movement: SeaBattleMovementType) => {
+			if (selectedBoatIndex < 0) {
+				console.debug("[SeaBattle] No boat selected");
+				return;
+			}
 			dispatch(
 				moveBoat({
 					boatIndex: selectedBoatIndex,
@@ -112,13 +127,21 @@ export const SeaBattle = () => {
 				console.debug("[SeaBattle] No player or opponent");
 				return;
 			}
-			if (!testHit(player, opponent, position)) {
+			if (!weapon) {
+				console.debug("[SeaBattle] No weapon selected");
+				return;
+			}
+			if (!weapon.count) {
+				console.debug("[SeaBattle] No more weapon available");
+				return;
+			}
+			if (!testHit(player, opponent, weapon, position)) {
 				dispatch(displayError("You've missed opponent boat"));
 				return;
 			}
 			dispatch(displaySuccess("You've hitted opponent boat"));
 		},
-		[dispatch, opponent, player]
+		[dispatch, opponent, player, weapon]
 	);
 
 	useEffect(() => {
@@ -134,7 +157,7 @@ export const SeaBattle = () => {
 			<div className="SeaBattlePlayer current">
 				<PlayerControls
 					boat={boat}
-					disabled={!boat}
+					disabled={selectedBoatIndex < 0}
 					onPlayNext={onPlayNext}
 					onMoveForward={() => onMove("move-forward")}
 					onMoveBackward={() => onMove("move-backward")}
@@ -144,8 +167,8 @@ export const SeaBattle = () => {
 				{player ? (
 					<Map
 						player={player}
-						selectedBoat={boat}
-						setSelectedBoat={setSelectedBoat}
+						selectedBoatIndex={selectedBoatIndex}
+						onSelectBoatIndex={setSelectedBoatIndex}
 					/>
 				) : (
 					<div className="SeaBattleJoin">
@@ -168,7 +191,6 @@ export const SeaBattle = () => {
 			</div>
 			<div className="SeaBattlePlayer other">
 				<OpponentControls
-					disabled={!opponent}
 					opponentsCount={opponents?.length || 0}
 					opponentIndex={selectedOpponentIndex}
 					onSelectPreviousOpponent={
@@ -190,9 +212,7 @@ export const SeaBattle = () => {
 									)
 							: void 0
 					}
-					onSelectWeapon={(weapon: SeaBattleWeaponData) => {
-						console.log(weapon);
-					}}
+					onSelectWeaponType={setSelectedWeaponType}
 					weapons={player?.weapons || []}
 				/>
 				<Map

@@ -131,6 +131,14 @@ export type SeaBattleData = {
 
 // ------------------------------------------------------------------
 
+export const countWeapons = (
+	weapons: SeaBattleWeaponData[],
+	type: SeaBattleWeaponType
+) => {
+	const weapon = weapons.find(other => other.type === type);
+	return weapon?.count || 0;
+};
+
 export const generateBattle = (userId: string): SeaBattleData => {
 	console.debug("[SeaBattle] Genering battle...");
 	const battle: SeaBattleData = {
@@ -195,29 +203,45 @@ export const generateFleet = (battle: SeaBattleData, userId: string) => {
 
 // ------------------------------------------------------------------
 
-export const extractBattleInfo = (
-	extra: string,
-	userId: string,
-	boatIndex: number,
-	opponentIndex: number
-): {
+export const extractBattleInfo = ({
+	extra,
+	userId,
+	boatIndex,
+	opponentIndex,
+	weaponType
+}: {
+	extra: string;
+	userId: string;
+	boatIndex: number;
+	opponentIndex: number;
+	weaponType?: SeaBattleWeaponType;
+}): {
 	battle?: SeaBattleData;
 	boat?: SeaBattleBoatData;
 	opponent?: SeaBattlePlayerData;
 	opponents?: SeaBattlePlayerData[];
 	player?: SeaBattlePlayerData;
+	weapon?: SeaBattleWeaponData;
 } => {
 	let battle: SeaBattleData | undefined = void 0;
 	let boat: SeaBattleBoatData | undefined = void 0;
 	let opponent: SeaBattlePlayerData | undefined = void 0;
 	let opponents: SeaBattlePlayerData[] | undefined = void 0;
 	let player: SeaBattlePlayerData | undefined = void 0;
+	let weapon: SeaBattleWeaponData | undefined = void 0;
 	if (extra) {
 		battle = decode<SeaBattleData>(extra);
 		if (userId) {
 			player = battle.players[userId];
-			if (boatIndex >= 0 && boatIndex < player.fleet.length) {
-				boat = player.fleet[boatIndex];
+			if (player) {
+				if (boatIndex >= 0 && boatIndex < player.fleet.length) {
+					boat = player.fleet[boatIndex];
+				}
+				if (weaponType) {
+					weapon = player.weapons.find(
+						other => other.type === weaponType
+					);
+				}
 			}
 		}
 		opponents = Object.values(battle.players).filter(
@@ -232,7 +256,8 @@ export const extractBattleInfo = (
 		boat,
 		opponent,
 		opponents,
-		player
+		player,
+		weapon
 	};
 };
 
@@ -241,6 +266,7 @@ export const extractBattleInfo = (
 export const testHit = (
 	player: SeaBattlePlayerData,
 	opponent: SeaBattlePlayerData,
+	weapon: SeaBattleWeaponData,
 	position: SeaBattlePosition
 ) => {
 	const grid = generateGrid(opponent.fleet);

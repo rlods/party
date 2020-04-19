@@ -8,64 +8,53 @@ import {
 	SeaBattleAssetVisibility,
 	SeaBattlePosition,
 	SeaBattleWeaponData,
-	SeaBattleWeaponTypes
+	SeaBattleWeaponTypes,
+	SeaBattleWeaponType,
+	countWeapons
 } from "../../utils/games/seabattle";
 
 // ------------------------------------------------------------------
 
 export const WeaponSelection = ({
-	onSelectWeapon,
+	onSelectWeaponType,
 	weapons
 }: {
-	onSelectWeapon?: (weapon: SeaBattleWeaponData) => void;
+	onSelectWeaponType: (type?: SeaBattleWeaponType) => void;
 	weapons: SeaBattleWeaponData[];
 }) => {
 	const svg = useRef<SVGSVGElement>(null);
 
-	const [selectedPosition, setSelectedPosition] = useState<SeaBattlePosition>(
-		{
-			x: 0,
-			y: 0
-		}
-	);
+	const [selectedPosition, setSelectedPosition] = useState<number>(-1);
 	const [selectedVisibility, setSelectedVisibility] = useState<
 		SeaBattleAssetVisibility
 	>("hidden");
 
-	const [selectionPos, setSelectionPosition] = useState<SeaBattlePosition>({
-		x: 0,
-		y: 0
-	});
+	const [selectionPosition, setSelectionPosition] = useState<number>(-1);
 	const [selectionVisibility, setSelectionVisibility] = useState<
 		SeaBattleAssetVisibility
 	>("hidden");
 
 	const onClick = useCallback(
 		(position: SeaBattlePosition) => {
-			const normalizedPosition = getSVGNormalizedPosition(
-				svg.current!,
-				position
-			);
-			setSelectedPosition(normalizedPosition);
-			setSelectedVisibility("visible");
-			if (
-				!onSelectWeapon ||
-				normalizedPosition.x < 0 ||
-				normalizedPosition.x >= weapons.length
-			) {
+			const { x } = getSVGNormalizedPosition(svg.current!, position);
+			if (selectedPosition === x) {
+				// Reset
+				setSelectedPosition(-1);
+				setSelectedVisibility("hidden");
+				onSelectWeaponType(void 0);
 				return;
 			}
-			onSelectWeapon(weapons[normalizedPosition.x]);
+			// Set
+			setSelectedPosition(x);
+			setSelectedVisibility("visible");
+			onSelectWeaponType(SeaBattleWeaponTypes[x]);
 		},
-		[onSelectWeapon, weapons]
+		[onSelectWeaponType, selectedPosition]
 	);
 
 	const onOver = useCallback((position: SeaBattlePosition) => {
-		const normalizedPosition = getSVGNormalizedPosition(
-			svg.current!,
-			position
-		);
-		setSelectionPosition(normalizedPosition);
+		const { x } = getSVGNormalizedPosition(svg.current!, position);
+		setSelectionPosition(x);
 		setSelectionVisibility("visible");
 	}, []);
 
@@ -85,12 +74,12 @@ export const WeaponSelection = ({
 			<rect width="400" height="400" fill="url(#sea-grid)" />
 			<Cell
 				type="cell-selection"
-				position={selectionPos}
+				position={{ x: selectionPosition, y: 0 }}
 				visibility={selectionVisibility}
 			/>
 			<Cell
 				type="cell-selected"
-				position={selectedPosition}
+				position={{ x: selectedPosition, y: 0 }}
 				visibility={selectedVisibility}
 			/>
 			<Weapons
@@ -106,9 +95,7 @@ export const WeaponSelection = ({
 					type="cell-crossed"
 					position={{ x: index, y: 0 }}
 					visibility={
-						weapons.find(other => other.type === type)?.count === 0
-							? "visible"
-							: "hidden"
+						countWeapons(weapons, type) === 0 ? "visible" : "hidden"
 					}
 				/>
 			))}

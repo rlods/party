@@ -8,8 +8,7 @@ import { getSVGNormalizedPosition } from "../../utils/svg";
 import {
 	SeaBattlePosition,
 	SeaBattlePlayerData,
-	SeaBattleAssetVisibility,
-	SeaBattleBoatData
+	SeaBattleAssetVisibility
 } from "../../utils/games/seabattle";
 
 // ------------------------------------------------------------------
@@ -19,14 +18,14 @@ export const Map = ({
 	hideActiveFleet = false,
 	onCellClick,
 	player: { fleet, hits, weapons } = { fleet: [], hits: [], weapons: [] },
-	selectedBoat,
-	setSelectedBoat
+	selectedBoatIndex,
+	onSelectBoatIndex
 }: {
 	hideActiveFleet?: boolean;
 	onCellClick?: (position: SeaBattlePosition) => void;
 	player?: SeaBattlePlayerData;
-	selectedBoat?: SeaBattleBoatData;
-	setSelectedBoat?: (index: number) => void;
+	selectedBoatIndex?: number;
+	onSelectBoatIndex?: (index: number) => void;
 }) => {
 	const svg = useRef<SVGSVGElement>(null);
 	const [selectedPosition, setSelectedPosition] = useState<SeaBattlePosition>(
@@ -100,8 +99,8 @@ export const Map = ({
 			<Fleet
 				hideActiveFleet={hideActiveFleet}
 				fleet={fleet}
-				selectedBoat={selectedBoat}
-				setSelectedBoat={setSelectedBoat}
+				selectedBoatIndex={selectedBoatIndex}
+				onSelectBoatIndex={onSelectBoatIndex}
 			/>
 			<Hits hits={hits} />
 		</svg>

@@ -92,7 +92,6 @@ export const moveBoat = ({
 		const { direction: oldDirection, position: oldPosition, type } = fleet[
 			boatIndex
 		];
-
 		let newPosition = { ...oldPosition };
 		if (movement === "move-forward" || movement === "move-backward") {
 			newPosition.x +=
@@ -115,7 +114,8 @@ export const moveBoat = ({
 				].y;
 		}
 
-		if (!movementIsPossible(fleet, boatIndex, newPosition, newDirection)) {
+		const boat = fleet[boatIndex];
+		if (!movementIsPossible(fleet, boat, newPosition, newDirection)) {
 			console.debug("[SeaBattle] Movement is not possible...", {
 				boatIndex,
 				movement,
@@ -137,8 +137,8 @@ export const moveBoat = ({
 			newPosition
 		});
 
-		player.fleet[boatIndex].direction = newDirection;
-		player.fleet[boatIndex].position = newPosition;
+		boat.direction = newDirection;
+		boat.position = newPosition;
 
 		await room.update({
 			...info,

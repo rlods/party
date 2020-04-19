@@ -203,16 +203,15 @@ export const checkCollisions = (
 
 export const movementIsPossible = (
 	fleet: SeaBattleBoatData[],
-	movingBoatIndex: number,
+	boat: SeaBattleBoatData,
 	newPosition: SeaBattlePosition,
 	newDirection: SeaBattleDirection
 ) => {
-	const movingBoat = fleet[movingBoatIndex];
-	if (!checkZone(movingBoat, newPosition, newDirection)) {
+	if (!checkZone(boat, newPosition, newDirection)) {
 		console.debug("[SeaBattle] Boat blocked by zone");
 		return false;
 	}
-	if (!checkCollisions(fleet, movingBoat, newPosition, newDirection)) {
+	if (!checkCollisions(fleet, boat, newPosition, newDirection)) {
 		console.debug("[SeaBattle] Boat blocked by collision");
 		return false;
 	}
