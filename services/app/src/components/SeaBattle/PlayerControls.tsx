@@ -1,10 +1,8 @@
 import React from "react";
 //
 import { IconButton } from "../Common/IconButton";
-import {
-	SeaBattleBoatData,
-	SeaBattleMovementIconMappings
-} from "../../utils/games/seabattle";
+import { SeaBattleBoatData } from "../../utils/games/seabattle";
+import { SeaBattleMovementIconMappings } from "../../utils/games/seabattle/mappings";
 import { useTranslation } from "react-i18next";
 
 // ------------------------------------------------------------------

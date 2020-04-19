@@ -4,10 +4,10 @@ import classNames from "classnames";
 import { Asset } from "./Assets";
 import {
 	SeaBattleBoatData,
-	SeabattleBoatOrientationMappings,
 	GRID_CELL_UNIT_SIZE,
 	BoatsOffsetMappings
 } from "../../utils/games/seabattle";
+import { SeabattleBoatOrientationMappings } from "../../utils/games/seabattle/mappings";
 
 // ------------------------------------------------------------------
 

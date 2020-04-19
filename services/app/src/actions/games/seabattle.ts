@@ -1,17 +1,19 @@
 import { AsyncAction } from "..";
 import { displayError } from "../messages";
 import { extractErrorMessage } from "../../utils/messages";
+import { decode, encode } from "../../utils/encoder";
 import {
 	SeaBattleMovementType,
-	SeabattleBoatRotationMappings,
-	SeabattleBoatTranslationMappings,
-	SeabattleBoatRotationTransformationMappings,
 	movementIsPossible,
 	SeaBattleData,
 	generateFleet,
 	MAX_PLAYER_COUNT
 } from "../../utils/games/seabattle";
-import { decode, encode } from "../../utils/encoder";
+import {
+	SeabattleBoatRotationMappings,
+	SeabattleBoatTranslationMappings,
+	SeabattleBoatRotationTransformationMappings
+} from "../../utils/games/seabattle/mappings";
 
 // ------------------------------------------------------------------
 

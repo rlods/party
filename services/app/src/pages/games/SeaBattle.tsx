@@ -8,9 +8,9 @@ import { RootState } from "../../reducers";
 import {
 	extractBattleInfo,
 	MAX_PLAYER_COUNT,
-	SeabattleKeyboardMoveMappings,
 	SeaBattleMovementType
 } from "../../utils/games/seabattle";
+import { SeabattleKeyboardMoveMappings } from "../../utils/games/seabattle/mappings";
 import { Dispatch } from "../../actions";
 import { moveBoat, joinBattle } from "../../actions/games/seabattle";
 import { KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT } from "../../utils/keyboards";
