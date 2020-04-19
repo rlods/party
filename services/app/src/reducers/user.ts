@@ -14,13 +14,11 @@ import { createAction } from "../actions";
 
 type UserAction =
 	| ReturnType<typeof fetching>
-	| ReturnType<typeof success>
 	| ReturnType<typeof error>
 	| ReturnType<typeof resetUser>
 	| ReturnType<typeof setUser>;
 
 export const fetching = () => createAction("user/FETCHING");
-export const success = () => createAction("user/FETCHED");
 export const error = (error: AxiosError) => createAction("user/ERROR", error);
 export const resetUser = () => createAction("user/RESET");
 export const setUser = (values: Partial<UserData>) =>
@@ -60,13 +58,6 @@ export const userReducer: Reducer<State, UserAction> = (
 				fetching: true,
 				error: null
 			};
-		case "user/FETCHED": {
-			return {
-				...state,
-				fetching: false,
-				error: null
-			};
-		}
 		case "user/ERROR":
 			return {
 				...state,
@@ -76,7 +67,9 @@ export const userReducer: Reducer<State, UserAction> = (
 		case "user/SET": {
 			const copy = {
 				...state,
-				...action.payload
+				...action.payload,
+				fetching: false,
+				error: null
 			};
 			saveUserAccess(copy.access);
 			return copy;

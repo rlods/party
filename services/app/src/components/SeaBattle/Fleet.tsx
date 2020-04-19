@@ -13,7 +13,7 @@ export const Fleet = ({
 }: {
 	fleet: SeaBattleBoatData[];
 	hideActiveFleet?: boolean;
-	selectedBoat?: number;
+	selectedBoat?: SeaBattleBoatData;
 	setSelectedBoat?: (index: number) => void;
 }) => {
 	return (
@@ -28,12 +28,12 @@ export const Fleet = ({
 							setSelectedBoat && boat.status === "ok"
 								? () => {
 										setSelectedBoat(
-											index === selectedBoat ? -1 : index
+											boat === selectedBoat ? -1 : index
 										);
 								  }
 								: void 0
 						}
-						selected={selectedBoat === index}
+						selected={boat === selectedBoat}
 					/>
 				))}
 		</>

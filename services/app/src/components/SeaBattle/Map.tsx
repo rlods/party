@@ -7,7 +7,8 @@ import {
 	SeaBattleAssetPosition,
 	SeaBattlePlayerData,
 	SeaBattleAssetVisibility,
-	GRID_CELL_UNIT_SIZE
+	GRID_CELL_UNIT_SIZE,
+	SeaBattleBoatData
 } from "../../utils/games/seabattle";
 import { BattleAssets } from "./BattleAssets";
 import { getSVGPosition } from "../../utils/svg";
@@ -17,13 +18,13 @@ import { getSVGPosition } from "../../utils/svg";
 // Order is important : Weapons under Boats under Hits
 export const Map = ({
 	hideActiveFleet = false,
-	player: { fleet, hits, weapons },
+	player: { fleet, hits, weapons } = { fleet: [], hits: [], weapons: [] },
 	selectedBoat,
 	setSelectedBoat
 }: {
 	hideActiveFleet?: boolean;
-	player: SeaBattlePlayerData;
-	selectedBoat?: number;
+	player?: SeaBattlePlayerData;
+	selectedBoat?: SeaBattleBoatData;
 	setSelectedBoat?: (index: number) => void;
 }) => {
 	const svg = useRef<SVGSVGElement>(null);

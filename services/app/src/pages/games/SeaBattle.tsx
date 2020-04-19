@@ -4,7 +4,11 @@ import { useSelector, useDispatch } from "react-redux";
 import { FleetControls } from "../../components/SeaBattle/FleetControls";
 import { Map } from "../../components/SeaBattle/Map";
 import { RootState } from "../../reducers";
-import { SeaBattlePlayerData } from "../../utils/games/seabattle";
+import {
+	SeaBattleData,
+	SeaBattlePlayerData,
+	SeaBattleBoatData
+} from "../../utils/games/seabattle";
 import { Dispatch } from "../../actions";
 import { moveBoat } from "../../actions/games/seabattle";
 import { KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT } from "../../utils/keyboards";
@@ -12,36 +16,46 @@ import { WeaponControls } from "../../components/SeaBattle/WeaponsControls";
 import { startPlayer } from "../../actions/player";
 import { setQueuePosition } from "../../actions/queue";
 import { generateRandomPosition } from "../../utils/player";
-import "./SeaBattle.scss";
 import { selectTracksCount } from "../../selectors/medias";
+import { decode } from "../../utils/encoder";
+import "./SeaBattle.scss";
 
 // ------------------------------------------------------------------
 
 export const SeaBattle = () => {
 	const dispatch = useDispatch<Dispatch>();
-	const [selectedBoat1, setSelectedBoat1] = useState<number>(-1);
-	const [selectedBoat2, setSelectedBoat2] = useState<number>(-1);
+	const [selectedBoatIndex, setSelectedBoat] = useState<number>(-1);
 
 	const queueReady = useSelector<RootState, boolean>(
 		state => !!state.room.info
 	);
 
+	const playerId = useSelector<RootState, string | undefined>(
+		state => state.user.access.id
+	);
+
 	const tracksCount = useSelector<RootState, number>(selectTracksCount);
 
-	const player1 = useSelector<RootState, SeaBattlePlayerData>(
-		state => state.games.seabattle.players.player1
-	);
-	const player2 = useSelector<RootState, SeaBattlePlayerData>(
-		state => state.games.seabattle.players.player2
+	const extra = useSelector<RootState, string | undefined>(
+		state => state.room.info?.extra
 	);
 
-	const players: SeaBattlePlayerData[] = [player1, player2];
-	const selectedBoats: number[] = [selectedBoat1, selectedBoat2];
-	const setSelectedBoats: Array<(index: number) => void> = [
-		setSelectedBoat1,
-		setSelectedBoat2
-	];
-	const activePlayer = 0;
+	let battle: SeaBattleData | undefined = void 0;
+	let player: SeaBattlePlayerData | undefined = void 0;
+	let boat: SeaBattleBoatData | undefined = void 0;
+
+	if (extra) {
+		battle = decode<SeaBattleData>(extra);
+		if (playerId) {
+			player = battle.players[playerId];
+			if (
+				selectedBoatIndex >= 0 &&
+				selectedBoatIndex < player.fleet.length
+			) {
+				boat = player.fleet[selectedBoatIndex];
+			}
+		}
+	}
 
 	useEffect(() => {
 		if (queueReady && tracksCount > 0) {
@@ -54,46 +68,43 @@ export const SeaBattle = () => {
 	const moveForward = useCallback(() => {
 		dispatch(
 			moveBoat({
-				boatIndex: selectedBoats[activePlayer],
-				playerId: "player1",
+				boatIndex: selectedBoatIndex,
 				movement: "move-forward"
 			})
 		);
-	}, [dispatch, selectedBoats]);
+	}, [dispatch, selectedBoatIndex]);
 
 	const moveBackward = useCallback(() => {
 		dispatch(
 			moveBoat({
-				boatIndex: selectedBoats[activePlayer],
-				playerId: "player1",
+				boatIndex: selectedBoatIndex,
 				movement: "move-backward"
 			})
 		);
-	}, [dispatch, selectedBoats]);
+	}, [dispatch, selectedBoatIndex]);
 
 	const rotateLeft = useCallback(() => {
 		dispatch(
 			moveBoat({
-				boatIndex: selectedBoats[activePlayer],
-				playerId: "player1",
+				boatIndex: selectedBoatIndex,
 				movement: "rotate-left"
 			})
 		);
-	}, [dispatch, selectedBoats]);
+	}, [dispatch, selectedBoatIndex]);
 
 	const rotateRight = useCallback(() => {
 		dispatch(
 			moveBoat({
-				boatIndex: selectedBoats[activePlayer],
-				playerId: "player1",
+				boatIndex: selectedBoatIndex,
 				movement: "rotate-right"
 			})
 		);
-	}, [dispatch, selectedBoats]);
+	}, [dispatch, selectedBoatIndex]);
 
 	const onKeyDown = useCallback(
 		(e: KeyboardEvent) => {
 			if (
+				!battle ||
 				e.repeat ||
 				(e.keyCode !== KEY_UP &&
 					e.keyCode !== KEY_DOWN &&
@@ -103,15 +114,9 @@ export const SeaBattle = () => {
 				return;
 			}
 			e.preventDefault(); // to prevent scrolling with keyboard
-			const player = players[activePlayer];
-			if (!player) {
+			if (!player || !boat) {
 				return;
 			}
-			const selectedBoatIndex = selectedBoats[activePlayer];
-			if (selectedBoatIndex < 0) {
-				return;
-			}
-			const selectedBoat = player.fleet[selectedBoatIndex];
 			const MoveMappings: {
 				[direction: string]: { [key: string]: () => void };
 			} = {
@@ -140,7 +145,7 @@ export const SeaBattle = () => {
 					[KEY_RIGHT]: moveBackward
 				}
 			};
-			const move = MoveMappings[selectedBoat.direction][e.keyCode];
+			const move = MoveMappings[boat.direction][e.keyCode];
 			if (move) {
 				move();
 			}
@@ -150,8 +155,9 @@ export const SeaBattle = () => {
 			moveBackward,
 			rotateLeft,
 			rotateRight,
-			players,
-			selectedBoats
+			battle,
+			player,
+			boat
 		]
 	);
 
@@ -167,28 +173,25 @@ export const SeaBattle = () => {
 		<div className="SeaBattle">
 			<div className="SeaBattlePlayer current">
 				<FleetControls
-					boat={
-						selectedBoats[activePlayer] >= 0
-							? players[activePlayer].fleet[
-									selectedBoats[activePlayer]
-							  ]
-							: void 0
-					}
-					disabled={selectedBoats[activePlayer] < 0}
+					boat={boat}
+					disabled={!boat}
 					onMoveForward={moveForward}
 					onMoveBackward={moveBackward}
 					onRotateLeft={rotateLeft}
 					onRotateRight={rotateRight}
 				/>
 				<Map
-					player={players[0]}
-					selectedBoat={selectedBoats[0]}
-					setSelectedBoat={setSelectedBoats[0]}
+					player={player}
+					selectedBoat={boat}
+					setSelectedBoat={setSelectedBoat}
 				/>
 			</div>
 			<div className="SeaBattlePlayer other">
-				<WeaponControls disabled={selectedBoats[activePlayer] < 0} />
-				<Map player={players[1]} hideActiveFleet={true} />
+				<WeaponControls disabled={!battle} />
+				<Map
+					player={battle?.players["player2"]}
+					hideActiveFleet={true}
+				/>
 			</div>
 		</div>
 	);

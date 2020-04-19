@@ -8,7 +8,11 @@ import { Dispatch } from "../../actions";
 import { RootState } from "../../reducers";
 import { isRoomLocked, isRoomPlaying } from "../../selectors/room";
 import { lockRoom } from "../../actions/room";
-import { clearQueue, moveBackward, moveForward } from "../../actions/queue";
+import {
+	clearQueue,
+	moveToPreviousTrack,
+	moveToNextTrack
+} from "../../actions/queue";
 import { stopPlayer, startPlayer } from "../../actions/player";
 import { confirmModal } from "../../actions/modals";
 import { openModal } from "../../reducers/modals";
@@ -45,11 +49,11 @@ export const Controls = () => {
 		dispatch(openModal({ type: "UnlockRoom", props: null }));
 	}, [dispatch]);
 
-	const onMoveBackward = useCallback(() => dispatch(moveBackward()), [
+	const onMoveBackward = useCallback(() => dispatch(moveToPreviousTrack()), [
 		dispatch
 	]);
 
-	const onMoveForward = useCallback(() => dispatch(moveForward()), [
+	const onMoveForward = useCallback(() => dispatch(moveToNextTrack()), [
 		dispatch
 	]);
 

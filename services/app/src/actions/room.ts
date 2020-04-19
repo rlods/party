@@ -2,7 +2,7 @@ import { v4 } from "uuid";
 //
 import { AsyncAction, Dispatch } from ".";
 import { displayError } from "./messages";
-import { RoomInfo, RoomType } from "../utils/rooms";
+import { RoomInfo, RoomType, generateRoomExtra } from "../utils/rooms";
 import { FirebaseRoom } from "../utils/firebase";
 import {
 	MediaAccess,
@@ -64,13 +64,22 @@ export const createRoom = (
 	name: string,
 	secret: string,
 	type: RoomType
-): AsyncAction => async dispatch => {
+): AsyncAction => async (dispatch, getState) => {
+	const {
+		user: {
+			access: { id: userId }
+		}
+	} = getState();
+	if (!userId) {
+		dispatch(displayError("No user connected"));
+		return;
+	}
 	try {
 		const id = v4();
 		console.debug("[Room] Creating...", { id, secret });
 
 		await FirebaseRoom({ id, secret }).update({
-			extra: "",
+			extra: generateRoomExtra(userId, type),
 			name,
 			queue_position: 0,
 			type,
@@ -191,6 +200,7 @@ const _watchRoom = (
 			if (!newInfo) {
 				return;
 			}
+
 			let medias: MediaAccess[] = [];
 			if (newInfo.queue) {
 				medias = Object.entries(newInfo.queue)

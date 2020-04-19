@@ -6,7 +6,7 @@ import {
 	SeaBattleMovementIconMappings
 } from "../../utils/games/seabattle";
 import { useSelector, useDispatch } from "react-redux";
-import { moveForward } from "../../actions/queue";
+import { moveToNextTrack } from "../../actions/queue";
 import { Dispatch } from "../../actions";
 import { useTranslation } from "react-i18next";
 import { RootState } from "../../reducers";
@@ -34,7 +34,9 @@ export const FleetControls = ({
 		state => state.room.medias.length
 	);
 
-	const nextTrack = useCallback(() => dispatch(moveForward()), [dispatch]);
+	const nextTrack = useCallback(() => dispatch(moveToNextTrack()), [
+		dispatch
+	]);
 
 	return (
 		<div className="SeaBattleControls">

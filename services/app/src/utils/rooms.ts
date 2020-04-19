@@ -1,4 +1,6 @@
 import { MediaAccess } from "./medias";
+import { generateBattle } from "./games/seabattle";
+import { encode } from "./encoder";
 
 export type PlayMode = "default" | "shuffle"; // TODO: Implement Shuffle mode
 
@@ -61,4 +63,17 @@ export const createQueueRemoving = (
 		queue[index] = { id, provider, type };
 	});
 	return queue;
+};
+
+// ------------------------------------------------------------------
+
+export const generateRoomExtra = (userId: string, type: RoomType): string => {
+	switch (type) {
+		case "blind":
+			return "";
+		case "dj":
+			return "";
+		case "seabattle":
+			return encode(generateBattle(userId));
+	}
 };

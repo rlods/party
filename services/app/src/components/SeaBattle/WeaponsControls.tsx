@@ -94,6 +94,7 @@ export const WeaponControls = ({ disabled = true }: { disabled?: boolean }) => {
 				<Weapons weapons={weapons} />
 				{weapons.map((weapon, index) => (
 					<Cell
+						key={index}
 						type="cell-crossed"
 						position={{ x: index, y: 0 }}
 						visibility={weapon.count === 0 ? "visible" : "hidden"}

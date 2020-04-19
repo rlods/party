@@ -7,13 +7,12 @@ import { createAction } from "../actions";
 
 type MembersAction =
 	| ReturnType<typeof fetching>
-	| ReturnType<typeof success>
+	| ReturnType<typeof set>
 	| ReturnType<typeof error>
 	| ReturnType<typeof reset>;
 
 export const fetching = () => createAction("members/FETCHING");
-export const success = (members: Member[]) =>
-	createAction("members/FETCHED", members);
+export const set = (members: Member[]) => createAction("members/SET", members);
 export const error = (error: AxiosError) =>
 	createAction("members/ERROR", error);
 export const reset = () => createAction("members/RESET");
@@ -45,7 +44,7 @@ export const membersReducer: Reducer<State, MembersAction> = (
 				fetching: true,
 				error: null
 			};
-		case "members/FETCHED": {
+		case "members/SET": {
 			const items = [...state.items];
 			//TODO for (const item of action.payload) {
 			//  items[item.id] = item;

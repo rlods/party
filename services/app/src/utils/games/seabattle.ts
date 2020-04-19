@@ -430,3 +430,107 @@ export const movementIsPossible = (
 	}
 	return true;
 };
+
+export const generateBattle = (userId: string): SeaBattleData => {
+	console.debug("[SeaBattle] Genering battle", {
+		userId
+	});
+	return {
+		players: {
+			[userId]: {
+				fleet: [
+					{
+						type: "boat1",
+						direction: "E",
+						position: { x: 0, y: 0 },
+						status: "ok"
+					},
+					{
+						type: "boat1",
+						direction: "E",
+						position: { x: 1, y: 0 },
+						status: "ko"
+					},
+					{
+						type: "boat2",
+						direction: "E",
+						position: { x: 0, y: 1 },
+						status: "ok"
+					},
+					{
+						type: "boat2",
+						direction: "E",
+						position: { x: 2, y: 1 },
+						status: "ko"
+					},
+					{
+						type: "boat3",
+						direction: "E",
+						position: { x: 0, y: 2 },
+						status: "ok"
+					},
+					{
+						type: "boat3",
+						direction: "E",
+						position: { x: 3, y: 2 },
+						status: "ko"
+					}
+				],
+				hits: [
+					{ position: { x: 0, y: 1 }, type: "hitted1" },
+					{ position: { x: 0, y: 2 }, type: "hitted2" },
+					{ position: { x: 0, y: 3 }, type: "missed1" },
+					{ position: { x: 0, y: 4 }, type: "missed2" }
+				],
+				weapons: [{ count: 1, position: { x: 0, y: 5 }, type: "mine" }]
+			},
+			player2: {
+				fleet: [
+					{
+						type: "boat1",
+						direction: "E",
+						position: { x: 0, y: 0 },
+						status: "ok"
+					},
+					{
+						type: "boat1",
+						direction: "E",
+						position: { x: 1, y: 0 },
+						status: "ko"
+					},
+					{
+						type: "boat2",
+						direction: "E",
+						position: { x: 0, y: 1 },
+						status: "ok"
+					},
+					{
+						type: "boat2",
+						direction: "E",
+						position: { x: 2, y: 1 },
+						status: "ko"
+					},
+					{
+						type: "boat3",
+						direction: "E",
+						position: { x: 0, y: 2 },
+						status: "ok"
+					},
+					{
+						type: "boat3",
+						direction: "E",
+						position: { x: 3, y: 2 },
+						status: "ko"
+					}
+				],
+				hits: [
+					{ position: { x: 0, y: 1 }, type: "hitted1" },
+					{ position: { x: 0, y: 2 }, type: "hitted2" },
+					{ position: { x: 0, y: 3 }, type: "missed1" },
+					{ position: { x: 0, y: 4 }, type: "missed2" }
+				],
+				weapons: [{ count: 1, position: { x: 0, y: 5 }, type: "mine" }]
+			}
+		}
+	};
+};

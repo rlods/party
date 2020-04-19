@@ -10,13 +10,11 @@ import { createAction } from "../actions";
 
 type RoomAction =
 	| ReturnType<typeof fetching>
-	| ReturnType<typeof success>
 	| ReturnType<typeof error>
 	| ReturnType<typeof resetRoom>
 	| ReturnType<typeof setRoom>;
 
 export const fetching = () => createAction("room/FETCHING");
-export const success = () => createAction("room/FETCHED");
 export const error = (error: AxiosError) => createAction("room/ERROR", error);
 export const resetRoom = () => createAction("room/RESET");
 export const setRoom = (values: Partial<RoomData>) =>
@@ -62,12 +60,6 @@ export const roomReducer: Reducer<State, RoomAction> = (
 				fetching: true,
 				error: null
 			};
-		case "room/FETCHED":
-			return {
-				...state,
-				fetching: false,
-				error: null
-			};
 		case "room/ERROR":
 			return {
 				...state,
@@ -77,7 +69,9 @@ export const roomReducer: Reducer<State, RoomAction> = (
 		case "room/SET":
 			return {
 				...state,
-				...action.payload
+				...action.payload,
+				fetching: false,
+				error: null
 			};
 		case "room/RESET":
 			return INITIAL_STATE;

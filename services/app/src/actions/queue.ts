@@ -169,7 +169,10 @@ export const setQueuePosition = (newTrackIndex: number): AsyncAction => async (
 
 // ------------------------------------------------------------------
 
-export const moveBackward = (): AsyncAction => async (dispatch, getState) => {
+export const moveToPreviousTrack = (): AsyncAction => async (
+	dispatch,
+	getState
+) => {
 	const {
 		room: { info, tracks }
 	} = getState();
@@ -189,7 +192,10 @@ export const moveBackward = (): AsyncAction => async (dispatch, getState) => {
 
 // ------------------------------------------------------------------
 
-export const moveForward = (): AsyncAction => async (dispatch, getState) => {
+export const moveToNextTrack = (): AsyncAction => async (
+	dispatch,
+	getState
+) => {
 	const {
 		room: { info, tracks }
 	} = getState();

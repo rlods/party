@@ -1,3 +1,5 @@
+import { encode, decode } from "./encoder";
+
 export type UserInfo = {
 	name: string;
 	online: boolean;
@@ -21,10 +23,10 @@ export const loadUserAccess = (): UserAccess => {
 	const s = localStorage.getItem("U");
 	if (s) {
 		try {
-			const d = JSON.parse(atob(s));
-			if (typeof d.i === "string" && typeof d.s === "string") {
-				res.id = d.i;
-				res.secret = d.s;
+			const d = decode<UserAccess>(s);
+			if (typeof d.id === "string" && typeof d.secret === "string") {
+				res.id = d.id;
+				res.secret = d.secret;
 				console.debug("Loaded user access: ", res);
 			}
 		} catch (err) {}
@@ -39,11 +41,9 @@ export const deleteUserAccess = () => {
 export const saveUserAccess = ({ id, secret }: UserAccess) => {
 	localStorage.setItem(
 		"U",
-		btoa(
-			JSON.stringify({
-				i: id,
-				s: secret
-			})
-		)
+		encode({
+			id,
+			secret
+		})
 	);
 };

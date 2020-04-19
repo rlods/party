@@ -7,13 +7,11 @@ import { createAction } from "../actions";
 
 type MediasAction =
 	| ReturnType<typeof fetching>
-	| ReturnType<typeof success>
 	| ReturnType<typeof error>
 	| ReturnType<typeof resetMedias>
 	| ReturnType<typeof setMedias>;
 
 export const fetching = () => createAction("medias/FETCHING");
-export const success = () => createAction("medias/FETCHED");
 export const error = (error: AxiosError) => createAction("medias/ERROR", error);
 export const resetMedias = () => createAction("medias/RESET");
 export const setMedias = (medias: Media[]) =>
@@ -54,13 +52,6 @@ export const mediasReducer: Reducer<State, MediasAction> = (
 				fetching: true,
 				error: null
 			};
-		case "medias/FETCHED": {
-			return {
-				...state,
-				fetching: false,
-				error: null
-			};
-		}
 		case "medias/ERROR":
 			return {
 				...state,
@@ -70,6 +61,8 @@ export const mediasReducer: Reducer<State, MediasAction> = (
 		case "medias/SET": {
 			const copy = {
 				...state,
+				fetching: false,
+				error: null,
 				medias: {
 					// keys are ProvideType
 					deezer: {

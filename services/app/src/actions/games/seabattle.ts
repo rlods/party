@@ -6,30 +6,44 @@ import {
 	SeabattleBoatRotationMappings,
 	SeabattleBoatTranslationMappings,
 	SeabattleBoatRotationTransformationMappings,
-	movementIsPossible
+	movementIsPossible,
+	SeaBattleData
 } from "../../utils/games/seabattle";
-import { setBoatPosition } from "../../reducers/games/seabattle";
+import { decode, encode } from "../../utils/encoder";
 
 // ------------------------------------------------------------------
 
 export const moveBoat = ({
-	playerId,
 	boatIndex,
 	movement
 }: {
-	playerId: string;
 	boatIndex: number;
 	movement: SeaBattleMovementType;
 }): AsyncAction => async (dispatch, getState) => {
+	const {
+		room: { info, room },
+		user: {
+			access: { id: userId }
+		}
+	} = getState();
+	if (!room || room.isLocked() || !info) {
+		dispatch(displayError("rooms.error.locked"));
+		return;
+	}
+	if (!userId) {
+		dispatch(displayError("No user connected"));
+		return;
+	}
 	try {
-		const {
-			games: {
-				seabattle: { players }
-			}
-		} = getState();
+		const battle = decode<SeaBattleData>(info.extra);
 
-		const { fleet } = players[playerId];
-		if (boatIndex < 0 || boatIndex >= fleet.length) {
+		const player = battle.players[userId];
+		if (!player) {
+			return;
+		}
+
+		const { fleet } = player;
+		if (boatIndex < 0 || boatIndex >= player.fleet.length) {
 			return;
 		}
 
@@ -61,7 +75,6 @@ export const moveBoat = ({
 
 		if (!movementIsPossible(fleet, boatIndex, newPosition, newDirection)) {
 			console.debug("[SeaBattle] Movement is not possible...", {
-				playerId,
 				boatIndex,
 				movement,
 				oldDirection,
@@ -74,20 +87,21 @@ export const moveBoat = ({
 		}
 
 		console.debug("[SeaBattle] Moving boat...", {
-			playerId,
 			boatIndex,
 			movement,
+			oldDirection,
+			oldPosition,
 			newDirection,
 			newPosition
 		});
-		dispatch(
-			setBoatPosition({
-				playerId,
-				boatIndex,
-				direction: newDirection,
-				position: newPosition
-			})
-		);
+
+		player.fleet[boatIndex].direction = newDirection;
+		player.fleet[boatIndex].position = newPosition;
+
+		await room.update({
+			...info,
+			extra: encode(battle)
+		});
 	} catch (err) {
 		dispatch(displayError(extractErrorMessage(err)));
 	}

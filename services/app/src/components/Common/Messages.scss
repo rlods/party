@@ -1,13 +1,12 @@
 .Messages {
 	position: fixed;
-	left: 0;
-	right: 0;
 	bottom: 120px;
 	z-index: 100000;
 
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+	align-self: center;
 }
 
 .Message {
