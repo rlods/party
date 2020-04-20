@@ -1,7 +1,7 @@
 import React from "react";
 import classNames from "classnames";
 //
-import { Icon } from "./Icon";
+import { Icon, IconSize } from "./Icon";
 import "./IconButton.scss";
 
 // ------------------------------------------------------------------
@@ -28,7 +28,7 @@ export const IconButton = React.memo(
 		icon: string;
 		kind?: "default" | "primary" | "danger" | "special";
 		onClick?: () => void;
-		size?: "S" | "M" | "L";
+		size?: IconSize;
 		title: string;
 		type?: ButtonType;
 	}) => (

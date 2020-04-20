@@ -6,7 +6,7 @@ import { SeaBattleWeaponType } from "../../utils/games/seabattle";
 
 // ------------------------------------------------------------------
 
-export const OpponentControls = ({
+export const SeaBattleOpponentControls = ({
 	opponentsCount,
 	opponentIndex,
 	onSelectPreviousOpponent,
@@ -21,7 +21,7 @@ export const OpponentControls = ({
 	onSelectWeaponType: (type?: SeaBattleWeaponType) => void;
 	weapons: { [type: string]: number };
 }) => (
-	<div className="SeaBattleControls">
+	<div className="SeaBattleOpponentControls SeaBattleControls">
 		<OpponentSelection
 			opponentsCount={opponentsCount}
 			opponentIndex={opponentIndex}

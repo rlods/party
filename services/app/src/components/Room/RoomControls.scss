@@ -1,4 +1,4 @@
-.Controls {
+.RoomControls {
 	display: flex;
 	flex-direction: column;
 	flex-shrink: 0;
@@ -34,7 +34,7 @@
 			align-items: center;
 			justify-content: space-between;
 
-			&.PlayerControlsSet {
+			&.AudioPlayerControls {
 				min-width: 130px;
 
 				@media screen and (max-width: 150px) {
@@ -53,13 +53,13 @@
 
 body {
 	&.dark {
-		.Controls {
+		.RoomControls {
 			border-color: rgba(0, 0, 0, 0.1);
 		}
 	}
 
 	&.light {
-		.Controls {
+		.RoomControls {
 			border-color: rgba(255, 255, 255, 0.1);
 		}
 	}

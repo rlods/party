@@ -1,6 +1,7 @@
 import React from "react";
 import classNames from "classnames";
 //
+import { IconSize } from "./Icon";
 import "./SwitchButton.scss";
 
 // ------------------------------------------------------------------
@@ -22,7 +23,7 @@ export const SwitchButton = React.memo(
 		disabled?: boolean;
 		displayLabel?: boolean;
 		onClick?: (checked: boolean) => void;
-		size?: "S" | "M" | "L";
+		size?: IconSize;
 		labelOff: string;
 		labelOn: string;
 		title: string;

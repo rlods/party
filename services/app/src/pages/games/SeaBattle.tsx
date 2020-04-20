@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
 //
-import { PlayerControls } from "../../components/SeaBattle/PlayerControls";
+import { SeaBattlePlayerControls } from "../../components/SeaBattle/PlayerControls";
 import { Map } from "../../components/SeaBattle/Map";
 import { RootState } from "../../reducers";
 import { SeaBattleKeyboardMoveMappings } from "../../utils/games/seabattle/mappings";
@@ -13,12 +13,8 @@ import {
 	attackOpponent
 } from "../../actions/games/seabattle";
 import { KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT } from "../../utils/keyboards";
-import { OpponentControls } from "../../components/SeaBattle/OpponentControls";
-import { generateRandomPosition } from "../../utils/player";
-import { selectTracksCount } from "../../selectors/medias";
+import { SeaBattleOpponentControls } from "../../components/SeaBattle/OpponentControls";
 import { IconButton } from "../../components/Common/IconButton";
-import { setRoom } from "../../reducers/room";
-import { RoomInfo } from "../../utils/rooms";
 import {
 	extractBattleInfo,
 	MAX_PLAYER_COUNT,
@@ -27,9 +23,9 @@ import {
 	SeaBattleWeaponType,
 	AngleToDirection
 } from "../../utils/games/seabattle";
-import "./SeaBattle.scss";
 import { displayInfo } from "../../actions/messages";
 import { openModal } from "../../reducers/modals";
+import "./SeaBattle.scss";
 
 // ------------------------------------------------------------------
 
@@ -46,14 +42,8 @@ export const SeaBattle = () => {
 		state => state.user.access.id
 	);
 
-	const tracksCount = useSelector<RootState, number>(selectTracksCount);
-
 	const extra = useSelector<RootState, string>(
 		state => state.room.info?.extra || ""
-	);
-
-	const roomInfo = useSelector<RootState, RoomInfo | null>(
-		state => state.room.info
 	);
 
 	const { boat, opponentMaps, playerMap } = extractBattleInfo({
@@ -66,20 +56,6 @@ export const SeaBattle = () => {
 	const onJoinBattle = useCallback(() => {
 		dispatch(joinBattle());
 	}, [dispatch]);
-
-	const onPlayNext = useCallback(() => {
-		if (!roomInfo || tracksCount === 0) {
-			return;
-		}
-		dispatch(
-			setRoom({
-				info: {
-					...roomInfo,
-					queue_position: generateRandomPosition() % tracksCount
-				}
-			})
-		);
-	}, [dispatch, roomInfo, tracksCount]);
 
 	const onMove = useCallback(
 		(movement: SeaBattleMovementType) => {
@@ -132,7 +108,6 @@ export const SeaBattle = () => {
 				dispatch(displayInfo("games.seabattle.no_weapon_selected"));
 				return;
 			}
-
 			dispatch(attackOpponent({ opponentIndex, position, weaponType }));
 		},
 		[dispatch, opponentIndex, opponentMaps, weaponType]
@@ -149,10 +124,9 @@ export const SeaBattle = () => {
 	return (
 		<div className="SeaBattle">
 			<div className="SeaBattlePlayer current">
-				<PlayerControls
+				<SeaBattlePlayerControls
 					boat={boat}
 					disabled={!boat}
-					onPlayNext={onPlayNext}
 					onMoveForward={() => onMove("move-forward")}
 					onMoveBackward={() => onMove("move-backward")}
 					onRotateLeft={() => onMove("rotate-left")}
@@ -196,7 +170,7 @@ export const SeaBattle = () => {
 				)}
 			</div>
 			<div className="SeaBattlePlayer other">
-				<OpponentControls
+				<SeaBattleOpponentControls
 					opponentsCount={opponentMaps?.length || 0}
 					opponentIndex={opponentIndex}
 					onSelectPreviousOpponent={

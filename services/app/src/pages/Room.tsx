@@ -6,7 +6,7 @@ import qs from "qs";
 //
 import { Head } from "../components/Room/Head";
 import { Queue } from "../components/Room/Queue";
-import { Controls } from "../components/Room/Controls";
+import { RoomControls } from "../components/Room/RoomControls";
 import { RootState } from "../reducers";
 import { CombinedColor } from "../utils/colorpicker";
 import { exitRoom, enterRoom } from "../actions/room";
@@ -62,11 +62,22 @@ export const Room = () => {
 						return (
 							<>
 								<Queue />
-								<Controls />
+								<RoomControls
+									extended={true}
+									propagate={true}
+								/>
 							</>
 						);
 					case "seabattle":
-						return <SeaBattle />;
+						return (
+							<>
+								<SeaBattle />
+								<RoomControls
+									extended={false}
+									propagate={false}
+								/>
+							</>
+						);
 				}
 			})()}
 		</div>

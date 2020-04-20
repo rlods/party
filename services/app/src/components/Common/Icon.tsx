@@ -6,6 +6,10 @@ import "./Icon.scss";
 
 // ------------------------------------------------------------------
 
+export type IconSize = "S" | "M" | "L";
+
+// ------------------------------------------------------------------
+
 export const Icon = React.memo(
 	({
 		className,
@@ -17,7 +21,7 @@ export const Icon = React.memo(
 		className?: string;
 		color?: string;
 		icon: string;
-		size?: "S" | "M" | "L";
+		size?: IconSize;
 		title?: string;
 	}) => (
 		<FontAwesome

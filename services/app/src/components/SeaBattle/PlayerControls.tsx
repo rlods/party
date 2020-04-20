@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 //
 import { IconButton } from "../Common/IconButton";
 import {
@@ -6,14 +7,12 @@ import {
 	AngleToDirection
 } from "../../utils/games/seabattle";
 import { SeaBattleMovementIconMappings } from "../../utils/games/seabattle/mappings";
-import { useTranslation } from "react-i18next";
 
 // ------------------------------------------------------------------
 
-export const PlayerControls = ({
+export const SeaBattlePlayerControls = ({
 	boat,
 	disabled = false,
-	onPlayNext,
 	onMoveBackward,
 	onMoveForward,
 	onRotateLeft,
@@ -21,7 +20,6 @@ export const PlayerControls = ({
 }: {
 	boat?: SeaBattleBoatData;
 	disabled?: boolean;
-	onPlayNext?: () => void;
 	onMoveBackward: () => void;
 	onMoveForward: () => void;
 	onRotateLeft: () => void;
@@ -30,11 +28,11 @@ export const PlayerControls = ({
 	const { t } = useTranslation();
 
 	return (
-		<div className="SeaBattleControls">
+		<div className="SeaBattlePlayerControls SeaBattleControls">
 			<IconButton
 				disabled={disabled}
 				icon="rotate-left"
-				title="Rotate Left"
+				title={t("Rotate Left")}
 				onClick={onRotateLeft}
 			/>
 			<IconButton
@@ -46,14 +44,8 @@ export const PlayerControls = ({
 						  ].backward
 						: "arrow-down"
 				}
-				title="Move Backward"
+				title={t("Move Backward")}
 				onClick={onMoveBackward}
-			/>
-			<IconButton
-				icon="step-forward"
-				onClick={onPlayNext}
-				size="M"
-				title={t("player.forward")}
 			/>
 			<IconButton
 				disabled={disabled}
@@ -64,13 +56,13 @@ export const PlayerControls = ({
 						  ].forward
 						: "arrow-up"
 				}
-				title="Move Forward"
+				title={t("Move Forward")}
 				onClick={onMoveForward}
 			/>
 			<IconButton
 				disabled={disabled}
 				icon="rotate-right"
-				title="Rotate Right"
+				title={t("Rotate Right")}
 				onClick={onRotateRight}
 			/>
 		</div>

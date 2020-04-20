@@ -1,7 +1,7 @@
 import React from "react";
 import classNames from "classnames";
 //
-import { Icon } from "../Common/Icon";
+import { Icon, IconSize } from "../Common/Icon";
 
 // ------------------------------------------------------------------
 
@@ -19,7 +19,7 @@ export const IconLink = React.memo(
 		className?: string;
 		color?: string;
 		icon: string;
-		size?: "S" | "M" | "L";
+		size?: IconSize;
 		title: string;
 		url: string;
 	}) => {
