@@ -8,6 +8,7 @@ import { RootState } from "../reducers";
 import { openModal } from "../reducers/modals";
 import { disconnectUser } from "../actions/user";
 import { clearMessages } from "../reducers/messages";
+import { Messages } from "../components/Common/Messages";
 import "./Splash.scss";
 
 // ------------------------------------------------------------------
@@ -25,7 +26,7 @@ export const Splash = () => {
 	);
 
 	const onConnectUser = useCallback(
-		() => dispatch(openModal({ type: "CreateUser", props: null })),
+		() => dispatch(openModal({ type: "CreateUser", props: {} })),
 		[dispatch]
 	);
 
@@ -60,68 +61,71 @@ export const Splash = () => {
 	*/
 
 	return (
-		<div className="Splash">
-			<div className="Top">
-				<Link className="Logo" to="/">
-					<img
-						src="/images/logo.png"
-						title="Party"
-						alt="Party Logo"
-					/>
-					Party
-				</Link>
-				<div className="Description">{t("splash.description")}</div>
-			</div>
-			<div className="Middle">
-				<div className="Menu">
-					{loggedIn ? (
-						<>
+		<>
+			<div className="Splash">
+				<div className="Top">
+					<Link className="Logo" to="/">
+						<img
+							src="/images/logo.png"
+							title="Party"
+							alt="Party Logo"
+						/>
+						Party
+					</Link>
+					<div className="Description">{t("splash.description")}</div>
+				</div>
+				<div className="Middle">
+					<div className="Menu">
+						{loggedIn ? (
+							<>
+								<div className="MenuItem">
+									<IconButton
+										icon="plus"
+										onClick={onCreateRoom}
+										size="L"
+										title={t("rooms.create")}
+									/>
+								</div>
+							</>
+						) : (
+							<>
+								<div className="MenuItem">
+									<IconButton
+										onClick={onConnectUser}
+										icon="sign-in"
+										size="L"
+										title={t("users.connect")}
+									/>
+								</div>
+							</>
+						)}
+					</div>
+				</div>
+				<div className="Bottom">
+					<div className="Menu">
+						{loggedIn ? (
 							<div className="MenuItem">
 								<IconButton
-									icon="plus"
-									onClick={onCreateRoom}
-									size="L"
-									title={t("rooms.create")}
+									icon="sign-out"
+									onClick={onDisconnect}
+									size="M"
+									title={t("users.disconnect")}
 								/>
 							</div>
-						</>
-					) : (
-						<>
+						) : (
 							<div className="MenuItem">
 								<IconButton
-									onClick={onConnectUser}
-									icon="sign-in"
+									icon="question-circle"
+									onClick={onShowHelp}
 									size="L"
-									title={t("users.connect")}
+									title={t("help.help")}
 								/>
 							</div>
-						</>
-					)}
+						)}
+					</div>
 				</div>
 			</div>
-			<div className="Bottom">
-				<div className="Menu">
-					{loggedIn ? (
-						<div className="MenuItem">
-							<IconButton
-								icon="sign-out"
-								onClick={onDisconnect}
-								size="M"
-								title={t("users.disconnect")}
-							/>
-						</div>
-					) : (
-						<div className="MenuItem">
-							<IconButton
-								icon="question-circle"
-								onClick={onShowHelp}
-								size="L"
-								title={t("help.help")}
-							/>
-						</div>
-					)}
-				</div>
-			</div>
-		</div>
+			<Messages />
+		</>
 	);
 };

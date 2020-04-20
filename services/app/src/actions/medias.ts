@@ -12,8 +12,7 @@ export const displayMediaInfo = (media: Media): AsyncAction => async dispatch =>
 	dispatch(
 		displayMessage("info", {
 			duration: 5000,
-			extra: () => renderMediaInToaster(media),
-			weight: 1000
+			extra: () => renderMediaInToaster(media)
 		})
 	);
 

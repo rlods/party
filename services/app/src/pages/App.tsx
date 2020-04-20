@@ -5,7 +5,6 @@ import { Redirect, Route, Switch } from "react-router-dom";
 import { Room } from "./Room";
 import { Splash } from "./Splash";
 import { Modals } from "../components/Modals";
-import { Messages } from "../components/Common/Messages";
 import { reconnectUser } from "../actions/user";
 import { Dispatch } from "../actions";
 import "./App.scss";
@@ -31,7 +30,6 @@ export const App = () => {
 				<Route exact={true} path="/" component={Splash} />
 				<Redirect to="/" />
 			</Switch>
-			<Messages />
 		</div>
 	);
 };

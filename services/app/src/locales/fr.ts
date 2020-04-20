@@ -49,7 +49,7 @@ export default {
 			movement_not_possible: "Ce déplacement est impossible !",
 			movement_not_possible_because_hitted:
 				"Un bateau touché ne peut plus se déplacer !",
-			opponent_index: "Ennemi {{index}}",
+			opponent_index: "Adversaire {{index}}",
 			join_battle: "Participer à la bataille",
 			opponent_already_killed:
 				"Tous les bateaux de l'ennemi ont déjà été tués",
@@ -61,9 +61,9 @@ export default {
 			missed_opponent: "Vous n'avez pas touché de bateau ennemi",
 			no_weapon_selected: "Sélectionnez une arme pour attaquer",
 			weapon_not_available: "L'arme sélectionnée n'est plus disponible",
-			you_played_your_turn: "Vous avez joué votre tour",
-			not_your_turn: "Ce n'est pas votre tour de jouer !",
-			your_turn: "C'est votre tour de jouer !",
+			not_your_turn: "Ce n'est pas à votre tour de jouer !",
+			opponent_turn: "C'est au tour de votre adversaire de jouer",
+			player_turn: "C'est à votre tour de jouer !",
 			you_have_been_killed: "Tous vos bateaux ont été tués"
 		},
 		max_players_count: "Le nombre maximal de joueurs est déjà atteint",

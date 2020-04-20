@@ -42,7 +42,19 @@ export const joinBattle = (): AsyncAction => async (dispatch, getState) => {
 	}
 	if (!userId) {
 		console.debug("[SeaBattle] Not connected");
-		dispatch(openModal({ type: "CreateUser", props: null }));
+		dispatch(displayError("users.not_connected"));
+		dispatch(
+			openModal({
+				type: "CreateUser",
+				props: {
+					options: {
+						onSuccess: () => {
+							dispatch(joinBattle());
+						}
+					}
+				}
+			})
+		);
 		return;
 	}
 	try {
@@ -87,7 +99,19 @@ export const moveBoat = ({
 	}
 	if (!userId) {
 		console.debug("[SeaBattle] Not connected");
-		dispatch(openModal({ type: "CreateUser", props: null }));
+		dispatch(displayError("users.not_connected"));
+		dispatch(
+			openModal({
+				type: "CreateUser",
+				props: {
+					options: {
+						onSuccess: () => {
+							dispatch(moveBoat({ boatIndex, movement }));
+						}
+					}
+				}
+			})
+		);
 		return;
 	}
 	try {
@@ -191,15 +215,6 @@ export const moveBoat = ({
 			...info,
 			extra: encode(battle)
 		});
-
-		if (battle.maps.length > 1) {
-			// More than one player...
-			dispatch(
-				displaySuccess("games.seabattle.you_played_your_turn", {
-					tag: INVALID_MOVE_MESSAGE_TAG
-				})
-			);
-		}
 	} catch (err) {
 		dispatch(displayError(extractErrorMessage(err)));
 	}
@@ -228,7 +243,25 @@ export const attackOpponent = ({
 	}
 	if (!userId) {
 		console.debug("[SeaBattle] Not connected");
-		dispatch(openModal({ type: "CreateUser", props: null }));
+		dispatch(displayError("users.not_connected"));
+		dispatch(
+			openModal({
+				type: "CreateUser",
+				props: {
+					options: {
+						onSuccess: () => {
+							dispatch(
+								attackOpponent({
+									opponentIndex,
+									position,
+									weaponType
+								})
+							);
+						}
+					}
+				}
+			})
+		);
 		return;
 	}
 	try {
@@ -336,15 +369,6 @@ export const attackOpponent = ({
 			...info,
 			extra: encode(battle)
 		});
-
-		if (battle.maps.length > 1) {
-			// More than one player...
-			dispatch(
-				displaySuccess("games.seabattle.you_played_your_turn", {
-					tag: INVALID_MOVE_MESSAGE_TAG
-				})
-			);
-		}
 	} catch (err) {
 		dispatch(displayError(extractErrorMessage(err)));
 	}

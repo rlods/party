@@ -27,11 +27,11 @@ export const getModal = (prereq?: ModalPrereq) => {
 			case "Confirm":
 				return <ConfirmModal {...prereq.props} />;
 			case "ConnectUser":
-				return <ConnectUserModal />;
+				return <ConnectUserModal {...prereq.props} />;
 			case "CreateRoom":
 				return <CreateRoomModal />;
 			case "CreateUser":
-				return <CreateUserModal />;
+				return <CreateUserModal {...prereq.props} />;
 			case "Help":
 				return <HelpModal />;
 			case "JoinRoom":

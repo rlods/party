@@ -8,13 +8,15 @@ import { CancelButton } from "../Common/CancelButton";
 import { popModal, openModal } from "../../reducers/modals";
 import { displayError } from "../../actions/messages";
 import { connectUser } from "../../actions/user";
-import { Dispatch } from "../../actions";
+import { Dispatch, ActionOptions } from "../../actions";
 import { SECRET_FIELD_SIZE, InputField } from "../Modals/ModalFields";
 import { DEFAULT_USER_DATABASE_ID } from "../../config/firebase";
 
 // ------------------------------------------------------------------
 
-export const ConnectUserModal = () => {
+export type ConnectUserModalProps = { options?: ActionOptions };
+
+export const ConnectUserModal = ({ options }: ConnectUserModalProps) => {
 	const dispatch = useDispatch<Dispatch>();
 	const [userId, setUserId] = useState("");
 	const [secret, setSecret] = useState("");
@@ -41,15 +43,18 @@ export const ConnectUserModal = () => {
 		dispatch(
 			connectUser(DEFAULT_USER_DATABASE_ID, userId, secret, {
 				onSuccess: () => {
+					if (options && options.onSuccess) {
+						options.onSuccess();
+					}
 					dispatch(popModal());
 				}
 			})
 		);
-	}, [dispatch, userId, secret]);
+	}, [dispatch, userId, secret, options]);
 
 	const onCreate = useCallback(
-		() => dispatch(openModal({ type: "CreateUser", props: null })),
-		[dispatch]
+		() => dispatch(openModal({ type: "CreateUser", props: { options } })),
+		[dispatch, options]
 	);
 
 	return (

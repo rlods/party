@@ -1,5 +1,8 @@
 import { Reducer } from "redux";
 import { createAction } from "../actions";
+import { ConnectUserModalProps } from "../components/Users/ConnectUserModal";
+import { CreateUserModalProps } from "../components/Users/CreateUserModal";
+import { ConfirmModalProps } from "../components/Modals/ConfirmModal";
 
 // ------------------------------------------------------------------
 
@@ -9,17 +12,10 @@ export type ModalPrereqT<T extends string, P> = {
 };
 
 export type ModalPrereq =
-	| ModalPrereqT<
-			"Confirm",
-			{
-				question: string;
-				onCanceled?: () => void;
-				onConfirmed: () => void;
-			}
-	  >
-	| ModalPrereqT<"ConnectUser", null>
+	| ModalPrereqT<"Confirm", ConfirmModalProps>
+	| ModalPrereqT<"ConnectUser", ConnectUserModalProps>
 	| ModalPrereqT<"CreateRoom", null>
-	| ModalPrereqT<"CreateUser", null>
+	| ModalPrereqT<"CreateUser", CreateUserModalProps>
 	| ModalPrereqT<"Help", null>
 	| ModalPrereqT<"JoinRoom", null>
 	| ModalPrereqT<"Search", null>

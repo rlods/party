@@ -14,7 +14,7 @@ import {
 import { popModal, openModal } from "../../reducers/modals";
 import { displayError } from "../../actions/messages";
 import { createUser } from "../../actions/user";
-import { Dispatch } from "../../actions";
+import { Dispatch, ActionOptions } from "../../actions";
 import { DEFAULT_USER_DATABASE_ID } from "../../config/firebase";
 
 // ------------------------------------------------------------------
@@ -23,7 +23,9 @@ let USER_COUNTER = 1;
 
 // ------------------------------------------------------------------
 
-export const CreateUserModal = () => {
+export type CreateUserModalProps = { options?: ActionOptions };
+
+export const CreateUserModal = ({ options }: CreateUserModalProps) => {
 	const dispatch = useDispatch<Dispatch>();
 	const [name, setName] = useState("");
 	const [secret, setSecret] = useState(v4());
@@ -51,16 +53,19 @@ export const CreateUserModal = () => {
 		dispatch(
 			createUser(DEFAULT_USER_DATABASE_ID, name, secret, {
 				onSuccess: () => {
+					if (options && options.onSuccess) {
+						options.onSuccess();
+					}
 					dispatch(popModal());
 				}
 			})
 		);
 		USER_COUNTER++;
-	}, [dispatch, name, secret]);
+	}, [dispatch, name, secret, options]);
 
 	const onToggle = useCallback(() => {
-		dispatch(openModal({ type: "ConnectUser", props: null }));
-	}, [dispatch]);
+		dispatch(openModal({ type: "ConnectUser", props: { options } }));
+	}, [dispatch, options]);
 
 	return (
 		<FormModal

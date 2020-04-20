@@ -10,15 +10,17 @@ import { popModal } from "../../reducers/modals";
 
 // ------------------------------------------------------------------
 
+export type ConfirmModalProps = {
+	question: string;
+	onCanceled?: () => void;
+	onConfirmed: () => void;
+};
+
 export const ConfirmModal = ({
 	question,
 	onCanceled,
 	onConfirmed
-}: {
-	question: string;
-	onCanceled?: () => void;
-	onConfirmed: () => void;
-}) => {
+}: ConfirmModalProps) => {
 	const dispatch = useDispatch<Dispatch>();
 	const { t } = useTranslation();
 

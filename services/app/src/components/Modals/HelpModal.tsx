@@ -25,12 +25,12 @@ export const HelpModal = () => {
 	);
 
 	const onCreateUser = useCallback(
-		() => dispatch(openModal({ type: "CreateUser", props: null })),
+		() => dispatch(openModal({ type: "CreateUser", props: {} })),
 		[dispatch]
 	);
 
 	const onConnectUser = useCallback(
-		() => dispatch(openModal({ type: "ConnectUser", props: null })),
+		() => dispatch(openModal({ type: "ConnectUser", props: {} })),
 		[dispatch]
 	);
 

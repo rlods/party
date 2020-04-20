@@ -21,11 +21,13 @@ import {
 	SeaBattleMovementType,
 	SeaBattlePosition,
 	SeaBattleWeaponType,
-	AngleToDirection
+	AngleToDirection,
+	PLAYER_TURN_MESSAGE_TAG
 } from "../../utils/games/seabattle";
 import { displayInfo } from "../../actions/messages";
 import { openModal } from "../../reducers/modals";
 import "./SeaBattle.scss";
+import { clearMessages } from "../../reducers/messages";
 
 // ------------------------------------------------------------------
 
@@ -100,7 +102,7 @@ export const SeaBattle = () => {
 	);
 
 	const onConnectUser = useCallback(
-		() => dispatch(openModal({ type: "CreateUser", props: null })),
+		() => dispatch(openModal({ type: "CreateUser", props: {} })),
 		[dispatch]
 	);
 
@@ -128,23 +130,43 @@ export const SeaBattle = () => {
 	}, [onKeyDown]);
 
 	useEffect(() => {
-		if (
-			previousMapIndex !== currentMapIndex &&
-			currentMapIndex === playerMapIndex
-		) {
-			if (playerMap?.status === "ko") {
-				dispatch(displayInfo("games.seabattle.you_have_been_killed"));
+		if (previousMapIndex !== currentMapIndex) {
+			dispatch(clearMessages(PLAYER_TURN_MESSAGE_TAG));
+			if (currentMapIndex === playerMapIndex) {
+				if (playerMap?.status === "ko") {
+					dispatch(
+						displayInfo("games.seabattle.you_have_been_killed")
+					);
+				} else if (opponentMaps && opponentMaps.length > 0) {
+					// More than one player...
+					dispatch(
+						displayInfo("games.seabattle.player_turn", {
+							autoclear: false,
+							closable: false,
+							tag: PLAYER_TURN_MESSAGE_TAG,
+							weight: 1000000
+						})
+					);
+				}
 			} else {
-				dispatch(displayInfo("games.seabattle.your_turn"));
+				dispatch(
+					displayInfo("games.seabattle.opponent_turn", {
+						autoclear: false,
+						closable: false,
+						tag: PLAYER_TURN_MESSAGE_TAG,
+						weight: 1000000
+					})
+				);
 			}
 		}
 		setPreviousMapIndex(currentMapIndex);
 	}, [
-		dispatch,
-		previousMapIndex,
 		currentMapIndex,
+		dispatch,
+		opponentMaps,
 		playerMap,
-		playerMapIndex
+		playerMapIndex,
+		previousMapIndex
 	]);
 
 	return (

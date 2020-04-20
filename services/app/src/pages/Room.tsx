@@ -14,6 +14,7 @@ import { Dispatch } from "../actions";
 import { RoomInfo } from "../utils/rooms";
 import { SeaBattle } from "./games/SeaBattle";
 import "./Room.scss";
+import { Messages } from "../components/Common/Messages";
 
 // ------------------------------------------------------------------
 
@@ -67,6 +68,10 @@ export const Room = () => {
 									extended={true}
 									propagate={true}
 								/>
+								<Messages
+									className="QueueMessages"
+									bottomPosition="120px"
+								/>
 							</>
 						);
 					case "seabattle":
@@ -76,6 +81,10 @@ export const Room = () => {
 								<RoomControls
 									extended={false}
 									propagate={false}
+								/>
+								<Messages
+									className="SeaBattleMessages"
+									bottomPosition="50px"
 								/>
 							</>
 						);

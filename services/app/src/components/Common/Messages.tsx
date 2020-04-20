@@ -14,14 +14,22 @@ import "./Messages.scss";
 
 // ------------------------------------------------------------------
 
-export const Messages = () => {
+export const Messages = ({
+	className,
+	bottomPosition
+}: {
+	className?: string;
+	bottomPosition?: string;
+}) => {
 	const { t } = useTranslation();
 	const dispatch = useDispatch<Dispatch>();
 	const messages = useSelector<RootState, Message[]>(selectMessages);
 	return (
-		<div className="Messages">
+		<div
+			className={classNames("Messages", className)}
+			style={{ bottom: bottomPosition }}>
 			<TransitionGroup>
-				{messages.map(({ extra, id, text, type }) => (
+				{messages.map(({ closable, extra, id, text, type }) => (
 					<CSSTransition
 						key={id}
 						classNames="Message"
@@ -35,13 +43,17 @@ export const Messages = () => {
 								{text ? t(text) : null}
 								{extra ? extra() : null}
 							</div>
-							<div className="MessageActions">
-								<IconButton
-									icon="close"
-									title={t("clear")}
-									onClick={() => dispatch(removeMessage(id))}
-								/>
-							</div>
+							{closable ? (
+								<div className="MessageActions">
+									<IconButton
+										icon="close"
+										title={t("clear")}
+										onClick={() =>
+											dispatch(removeMessage(id))
+										}
+									/>
+								</div>
+							) : null}
 						</div>
 					</CSSTransition>
 				))}

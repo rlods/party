@@ -8,6 +8,7 @@ let MESSAGE_ID_GENERATOR: number = 0;
 
 type MessageCreationData = {
 	autoclear?: boolean;
+	closable?: boolean;
 	duration?: number;
 	extra?: () => React.ReactNode;
 	tag?: string;
@@ -19,6 +20,7 @@ export const displayMessage = (
 	type: MessageType,
 	{
 		autoclear = true,
+		closable = true,
 		duration = 3000,
 		extra,
 		tag,
@@ -46,6 +48,7 @@ export const displayMessage = (
 		addMessage(
 			id,
 			{
+				closable,
 				extra,
 				id,
 				stamp: new Date().getTime(),

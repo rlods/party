@@ -19,10 +19,7 @@ export const createUser = (
 		console.debug("[User] Creating...");
 		const userId = v4();
 		await FirebaseUser({ dbId, userId, secret }).update({ name });
-		dispatch(connectUser(dbId, userId, secret));
-		if (options && options.onSuccess) {
-			options.onSuccess();
-		}
+		dispatch(connectUser(dbId, userId, secret, options));
 	} catch (err) {
 		dispatch(displayError(extractErrorMessage(err)));
 	}

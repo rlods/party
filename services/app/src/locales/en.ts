@@ -60,9 +60,9 @@ export default {
 			missed_opponent: "You've missed opponent boat",
 			no_weapon_selected: "Select a weapon to attack",
 			weapon_not_available: "Selected weapon is not available",
-			you_played_your_turn: "You played your turn",
 			not_your_turn: "This is not your turn",
-			your_turn: "This is your turn",
+			opponent_turn: "It's your opponent turn to play",
+			player_turn: "It's your turn to play",
 			you_have_been_killed: "All your boats have been killed"
 		},
 		max_players_count: "Maximum players number has been already reached",
