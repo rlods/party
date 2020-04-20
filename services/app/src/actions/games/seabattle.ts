@@ -21,7 +21,8 @@ import {
 } from "../../utils/games/seabattle/mappings";
 import {
 	movementIsPossible,
-	generateGrid
+	generateGrid,
+	getGridCell
 } from "../../utils/games/seabattle/collision";
 import { openModal } from "../../reducers/modals";
 
@@ -251,9 +252,10 @@ export const attackOpponent = ({
 		});
 
 		const grid = generateGrid(opponentMap.fleet);
+		const cell = getGridCell(grid, position);
 
 		// Alter battle
-		if (grid[position.y][position.x] === 0) {
+		if (null === cell) {
 			dispatch(displayError("games.seabattle.missed_opponent"));
 			opponentMap.hits.push({
 				position,

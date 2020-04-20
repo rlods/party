@@ -2,6 +2,7 @@ import { SeaBattleBoatLengthMappings } from "./mappings";
 import {
 	SeaBattleBoatData,
 	SeaBattleGrid,
+	SeaBattleGridCell,
 	SeaBattlePosition,
 	SeaBattleDirection,
 	GRID_CELL_COUNT,
@@ -10,10 +11,18 @@ import {
 
 // ------------------------------------------------------------------
 
-export const checkPositionInGrid = (
+export const getGridCell = (
 	grid: SeaBattleGrid,
 	pos: SeaBattlePosition
-) => grid[pos.y][pos.x] === 0;
+): SeaBattleGridCell => grid[pos.y][pos.x];
+
+export const setGridCell = (
+	grid: SeaBattleGrid,
+	pos: SeaBattlePosition,
+	cell: SeaBattleGridCell
+): void => {
+	grid[pos.y][pos.x] = cell;
+};
 
 // ------------------------------------------------------------------
 
@@ -64,9 +73,9 @@ export const generateGrid = (
 	fleet: SeaBattleBoatData[],
 	movingBoat?: SeaBattleBoatData
 ): SeaBattleGrid => {
-	const grid: SeaBattleGrid = Array<number>(GRID_CELL_COUNT)
-		.fill(0)
-		.map(_ => Array<number>(GRID_CELL_COUNT).fill(0));
+	const grid: SeaBattleGrid = Array<SeaBattleGridCell>(GRID_CELL_COUNT)
+		.fill(null)
+		.map(_ => Array<SeaBattleGridCell>(GRID_CELL_COUNT).fill(null));
 	for (
 		let boatIndex = 0, boatCount = fleet.length;
 		boatIndex < boatCount;
@@ -83,7 +92,14 @@ export const generateGrid = (
 					i < SeaBattleBoatLengthMappings[boat.type];
 					++i
 				) {
-					grid[boat.position.y - i][boat.position.x] += 1;
+					setGridCell(
+						grid,
+						{ x: boat.position.x, y: boat.position.y - i },
+						{
+							boatIndex,
+							type: "boat"
+						}
+					);
 				}
 				break;
 			case "E":
@@ -92,7 +108,14 @@ export const generateGrid = (
 					i < SeaBattleBoatLengthMappings[boat.type];
 					++i
 				) {
-					grid[boat.position.y][boat.position.x + i] += 1;
+					setGridCell(
+						grid,
+						{ x: boat.position.x + i, y: boat.position.y },
+						{
+							boatIndex,
+							type: "boat"
+						}
+					);
 				}
 				break;
 			case "S":
@@ -101,7 +124,14 @@ export const generateGrid = (
 					i < SeaBattleBoatLengthMappings[boat.type];
 					++i
 				) {
-					grid[boat.position.y + i][boat.position.x] += 1;
+					setGridCell(
+						grid,
+						{ x: boat.position.x, y: boat.position.y + i },
+						{
+							boatIndex,
+							type: "boat"
+						}
+					);
 				}
 				break;
 			case "W":
@@ -110,7 +140,14 @@ export const generateGrid = (
 					i < SeaBattleBoatLengthMappings[boat.type];
 					++i
 				) {
-					grid[boat.position.y][boat.position.x - i] += 1;
+					setGridCell(
+						grid,
+						{ x: boat.position.x - i, y: boat.position.y },
+						{
+							boatIndex,
+							type: "boat"
+						}
+					);
 				}
 				break;
 		}
@@ -128,55 +165,48 @@ export const checkCollisions = (
 ) => {
 	const grid = generateGrid(fleet, boat);
 	// console.debug("[SeaBattle] Collision grid", grid);
-	if (!checkPositionInGrid(grid, newPos)) {
-		return false;
-	}
 	const boatLength = SeaBattleBoatLengthMappings[boat.type];
 	switch (newDir) {
 		case "N":
 			for (let i = 0; i < boatLength; ++i) {
-				if (
-					!checkPositionInGrid(grid, {
-						x: newPos.x,
-						y: newPos.y - i
-					})
-				) {
+				const cell = getGridCell(grid, {
+					x: newPos.x,
+					y: newPos.y - i
+				});
+				if (null !== cell) {
 					return false;
 				}
 			}
 			break;
 		case "E":
 			for (let i = 0; i < boatLength; ++i) {
-				if (
-					!checkPositionInGrid(grid, {
-						x: newPos.x + i,
-						y: newPos.y
-					})
-				) {
+				const cell = getGridCell(grid, {
+					x: newPos.x + i,
+					y: newPos.y
+				});
+				if (null !== cell) {
 					return false;
 				}
 			}
 			break;
 		case "S":
 			for (let i = 0; i < boatLength; ++i) {
-				if (
-					!checkPositionInGrid(grid, {
-						x: newPos.x,
-						y: newPos.y + i
-					})
-				) {
+				const cell = getGridCell(grid, {
+					x: newPos.x,
+					y: newPos.y + i
+				});
+				if (null !== cell) {
 					return false;
 				}
 			}
 			break;
 		case "W":
 			for (let i = 0; i < boatLength; ++i) {
-				if (
-					!checkPositionInGrid(grid, {
-						x: newPos.x - i,
-						y: newPos.y
-					})
-				) {
+				const cell = getGridCell(grid, {
+					x: newPos.x - i,
+					y: newPos.y
+				});
+				if (null !== cell) {
 					return false;
 				}
 			}

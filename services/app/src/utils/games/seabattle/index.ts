@@ -10,7 +10,18 @@ export const INVALID_MOVE_MESSAGE_TAG = "invalid_move";
 
 // ------------------------------------------------------------------
 
-export type SeaBattleGrid = number[][];
+export type SeaBattleGridCell =
+	| {
+			boatIndex: number;
+			type: "boat";
+	  }
+	| {
+			weaponType: SeaBattleWeaponType;
+			type: "weapon";
+	  }
+	| null;
+
+export type SeaBattleGrid = SeaBattleGridCell[][];
 
 // ------------------------------------------------------------------
 
