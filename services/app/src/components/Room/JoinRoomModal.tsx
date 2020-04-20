@@ -33,8 +33,13 @@ export const JoinRoomModal = () => {
 			dispatch(displayError("rooms.id_is_invalid"));
 			return;
 		}
-		dispatch(enterRoom(DEFAULT_ROOM_DATABASE_ID, roomId, ""));
-		dispatch(popModal());
+		dispatch(
+			enterRoom(DEFAULT_ROOM_DATABASE_ID, roomId, "", {
+				onSuccess: () => {
+					dispatch(popModal());
+				}
+			})
+		);
 	}, [dispatch, roomId]);
 
 	const onCreate = useCallback(

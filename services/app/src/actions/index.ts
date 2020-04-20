@@ -33,3 +33,5 @@ export function createAction<T extends string, P>(
 export function createAction<T extends string, P>(type: T, payload?: P) {
 	return payload === void 0 ? { type } : { type, payload };
 }
+
+export type ActionOptions = { onSuccess?: () => void };

@@ -1,0 +1,23 @@
+.HelpModal {
+	.ModalBody {
+		.HelpModalSection {
+			.HelpModalSectionTitle {
+				padding-left: 1rem;
+				font-weight: bold;
+				text-transform: uppercase;
+			}
+
+			ul {
+				padding-left: 1.5rem;
+
+				li {
+					margin-top: 1rem;
+
+					.IconButton {
+						display: inline;
+					}
+				}
+			}
+		}
+	}
+}

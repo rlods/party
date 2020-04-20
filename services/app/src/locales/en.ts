@@ -10,6 +10,18 @@ export default {
 		powered_with: "Powered with",
 		description: "Collaborative & Musical Games Experimentation"
 	},
+	help: {
+		help: "Help",
+		rules: "Rules",
+		rule1: "Create an user account",
+		rule1b: "or connect",
+		rule2: "Create a room",
+		rule2b: "or join one",
+		notes: "Notes",
+		note1:
+			"A room is protected with a secret: it can be accessed without its secret but then no action can be done in it.",
+		note2: "No personal data is accessed or stored."
+	},
 	users: {
 		errors: {
 			invalid: "User is invalid"

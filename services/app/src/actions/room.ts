@@ -1,6 +1,6 @@
 import { v4 } from "uuid";
 //
-import { AsyncAction, Dispatch } from ".";
+import { AsyncAction, Dispatch, ActionOptions } from ".";
 import { displayError } from "./messages";
 import { RoomInfo, RoomType, generateRoomExtra } from "../utils/rooms";
 import { FirebaseRoom } from "../utils/firebase";
@@ -19,7 +19,6 @@ import {
 	extractTracks,
 	ContextualizedTrackAccess
 } from "../utils/medias";
-import { openModal } from "../reducers/modals";
 
 // ------------------------------------------------------------------
 
@@ -66,7 +65,8 @@ export const createRoom = (
 	dbId: string,
 	name: string,
 	secret: string,
-	type: RoomType
+	type: RoomType,
+	options?: ActionOptions
 ): AsyncAction => async (dispatch, getState) => {
 	const {
 		user: {
@@ -75,7 +75,7 @@ export const createRoom = (
 	} = getState();
 	if (!userId) {
 		console.debug("[SeaBattle] Not connected");
-		dispatch(openModal({ type: "CreateUser", props: null }));
+		dispatch(displayError("users.not_connected"));
 		return;
 	}
 	try {
@@ -90,6 +90,9 @@ export const createRoom = (
 			...DEFAULT_QUEUE_INFO_BY_TYPE[type]
 		});
 		dispatch(enterRoom(dbId, roomId, secret));
+		if (options && options.onSuccess) {
+			options.onSuccess();
+		}
 	} catch (err) {
 		dispatch(displayError(extractErrorMessage(err)));
 	}
@@ -100,13 +103,22 @@ export const createRoom = (
 export const enterRoom = (
 	dbId: string,
 	roomId: string,
-	secret: string
+	secret: string,
+	options?: ActionOptions
 ): AsyncAction => async (dispatch, getState) => {
 	const {
-		room: { room }
+		room: { room },
+		user: {
+			access: { userId }
+		}
 	} = getState();
 	if (room && room.dbId === dbId && room.roomId === roomId) {
 		// Nothing to do
+		return;
+	}
+	if (!userId) {
+		console.debug("[SeaBattle] Not connected");
+		dispatch(displayError("users.not_connected"));
 		return;
 	}
 	dispatch(exitRoom());
@@ -123,6 +135,9 @@ export const enterRoom = (
 		dispatch(_watchRoom(newRoom));
 		dispatch(_watchPlayer());
 		history.push(`/room/${dbId}/${roomId}?secret=${secret}`); // TODO: should push only if we're not already in it
+		if (options && options.onSuccess) {
+			options.onSuccess();
+		}
 	} catch (err) {
 		dispatch(displayError(extractErrorMessage(err)));
 	}
@@ -161,10 +176,10 @@ export const lockRoom = (): AsyncAction => async (dispatch, getState) => {
 	dispatch(setRoom({ access: { dbId, roomId, secret: "" } }));
 };
 
-export const unlockRoom = (secret: string): AsyncAction => async (
-	dispatch,
-	getState
-) => {
+export const unlockRoom = (
+	secret: string,
+	options?: ActionOptions
+): AsyncAction => async (dispatch, getState) => {
 	const {
 		room: {
 			room,
@@ -184,6 +199,9 @@ export const unlockRoom = (secret: string): AsyncAction => async (
 	room.setSecret(secret);
 	// TODO : not history.replace(`/room/${id}?secret=${secret}`); as it would trigger a page refresh
 	dispatch(setRoom({ access: { dbId, roomId, secret } }));
+	if (options && options.onSuccess) {
+		options.onSuccess();
+	}
 };
 
 // ------------------------------------------------------------------

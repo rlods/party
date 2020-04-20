@@ -1,5 +1,5 @@
 import { MediaAccess } from "./medias";
-import { generateBattle } from "./games/seabattle";
+import { generateBattle } from "./games/seabattle/generator";
 import { encode } from "./encoder";
 
 export type PlayMode = "default" | "shuffle"; // TODO: Implement Shuffle mode

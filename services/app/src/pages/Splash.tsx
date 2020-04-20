@@ -33,6 +33,11 @@ export const Splash = () => {
 		dispatch
 	]);
 
+	const onShowHelp = useCallback(
+		() => dispatch(openModal({ type: "Help", props: null })),
+		[dispatch]
+	);
+
 	useEffect(() => {
 		dispatch(clearMessages());
 	}, [dispatch]);
@@ -105,10 +110,10 @@ export const Splash = () => {
 					) : (
 						<div className="MenuItem">
 							<IconButton
-								icon="info"
-								onClick={() => {}}
-								size="M"
-								title={t("splash.CGU")}
+								icon="question-circle"
+								onClick={onShowHelp}
+								size="L"
+								title={t("help.help")}
 							/>
 						</div>
 					)}

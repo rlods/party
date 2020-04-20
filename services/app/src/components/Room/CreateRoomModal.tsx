@@ -51,8 +51,13 @@ export const CreateRoomModal = () => {
 			dispatch(displayError("rooms.secret_is_invalid"));
 			return;
 		}
-		dispatch(createRoom(DEFAULT_ROOM_DATABASE_ID, name, secret, type));
-		dispatch(popModal());
+		dispatch(
+			createRoom(DEFAULT_ROOM_DATABASE_ID, name, secret, type, {
+				onSuccess: () => {
+					dispatch(popModal());
+				}
+			})
+		);
 		ROOM_COUNTER++;
 	}, [dispatch, name, secret, type]);
 

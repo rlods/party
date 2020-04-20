@@ -38,8 +38,13 @@ export const ConnectUserModal = () => {
 			dispatch(displayError("users.secret_is_invalid"));
 			return;
 		}
-		dispatch(connectUser(DEFAULT_USER_DATABASE_ID, userId, secret));
-		dispatch(popModal());
+		dispatch(
+			connectUser(DEFAULT_USER_DATABASE_ID, userId, secret, {
+				onSuccess: () => {
+					dispatch(popModal());
+				}
+			})
+		);
 	}, [dispatch, userId, secret]);
 
 	const onCreate = useCallback(

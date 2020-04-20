@@ -10,6 +10,18 @@ export default {
 		powered_with: "Utilise",
 		description: "Expérimentation de jeux collaboratifs et musicaux"
 	},
+	help: {
+		help: "Aide",
+		rules: "Règles",
+		rule1: "Créez un compte utilisateur",
+		rule1b: "ou connectez-vous",
+		rule2: "Créez une salle",
+		rule2b: "ou rejoignez en une",
+		notes: "Notes",
+		note1:
+			"Un salle est protégée par un secret : elle peut-être accédée sans son secret mais aucune action ne pourra y être réalisée.",
+		note2: "Aucune donnée personnelle n'est manipulée ou stockée."
+	},
 	users: {
 		errors: {
 			invalid: "L'utilisateur est invalide"

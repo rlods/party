@@ -48,8 +48,13 @@ export const CreateUserModal = () => {
 			dispatch(displayError("users.secret_is_invalid"));
 			return;
 		}
-		dispatch(createUser(DEFAULT_USER_DATABASE_ID, name, secret));
-		dispatch(popModal());
+		dispatch(
+			createUser(DEFAULT_USER_DATABASE_ID, name, secret, {
+				onSuccess: () => {
+					dispatch(popModal());
+				}
+			})
+		);
 		USER_COUNTER++;
 	}, [dispatch, name, secret]);
 

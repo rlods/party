@@ -3,7 +3,7 @@ import React from "react";
 import { Asset } from "./Assets";
 import {
 	SeaBattleWeaponData,
-	WeaponsOffsetMappings,
+	SeaBattleWeaponsOffsetMappings,
 	GRID_CELL_UNIT_SIZE
 } from "../../utils/games/seabattle";
 
@@ -15,10 +15,10 @@ export const Weapon = ({ type, ...asset }: SeaBattleWeaponData) => (
 		type={type}
 		position={{
 			x:
-				WeaponsOffsetMappings[type].x +
+				SeaBattleWeaponsOffsetMappings[type].x +
 				asset.position.x * GRID_CELL_UNIT_SIZE,
 			y:
-				WeaponsOffsetMappings[type].y +
+				SeaBattleWeaponsOffsetMappings[type].y +
 				asset.position.y * GRID_CELL_UNIT_SIZE
 		}}
 	/>

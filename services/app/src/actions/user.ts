@@ -1,6 +1,6 @@
 import { v4 } from "uuid";
 //
-import { AsyncAction } from ".";
+import { AsyncAction, ActionOptions } from ".";
 import { UserInfo } from "../utils/users";
 import { FirebaseUser } from "../utils/firebase";
 import { displayError } from "./messages";
@@ -12,13 +12,17 @@ import { setUser, resetUser } from "../reducers/user";
 export const createUser = (
 	dbId: string,
 	name: string,
-	secret: string
+	secret: string,
+	options?: ActionOptions
 ): AsyncAction => async dispatch => {
 	try {
 		console.debug("[User] Creating...");
 		const userId = v4();
 		await FirebaseUser({ dbId, userId, secret }).update({ name });
 		dispatch(connectUser(dbId, userId, secret));
+		if (options && options.onSuccess) {
+			options.onSuccess();
+		}
 	} catch (err) {
 		dispatch(displayError(extractErrorMessage(err)));
 	}
@@ -31,7 +35,8 @@ let FIREBASE_CB: any = null;
 export const connectUser = (
 	dbId: string,
 	userId: string,
-	secret: string
+	secret: string,
+	options?: ActionOptions
 ): AsyncAction => async (dispatch, getState) => {
 	const {
 		user: { user }
@@ -58,6 +63,9 @@ export const connectUser = (
 				dispatch(setUser({ user: newUser, info: newInfo }));
 			}
 		);
+		if (options && options.onSuccess) {
+			options.onSuccess();
+		}
 	} catch (err) {
 		dispatch(displayError(extractErrorMessage(err)));
 		dispatch(disconnectUser());

@@ -5,7 +5,6 @@ import { decode, encode } from "../../utils/encoder";
 import {
 	SeaBattleMovementType,
 	SeaBattleData,
-	generateFleet,
 	AngleToDirection,
 	MAX_PLAYER_COUNT,
 	INVALID_MOVE_MESSAGE_TAG,
@@ -26,6 +25,7 @@ import {
 	getGridCell
 } from "../../utils/games/seabattle/collision";
 import { openModal } from "../../reducers/modals";
+import { generateFleet } from "../../utils/games/seabattle/generator";
 
 // ------------------------------------------------------------------
 

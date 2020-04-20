@@ -27,8 +27,13 @@ export const UnlockRoomModal = () => {
 	const onClose = useCallback(() => dispatch(popModal()), [dispatch]);
 
 	const onUnlock = useCallback(() => {
-		dispatch(unlockRoom(secret));
-		dispatch(popModal());
+		dispatch(
+			unlockRoom(secret, {
+				onSuccess: () => {
+					dispatch(popModal());
+				}
+			})
+		);
 	}, [dispatch, secret]);
 
 	return (
