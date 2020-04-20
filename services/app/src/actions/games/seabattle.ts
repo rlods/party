@@ -260,6 +260,10 @@ export const attackOpponent = ({
 			console.debug("[SeaBattle] Invalid opponent map");
 			return;
 		}
+		if (opponentMap.status === "ko") {
+			dispatch(displayError("games.seabattle.opponent_already_killed"));
+			return;
+		}
 
 		console.debug("[SeaBattle] Attacking opponent...", {
 			opponentIndex,
@@ -282,7 +286,7 @@ export const attackOpponent = ({
 				const opponentBoat = opponentMap.fleet[cell.boatIndex];
 				if (opponentBoat.status === "ko") {
 					dispatch(
-						displayError("games.seabattle.ship_is_already_killed")
+						displayError("games.seabattle.ship_already_killed")
 					);
 					return;
 				}
@@ -292,7 +296,7 @@ export const attackOpponent = ({
 				);
 				if (hit) {
 					dispatch(
-						displayError("games.seabattle.ship_is_already_hitted")
+						displayError("games.seabattle.ship_already_hitted")
 					);
 					return;
 				}
@@ -308,8 +312,17 @@ export const attackOpponent = ({
 					opponentBoat.hits.length ===
 					SeaBattleBoatLengthMappings[opponentBoat.type]
 				) {
-					dispatch(displaySuccess("games.seabattle.killed_opponent"));
+					dispatch(
+						displaySuccess("games.seabattle.killed_opponent_boat")
+					);
 					opponentBoat.status = "ko";
+
+					if (!opponentMap.fleet.find(boat => boat.status === "ok")) {
+						dispatch(
+							displaySuccess("games.seabattle.killed_opponent")
+						);
+						opponentMap.status = "ko";
+					}
 				} else {
 					dispatch(displaySuccess("games.seabattle.hitted_opponent"));
 				}

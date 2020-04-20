@@ -39,17 +39,20 @@ export default {
 				"Un bateau touché ne peut plus se déplacer !",
 			opponent_index: "Ennemi {{index}}",
 			join_battle: "Participer à la bataille",
-			ship_is_already_hitted:
-				"Le bateau est touché touché à cette position",
-			ship_is_already_killed: "Le bateau a déjà été tué",
+			opponent_already_killed:
+				"Tous les bateaux de l'ennemi ont déjà été tués",
+			ship_already_hitted: "Le bateau est touché touché à cette position",
+			ship_already_killed: "Le bateau a déjà été tué",
 			hitted_opponent: "Vous avez touché un bateau ennemi",
-			killed_opponent: "Vous avez tué un bateau ennemi",
+			killed_opponent: "Vous avez tué tous les bateaux de l'ennemi",
+			killed_opponent_boat: "Vous avez tué un bateau ennemi",
 			missed_opponent: "Vous n'avez pas touché de bateau ennemi",
 			no_weapon_selected: "Sélectionnez une arme pour attaquer",
 			weapon_not_available: "L'arme sélectionnée n'est plus disponible",
 			you_played_your_turn: "Vous avez joué votre tour",
 			not_your_turn: "Ce n'est pas votre tour de jouer !",
-			your_turn: "C'est votre tour de jouer !"
+			your_turn: "C'est votre tour de jouer !",
+			you_have_been_killed: "Tous vos bateaux ont été tués"
 		},
 		max_players_count: "Le nombre maximal de joueurs est déjà atteint",
 		no_opponents: "Aucun ennemi",

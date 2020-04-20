@@ -132,10 +132,20 @@ export const SeaBattle = () => {
 			previousMapIndex !== currentMapIndex &&
 			currentMapIndex === playerMapIndex
 		) {
-			dispatch(displayInfo("games.seabattle.your_turn"));
+			if (playerMap?.status === "ko") {
+				dispatch(displayInfo("games.seabattle.you_have_been_killed"));
+			} else {
+				dispatch(displayInfo("games.seabattle.your_turn"));
+			}
 		}
 		setPreviousMapIndex(currentMapIndex);
-	}, [dispatch, previousMapIndex, currentMapIndex, playerMapIndex]);
+	}, [
+		dispatch,
+		previousMapIndex,
+		currentMapIndex,
+		playerMap,
+		playerMapIndex
+	]);
 
 	return (
 		<div className="SeaBattle">
