@@ -7,7 +7,7 @@ import { IconButton } from "../Common/IconButton";
 import { CancelButton } from "../Common/CancelButton";
 import { InputField } from "../Modals/ModalFields";
 import { Dispatch } from "../../actions";
-import { popModal, openModal } from "../../reducers/modals";
+import { popModal } from "../../reducers/modals";
 import { displayError } from "../../actions/messages";
 import { enterRoom } from "../../actions/room";
 import { DEFAULT_ROOM_DATABASE_ID } from "../../config/firebase";
@@ -42,11 +42,6 @@ export const JoinRoomModal = () => {
 		);
 	}, [dispatch, roomId]);
 
-	const onCreate = useCallback(
-		() => dispatch(openModal({ type: "CreateRoom", props: null })),
-		[dispatch]
-	);
-
 	return (
 		<FormModal
 			title={t("rooms.room_join")}
@@ -63,12 +58,6 @@ export const JoinRoomModal = () => {
 						type="submit"
 					/>
 					<CancelButton onClick={onClose} />
-					<IconButton
-						title={t("rooms.create")}
-						kind="default"
-						icon="plus"
-						onClick={onCreate}
-					/>
 				</>
 			)}>
 			<InputField

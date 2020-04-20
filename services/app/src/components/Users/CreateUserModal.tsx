@@ -11,7 +11,7 @@ import {
 	SECRET_FIELD_SIZE,
 	InputField
 } from "../Modals/ModalFields";
-import { popModal, openModal } from "../../reducers/modals";
+import { popModal } from "../../reducers/modals";
 import { displayError } from "../../actions/messages";
 import { createUser } from "../../actions/user";
 import { Dispatch, ActionOptions } from "../../actions";
@@ -63,10 +63,6 @@ export const CreateUserModal = ({ options }: CreateUserModalProps) => {
 		USER_COUNTER++;
 	}, [dispatch, name, secret, options]);
 
-	const onToggle = useCallback(() => {
-		dispatch(openModal({ type: "ConnectUser", props: { options } }));
-	}, [dispatch, options]);
-
 	return (
 		<FormModal
 			title={t("users.user_creation")}
@@ -80,16 +76,10 @@ export const CreateUserModal = ({ options }: CreateUserModalProps) => {
 						}
 						title={t("users.create")}
 						kind="primary"
-						icon="plus"
+						icon="sign-in"
 						type="submit"
 					/>
 					<CancelButton onClick={onClose} />
-					<IconButton
-						title={t("users.connect")}
-						kind="default"
-						icon="sign-in"
-						onClick={onToggle}
-					/>
 				</>
 			)}>
 			<InputField

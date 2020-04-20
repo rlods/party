@@ -61,9 +61,9 @@ export default {
 			missed_opponent: "Vous n'avez pas touché de bateau ennemi",
 			no_weapon_selected: "Sélectionnez une arme pour attaquer",
 			weapon_not_available: "L'arme sélectionnée n'est plus disponible",
-			not_your_turn: "Ce n'est pas à votre tour de jouer !",
+			not_your_turn: "Ce n'est pas à votre tour de jouer",
 			opponent_turn: "C'est au tour de votre adversaire de jouer",
-			player_turn: "C'est à votre tour de jouer !",
+			player_turn: "C'est à votre tour de bouger ou d'attaquer",
 			you_have_been_killed: "Tous vos bateaux ont été tués"
 		},
 		max_players_count: "Le nombre maximal de joueurs est déjà atteint",

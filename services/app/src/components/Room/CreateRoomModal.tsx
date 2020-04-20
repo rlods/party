@@ -13,7 +13,7 @@ import {
 	SelectField
 } from "../Modals/ModalFields";
 import { Dispatch } from "../../actions";
-import { popModal, openModal } from "../../reducers/modals";
+import { popModal } from "../../reducers/modals";
 import { createRoom } from "../../actions/room";
 import { displayError } from "../../actions/messages";
 import { RoomType, RoomTypes, DEFAULT_ROOM_TYPE } from "../../utils/rooms";
@@ -61,11 +61,6 @@ export const CreateRoomModal = () => {
 		ROOM_COUNTER++;
 	}, [dispatch, name, secret, type]);
 
-	const onJoin = useCallback(
-		() => dispatch(openModal({ type: "JoinRoom", props: null })),
-		[dispatch]
-	);
-
 	return (
 		<FormModal
 			title={t("rooms.room_creation")}
@@ -79,16 +74,10 @@ export const CreateRoomModal = () => {
 						}
 						title={t("rooms.create")}
 						kind="primary"
-						icon="plus"
+						icon="sign-in"
 						type="submit"
 					/>
 					<CancelButton onClick={onClose} />
-					<IconButton
-						title={t("rooms.join")}
-						kind="default"
-						icon="sign-in"
-						onClick={onJoin}
-					/>
 				</>
 			)}>
 			<InputField

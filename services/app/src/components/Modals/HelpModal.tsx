@@ -42,7 +42,7 @@ export const HelpModal = () => {
 					<li>
 						{t("help.rule1")}&nbsp;
 						<IconButton
-							icon="plus"
+							icon="user-plus"
 							size="S"
 							title=""
 							onClick={onCreateUser}
@@ -59,7 +59,7 @@ export const HelpModal = () => {
 					<li>
 						{t("help.rule2")}&nbsp;
 						<IconButton
-							icon="plus"
+							icon="play"
 							size="S"
 							title=""
 							onClick={onCreateRoom}

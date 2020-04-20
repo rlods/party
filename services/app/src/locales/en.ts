@@ -62,7 +62,7 @@ export default {
 			weapon_not_available: "Selected weapon is not available",
 			not_your_turn: "This is not your turn",
 			opponent_turn: "It's your opponent turn to play",
-			player_turn: "It's your turn to play",
+			player_turn: "It's your turn to move or attack",
 			you_have_been_killed: "All your boats have been killed"
 		},
 		max_players_count: "Maximum players number has been already reached",

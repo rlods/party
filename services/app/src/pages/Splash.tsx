@@ -25,8 +25,13 @@ export const Splash = () => {
 		[dispatch]
 	);
 
-	const onConnectUser = useCallback(
+	const onCreateUser = useCallback(
 		() => dispatch(openModal({ type: "CreateUser", props: {} })),
+		[dispatch]
+	);
+
+	const onConnectUser = useCallback(
+		() => dispatch(openModal({ type: "ConnectUser", props: {} })),
 		[dispatch]
 	);
 
@@ -80,9 +85,9 @@ export const Splash = () => {
 							<>
 								<div className="MenuItem">
 									<IconButton
-										icon="plus"
 										onClick={onCreateRoom}
-										size="L"
+										icon="play"
+										size="XL"
 										title={t("rooms.create")}
 									/>
 								</div>
@@ -91,9 +96,17 @@ export const Splash = () => {
 							<>
 								<div className="MenuItem">
 									<IconButton
+										onClick={onCreateUser}
+										icon="user-plus"
+										size="XL"
+										title={t("users.create")}
+									/>
+								</div>
+								<div className="MenuItem">
+									<IconButton
 										onClick={onConnectUser}
 										icon="sign-in"
-										size="L"
+										size="XL"
 										title={t("users.connect")}
 									/>
 								</div>

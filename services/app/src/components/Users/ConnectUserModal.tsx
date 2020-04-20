@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { FormModal } from "../Modals/FormModal";
 import { IconButton } from "../Common/IconButton";
 import { CancelButton } from "../Common/CancelButton";
-import { popModal, openModal } from "../../reducers/modals";
+import { popModal } from "../../reducers/modals";
 import { displayError } from "../../actions/messages";
 import { connectUser } from "../../actions/user";
 import { Dispatch, ActionOptions } from "../../actions";
@@ -52,11 +52,6 @@ export const ConnectUserModal = ({ options }: ConnectUserModalProps) => {
 		);
 	}, [dispatch, userId, secret, options]);
 
-	const onCreate = useCallback(
-		() => dispatch(openModal({ type: "CreateUser", props: { options } })),
-		[dispatch, options]
-	);
-
 	return (
 		<FormModal
 			title={t("users.connection")}
@@ -75,12 +70,6 @@ export const ConnectUserModal = ({ options }: ConnectUserModalProps) => {
 						type="submit"
 					/>
 					<CancelButton onClick={onClose} />
-					<IconButton
-						title={t("users.create")}
-						kind="default"
-						icon="plus"
-						onClick={onCreate}
-					/>
 				</>
 			)}>
 			<InputField
