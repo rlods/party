@@ -25,6 +25,9 @@ export const Fleet = ({
 				onClick={
 					onSelectBoatIndex && boat.status === "ok"
 						? () => {
+								console.debug("[SeaBattle] Selected boat", {
+									boat
+								});
 								onSelectBoatIndex(
 									index === selectedBoatIndex ? -1 : index
 								);

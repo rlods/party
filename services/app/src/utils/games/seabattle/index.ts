@@ -50,6 +50,14 @@ export const SeaBattleDirections: SeaBattleDirection[] = ["E", "S", "W", "N"]; /
 export const AngleToDirection = (angle: number): SeaBattleDirection =>
 	augmentedArrayIndexAccess(SeaBattleDirections, angle);
 
+export const DirectionToAngle = {
+	// Keys are direction
+	E: 0,
+	S: 1,
+	W: 2,
+	N: 3
+};
+
 export type SeaBattleMovementType =
 	| "move-forward"
 	| "move-backward"

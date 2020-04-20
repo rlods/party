@@ -34,7 +34,6 @@ export const displayMessage = (
 	let id = 0;
 	if (oldEntry) {
 		const [oldID, oldMessage] = oldEntry;
-		console.log("REUSING");
 		id = Number(oldID); // Reuse message id and renqueue
 		if (oldMessage.timer) {
 			clearTimeout(oldMessage.timer);
