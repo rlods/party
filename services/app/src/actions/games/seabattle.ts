@@ -17,7 +17,8 @@ import {
 } from "../../utils/games/seabattle";
 import {
 	SeaBattleBoatTranslationMappings,
-	SeaBattleBoatRotationTransformationMappings
+	SeaBattleBoatRotationTransformationMappings,
+	SeaBattleBoatLengthMappings
 } from "../../utils/games/seabattle/mappings";
 import {
 	movementIsPossible,
@@ -144,6 +145,18 @@ export const moveBoat = ({
 		}
 
 		const boat = fleet[boatIndex];
+		if (boat.hits.find(hit => hit.type === "hitted")) {
+			dispatch(
+				displayError(
+					"games.seabattle.movement_not_possible_because_hitted",
+					{
+						tag: INVALID_MOVE_MESSAGE_TAG
+					}
+				)
+			);
+			return;
+		}
+
 		if (!movementIsPossible(fleet, boat, newPosition, newDirection)) {
 			console.debug("[SeaBattle] Movement is not possible...", {
 				boatIndex,
@@ -154,7 +167,7 @@ export const moveBoat = ({
 				newPosition
 			});
 			dispatch(
-				displayError("games.seabattle.movement_is_not_possible", {
+				displayError("games.seabattle.movement_not_possible", {
 					tag: INVALID_MOVE_MESSAGE_TAG
 				})
 			);
@@ -266,15 +279,40 @@ export const attackOpponent = ({
 			});
 		} else {
 			if (cell.type === "boat") {
-				dispatch(displaySuccess("games.seabattle.hitted_opponent"));
 				const opponentBoat = opponentMap.fleet[cell.boatIndex];
+				if (opponentBoat.status === "ko") {
+					dispatch(
+						displayError("games.seabattle.ship_is_already_killed")
+					);
+					return;
+				}
+
+				const hit = opponentBoat.hits.find(
+					hit => hit.position.x === cell.boatLocalIndex
+				);
+				if (hit) {
+					dispatch(
+						displayError("games.seabattle.ship_is_already_hitted")
+					);
+					return;
+				}
+
 				opponentBoat.hits.push({
 					position: {
-						x: 0,
-						y: opponentBoat.hits.length
+						x: cell.boatLocalIndex,
+						y: 0
 					},
-					type: "hitted1"
+					type: "hitted"
 				});
+				if (
+					opponentBoat.hits.length ===
+					SeaBattleBoatLengthMappings[opponentBoat.type]
+				) {
+					dispatch(displaySuccess("games.seabattle.killed_opponent"));
+					opponentBoat.status = "ko";
+				} else {
+					dispatch(displaySuccess("games.seabattle.hitted_opponent"));
+				}
 			} else {
 				dispatch(displaySuccess("games.seabattle.hitted_weapon")); // TODO: for example a mine
 			}

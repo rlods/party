@@ -34,11 +34,17 @@ export default {
 	},
 	games: {
 		seabattle: {
-			movement_is_not_possible: "Ce déplacement est impossible !",
+			movement_not_possible: "Ce déplacement est impossible !",
+			movement_not_possible_because_hitted:
+				"Un bateau touché ne peut plus se déplacer !",
 			opponent_index: "Ennemi {{index}}",
 			join_battle: "Participer à la bataille",
-			missed_opponent: "Vous avez raté l'ennemi",
-			hitted_opponent: "Vous avez touché l'ennemi",
+			ship_is_already_hitted:
+				"Le bateau est touché touché à cette position",
+			ship_is_already_killed: "Le bateau a déjà été tué",
+			hitted_opponent: "Vous avez touché un bateau ennemi",
+			killed_opponent: "Vous avez tué un bateau ennemi",
+			missed_opponent: "Vous n'avez pas touché de bateau ennemi",
 			no_weapon_selected: "Sélectionnez une arme pour attaquer",
 			weapon_not_available: "L'arme sélectionnée n'est plus disponible",
 			you_played_your_turn: "Vous avez joué votre tour",

@@ -34,11 +34,15 @@ export default {
 	},
 	games: {
 		seabattle: {
-			movement_is_not_possible: "This movement is not possible!",
+			movement_not_possible: "This movement is not possible!",
+			movement_not_possible_because_hitted: "A hitted boat cannot move!",
 			opponent_index: "Opponent {{index}}",
 			join_battle: "Join the battle",
-			missed_opponent: "You've missed opponent boat",
+			ship_is_already_hitted: "Boat is already hitten at this position",
+			ship_is_already_killed: "Boat has already been killed",
 			hitted_opponent: "You've hitted opponent boat",
+			killed_opponent: "You've killed opponent boat",
+			missed_opponent: "You've missed opponent boat",
 			no_weapon_selected: "Select a weapon to attack",
 			weapon_not_available: "Selected weapon is not available",
 			you_played_your_turn: "You played your turn",

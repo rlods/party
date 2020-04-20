@@ -13,6 +13,7 @@ export const INVALID_MOVE_MESSAGE_TAG = "invalid_move";
 export type SeaBattleGridCell =
 	| {
 			boatIndex: number;
+			boatLocalIndex: number;
 			type: "boat";
 	  }
 	| {
@@ -84,7 +85,7 @@ export type SeaBattleCellData = {
 
 // ------------------------------------------------------------------
 
-export type SeaBattleHitType = "hitted1" | "hitted2" | "missed";
+export type SeaBattleHitType = "hitted" | "missed";
 
 export type SeaBattleHitData = {
 	position: SeaBattlePosition;
@@ -93,15 +94,13 @@ export type SeaBattleHitData = {
 
 export const HitsOffsetInBoatappings = {
 	// Keys are hits types
-	hitted1: { x: 4, y: 4 },
-	hitted2: { x: 4, y: 4 },
+	hitted: { x: 4, y: 4 },
 	missed: { x: 4, y: 4 }
 };
 
 export const HitsOffsetInCellMappings = {
 	// Keys are hits types
-	hitted1: { x: 10, y: 10 },
-	hitted2: { x: 10, y: 10 },
+	hitted: { x: 10, y: 10 },
 	missed: { x: 10, y: 10 }
 };
 
@@ -187,9 +186,9 @@ export const generateFleet = (battle: SeaBattleData, userId: string) => {
 				fleet.push({
 					hits: [
 						/*
-						{ position: { x: 0, y: 0 }, type: "hitted1" },
-						{ position: { x: 1, y: 0 }, type: "hitted2" }
-						*/
+						{ position: { x: 0, y: 0 }, type: "hitted" },
+						{ position: { x: 1, y: 0 }, type: "hitted" }
+						 */
 					],
 					type: type as SeaBattleBoatType,
 					angle: 0,
@@ -203,8 +202,8 @@ export const generateFleet = (battle: SeaBattleData, userId: string) => {
 		fleet,
 		hits: [
 			/*
-			{ position: { x: 0, y: 1 }, type: "hitted1" },
-			{ position: { x: 0, y: 2 }, type: "hitted2" },
+			{ position: { x: 0, y: 1 }, type: "hitted" },
+			{ position: { x: 0, y: 2 }, type: "hitted" },
 			{ position: { x: 0, y: 3 }, type: "missed" }
 			*/
 		],

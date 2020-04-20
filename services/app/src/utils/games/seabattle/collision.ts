@@ -88,15 +88,19 @@ export const generateGrid = (
 		switch (AngleToDirection(boat.angle)) {
 			case "N":
 				for (
-					let i = 0;
-					i < SeaBattleBoatLengthMappings[boat.type];
-					++i
+					let boatLocalIndex = 0;
+					boatLocalIndex < SeaBattleBoatLengthMappings[boat.type];
+					++boatLocalIndex
 				) {
 					setGridCell(
 						grid,
-						{ x: boat.position.x, y: boat.position.y - i },
+						{
+							x: boat.position.x,
+							y: boat.position.y - boatLocalIndex
+						},
 						{
 							boatIndex,
+							boatLocalIndex,
 							type: "boat"
 						}
 					);
@@ -104,15 +108,19 @@ export const generateGrid = (
 				break;
 			case "E":
 				for (
-					let i = 0;
-					i < SeaBattleBoatLengthMappings[boat.type];
-					++i
+					let boatLocalIndex = 0;
+					boatLocalIndex < SeaBattleBoatLengthMappings[boat.type];
+					++boatLocalIndex
 				) {
 					setGridCell(
 						grid,
-						{ x: boat.position.x + i, y: boat.position.y },
+						{
+							x: boat.position.x + boatLocalIndex,
+							y: boat.position.y
+						},
 						{
 							boatIndex,
+							boatLocalIndex,
 							type: "boat"
 						}
 					);
@@ -120,15 +128,19 @@ export const generateGrid = (
 				break;
 			case "S":
 				for (
-					let i = 0;
-					i < SeaBattleBoatLengthMappings[boat.type];
-					++i
+					let boatLocalIndex = 0;
+					boatLocalIndex < SeaBattleBoatLengthMappings[boat.type];
+					++boatLocalIndex
 				) {
 					setGridCell(
 						grid,
-						{ x: boat.position.x, y: boat.position.y + i },
+						{
+							x: boat.position.x,
+							y: boat.position.y + boatLocalIndex
+						},
 						{
 							boatIndex,
+							boatLocalIndex,
 							type: "boat"
 						}
 					);
@@ -136,15 +148,19 @@ export const generateGrid = (
 				break;
 			case "W":
 				for (
-					let i = 0;
-					i < SeaBattleBoatLengthMappings[boat.type];
-					++i
+					let boatLocalIndex = 0;
+					boatLocalIndex < SeaBattleBoatLengthMappings[boat.type];
+					++boatLocalIndex
 				) {
 					setGridCell(
 						grid,
-						{ x: boat.position.x - i, y: boat.position.y },
+						{
+							x: boat.position.x - boatLocalIndex,
+							y: boat.position.y
+						},
 						{
 							boatIndex,
+							boatLocalIndex,
 							type: "boat"
 						}
 					);
