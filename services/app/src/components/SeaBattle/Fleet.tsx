@@ -7,33 +7,32 @@ import { SeaBattleBoatData } from "../../utils/games/seabattle";
 
 export const Fleet = ({
 	fleet,
-	hideActiveFleet,
+	hideFleet,
 	selectedBoatIndex,
 	onSelectBoatIndex
 }: {
 	fleet: SeaBattleBoatData[];
-	hideActiveFleet?: boolean;
+	hideFleet: boolean;
 	selectedBoatIndex?: number;
 	onSelectBoatIndex?: (index: number) => void;
 }) => (
 	<>
-		{fleet
-			.filter(boat => !hideActiveFleet || boat.status === "ko")
-			.map((boat, index) => (
-				<Boat
-					key={index}
-					boat={boat}
-					onClick={
-						onSelectBoatIndex && boat.status === "ok"
-							? () => {
-									onSelectBoatIndex(
-										index === selectedBoatIndex ? -1 : index
-									);
-							  }
-							: void 0
-					}
-					selected={index === selectedBoatIndex}
-				/>
-			))}
+		{fleet.map((boat, index) => (
+			<Boat
+				key={index}
+				boat={boat}
+				hideFleet={hideFleet}
+				onClick={
+					onSelectBoatIndex && boat.status === "ok"
+						? () => {
+								onSelectBoatIndex(
+									index === selectedBoatIndex ? -1 : index
+								);
+						  }
+						: void 0
+				}
+				selected={index === selectedBoatIndex}
+			/>
+		))}
 	</>
 );

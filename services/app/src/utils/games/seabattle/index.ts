@@ -61,6 +61,7 @@ export type SeaBattleBoatType = "boat1" | "boat2" | "boat3";
 
 export type SeaBattleBoatData = {
 	angle: number;
+	hits: SeaBattleHitData[];
 	position: SeaBattlePosition;
 	status: SeaBattleBoatStatus;
 	type: SeaBattleBoatType;
@@ -90,7 +91,14 @@ export type SeaBattleHitData = {
 	type: SeaBattleHitType;
 };
 
-export const HitsOffsetMappings = {
+export const HitsOffsetInBoatappings = {
+	// Keys are hits types
+	hitted1: { x: 4, y: 4 },
+	hitted2: { x: 4, y: 4 },
+	missed: { x: 4, y: 4 }
+};
+
+export const HitsOffsetInCellMappings = {
 	// Keys are hits types
 	hitted1: { x: 10, y: 10 },
 	hitted2: { x: 10, y: 10 },
@@ -177,6 +185,12 @@ export const generateFleet = (battle: SeaBattleData, userId: string) => {
 		.forEach(([type, count]) => {
 			for (let i = 0; i < count; ++i) {
 				fleet.push({
+					hits: [
+						/*
+						{ position: { x: 0, y: 0 }, type: "hitted1" },
+						{ position: { x: 1, y: 0 }, type: "hitted2" }
+						*/
+					],
 					type: type as SeaBattleBoatType,
 					angle: 0,
 					position: { x: 0, y: totalCount++ },

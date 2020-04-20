@@ -15,7 +15,7 @@ import {
 
 // Order is important : Weapons under Boats under Hits
 export const Map = ({
-	hideActiveFleet = false,
+	hideFleet,
 	onCellClick,
 	map: { fleet, hits, opponentsWeapons } = {
 		fleet: [],
@@ -27,7 +27,7 @@ export const Map = ({
 	selectedBoatIndex,
 	onSelectBoatIndex
 }: {
-	hideActiveFleet?: boolean;
+	hideFleet: boolean;
 	onCellClick?: (position: SeaBattlePosition) => void;
 	map?: SeaBattleMapData;
 	selectedBoatIndex?: number;
@@ -107,7 +107,7 @@ export const Map = ({
 			/>
 			<Weapons weapons={opponentsWeapons} />
 			<Fleet
-				hideActiveFleet={hideActiveFleet}
+				hideFleet={hideFleet}
 				fleet={fleet}
 				selectedBoatIndex={selectedBoatIndex}
 				onSelectBoatIndex={onSelectBoatIndex}

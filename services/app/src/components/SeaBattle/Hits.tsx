@@ -4,7 +4,7 @@ import { Asset } from "./Assets";
 import {
 	SeaBattleHitData,
 	GRID_CELL_UNIT_SIZE,
-	HitsOffsetMappings
+	HitsOffsetInCellMappings
 } from "../../utils/games/seabattle";
 
 // ------------------------------------------------------------------
@@ -15,10 +15,10 @@ export const Hit = ({ type, ...asset }: SeaBattleHitData) => (
 		type={type}
 		position={{
 			x:
-				HitsOffsetMappings[type].x +
+				HitsOffsetInCellMappings[type].x +
 				asset.position.x * GRID_CELL_UNIT_SIZE,
 			y:
-				HitsOffsetMappings[type].y +
+				HitsOffsetInCellMappings[type].y +
 				asset.position.y * GRID_CELL_UNIT_SIZE
 		}}
 	/>

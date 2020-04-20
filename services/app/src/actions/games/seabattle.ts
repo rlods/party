@@ -265,11 +265,19 @@ export const attackOpponent = ({
 				type: "missed"
 			});
 		} else {
-			dispatch(displaySuccess("games.seabattle.hitted_opponent"));
-			opponentMap.hits.push({
-				position,
-				type: "hitted1"
-			});
+			if (cell.type === "boat") {
+				dispatch(displaySuccess("games.seabattle.hitted_opponent"));
+				const opponentBoat = opponentMap.fleet[cell.boatIndex];
+				opponentBoat.hits.push({
+					position: {
+						x: 0,
+						y: opponentBoat.hits.length
+					},
+					type: "hitted1"
+				});
+			} else {
+				dispatch(displaySuccess("games.seabattle.hitted_weapon")); // TODO: for example a mine
+			}
 		}
 		playerMap.weapons[weaponType]--;
 		passBatonToNextPlayer(battle);

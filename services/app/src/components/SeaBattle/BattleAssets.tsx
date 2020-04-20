@@ -11,8 +11,8 @@ const SEA_COLOR2 = "#50a3db";
 export const BattleAssets = () => (
 	<defs>
 		<circle id="missed" cx="10" cy="10" r="8" fill="#fff" />
-		<circle id="hitted1" cx="10" cy="10" r="8" fill="#ffcf02" />
-		<circle id="hitted2" cx="10" cy="10" r="8" fill="#e52524" />
+		<circle id="hitted1" cx="10" cy="10" r="8" fill="#e52524" />
+		<circle id="hitted2" cx="10" cy="10" r="8" fill="#ffcf02" />
 		<polygon
 			id="crossed"
 			points="11.98 8.08 20.07 0 24 3.9 15.92 11.98 24 20.07 20.07 24 11.98 15.92 3.9 24 0 20.07 8.08 11.98 0 3.9 3.9 0 11.98 8.08"

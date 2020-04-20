@@ -135,6 +135,7 @@ export const SeaBattle = () => {
 				{playerMap ? (
 					<Map
 						map={playerMap}
+						hideFleet={false}
 						selectedBoatIndex={boatIndex}
 						onSelectBoatIndex={setSelectedBoatIndex}
 					/>
@@ -201,7 +202,7 @@ export const SeaBattle = () => {
 							? opponentMaps[opponentIndex]
 							: void 0
 					}
-					hideActiveFleet={true}
+					hideFleet={true}
 					onCellClick={onOpponentCellClick}
 				/>
 			</div>
