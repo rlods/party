@@ -40,10 +40,6 @@ export type SeaBattleAssetType =
 	| SeaBattleHitType
 	| SeaBattleWeaponType;
 
-export type SeaBattleAssetData = {
-	position: SeaBattlePosition;
-};
-
 // ------------------------------------------------------------------
 
 export type SeaBattleDirection = "E" | "S" | "W" | "N";
@@ -63,8 +59,9 @@ export type SeaBattleBoatStatus = "ok" | "ko";
 
 export type SeaBattleBoatType = "boat1" | "boat2" | "boat3";
 
-export type SeaBattleBoatData = SeaBattleAssetData & {
+export type SeaBattleBoatData = {
 	angle: number;
+	position: SeaBattlePosition;
 	status: SeaBattleBoatStatus;
 	type: SeaBattleBoatType;
 };
@@ -78,7 +75,8 @@ export const BoatsOffsetMappings = {
 
 // ------------------------------------------------------------------
 
-export type SeaBattleCellData = SeaBattleAssetData & {
+export type SeaBattleCellData = {
+	position: SeaBattlePosition;
 	type: SeaBattleCellType;
 	visibility?: SeaBattleAssetVisibility;
 };
@@ -87,7 +85,10 @@ export type SeaBattleCellData = SeaBattleAssetData & {
 
 export type SeaBattleHitType = "hitted1" | "hitted2" | "missed";
 
-export type SeaBattleHitData = SeaBattleAssetData & { type: SeaBattleHitType };
+export type SeaBattleHitData = {
+	position: SeaBattlePosition;
+	type: SeaBattleHitType;
+};
 
 export const HitsOffsetMappings = {
 	// Keys are hits types
@@ -107,8 +108,9 @@ export const SeaBattleWeaponTypes: SeaBattleWeaponType[] = [
 	"mine"
 ];
 
-export type SeaBattleWeaponData = SeaBattleAssetData & {
+export type SeaBattleWeaponData = {
 	opponentId: string;
+	position: SeaBattlePosition;
 	type: SeaBattleWeaponType;
 };
 

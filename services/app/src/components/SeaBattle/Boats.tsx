@@ -26,12 +26,9 @@ export const Boat = ({
 		})}
 		onClick={onClick}
 		stopPropagation={true}
-		data={{
-			...asset,
-			position: {
-				x: 0,
-				y: 0
-			}
+		position={{
+			x: 0,
+			y: 0
 		}}
 		transform={`translate(${
 			BoatsOffsetMappings[type].x + asset.position.x * GRID_CELL_UNIT_SIZE

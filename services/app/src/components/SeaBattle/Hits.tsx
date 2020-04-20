@@ -13,16 +13,13 @@ export const Hit = ({ type, ...asset }: SeaBattleHitData) => (
 	<Asset
 		className="SeaBattleHit"
 		type={type}
-		data={{
-			...asset,
-			position: {
-				x:
-					HitsOffsetMappings[type].x +
-					asset.position.x * GRID_CELL_UNIT_SIZE,
-				y:
-					HitsOffsetMappings[type].y +
-					asset.position.y * GRID_CELL_UNIT_SIZE
-			}
+		position={{
+			x:
+				HitsOffsetMappings[type].x +
+				asset.position.x * GRID_CELL_UNIT_SIZE,
+			y:
+				HitsOffsetMappings[type].y +
+				asset.position.y * GRID_CELL_UNIT_SIZE
 		}}
 	/>
 );

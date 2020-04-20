@@ -13,16 +13,13 @@ export const Weapon = ({ type, ...asset }: SeaBattleWeaponData) => (
 	<Asset
 		className="SeaBattleWeapon"
 		type={type}
-		data={{
-			...asset,
-			position: {
-				x:
-					WeaponsOffsetMappings[type].x +
-					asset.position.x * GRID_CELL_UNIT_SIZE,
-				y:
-					WeaponsOffsetMappings[type].y +
-					asset.position.y * GRID_CELL_UNIT_SIZE
-			}
+		position={{
+			x:
+				WeaponsOffsetMappings[type].x +
+				asset.position.x * GRID_CELL_UNIT_SIZE,
+			y:
+				WeaponsOffsetMappings[type].y +
+				asset.position.y * GRID_CELL_UNIT_SIZE
 		}}
 	/>
 );

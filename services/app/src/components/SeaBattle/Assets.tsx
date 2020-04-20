@@ -1,25 +1,25 @@
 import React from "react";
 import {
-	SeaBattleAssetData,
 	SeaBattleAssetType,
 	SeaBattleCellData,
-	GRID_CELL_UNIT_SIZE
+	GRID_CELL_UNIT_SIZE,
+	SeaBattlePosition
 } from "../../utils/games/seabattle";
 
 // ------------------------------------------------------------------
 
 export const Asset = ({
-	data: { position },
 	className,
 	onClick,
+	position,
 	stopPropagation = false,
 	transform,
 	type,
 	visibility
 }: {
 	className?: string;
-	data: SeaBattleAssetData;
 	onClick?: () => void;
+	position: SeaBattlePosition;
 	stopPropagation?: boolean;
 	transform?: string;
 	type: SeaBattleAssetType;
@@ -49,12 +49,9 @@ export const Cell = ({ type, visibility, ...asset }: SeaBattleCellData) => (
 		className="SeaBattleCell"
 		type={type}
 		visibility={visibility}
-		data={{
-			...asset,
-			position: {
-				x: asset.position.x * GRID_CELL_UNIT_SIZE,
-				y: asset.position.y * GRID_CELL_UNIT_SIZE
-			}
+		position={{
+			x: asset.position.x * GRID_CELL_UNIT_SIZE,
+			y: asset.position.y * GRID_CELL_UNIT_SIZE
 		}}
 	/>
 );
