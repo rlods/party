@@ -234,26 +234,32 @@ export const extractOpponentMaps = (maps: SeaBattleMapData[], userId: string) =>
 export const extractBattleInfo = ({
 	extra,
 	userId,
-	boatIndex,
-	weaponType
+	boatIndex
 }: {
 	extra: string;
 	userId: string;
 	boatIndex: number;
-	weaponType?: SeaBattleWeaponType;
 }): {
 	boat?: SeaBattleBoatData;
+	currentMapIndex: number;
 	opponentMaps?: SeaBattleMapData[];
 	playerMap?: SeaBattleMapData;
+	playerMapIndex: number;
 } => {
 	let boat: SeaBattleBoatData | undefined = void 0;
+	let currentMapIndex = -1;
 	let opponentMaps: SeaBattleMapData[] | undefined = void 0;
 	let playerMap: SeaBattleMapData | undefined = void 0;
+	let playerMapIndex = -1;
 	if (extra) {
 		const battle = decode<SeaBattleData>(extra);
 		if (userId) {
-			playerMap = battle.maps.find(other => other.userId === userId);
-			if (playerMap) {
+			currentMapIndex = battle.currentMapIndex;
+			playerMapIndex = battle.maps.findIndex(
+				other => other.userId === userId
+			);
+			if (playerMapIndex >= 0) {
+				playerMap = battle.maps[playerMapIndex];
 				if (boatIndex >= 0 && boatIndex < playerMap.fleet.length) {
 					boat = playerMap.fleet[boatIndex];
 				}
@@ -263,8 +269,10 @@ export const extractBattleInfo = ({
 	}
 	return {
 		boat,
+		currentMapIndex,
 		opponentMaps,
-		playerMap
+		playerMap,
+		playerMapIndex
 	};
 };
 

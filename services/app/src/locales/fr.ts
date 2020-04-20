@@ -48,7 +48,8 @@ export default {
 			no_weapon_selected: "Sélectionnez une arme pour attaquer",
 			weapon_not_available: "L'arme sélectionnée n'est plus disponible",
 			you_played_your_turn: "Vous avez joué votre tour",
-			not_your_turn: "Ce n'est pas votre tour de jouer"
+			not_your_turn: "Ce n'est pas votre tour de jouer !",
+			your_turn: "C'est votre tour de jouer !"
 		},
 		max_players_count: "Le nombre maximal de joueurs est déjà atteint",
 		no_opponents: "Aucun ennemi",

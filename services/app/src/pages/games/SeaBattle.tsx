@@ -32,6 +32,7 @@ import "./SeaBattle.scss";
 export const SeaBattle = () => {
 	const dispatch = useDispatch<Dispatch>();
 	const { t } = useTranslation();
+	const [previousMapIndex, setPreviousMapIndex] = useState<number>(-1);
 	const [boatIndex, setSelectedBoatIndex] = useState<number>(-1);
 	const [opponentIndex, setSelectedOpponent] = useState<number>(0);
 	const [weaponType, setSelectedWeaponType] = useState<
@@ -46,11 +47,16 @@ export const SeaBattle = () => {
 		state => state.room.info?.extra || ""
 	);
 
-	const { boat, opponentMaps, playerMap } = extractBattleInfo({
+	const {
+		boat,
+		currentMapIndex,
+		opponentMaps,
+		playerMap,
+		playerMapIndex
+	} = extractBattleInfo({
 		extra,
 		userId,
-		boatIndex,
-		weaponType
+		boatIndex
 	});
 
 	const onJoinBattle = useCallback(() => {
@@ -120,6 +126,16 @@ export const SeaBattle = () => {
 			document.removeEventListener("keydown", onKeyDown);
 		};
 	}, [onKeyDown]);
+
+	useEffect(() => {
+		if (
+			previousMapIndex !== currentMapIndex &&
+			currentMapIndex === playerMapIndex
+		) {
+			dispatch(displayInfo("games.seabattle.your_turn"));
+		}
+		setPreviousMapIndex(currentMapIndex);
+	}, [dispatch, previousMapIndex, currentMapIndex, playerMapIndex]);
 
 	return (
 		<div className="SeaBattle">

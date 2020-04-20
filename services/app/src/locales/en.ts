@@ -46,7 +46,8 @@ export default {
 			no_weapon_selected: "Select a weapon to attack",
 			weapon_not_available: "Selected weapon is not available",
 			you_played_your_turn: "You played your turn",
-			not_your_turn: "This is not your turn"
+			not_your_turn: "This is not your turn",
+			your_turn: "This is your turn"
 		},
 		max_players_count: "Maximum players number has been already reached",
 		no_opponents: "No opponents",
