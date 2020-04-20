@@ -15,6 +15,7 @@ import { popModal, openModal } from "../../reducers/modals";
 import { displayError } from "../../actions/messages";
 import { createUser } from "../../actions/user";
 import { Dispatch } from "../../actions";
+import { DEFAULT_USER_DATABASE_ID } from "../../config/firebase";
 
 // ------------------------------------------------------------------
 
@@ -47,7 +48,7 @@ export const CreateUserModal = () => {
 			dispatch(displayError("users.secret_is_invalid"));
 			return;
 		}
-		dispatch(createUser(name, secret));
+		dispatch(createUser(DEFAULT_USER_DATABASE_ID, name, secret));
 		dispatch(popModal());
 		USER_COUNTER++;
 	}, [dispatch, name, secret]);

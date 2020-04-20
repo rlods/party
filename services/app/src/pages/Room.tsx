@@ -27,7 +27,8 @@ export const Room = () => {
 	);
 
 	const { search } = useLocation();
-	const { room_id } = useParams<{
+	const { db_id, room_id } = useParams<{
+		db_id: string;
 		room_id: string;
 	}>();
 
@@ -36,12 +37,12 @@ export const Room = () => {
 	};
 
 	useEffect(() => {
-		dispatch(enterRoom(room_id, secret || ""));
+		dispatch(enterRoom(db_id, room_id, secret || ""));
 
 		return () => {
 			dispatch(exitRoom());
 		};
-	}, [dispatch, room_id, secret]);
+	}, [dispatch, db_id, room_id, secret]);
 
 	useEffect(() => {
 		document.body.className = fg;

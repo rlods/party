@@ -2,7 +2,7 @@ import * as firebase from "firebase/app";
 import "firebase/database";
 //
 import firebaseConfig from "../config/firebase";
-import { RoomInfo, DEFAULT_PLAY_MODE, DEFAULT_ROOM_TYPE } from "./rooms";
+import { RoomInfo } from "./rooms";
 import { UserInfo } from "./users";
 
 // ------------------------------------------------------------------
@@ -15,25 +15,21 @@ const APPS: {
 	[id: string]: {
 		app: firebase.app.App;
 		database: firebase.database.Database;
-		members: firebase.database.Reference;
 		rooms: firebase.database.Reference;
 		users: firebase.database.Reference;
 	};
 } = {};
 
-const DEFAULT_APP_ID = firebaseConfig.appIDs[0];
-
-const createOrGetApp = (appId: string = DEFAULT_APP_ID) => {
-	let res = APPS[appId];
+const createOrGetApp = (dbId: string) => {
+	let res = APPS[dbId];
 	if (!res) {
-		console.debug("[Firebase] Creating app", { appId });
-		const databaseURL = `https://${appId}.firebaseio.com`;
+		console.debug("[Firebase] Creating app", { dbId });
+		const databaseURL = `https://${firebaseConfig.dbPrefix}${dbId}.firebaseio.com`;
 		const app = firebase.initializeApp({ databaseURL });
 		const database = firebase.database(app);
-		APPS[appId] = res = {
+		APPS[dbId] = res = {
 			app,
 			database,
-			members: database.ref("members"),
 			rooms: database.ref("rooms"),
 			users: database.ref("users")
 		};
@@ -44,16 +40,17 @@ const createOrGetApp = (appId: string = DEFAULT_APP_ID) => {
 // ------------------------------------------------------------------
 
 export const FirebaseRoom = ({
-	id,
+	dbId,
+	roomId,
 	secret
 }: {
-	id: string;
+	dbId: string;
+	roomId: string;
 	secret?: string;
 }) => {
-	const app = createOrGetApp();
-	const _room = app.rooms.child(id);
+	const app = createOrGetApp(dbId);
+	const _room = app.rooms.child(roomId);
 	const _info = _room.child("info");
-	const _members = app.members.child(id);
 	let _secret = secret || "";
 
 	const isLocked = () => !_secret;
@@ -89,17 +86,17 @@ export const FirebaseRoom = ({
 		_info.off("value", cb);
 	};
 
-	const subscribeMembers = (cbAdded: FirebaseCB, cbRemoved: FirebaseCB) => {
-		console.debug("[Firebase] Subscribing members...");
-		_members.on("child_added", cbAdded);
-		_members.on("child_removed", cbRemoved);
-	};
+	// const subscribeMembers = (cbAdded: FirebaseCB, cbRemoved: FirebaseCB) => {
+	// 	console.debug("[Firebase] Subscribing members...");
+	// 	_members.on("child_added", cbAdded);
+	// 	_members.on("child_removed", cbRemoved);
+	// };
 
-	const unsubscribeMembers = (cbAdded: FirebaseCB, cbRemoved: FirebaseCB) => {
-		console.debug("[Firebase] Unsubscribing members...");
-		_members.off("child_added", cbAdded);
-		_members.off("child_removed", cbRemoved);
-	};
+	// const unsubscribeMembers = (cbAdded: FirebaseCB, cbRemoved: FirebaseCB) => {
+	// 	console.debug("[Firebase] Unsubscribing members...");
+	// 	_members.off("child_added", cbAdded);
+	// 	_members.off("child_removed", cbRemoved);
+	// };
 
 	const update = async ({
 		extra,
@@ -143,14 +140,13 @@ export const FirebaseRoom = ({
 	};
 
 	return {
-		id,
+		dbId,
+		roomId,
 		isLocked,
 		setSecret,
 		wait,
 		subscribe,
-		subscribeMembers,
 		unsubscribe,
-		unsubscribeMembers,
 		update
 	};
 };
@@ -158,21 +154,22 @@ export const FirebaseRoom = ({
 // ------------------------------------------------------------------
 
 export const FirebaseUser = ({
-	id,
+	dbId,
+	userId,
 	secret
 }: {
-	id: string;
+	dbId: string;
+	userId: string;
 	secret?: string;
 }) => {
-	const app = createOrGetApp();
-	const _user = app.users.child(id);
+	const app = createOrGetApp(dbId);
+	const _user = app.users.child(userId);
 	const _info = _user.child("info");
-	let _membership: firebase.database.Reference | null = null;
+	// let _membership: firebase.database.Reference | null = null;
 	let _secret = secret || "";
 	let _values: UserInfo = {
 		name: "dummy",
 		online: false,
-		room_id: "",
 		status: "",
 		timestamp: 0
 	};
@@ -211,16 +208,10 @@ export const FirebaseUser = ({
 		_info.off("value", cb);
 	};
 
-	const update = async ({
-		name,
-		room_id
-	}: Partial<Pick<UserInfo, "name" | "room_id">>) => {
-		console.debug("[Firebase] Updating user...", { name, room_id });
+	const update = async ({ name }: Partial<Pick<UserInfo, "name">>) => {
+		console.debug("[Firebase] Updating user...", { name });
 		if (name !== void 0) {
 			_values.name = name;
-		}
-		if (room_id !== void 0) {
-			_values.room_id = room_id;
 		}
 		await _user.set({
 			info: {
@@ -241,7 +232,6 @@ export const FirebaseUser = ({
 			info: {
 				..._values,
 				online: false,
-				room_id: "",
 				status: "disconnected",
 				timestamp: firebase.database.ServerValue.TIMESTAMP
 			},
@@ -249,117 +239,39 @@ export const FirebaseUser = ({
 		});
 	};
 
-	const enter = async (room: ReturnType<typeof FirebaseRoom>) => {
-		const app = createOrGetApp();
-		if (_membership) {
-			await _membership.remove();
-			_membership = null;
-		}
-		await update({
-			room_id: room.id
-		});
-		_membership = app.members.child(room.id).child(id);
-		_membership.onDisconnect().remove();
-		await _membership.set({
-			timestamp: firebase.database.ServerValue.TIMESTAMP
-		});
-	};
+	//const enter = async (room: ReturnType<typeof FirebaseRoom>) => {
+	//	const app = createOrGetApp();
+	//	if (_membership) {
+	//		await _membership.remove();
+	//		_membership = null;
+	//	}
+	//	await update({
+	//	});
+	// 	_membership = app.members.child(room.id).child(id);
+	// 	_membership.onDisconnect().remove();
+	// 	await _membership.set({
+	// 		timestamp: firebase.database.ServerValue.TIMESTAMP
+	// 	});
+	//};
 
-	const exit = async () => {
-		if (_membership) {
-			await _membership.remove();
-			_membership = null;
-		}
-		await update({
-			room_id: ""
-		});
-	};
+	//const exit = async () => {
+	// if (_membership) {
+	// 	await _membership.remove();
+	// 	_membership = null;
+	// }
+	//	await update({
+	//		...
+	//	});
+	//};
 
 	return {
-		id,
-		enter,
-		exit,
+		dbId,
+		userId,
 		isLocked,
 		setSecret,
 		wait,
 		subscribe,
 		unsubscribe,
 		update
-	};
-};
-
-// ------------------------------------------------------------------
-
-export const FirebaseParty = ({
-	id,
-	room
-}: {
-	id: string;
-	room: ReturnType<typeof FirebaseRoom>;
-}) => {
-	const _members: string[] = [];
-	const _users: { [id: string]: ReturnType<typeof FirebaseUser> } = {};
-	let _info: RoomInfo = {
-		extra: "",
-		name: "",
-		playing: false,
-		playmode: DEFAULT_PLAY_MODE,
-		queue_position: 0,
-		timestamp: 0,
-		type: DEFAULT_ROOM_TYPE
-	};
-
-	const _onAdded = (added: firebase.database.DataSnapshot) => {
-		const userId = added.key;
-		if (userId) {
-			const index = _members.indexOf(userId);
-			if (index === -1) {
-				_members.push(userId);
-				_users[userId] = FirebaseUser({ id: userId });
-				_log();
-			}
-		}
-	};
-
-	const _onRemoved = (removed: firebase.database.DataSnapshot) => {
-		const userId = removed.key;
-		if (userId) {
-			const index = _members.indexOf(userId);
-			if (index !== -1) {
-				_members.splice(index, 1);
-				delete _users[userId];
-				_log();
-			}
-		}
-	};
-
-	const _onRoomInfo = (snapshot: firebase.database.DataSnapshot) => {
-		const newValues = snapshot.val() as RoomInfo | null;
-		if (newValues) {
-			_info = newValues;
-			_log();
-		}
-	};
-
-	const _log = () => {
-		console.debug("PARTY", {
-			_info,
-			_members
-		});
-	};
-
-	const init = () => {
-		room.subscribe(_onRoomInfo);
-		room.subscribeMembers(_onAdded, _onRemoved);
-	};
-
-	const terminate = () => {
-		room.unsubscribe(_onRoomInfo);
-		room.unsubscribeMembers(_onAdded, _onRemoved);
-	};
-
-	return {
-		init,
-		terminate
 	};
 };

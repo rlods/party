@@ -39,7 +39,7 @@ export const SeaBattle = () => {
 	>();
 
 	const userId = useSelector<RootState, string>(
-		state => state.user.access.id
+		state => state.user.access.userId
 	);
 
 	const extra = useSelector<RootState, string>(

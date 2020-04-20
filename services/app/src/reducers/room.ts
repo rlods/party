@@ -37,7 +37,7 @@ export type State = RoomData & {
 };
 
 const INITIAL_STATE: State = {
-	access: { id: "", secret: "" },
+	access: { dbId: "", roomId: "", secret: "" },
 	color: { fg: "dark", bg: { r: 255, g: 255, b: 255 } },
 	error: null,
 	fetching: false,

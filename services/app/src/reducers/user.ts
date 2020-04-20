@@ -38,7 +38,7 @@ export type State = UserData & {
 };
 
 const INITIAL_STATE: State = {
-	access: { id: "", secret: "" },
+	access: { dbId: "", userId: "", secret: "" },
 	error: null,
 	fetching: false,
 	info: null,

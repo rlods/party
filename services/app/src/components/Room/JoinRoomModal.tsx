@@ -10,31 +10,32 @@ import { Dispatch } from "../../actions";
 import { popModal, openModal } from "../../reducers/modals";
 import { displayError } from "../../actions/messages";
 import { enterRoom } from "../../actions/room";
+import { DEFAULT_ROOM_DATABASE_ID } from "../../config/firebase";
 
 // ------------------------------------------------------------------
 
 export const JoinRoomModal = () => {
 	const dispatch = useDispatch<Dispatch>();
-	const [id, setId] = useState("");
-	const idRef = useRef<HTMLInputElement>(null);
+	const [roomId, setRoomId] = useState("");
+	const roomIdRef = useRef<HTMLInputElement>(null);
 	const { t } = useTranslation();
 
 	useEffect(() => {
-		if (idRef.current) {
-			idRef.current.focus();
+		if (roomIdRef.current) {
+			roomIdRef.current.focus();
 		}
-	}, [idRef]);
+	}, [roomIdRef]);
 
 	const onClose = useCallback(() => dispatch(popModal()), [dispatch]);
 
 	const onJoin = useCallback(() => {
-		if (id.trim().length === 0) {
+		if (roomId.trim().length === 0) {
 			dispatch(displayError("rooms.id_is_invalid"));
 			return;
 		}
-		dispatch(enterRoom(id, ""));
+		dispatch(enterRoom(DEFAULT_ROOM_DATABASE_ID, roomId, ""));
 		dispatch(popModal());
-	}, [dispatch, id]);
+	}, [dispatch, roomId]);
 
 	const onCreate = useCallback(
 		() => dispatch(openModal({ type: "CreateRoom", props: null })),
@@ -48,7 +49,9 @@ export const JoinRoomModal = () => {
 			renderButtons={() => (
 				<>
 					<IconButton
-						disabled={id.trim().length === 0 || id.length !== 36}
+						disabled={
+							roomId.trim().length === 0 || roomId.length !== 36
+						}
 						title={t("rooms.join")}
 						kind="primary"
 						icon="sign-in"
@@ -64,16 +67,16 @@ export const JoinRoomModal = () => {
 				</>
 			)}>
 			<InputField
-				id="modal-id"
+				id="modal-roomId"
 				label={t("rooms.id")}
 				type="text"
 				placeholder={t("rooms.id_placeholder")}
 				maxLength={36}
 				minLength={36}
 				required={true}
-				value={id}
-				ref={idRef}
-				onChange={e => setId(e.target.value)}
+				value={roomId}
+				ref={roomIdRef}
+				onChange={e => setRoomId(e.target.value)}
 			/>
 		</FormModal>
 	);

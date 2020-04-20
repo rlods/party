@@ -15,7 +15,7 @@ import "./Splash.scss";
 export const Splash = () => {
 	const dispatch = useDispatch();
 	const loggedIn = useSelector<RootState, boolean>(
-		state => !!state.user.access.id
+		state => !!state.user.access.dbId && !!state.user.access.userId
 	);
 	const { t } = useTranslation();
 

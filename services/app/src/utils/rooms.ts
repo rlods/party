@@ -28,7 +28,8 @@ export type RoomInfo = {
 };
 
 export type RoomAccess = {
-	id: string;
+	dbId: string;
+	roomId: string;
 	secret: string;
 };
 

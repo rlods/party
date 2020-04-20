@@ -10,14 +10,15 @@ import { setUser, resetUser } from "../reducers/user";
 // ------------------------------------------------------------------
 
 export const createUser = (
+	dbId: string,
 	name: string,
 	secret: string
 ): AsyncAction => async dispatch => {
 	try {
 		console.debug("[User] Creating...");
-		const id = v4();
-		await FirebaseUser({ id, secret }).update({ name });
-		dispatch(connectUser(id, secret));
+		const userId = v4();
+		await FirebaseUser({ dbId, userId, secret }).update({ name });
+		dispatch(connectUser(dbId, userId, secret));
 	} catch (err) {
 		dispatch(displayError(extractErrorMessage(err)));
 	}
@@ -27,24 +28,25 @@ export const createUser = (
 
 let FIREBASE_CB: any = null;
 
-export const connectUser = (id: string, secret: string): AsyncAction => async (
-	dispatch,
-	getState
-) => {
+export const connectUser = (
+	dbId: string,
+	userId: string,
+	secret: string
+): AsyncAction => async (dispatch, getState) => {
 	const {
 		user: { user }
 	} = getState();
-	if (user && user.id === id) {
+	if (user && user.dbId === dbId && user.userId === userId) {
 		// Nothing to do
 		return;
 	}
 	dispatch(disconnectUser());
 	try {
-		console.debug("[User] Connecting...", { id, secret });
-		const newUser = FirebaseUser({ id, secret });
+		console.debug("[User] Connecting...", { dbId, userId, secret });
+		const newUser = FirebaseUser({ dbId, userId, secret });
 		dispatch(
 			setUser({
-				access: { id, secret },
+				access: { dbId, userId, secret },
 				user: newUser,
 				info: await newUser.wait()
 			})
@@ -58,22 +60,22 @@ export const connectUser = (id: string, secret: string): AsyncAction => async (
 		);
 	} catch (err) {
 		dispatch(displayError(extractErrorMessage(err)));
-		dispatch(setUser({ access: { id, secret: "" } }));
+		dispatch(disconnectUser());
 	}
 };
 
 export const disconnectUser = (): AsyncAction => async (dispatch, getState) => {
 	const {
 		user: {
-			access: { id, secret },
+			access: { dbId, userId, secret },
 			user
 		}
 	} = getState();
-	if (!id && !secret && !user) {
+	if (!dbId && !userId && !secret && !user) {
 		// Nothing to do
 		return;
 	}
-	console.debug("[User] Disconnecting...");
+	console.debug("[User] Disconnecting...", { dbId, userId, secret });
 	if (user) {
 		user.unsubscribe(FIREBASE_CB);
 		FIREBASE_CB = null;
@@ -84,13 +86,13 @@ export const disconnectUser = (): AsyncAction => async (dispatch, getState) => {
 export const reconnectUser = (): AsyncAction => async (dispatch, getState) => {
 	const {
 		user: {
-			access: { id, secret }
+			access: { dbId, userId, secret }
 		}
 	} = getState();
-	if (!id || !secret) {
+	if (!dbId || !userId || !secret) {
 		// Nothing to do
 		return;
 	}
-	console.debug("[User] Reconnecting...", { id, secret });
-	dispatch(connectUser(id, secret));
+	console.debug("[User] Reconnecting...", { dbId, userId, secret });
+	dispatch(connectUser(dbId, userId, secret));
 };

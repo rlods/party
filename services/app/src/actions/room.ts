@@ -63,13 +63,14 @@ const DEFAULT_QUEUE_INFO_BY_TYPE: {
 // ------------------------------------------------------------------
 
 export const createRoom = (
+	dbId: string,
 	name: string,
 	secret: string,
 	type: RoomType
 ): AsyncAction => async (dispatch, getState) => {
 	const {
 		user: {
-			access: { id: userId }
+			access: { userId }
 		}
 	} = getState();
 	if (!userId) {
@@ -78,17 +79,17 @@ export const createRoom = (
 		return;
 	}
 	try {
-		const id = v4();
-		console.debug("[Room] Creating...", { id, secret });
+		const roomId = v4();
+		console.debug("[Room] Creating...", { roomId, secret });
 
-		await FirebaseRoom({ id, secret }).update({
+		await FirebaseRoom({ dbId, roomId, secret }).update({
 			extra: generateRoomExtra(userId, type),
 			name,
 			queue_position: 0,
 			type,
 			...DEFAULT_QUEUE_INFO_BY_TYPE[type]
 		});
-		dispatch(enterRoom(id, secret));
+		dispatch(enterRoom(dbId, roomId, secret));
 	} catch (err) {
 		dispatch(displayError(extractErrorMessage(err)));
 	}
@@ -96,31 +97,32 @@ export const createRoom = (
 
 // ------------------------------------------------------------------
 
-export const enterRoom = (id: string, secret: string): AsyncAction => async (
-	dispatch,
-	getState
-) => {
+export const enterRoom = (
+	dbId: string,
+	roomId: string,
+	secret: string
+): AsyncAction => async (dispatch, getState) => {
 	const {
 		room: { room }
 	} = getState();
-	if (room && room.id === id) {
+	if (room && room.dbId === dbId && room.roomId === roomId) {
 		// Nothing to do
 		return;
 	}
 	dispatch(exitRoom());
 	try {
-		console.debug("[Room] Entering...", { id, secret });
-		const newRoom = FirebaseRoom({ id, secret });
+		console.debug("[Room] Entering...", { roomId, secret });
+		const newRoom = FirebaseRoom({ dbId, roomId, secret });
 		dispatch(
 			setRoom({
-				access: { id, secret },
+				access: { dbId, roomId, secret },
 				room: newRoom,
 				info: await newRoom.wait()
 			})
 		);
 		dispatch(_watchRoom(newRoom));
 		dispatch(_watchPlayer());
-		history.push(`/room/${id}?secret=${secret}`); // TODO: should push only if we're not already in it
+		history.push(`/room/${dbId}/${roomId}?secret=${secret}`); // TODO: should push only if we're not already in it
 	} catch (err) {
 		dispatch(displayError(extractErrorMessage(err)));
 	}
@@ -146,17 +148,17 @@ export const lockRoom = (): AsyncAction => async (dispatch, getState) => {
 	const {
 		room: {
 			room,
-			access: { id, secret: oldSecret }
+			access: { dbId, roomId, secret: oldSecret }
 		}
 	} = getState();
-	if (!room || room.id !== id || !oldSecret) {
+	if (!room || room.dbId !== dbId || room.roomId !== roomId || !oldSecret) {
 		// Nothing to do
 		return;
 	}
-	console.debug("[Room] Locking...", { id });
+	console.debug("[Room] Locking...", { dbId, roomId });
 	room.setSecret("");
-	// TODO : not history.replace(`/room/${id}`); as it would trigger a page refresh
-	dispatch(setRoom({ access: { id, secret: "" } }));
+	// TODO : not history.replace(`/room/${dbId}/${roomId}`); as it would trigger a page refresh
+	dispatch(setRoom({ access: { dbId, roomId, secret: "" } }));
 };
 
 export const unlockRoom = (secret: string): AsyncAction => async (
@@ -166,17 +168,22 @@ export const unlockRoom = (secret: string): AsyncAction => async (
 	const {
 		room: {
 			room,
-			access: { id, secret: oldSecret }
+			access: { dbId, roomId, secret: oldSecret }
 		}
 	} = getState();
-	if (!room || room.id !== id || oldSecret === secret) {
+	if (
+		!room ||
+		room.dbId !== dbId ||
+		room.roomId !== roomId ||
+		oldSecret === secret
+	) {
 		// Nothing to do
 		return;
 	}
-	console.debug("[Room] Unlocking...", { id, secret });
+	console.debug("[Room] Unlocking...", { dbId, roomId, secret });
 	room.setSecret(secret);
 	// TODO : not history.replace(`/room/${id}?secret=${secret}`); as it would trigger a page refresh
-	dispatch(setRoom({ access: { id, secret } }));
+	dispatch(setRoom({ access: { dbId, roomId, secret } }));
 };
 
 // ------------------------------------------------------------------

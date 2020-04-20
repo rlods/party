@@ -32,7 +32,7 @@ export const joinBattle = (): AsyncAction => async (dispatch, getState) => {
 	const {
 		room: { info, room },
 		user: {
-			access: { id: userId }
+			access: { userId }
 		}
 	} = getState();
 	if (!room || room.isLocked() || !info) {
@@ -77,7 +77,7 @@ export const moveBoat = ({
 	const {
 		room: { info, room },
 		user: {
-			access: { id: userId }
+			access: { userId }
 		}
 	} = getState();
 	if (!room || room.isLocked() || !info) {
@@ -206,7 +206,7 @@ export const attackOpponent = ({
 	const {
 		room: { info, room },
 		user: {
-			access: { id: userId }
+			access: { userId }
 		}
 	} = getState();
 	if (!room || room.isLocked() || !info) {

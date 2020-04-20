@@ -23,7 +23,11 @@ export const App = () => {
 		<div className="App">
 			<Modals />
 			<Switch>
-				<Route exact={true} path="/room/:room_id" component={Room} />
+				<Route
+					exact={true}
+					path="/room/:db_id/:room_id"
+					component={Room}
+				/>
 				<Route exact={true} path="/" component={Splash} />
 				<Redirect to="/" />
 			</Switch>

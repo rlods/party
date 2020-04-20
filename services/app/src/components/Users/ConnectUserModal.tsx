@@ -10,26 +10,27 @@ import { displayError } from "../../actions/messages";
 import { connectUser } from "../../actions/user";
 import { Dispatch } from "../../actions";
 import { SECRET_FIELD_SIZE, InputField } from "../Modals/ModalFields";
+import { DEFAULT_USER_DATABASE_ID } from "../../config/firebase";
 
 // ------------------------------------------------------------------
 
 export const ConnectUserModal = () => {
 	const dispatch = useDispatch<Dispatch>();
-	const [id, setId] = useState("");
+	const [userId, setUserId] = useState("");
 	const [secret, setSecret] = useState("");
-	const idRef = useRef<HTMLInputElement>(null);
+	const userIdRef = useRef<HTMLInputElement>(null);
 	const { t } = useTranslation();
 
 	useEffect(() => {
-		if (idRef.current) {
-			idRef.current.focus();
+		if (userIdRef.current) {
+			userIdRef.current.focus();
 		}
-	}, [idRef]);
+	}, [userIdRef]);
 
 	const onClose = useCallback(() => dispatch(popModal()), [dispatch]);
 
 	const onConnect = useCallback(() => {
-		if (id.trim().length === 0) {
+		if (userId.trim().length === 0) {
 			dispatch(displayError("users.id_is_invalid"));
 			return;
 		}
@@ -37,9 +38,9 @@ export const ConnectUserModal = () => {
 			dispatch(displayError("users.secret_is_invalid"));
 			return;
 		}
-		dispatch(connectUser(id, secret));
+		dispatch(connectUser(DEFAULT_USER_DATABASE_ID, userId, secret));
 		dispatch(popModal());
-	}, [dispatch, id, secret]);
+	}, [dispatch, userId, secret]);
 
 	const onCreate = useCallback(
 		() => dispatch(openModal({ type: "CreateUser", props: null })),
@@ -54,8 +55,8 @@ export const ConnectUserModal = () => {
 				<>
 					<IconButton
 						disabled={
-							id.trim().length === 0 ||
-							id.length !== 36 ||
+							userId.trim().length === 0 ||
+							userId.length !== 36 ||
 							secret.length !== SECRET_FIELD_SIZE
 						}
 						title={t("users.connect")}
@@ -73,16 +74,16 @@ export const ConnectUserModal = () => {
 				</>
 			)}>
 			<InputField
-				id="modal-id"
+				id="modal-userId"
 				label={t("users.id")}
 				type="text"
 				placeholder={t("users.id_placeholder")}
 				maxLength={36}
 				minLength={36}
 				required={true}
-				value={id}
-				ref={idRef}
-				onChange={e => setId(e.target.value)}
+				value={userId}
+				ref={userIdRef}
+				onChange={e => setUserId(e.target.value)}
 			/>
 			<InputField
 				id="modal-secret"

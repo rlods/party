@@ -9,7 +9,8 @@ services:
   app:
     build:
       args:
-        DATABASE_ID: "test-rl-7ffe8"
+        DATABASE_IDS: "7ffe8"
+        DATABASE_PREFIX: "test-rl-"
         NODE_ENV: development
     command: npm run start
     tty: true

@@ -8,14 +8,11 @@
 				".validate": "newData.hasChildren(['info', 'secret'])",
 				"info": {
 					".read": true,
-					".validate": "newData.hasChildren(['name', 'online', 'room_id', 'status', 'timestamp'])",
+					".validate": "newData.hasChildren(['name', 'online', 'status', 'timestamp'])",
 					"name": {
 						".validate": "newData.isString() && newData.val().length >= 2 && newData.val().length <= 100"
 					},
 					"online": { ".validate": "newData.isBoolean()" },
-					"room_id": {
-						".validate": "newData.isString() && (newData.val().length === 0 || root.child('rooms/'+newData.val()).exists())"
-					},
 					"status": {
 						".validate": "newData.isString() && newData.val().length > 0 && newData.val().length < 100"
 					},
