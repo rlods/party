@@ -10,7 +10,7 @@ export const startPlayer = (): AsyncAction => async (dispatch, getState) => {
 		room: { info, room }
 	} = getState();
 	if (!room || room.isLocked() || !info) {
-		dispatch(displayError("rooms.error.locked"));
+		dispatch(displayError("rooms.errors.locked"));
 		return;
 	}
 	if (info.playing) {
@@ -36,7 +36,7 @@ export const stopPlayer = (): AsyncAction => async (dispatch, getState) => {
 		room: { info, room }
 	} = getState();
 	if (!room || room.isLocked() || !info) {
-		dispatch(displayError("rooms.error.locked"));
+		dispatch(displayError("rooms.errors.locked"));
 		return;
 	}
 	if (!info.playing) {

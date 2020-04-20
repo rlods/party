@@ -13,7 +13,7 @@ export const clearQueue = (): AsyncAction => async (dispatch, getState) => {
 		room: { info, room }
 	} = getState();
 	if (!room || room.isLocked() || !info) {
-		dispatch(displayError("rooms.error.locked"));
+		dispatch(displayError("rooms.errors.locked"));
 		return;
 	}
 	try {
@@ -40,7 +40,7 @@ export const appendToQueue = (newMedias: MediaAccess[]): AsyncAction => async (
 		room: { info, medias: oldMedias, room }
 	} = getState();
 	if (!room || room.isLocked() || !info) {
-		dispatch(displayError("rooms.error.locked"));
+		dispatch(displayError("rooms.errors.locked"));
 		return;
 	}
 	if (newMedias.length === 0) {
@@ -72,7 +72,7 @@ export const removeFromQueue = (
 		room: { info, medias, room, tracks }
 	} = getState();
 	if (!room || room.isLocked() || !info) {
-		dispatch(displayError("rooms.error.locked"));
+		dispatch(displayError("rooms.errors.locked"));
 		return;
 	}
 	const {
@@ -143,7 +143,7 @@ export const setQueuePosition = (newTrackIndex: number): AsyncAction => async (
 		room: { info, room }
 	} = getState();
 	if (!room || room.isLocked() || !info) {
-		dispatch(displayError("rooms.error.locked"));
+		dispatch(displayError("rooms.errors.locked"));
 		return;
 	}
 	const oldTrackIndex = info.queue_position;

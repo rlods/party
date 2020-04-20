@@ -37,7 +37,7 @@ export const joinBattle = (): AsyncAction => async (dispatch, getState) => {
 		}
 	} = getState();
 	if (!room || room.isLocked() || !info) {
-		dispatch(displayError("rooms.error.locked"));
+		dispatch(displayError("rooms.errors.locked"));
 		return;
 	}
 	if (!userId) {
@@ -82,7 +82,7 @@ export const moveBoat = ({
 		}
 	} = getState();
 	if (!room || room.isLocked() || !info) {
-		dispatch(displayError("rooms.error.locked"));
+		dispatch(displayError("rooms.errors.locked"));
 		return;
 	}
 	if (!userId) {
@@ -223,7 +223,7 @@ export const attackOpponent = ({
 		}
 	} = getState();
 	if (!room || room.isLocked() || !info) {
-		dispatch(displayError("rooms.error.locked"));
+		dispatch(displayError("rooms.errors.locked"));
 		return;
 	}
 	if (!userId) {
