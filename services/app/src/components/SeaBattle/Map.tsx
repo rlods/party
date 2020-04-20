@@ -20,9 +20,10 @@ export const Map = ({
 	map: { fleet, hits, opponentsWeapons } = {
 		fleet: [],
 		hits: [],
-		weapons: {},
+		opponentsWeapons: [],
+		status: "ok",
 		userId: "",
-		opponentsWeapons: []
+		weapons: {}
 	},
 	selectedBoatIndex,
 	onSelectBoatIndex

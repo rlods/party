@@ -131,10 +131,13 @@ export const WeaponsOffsetMappings = {
 
 // ------------------------------------------------------------------
 
+export type SeaBattleMapStatus = "ok" | "ko";
+
 export type SeaBattleMapData = {
 	fleet: SeaBattleBoatData[];
 	hits: SeaBattleHitData[];
 	opponentsWeapons: SeaBattleWeaponData[]; // Weapons placed by opponents
+	status: SeaBattleMapStatus;
 	userId: string;
 	weapons: {
 		// Keys are weapon types
@@ -212,6 +215,7 @@ export const generateFleet = (battle: SeaBattleData, userId: string) => {
 			{position: { x: 0, y: 5 }, opponentId: '', type:'mine'}
 			*/
 		],
+		status: "ok",
 		userId,
 		weapons: {
 			// Keys are weapon types
