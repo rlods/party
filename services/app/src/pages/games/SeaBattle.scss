@@ -97,9 +97,12 @@
 					fill: #e52524;
 				}
 
-				&.selected,
-				&.ok:hover {
+				&.ok:hover:not(.selected) {
 					fill: #555;
+				}
+
+				&.selected {
+					fill: #ff0;
 				}
 			}
 
