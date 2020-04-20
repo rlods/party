@@ -179,11 +179,14 @@ export const moveBoat = ({
 			extra: encode(battle)
 		});
 
-		dispatch(
-			displaySuccess("games.seabattle.you_played_your_turn", {
-				tag: INVALID_MOVE_MESSAGE_TAG
-			})
-		);
+		if (battle.maps.length > 1) {
+			// More than one player...
+			dispatch(
+				displaySuccess("games.seabattle.you_played_your_turn", {
+					tag: INVALID_MOVE_MESSAGE_TAG
+				})
+			);
+		}
 	} catch (err) {
 		dispatch(displayError(extractErrorMessage(err)));
 	}
@@ -275,11 +278,14 @@ export const attackOpponent = ({
 			extra: encode(battle)
 		});
 
-		dispatch(
-			displaySuccess("games.seabattle.you_played_your_turn", {
-				tag: INVALID_MOVE_MESSAGE_TAG
-			})
-		);
+		if (battle.maps.length > 1) {
+			// More than one player...
+			dispatch(
+				displaySuccess("games.seabattle.you_played_your_turn", {
+					tag: INVALID_MOVE_MESSAGE_TAG
+				})
+			);
+		}
 	} catch (err) {
 		dispatch(displayError(extractErrorMessage(err)));
 	}
