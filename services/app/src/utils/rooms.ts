@@ -8,7 +8,7 @@ export type RoomType = "blind" | "dj" | "seabattle";
 
 export const DEFAULT_PLAY_MODE: PlayMode = "default";
 
-export const DEFAULT_ROOM_TYPE: RoomType = "dj";
+export const DEFAULT_ROOM_TYPE: RoomType = "seabattle";
 
 export const RoomTypes = [
 	// "blind",

@@ -23,7 +23,6 @@ import {
 	movementIsPossible,
 	generateGrid
 } from "../../utils/games/seabattle/collision";
-import { clearMessages } from "../../reducers/messages";
 import { openModal } from "../../reducers/modals";
 
 // ------------------------------------------------------------------
@@ -80,7 +79,6 @@ export const moveBoat = ({
 			access: { id: userId }
 		}
 	} = getState();
-	dispatch(clearMessages(INVALID_MOVE_MESSAGE_TAG));
 	if (!room || room.isLocked() || !info) {
 		dispatch(displayError("rooms.error.locked"));
 		return;
@@ -100,7 +98,7 @@ export const moveBoat = ({
 		}
 
 		if (!checkUserHasBatton(battle, userId)) {
-			dispatch(displayError("This is not your turn"));
+			dispatch(displayError("games.seabattle.not_your_turn"));
 			return;
 		}
 
@@ -155,10 +153,9 @@ export const moveBoat = ({
 				newPosition
 			});
 			dispatch(
-				displayError(
-					"games.seabattle.movement_is_not_possible",
-					INVALID_MOVE_MESSAGE_TAG
-				)
+				displayError("games.seabattle.movement_is_not_possible", {
+					tag: INVALID_MOVE_MESSAGE_TAG
+				})
 			);
 			return;
 		}
@@ -182,10 +179,9 @@ export const moveBoat = ({
 		});
 
 		dispatch(
-			displayInfo(
-				"games.seabattle.you_played_your_turn",
-				INVALID_MOVE_MESSAGE_TAG
-			)
+			displaySuccess("games.seabattle.you_played_your_turn", {
+				tag: INVALID_MOVE_MESSAGE_TAG
+			})
 		);
 	} catch (err) {
 		dispatch(displayError(extractErrorMessage(err)));
@@ -209,7 +205,6 @@ export const attackOpponent = ({
 			access: { id: userId }
 		}
 	} = getState();
-	dispatch(clearMessages(INVALID_MOVE_MESSAGE_TAG));
 	if (!room || room.isLocked() || !info) {
 		dispatch(displayError("rooms.error.locked"));
 		return;
@@ -228,7 +223,7 @@ export const attackOpponent = ({
 			return;
 		}
 		if (!checkUserHasBatton(battle, userId)) {
-			dispatch(displayError("This is not your turn"));
+			dispatch(displayError("games.seabattle.not_your_turn"));
 			return;
 		}
 
@@ -279,10 +274,9 @@ export const attackOpponent = ({
 		});
 
 		dispatch(
-			displayInfo(
-				"games.seabattle.you_played_your_turn",
-				INVALID_MOVE_MESSAGE_TAG
-			)
+			displaySuccess("games.seabattle.you_played_your_turn", {
+				tag: INVALID_MOVE_MESSAGE_TAG
+			})
 		);
 	} catch (err) {
 		dispatch(displayError(extractErrorMessage(err)));

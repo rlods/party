@@ -6,6 +6,7 @@ export type Message = {
 	stamp: number;
 	tag?: string;
 	text?: string;
+	timer?: NodeJS.Timeout;
 	type: MessageType;
 	weight: number;
 };

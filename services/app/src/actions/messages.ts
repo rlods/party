@@ -25,31 +25,59 @@ export const displayMessage = (
 		text,
 		weight = 0
 	}: MessageCreationData
-): AsyncAction => (dispatch): any => {
-	const id = MESSAGE_ID_GENERATOR++;
-	dispatch(
-		addMessage({
-			extra,
-			id,
-			stamp: new Date().getTime(),
-			tag,
-			text,
-			type,
-			weight
-		})
+): AsyncAction => (dispatch, getState) => {
+	const { messages } = getState();
+
+	const oldEntry = Object.entries(messages).find(
+		([_, message]) => message.tag === tag && message.text === text
 	);
-	if (autoclear) {
-		setTimeout(() => dispatch(removeMessage(id)), duration);
+	let id = 0;
+	if (oldEntry) {
+		const [oldID, oldMessage] = oldEntry;
+		console.log("REUSING");
+		id = Number(oldID); // Reuse message id and renqueue
+		if (oldMessage.timer) {
+			clearTimeout(oldMessage.timer);
+		}
+	} else {
+		id = MESSAGE_ID_GENERATOR++;
 	}
+
+	dispatch(
+		addMessage(
+			id,
+			{
+				extra,
+				id,
+				stamp: new Date().getTime(),
+				tag,
+				text,
+				type,
+				weight
+			},
+			autoclear
+				? setTimeout(() => dispatch(removeMessage(id)), duration)
+				: void 0
+		)
+	);
 };
 
 // ------------------------------------------------------------------
 
-export const displayError = (text: string, tag?: string) =>
-	displayMessage("error", { tag, text });
+export const displayError = (text: string, data?: MessageCreationData) =>
+	displayMessage("error", {
+		text,
+		...data
+	});
 
-export const displayInfo = (text: string, tag?: string) =>
-	displayMessage("info", { tag, text });
+export const displayInfo = (text: string, data?: MessageCreationData) =>
+	displayMessage("info", {
+		text,
+		...data
+	});
 
-export const displaySuccess = (text: string) =>
-	displayMessage("success", { text });
+export const displaySuccess = (text: string, data?: MessageCreationData) =>
+	displayMessage("success", {
+		text,
+		...data
+	});

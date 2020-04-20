@@ -16,7 +16,7 @@ import { Dispatch } from "../../actions";
 import { popModal, openModal } from "../../reducers/modals";
 import { createRoom } from "../../actions/room";
 import { displayError } from "../../actions/messages";
-import { RoomType, RoomTypes } from "../../utils/rooms";
+import { RoomType, RoomTypes, DEFAULT_ROOM_TYPE } from "../../utils/rooms";
 
 // ------------------------------------------------------------------
 
@@ -28,7 +28,7 @@ export const CreateRoomModal = () => {
 	const dispatch = useDispatch<Dispatch>();
 	const [name, setName] = useState("");
 	const [secret, setSecret] = useState(v4());
-	const [type, setType] = useState<RoomType>("dj");
+	const [type, setType] = useState<RoomType>(DEFAULT_ROOM_TYPE);
 	const nameRef = useRef<HTMLInputElement>(null);
 	const { t } = useTranslation();
 

@@ -6,7 +6,7 @@ export const confirmModal = (
 	question: string,
 	onConfirmed: () => void,
 	onCanceled?: () => void
-): AsyncAction => async () => {
+): AsyncAction => () => {
 	// TODO: open custom ConfirmModal instead of system popup
 	if (window.confirm(question)) {
 		onConfirmed();
