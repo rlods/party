@@ -62,12 +62,15 @@ export const Splash = () => {
 	return (
 		<div className="Splash">
 			<div className="Top">
-				<div className="Logo">
-					<Link to="/">Party</Link>
-				</div>
-				<div className="Description">
-					<span>{t("splash.description")}</span>
-				</div>
+				<Link className="Logo" to="/">
+					<img
+						src="/images/logo.png"
+						title="Party"
+						alt="Party Logo"
+					/>
+					Party
+				</Link>
+				<div className="Description">{t("splash.description")}</div>
 			</div>
 			<div className="Middle">
 				<div className="Menu">

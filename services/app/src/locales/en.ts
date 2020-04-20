@@ -8,7 +8,7 @@ export default {
 	splash: {
 		CGU: "CGU",
 		powered_with: "Powered with",
-		description: "Collaborative & Musical Games Experimentation"
+		description: "Collaborative & Musical Experimentations"
 	},
 	help: {
 		help: "Help",

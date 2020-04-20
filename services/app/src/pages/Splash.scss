@@ -27,14 +27,19 @@
 		}
 
 		.Logo {
+			display: flex;
+			flex-direction: row;
+			align-items: center;
 			line-height: 50px;
 			font-size: 50px;
 			font-weight: bold;
 			text-align: center;
+			text-decoration: none;
 			text-transform: uppercase;
 
-			a {
-				text-decoration: none;
+			img {
+				height: 50px;
+				margin-right: 0.5rem;
 			}
 		}
 	}
