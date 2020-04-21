@@ -1,10 +1,8 @@
 import { AsyncAction } from "..";
 import { displayError, displaySuccess, displayInfo } from "../messages";
 import { extractErrorMessage } from "../../utils/messages";
-import { decode, encode } from "../../utils/encoder";
 import {
 	SeaBattleMovementType,
-	SeaBattleData,
 	AngleToDirection,
 	MAX_PLAYER_COUNT,
 	INVALID_MOVE_MESSAGE_TAG,
@@ -12,7 +10,9 @@ import {
 	SeaBattleWeaponType,
 	extractOpponentMaps,
 	passBatonToNextPlayer,
-	checkUserHasBatton
+	checkUserHasBatton,
+	decodeBattle,
+	encodeBattle
 } from "../../utils/games/seabattle";
 import {
 	SeaBattleBoatTranslationMappings,
@@ -71,7 +71,7 @@ export const joinBattle = (): AsyncAction => async (dispatch, getState) => {
 	}
 	try {
 		console.debug("[SeaBattle] Joining battle...", { userId });
-		const battle = decode<SeaBattleData>(info.extra);
+		const battle = decodeBattle(info.extra);
 		const map = battle.maps.find(other => other.userId === userId);
 		if (map) {
 			return; // User is already in the battle
@@ -83,7 +83,7 @@ export const joinBattle = (): AsyncAction => async (dispatch, getState) => {
 		generateFleet(battle, userId);
 		await room.update({
 			...info,
-			extra: encode(battle)
+			extra: encodeBattle(battle)
 		});
 	} catch (err) {
 		dispatch(displayError(extractErrorMessage(err)));
@@ -139,7 +139,7 @@ export const moveBoat = ({
 		return;
 	}
 	try {
-		const battle = decode<SeaBattleData>(info.extra);
+		const battle = decodeBattle(info.extra);
 
 		const playerMap = battle.maps.find(other => other.userId === userId);
 		if (!playerMap) {
@@ -237,7 +237,7 @@ export const moveBoat = ({
 		passBatonToNextPlayer(battle);
 		await room.update({
 			...info,
-			extra: encode(battle)
+			extra: encodeBattle(battle)
 		});
 	} catch (err) {
 		dispatch(displayError(extractErrorMessage(err)));
@@ -307,7 +307,7 @@ export const attackOpponent = ({
 		return;
 	}
 	try {
-		const battle = decode<SeaBattleData>(info.extra);
+		const battle = decodeBattle(info.extra);
 
 		const playerMap = battle.maps.find(other => other.userId === userId);
 		if (!playerMap) {
@@ -409,7 +409,7 @@ export const attackOpponent = ({
 		passBatonToNextPlayer(battle);
 		await room.update({
 			...info,
-			extra: encode(battle)
+			extra: encodeBattle(battle)
 		});
 	} catch (err) {
 		dispatch(displayError(extractErrorMessage(err)));

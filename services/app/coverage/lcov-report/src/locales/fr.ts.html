@@ -168,7 +168,73 @@
 <a name='L110'></a><a href='#L110'>110</a>
 <a name='L111'></a><a href='#L111'>111</a>
 <a name='L112'></a><a href='#L112'>112</a>
-<a name='L113'></a><a href='#L113'>113</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L113'></a><a href='#L113'>113</a>
+<a name='L114'></a><a href='#L114'>114</a>
+<a name='L115'></a><a href='#L115'>115</a>
+<a name='L116'></a><a href='#L116'>116</a>
+<a name='L117'></a><a href='#L117'>117</a>
+<a name='L118'></a><a href='#L118'>118</a>
+<a name='L119'></a><a href='#L119'>119</a>
+<a name='L120'></a><a href='#L120'>120</a>
+<a name='L121'></a><a href='#L121'>121</a>
+<a name='L122'></a><a href='#L122'>122</a>
+<a name='L123'></a><a href='#L123'>123</a>
+<a name='L124'></a><a href='#L124'>124</a>
+<a name='L125'></a><a href='#L125'>125</a>
+<a name='L126'></a><a href='#L126'>126</a>
+<a name='L127'></a><a href='#L127'>127</a>
+<a name='L128'></a><a href='#L128'>128</a>
+<a name='L129'></a><a href='#L129'>129</a>
+<a name='L130'></a><a href='#L130'>130</a>
+<a name='L131'></a><a href='#L131'>131</a>
+<a name='L132'></a><a href='#L132'>132</a>
+<a name='L133'></a><a href='#L133'>133</a>
+<a name='L134'></a><a href='#L134'>134</a>
+<a name='L135'></a><a href='#L135'>135</a>
+<a name='L136'></a><a href='#L136'>136</a>
+<a name='L137'></a><a href='#L137'>137</a>
+<a name='L138'></a><a href='#L138'>138</a>
+<a name='L139'></a><a href='#L139'>139</a>
+<a name='L140'></a><a href='#L140'>140</a>
+<a name='L141'></a><a href='#L141'>141</a>
+<a name='L142'></a><a href='#L142'>142</a>
+<a name='L143'></a><a href='#L143'>143</a>
+<a name='L144'></a><a href='#L144'>144</a>
+<a name='L145'></a><a href='#L145'>145</a>
+<a name='L146'></a><a href='#L146'>146</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -292,6 +358,18 @@
 		powered_with: "Utilise",
 		description: "Expérimentations collaboratives et musicales"
 	},
+	help: {
+		help: "Aide",
+		rules: "Règles",
+		rule1: "Créez un compte utilisateur",
+		rule1b: "ou connectez-vous",
+		rule2: "Créez une salle",
+		rule2b: "ou rejoignez en une",
+		notes: "Notes",
+		note1:
+			"Un salle est protégée par un secret : elle peut-être accédée sans son secret mais aucune action ne pourra y être réalisée.",
+		note2: "Aucune donnée personnelle n'est manipulée ou stockée."
+	},
 	users: {
 		errors: {
 			invalid: "L'utilisateur est invalide"
@@ -316,11 +394,30 @@
 	},
 	games: {
 		seabattle: {
-			movement_is_not_possible: "Ce déplacement est impossible !",
-			opponent_index: "Ennemi {{index}}",
-			join_battle: "Participer à la bataille"
+			movement_not_possible: "Ce déplacement est impossible !",
+			movement_not_possible_because_hitted:
+				"Un bateau touché ne peut plus se déplacer !",
+			opponent_index: "Adversaire {{index}}",
+			join_battle: "Participer à la bataille",
+			opponent_already_killed:
+				"Tous les bateaux de l'ennemi ont déjà été tués",
+			ship_already_hitted: "Le bateau est touché touché à cette position",
+			ship_already_killed: "Le bateau a déjà été tué",
+			hitted_opponent: "Vous avez touché un bateau ennemi",
+			killed_opponent: "Vous avez tué tous les bateaux de l'ennemi",
+			killed_opponent_boat: "Vous avez tué un bateau ennemi",
+			missed_opponent: "Vous n'avez pas touché de bateau ennemi",
+			no_weapon_selected: "Sélectionnez une arme pour attaquer",
+			weapon_not_available: "L'arme sélectionnée n'est plus disponible",
+			not_your_turn: "Ce n'est pas à votre tour de jouer",
+			opponent_turn: "C'est au tour de votre adversaire de jouer",
+			player_turn: "C'est à votre tour de bouger ou d'attaquer",
+			you_have_been_killed: "Tous vos bateaux ont été tués"
 		},
 		max_players_count: "Le nombre maximal de joueurs est déjà atteint",
+		no_opponents: "Aucun ennemi",
+		no_opponents_to_attack: "Il n'y aucun ennemi à attaquer ...",
+		connect_to_join: "Vous devez vous connecter pour participer ...",
 		watch_or_join: "Vous pouvez regarder ou ..."
 	},
 	rooms: {
@@ -343,8 +440,10 @@
 		empty: "Cette salle est vide, vous devriez ajouter quelques pistes...",
 		empty_for_now: "Cette salle est pour le moment vide...",
 		exit: "Quitter la salle",
-		id: "Identifiant",
-		id_placeholder: "Identifiant...",
+		id: "Identifiant de la salle",
+		id_placeholder: "Identifiant de la salle...",
+		server_id: "Identifiant du serveur",
+		server_id_placeholder: "Identifiant du serveur...",
 		key_placeholder: "Clef...",
 		type_placeholder: "Type...",
 		key: "Clef",
@@ -399,7 +498,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Sun Apr 19 2020 17:43:37 GMT+0000 (Coordinated Universal Time)
+                at Tue Apr 21 2020 21:03:08 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../prettify.js"></script>

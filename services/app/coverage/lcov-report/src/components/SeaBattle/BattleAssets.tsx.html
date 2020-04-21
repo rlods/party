@@ -149,21 +149,7 @@
 <a name='L91'></a><a href='#L91'>91</a>
 <a name='L92'></a><a href='#L92'>92</a>
 <a name='L93'></a><a href='#L93'>93</a>
-<a name='L94'></a><a href='#L94'>94</a>
-<a name='L95'></a><a href='#L95'>95</a>
-<a name='L96'></a><a href='#L96'>96</a>
-<a name='L97'></a><a href='#L97'>97</a>
-<a name='L98'></a><a href='#L98'>98</a>
-<a name='L99'></a><a href='#L99'>99</a>
-<a name='L100'></a><a href='#L100'>100</a>
-<a name='L101'></a><a href='#L101'>101</a>
-<a name='L102'></a><a href='#L102'>102</a>
-<a name='L103'></a><a href='#L103'>103</a>
-<a name='L104'></a><a href='#L104'>104</a>
-<a name='L105'></a><a href='#L105'>105</a>
-<a name='L106'></a><a href='#L106'>106</a>
-<a name='L107'></a><a href='#L107'>107</a>
-<a name='L108'></a><a href='#L108'>108</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L94'></a><a href='#L94'>94</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -256,21 +242,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React from "react";
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React, { FC } from "react";
 import { GRID_CELL_UNIT_SIZE } from "../../utils/games/seabattle";
 &nbsp;
 // ------------------------------------------------------------------
@@ -280,12 +252,10 @@ const SEA_COLOR2 = <span class="cstat-no" title="statement not covered" >"#50a3d
 &nbsp;
 // ------------------------------------------------------------------
 &nbsp;
-export const BattleAssets = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >()</span> =&gt; (</span>
+export const BattleAssets: FC = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >()</span> =&gt; (</span>
 <span class="cstat-no" title="statement not covered" >	&lt;defs&gt;</span>
-		&lt;circle id="missed1" cx="10" cy="10" r="8" fill="#fff" /&gt;
-		&lt;circle id="missed2" cx="10" cy="10" r="8" fill="#fff7" /&gt;
-		&lt;circle id="hitted1" cx="10" cy="10" r="8" fill="#ffcf02" /&gt;
-		&lt;circle id="hitted2" cx="10" cy="10" r="8" fill="#e52524" /&gt;
+		&lt;circle id="hitted" cx="10" cy="10" r="8" fill="#e52524" /&gt;
+		&lt;circle id="missed" cx="10" cy="10" r="8" fill="#fff" /&gt;
 		&lt;polygon
 			id="crossed"
 			points="11.98 8.08 20.07 0 24 3.9 15.92 11.98 24 20.07 20.07 24 11.98 15.92 3.9 24 0 20.07 8.08 11.98 0 3.9 3.9 0 11.98 8.08"
@@ -319,26 +289,14 @@ export const BattleAssets = <span class="cstat-no" title="statement not covered"
 			fill="#000000"
 		/&gt;
 		&lt;path id="boat1" d="M28,14C28,19,14,28,14,28H0V0H14S28,9.05,28,14Z" /&gt;
-		&lt;use id="boat1-E" href="#boat1" /&gt;
-		&lt;use id="boat1-N" href="#boat1" transform="rotate(-90, 14, 14)" /&gt;
-		&lt;use id="boat1-S" href="#boat1" transform="rotate(90, 14, 14)" /&gt;
-		&lt;use id="boat1-W" href="#boat1" transform="rotate(180, 14, 14)" /&gt;
 		&lt;path
 			id="boat2"
 			d="M68,14C68,19,51.89,28,51.89,28H0V0H51.89S68,9.05,68,14Z"
 		/&gt;
-		&lt;use id="boat2-E" href="#boat2" /&gt;
-		&lt;use id="boat2-N" href="#boat2" transform="rotate(-90, 14, 14)" /&gt;
-		&lt;use id="boat2-S" href="#boat2" transform="rotate(90, 14, 14)" /&gt;
-		&lt;use id="boat2-W" href="#boat2" transform="rotate(180, 14, 14)" /&gt;
 		&lt;path
 			id="boat3"
 			d="M108,14C108,19,91.24,28,91.24,28H0V0H91.24S108,9.05,108,14Z"
 		/&gt;
-		&lt;use id="boat3-E" href="#boat3" /&gt;
-		&lt;use id="boat3-N" href="#boat3" transform="rotate(-90, 14, 14)" /&gt;
-		&lt;use id="boat3-S" href="#boat3" transform="rotate(90, 14, 14)" /&gt;
-		&lt;use id="boat3-W" href="#boat3" transform="rotate(180, 14, 14)" /&gt;
 		&lt;pattern
 			id="sea-grid"
 			width="80"
@@ -384,7 +342,7 @@ export const BattleAssets = <span class="cstat-no" title="statement not covered"
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Sun Apr 19 2020 17:43:37 GMT+0000 (Coordinated Universal Time)
+                at Tue Apr 21 2020 21:03:08 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../prettify.js"></script>

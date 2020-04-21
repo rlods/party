@@ -24,14 +24,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/42</span>
+                <span class='fraction'>0/44</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/15</span>
+                <span class='fraction'>0/22</span>
             </div>
         
             
@@ -45,7 +45,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/39</span>
+                <span class='fraction'>0/42</span>
             </div>
         
             
@@ -152,7 +152,14 @@
 <a name='L94'></a><a href='#L94'>94</a>
 <a name='L95'></a><a href='#L95'>95</a>
 <a name='L96'></a><a href='#L96'>96</a>
-<a name='L97'></a><a href='#L97'>97</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L97'></a><a href='#L97'>97</a>
+<a name='L98'></a><a href='#L98'>98</a>
+<a name='L99'></a><a href='#L99'>99</a>
+<a name='L100'></a><a href='#L100'>100</a>
+<a name='L101'></a><a href='#L101'>101</a>
+<a name='L102'></a><a href='#L102'>102</a>
+<a name='L103'></a><a href='#L103'>103</a>
+<a name='L104'></a><a href='#L104'>104</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -166,19 +173,13 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -188,6 +189,16 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -209,6 +220,9 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -250,7 +264,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { v4 } from "uuid";
 //
-import { AsyncAction } from ".";
+import { AsyncAction, ActionOptions } from ".";
 import { UserInfo } from "../utils/users";
 import { FirebaseUser } from "../utils/firebase";
 import { displayError } from "./messages";
@@ -260,14 +274,16 @@ import { setUser, resetUser } from "../reducers/user";
 // ------------------------------------------------------------------
 &nbsp;
 export const createUser = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(</span></span>
+	dbId: string,
 	name: string,
-	secret: string
+	secret: string,
+	options?: ActionOptions
 ): AsyncAction =&gt; <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >as</span>ync dispatch =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >	try {</span>
 <span class="cstat-no" title="statement not covered" >		console.debug("[User] Creating...");</span>
-		const id = <span class="cstat-no" title="statement not covered" >v4();</span>
-<span class="cstat-no" title="statement not covered" >		await FirebaseUser({ id, secret }).update({ name });</span>
-<span class="cstat-no" title="statement not covered" >		dispatch(connectUser(id, secret));</span>
+		const userId = <span class="cstat-no" title="statement not covered" >v4();</span>
+<span class="cstat-no" title="statement not covered" >		await FirebaseUser({ dbId, userId, secret }).update({ name });</span>
+<span class="cstat-no" title="statement not covered" >		dispatch(connectUser(dbId, userId, secret, options));</span>
 	} catch (err) {
 <span class="cstat-no" title="statement not covered" >		dispatch(displayError(extractErrorMessage(err)));</span>
 	}
@@ -277,24 +293,26 @@ export const createUser = <span class="cstat-no" title="statement not covered" >
 &nbsp;
 let FIREBASE_CB: any = <span class="cstat-no" title="statement not covered" >null;</span>
 &nbsp;
-export const connectUser = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(i</span>d: string, secret: string): AsyncAction =&gt; <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >as</span>ync (</span></span>
-	dispatch,
-	getState
-) =&gt; {
+export const connectUser = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(</span></span>
+	dbId: string,
+	userId: string,
+	secret: string,
+	options?: ActionOptions
+): AsyncAction =&gt; <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >as</span>ync (dispatch, getState) =&gt; {</span>
 	const {
 		user: { user }
 	} = <span class="cstat-no" title="statement not covered" >getState();</span>
-<span class="cstat-no" title="statement not covered" >	if (user &amp;&amp; user.id === id) {</span>
+<span class="cstat-no" title="statement not covered" >	if (user &amp;&amp; user.dbId === dbId &amp;&amp; user.userId === userId) {</span>
 		// Nothing to do
 <span class="cstat-no" title="statement not covered" >		return;</span>
 	}
 <span class="cstat-no" title="statement not covered" >	dispatch(disconnectUser());</span>
 <span class="cstat-no" title="statement not covered" >	try {</span>
-<span class="cstat-no" title="statement not covered" >		console.debug("[User] Connecting...", { id, secret });</span>
-		const newUser = <span class="cstat-no" title="statement not covered" >FirebaseUser({ id, secret });</span>
+<span class="cstat-no" title="statement not covered" >		console.debug("[User] Connecting...", { dbId, userId, secret });</span>
+		const newUser = <span class="cstat-no" title="statement not covered" >FirebaseUser({ dbId, userId, secret });</span>
 <span class="cstat-no" title="statement not covered" >		dispatch(</span>
 			setUser({
-				access: { id, secret },
+				access: { dbId, userId, secret },
 				user: newUser,
 				info: await newUser.wait()
 			})
@@ -306,24 +324,27 @@ export const connectUser = <span class="cstat-no" title="statement not covered" 
 <span class="cstat-no" title="statement not covered" >				dispatch(setUser({ user: newUser, info: newInfo }));</span>
 			}
 		);
+<span class="cstat-no" title="statement not covered" >		if (options &amp;&amp; options.onSuccess) {</span>
+<span class="cstat-no" title="statement not covered" >			options.onSuccess();</span>
+		}
 	} catch (err) {
 <span class="cstat-no" title="statement not covered" >		dispatch(displayError(extractErrorMessage(err)));</span>
-<span class="cstat-no" title="statement not covered" >		dispatch(setUser({ access: { id, secret: "" } }));</span>
+<span class="cstat-no" title="statement not covered" >		dispatch(disconnectUser());</span>
 	}
 };
 &nbsp;
 export const disconnectUser = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >()</span>: AsyncAction =&gt; <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >as</span>ync (dispatch, getState) =&gt; {</span></span>
 	const {
 		user: {
-			access: { id, secret },
+			access: { dbId, userId, secret },
 			user
 		}
 	} = <span class="cstat-no" title="statement not covered" >getState();</span>
-<span class="cstat-no" title="statement not covered" >	if (!id &amp;&amp; !secret &amp;&amp; !user) {</span>
+<span class="cstat-no" title="statement not covered" >	if (!dbId &amp;&amp; !userId &amp;&amp; !secret &amp;&amp; !user) {</span>
 		// Nothing to do
 <span class="cstat-no" title="statement not covered" >		return;</span>
 	}
-<span class="cstat-no" title="statement not covered" >	console.debug("[User] Disconnecting...");</span>
+<span class="cstat-no" title="statement not covered" >	console.debug("[User] Disconnecting...", { dbId, userId, secret });</span>
 <span class="cstat-no" title="statement not covered" >	if (user) {</span>
 <span class="cstat-no" title="statement not covered" >		user.unsubscribe(FIREBASE_CB);</span>
 <span class="cstat-no" title="statement not covered" >		FIREBASE_CB = null;</span>
@@ -334,15 +355,15 @@ export const disconnectUser = <span class="cstat-no" title="statement not covere
 export const reconnectUser = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >()</span>: AsyncAction =&gt; <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >as</span>ync (dispatch, getState) =&gt; {</span></span>
 	const {
 		user: {
-			access: { id, secret }
+			access: { dbId, userId, secret }
 		}
 	} = <span class="cstat-no" title="statement not covered" >getState();</span>
-<span class="cstat-no" title="statement not covered" >	if (!id || !secret) {</span>
+<span class="cstat-no" title="statement not covered" >	if (!dbId || !userId || !secret) {</span>
 		// Nothing to do
 <span class="cstat-no" title="statement not covered" >		return;</span>
 	}
-<span class="cstat-no" title="statement not covered" >	console.debug("[User] Reconnecting...", { id, secret });</span>
-<span class="cstat-no" title="statement not covered" >	dispatch(connectUser(id, secret));</span>
+<span class="cstat-no" title="statement not covered" >	console.debug("[User] Reconnecting...", { dbId, userId, secret });</span>
+<span class="cstat-no" title="statement not covered" >	dispatch(connectUser(dbId, userId, secret));</span>
 };
 &nbsp;</pre></td></tr></table></pre>
 
@@ -351,7 +372,7 @@ export const reconnectUser = <span class="cstat-no" title="statement not covered
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Sun Apr 19 2020 17:43:37 GMT+0000 (Coordinated Universal Time)
+                at Tue Apr 21 2020 21:03:08 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../prettify.js"></script>

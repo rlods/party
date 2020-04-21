@@ -123,6 +123,14 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -132,29 +140,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -170,30 +159,43 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React from "react";
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React, { FC } from "react";
 import {
-	SeaBattleAssetData,
 	SeaBattleAssetType,
 	SeaBattleCellData,
-	GRID_CELL_UNIT_SIZE
+	GRID_CELL_UNIT_SIZE,
+	SeaBattlePosition
 } from "../../utils/games/seabattle";
 &nbsp;
 // ------------------------------------------------------------------
 &nbsp;
-export const Asset = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >({</span></span>
-	data: { position },
-	className,
-	onClick,
-	stopPropagation = <span class="branch-0 cbranch-no" title="branch not covered" >false,</span>
-	type,
-	visibility
-}: {
+export const Asset: FC&lt;{
 	className?: string;
-	data: SeaBattleAssetData;
 	onClick?: () =&gt; void;
+	position: SeaBattlePosition;
 	stopPropagation?: boolean;
+	transform?: string;
 	type: SeaBattleAssetType;
 	visibility?: string;
+}&gt; = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >({</span></span>
+	className,
+	onClick,
+	position,
+	stopPropagation = <span class="branch-0 cbranch-no" title="branch not covered" >false,</span>
+	transform,
+	type,
+	visibility
 }) =&gt; (
 <span class="cstat-no" title="statement not covered" >	&lt;use</span>
 		onClick={<span class="fstat-no" title="function not covered" >e </span>=&gt; {
@@ -206,6 +208,7 @@ export const Asset = <span class="cstat-no" title="statement not covered" ><span
 		}}
 		className={className}
 		href={`#${type}`}
+		transform={transform}
 		visibility={visibility}
 		{...position}
 	/&gt;
@@ -213,17 +216,14 @@ export const Asset = <span class="cstat-no" title="statement not covered" ><span
 &nbsp;
 // ------------------------------------------------------------------
 &nbsp;
-export const Cell = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >({</span> type, visibility, ...asset }: SeaBattleCellData) =&gt; (</span>
+export const Cell: FC&lt;SeaBattleCellData&gt; = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >({</span> type, visibility, ...asset }) =&gt; (</span>
 <span class="cstat-no" title="statement not covered" >	&lt;Asset</span>
 		className="SeaBattleCell"
 		type={type}
 		visibility={visibility}
-		data={{
-			...asset,
-			position: {
-				x: asset.position.x * GRID_CELL_UNIT_SIZE,
-				y: asset.position.y * GRID_CELL_UNIT_SIZE
-			}
+		position={{
+			x: asset.position.x * GRID_CELL_UNIT_SIZE,
+			y: asset.position.y * GRID_CELL_UNIT_SIZE
 		}}
 	/&gt;
 );
@@ -234,7 +234,7 @@ export const Cell = <span class="cstat-no" title="statement not covered" ><span 
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Sun Apr 19 2020 17:43:37 GMT+0000 (Coordinated Universal Time)
+                at Tue Apr 21 2020 21:03:08 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../prettify.js"></script>

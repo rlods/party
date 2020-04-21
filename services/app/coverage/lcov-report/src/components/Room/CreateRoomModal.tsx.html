@@ -24,7 +24,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/31</span>
+                <span class='fraction'>0/29</span>
             </div>
         
             
@@ -45,7 +45,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/30</span>
+                <span class='fraction'>0/28</span>
             </div>
         
             
@@ -171,12 +171,8 @@
 <a name='L113'></a><a href='#L113'>113</a>
 <a name='L114'></a><a href='#L114'>114</a>
 <a name='L115'></a><a href='#L115'>115</a>
-<a name='L116'></a><a href='#L116'>116</a>
-<a name='L117'></a><a href='#L117'>117</a>
-<a name='L118'></a><a href='#L118'>118</a>
-<a name='L119'></a><a href='#L119'>119</a>
-<a name='L120'></a><a href='#L120'>120</a>
-<a name='L121'></a><a href='#L121'>121</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L116'></a><a href='#L116'>116</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -229,11 +225,8 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -241,15 +234,12 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -296,7 +286,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React, { useState, useRef, useEffect, useCallback } from "react";
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React, { FC, useState, useRef, useEffect, useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { v4 } from "uuid";
@@ -311,10 +301,11 @@ import {
 	SelectField
 } from "../Modals/ModalFields";
 import { Dispatch } from "../../actions";
-import { popModal, openModal } from "../../reducers/modals";
+import { popModal } from "../../reducers/modals";
 import { createRoom } from "../../actions/room";
 import { displayError } from "../../actions/messages";
-import { RoomType, RoomTypes } from "../../utils/rooms";
+import { RoomType, RoomTypes, DEFAULT_ROOM_TYPE } from "../../utils/rooms";
+import { selectRoomDatabaseId } from "../../config/firebase";
 &nbsp;
 // ------------------------------------------------------------------
 &nbsp;
@@ -322,11 +313,11 @@ let ROOM_COUNTER = <span class="cstat-no" title="statement not covered" >1;</spa
 &nbsp;
 // ------------------------------------------------------------------
 &nbsp;
-export const CreateRoomModal = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >()</span> =&gt; {</span>
+export const CreateRoomModal: FC = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >()</span> =&gt; {</span>
 	const dispatch = <span class="cstat-no" title="statement not covered" >useDispatch&lt;Dispatch&gt;();</span>
 	const [name, setName] = <span class="cstat-no" title="statement not covered" >useState("");</span>
 	const [secret, setSecret] = <span class="cstat-no" title="statement not covered" >useState(v4());</span>
-	const [type, setType] = <span class="cstat-no" title="statement not covered" >useState&lt;RoomType&gt;("dj");</span>
+	const [type, setType] = <span class="cstat-no" title="statement not covered" >useState&lt;RoomType&gt;(DEFAULT_ROOM_TYPE);</span>
 	const nameRef = <span class="cstat-no" title="statement not covered" >useRef&lt;HTMLInputElement&gt;(null);</span>
 	const { t } = <span class="cstat-no" title="statement not covered" >useTranslation();</span>
 &nbsp;
@@ -348,15 +339,15 @@ export const CreateRoomModal = <span class="cstat-no" title="statement not cover
 <span class="cstat-no" title="statement not covered" >			dispatch(displayError("rooms.secret_is_invalid"));</span>
 <span class="cstat-no" title="statement not covered" >			return;</span>
 		}
-<span class="cstat-no" title="statement not covered" >		dispatch(createRoom(name, secret, type));</span>
-<span class="cstat-no" title="statement not covered" >		dispatch(popModal());</span>
+<span class="cstat-no" title="statement not covered" >		dispatch(</span>
+			createRoom(selectRoomDatabaseId(), name, secret, type, {
+				onSuccess: <span class="fstat-no" title="function not covered" >()</span> =&gt; {
+<span class="cstat-no" title="statement not covered" >					dispatch(popModal());</span>
+				}
+			})
+		);
 <span class="cstat-no" title="statement not covered" >		ROOM_COUNTER++;</span>
 	}, [dispatch, name, secret, type]);
-&nbsp;
-	const onJoin = <span class="cstat-no" title="statement not covered" >useCallback(</span>
-<span class="fstat-no" title="function not covered" >		()</span> =&gt; <span class="cstat-no" title="statement not covered" >dispatch(openModal({ type: "JoinRoom", props: null })),</span>
-		[dispatch]
-	);
 &nbsp;
 <span class="cstat-no" title="statement not covered" >	return (</span>
 		&lt;FormModal
@@ -371,16 +362,10 @@ export const CreateRoomModal = <span class="cstat-no" title="statement not cover
 						}
 						title={t("rooms.create")}
 						kind="primary"
-						icon="plus"
+						icon="sign-in"
 						type="submit"
 					/&gt;
 					&lt;CancelButton onClick={onClose} /&gt;
-					&lt;IconButton
-						title={t("rooms.join")}
-						kind="default"
-						icon="sign-in"
-						onClick={onJoin}
-					/&gt;
 				&lt;/&gt;
 			)}&gt;
 			&lt;InputField
@@ -423,7 +408,7 @@ export const CreateRoomModal = <span class="cstat-no" title="statement not cover
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Sun Apr 19 2020 17:43:37 GMT+0000 (Coordinated Universal Time)
+                at Tue Apr 21 2020 21:03:08 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../prettify.js"></script>

@@ -126,8 +126,7 @@
 <a name='L68'></a><a href='#L68'>68</a>
 <a name='L69'></a><a href='#L69'>69</a>
 <a name='L70'></a><a href='#L70'>70</a>
-<a name='L71'></a><a href='#L71'>71</a>
-<a name='L72'></a><a href='#L72'>72</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L71'></a><a href='#L71'>71</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -135,6 +134,26 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -153,9 +172,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -180,90 +196,71 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React from "react";
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React, { FC } from "react";
+import { useTranslation } from "react-i18next";
 //
 import { IconButton } from "../Common/IconButton";
-import { SeaBattleBoatData } from "../../utils/games/seabattle";
+import {
+	SeaBattleBoatData,
+	AngleToDirection
+} from "../../utils/games/seabattle";
 import { SeaBattleMovementIconMappings } from "../../utils/games/seabattle/mappings";
-import { useTranslation } from "react-i18next";
 &nbsp;
 // ------------------------------------------------------------------
 &nbsp;
-export const PlayerControls = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >({</span></span>
-	boat,
-	disabled = <span class="branch-0 cbranch-no" title="branch not covered" >false,</span>
-	onPlayNext,
-	onMoveBackward,
-	onMoveForward,
-	onRotateLeft,
-	onRotateRight
-}: {
+export const SeaBattlePlayerControls: FC&lt;{
 	boat?: SeaBattleBoatData;
 	disabled?: boolean;
-	onPlayNext?: () =&gt; void;
 	onMoveBackward: () =&gt; void;
 	onMoveForward: () =&gt; void;
 	onRotateLeft: () =&gt; void;
 	onRotateRight: () =&gt; void;
+}&gt; = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >({</span></span>
+	boat,
+	disabled = <span class="branch-0 cbranch-no" title="branch not covered" >false,</span>
+	onMoveBackward,
+	onMoveForward,
+	onRotateLeft,
+	onRotateRight
 }) =&gt; {
 	const { t } = <span class="cstat-no" title="statement not covered" >useTranslation();</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >	return (</span>
-		&lt;div className="SeaBattleControls"&gt;
+		&lt;div className="SeaBattlePlayerControls SeaBattleControls"&gt;
 			&lt;IconButton
 				disabled={disabled}
 				icon="rotate-left"
-				title="Rotate Left"
+				title={t("Rotate Left")}
 				onClick={onRotateLeft}
 			/&gt;
 			&lt;IconButton
 				disabled={disabled}
 				icon={
-					boat?.direction
-						? SeaBattleMovementIconMappings[boat.direction].backward
+					boat
+						? SeaBattleMovementIconMappings[
+								AngleToDirection(boat.angle)
+						  ].backward
 						: "arrow-down"
 				}
-				title="Move Backward"
+				title={t("Move Backward")}
 				onClick={onMoveBackward}
-			/&gt;
-			&lt;IconButton
-				icon="step-forward"
-				onClick={onPlayNext}
-				size="M"
-				title={t("player.forward")}
 			/&gt;
 			&lt;IconButton
 				disabled={disabled}
 				icon={
-					boat?.direction
-						? SeaBattleMovementIconMappings[boat.direction].forward
+					boat
+						? SeaBattleMovementIconMappings[
+								AngleToDirection(boat.angle)
+						  ].forward
 						: "arrow-up"
 				}
-				title="Move Forward"
+				title={t("Move Forward")}
 				onClick={onMoveForward}
 			/&gt;
 			&lt;IconButton
 				disabled={disabled}
 				icon="rotate-right"
-				title="Rotate Right"
+				title={t("Rotate Right")}
 				onClick={onRotateRight}
 			/&gt;
 		&lt;/div&gt;
@@ -276,7 +273,7 @@ export const PlayerControls = <span class="cstat-no" title="statement not covere
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Sun Apr 19 2020 17:43:37 GMT+0000 (Coordinated Universal Time)
+                at Tue Apr 21 2020 21:03:08 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../prettify.js"></script>

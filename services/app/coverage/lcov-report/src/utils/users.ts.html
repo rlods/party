@@ -22,16 +22,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">46.67% </span>
+                <span class="strong">43.75% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>7/15</span>
+                <span class='fraction'>7/16</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">16.67% </span>
+                <span class="strong">14.29% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>1/6</span>
+                <span class='fraction'>1/7</span>
             </div>
         
             
@@ -43,9 +43,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">46.67% </span>
+                <span class="strong">43.75% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>7/15</span>
+                <span class='fraction'>7/16</span>
             </div>
         
             
@@ -105,7 +105,10 @@
 <a name='L47'></a><a href='#L47'>47</a>
 <a name='L48'></a><a href='#L48'>48</a>
 <a name='L49'></a><a href='#L49'>49</a>
-<a name='L50'></a><a href='#L50'>50</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L50'></a><a href='#L50'>50</a>
+<a name='L51'></a><a href='#L51'>51</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -127,10 +130,16 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -147,25 +156,20 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { encode, decode } from "./encoder";
+&nbsp;
+// ------------------------------------------------------------------
 &nbsp;
 export type UserInfo = {
 	name: string;
 	online: boolean;
-	room_id: string;
 	status: string;
 	timestamp: number;
 };
 &nbsp;
 export type UserAccess = {
-	id: string;
+	dbId: string;
+	userId: string;
 	secret: string;
 };
 &nbsp;
@@ -173,15 +177,21 @@ export type UserAccess = {
 &nbsp;
 export const loadUserAccess = (): UserAccess =&gt; {
 	const res: UserAccess = {
-		id: "",
+		dbId: "",
+		userId: "",
 		secret: ""
 	};
 	const s = localStorage.getItem("U");
 	<span class="missing-if-branch" title="if path not taken" >I</span>if (s) {
 <span class="cstat-no" title="statement not covered" >		try {</span>
 			const d = <span class="cstat-no" title="statement not covered" >decode&lt;UserAccess&gt;(s);</span>
-<span class="cstat-no" title="statement not covered" >			if (typeof d.id === "string" &amp;&amp; typeof d.secret === "string") {</span>
-<span class="cstat-no" title="statement not covered" >				res.id = d.id;</span>
+<span class="cstat-no" title="statement not covered" >			if (</span>
+				typeof d.dbId === "string" &amp;&amp;
+				typeof d.userId === "string" &amp;&amp;
+				typeof d.secret === "string"
+			) {
+<span class="cstat-no" title="statement not covered" >				res.dbId = d.dbId;</span>
+<span class="cstat-no" title="statement not covered" >				res.userId = d.userId;</span>
 <span class="cstat-no" title="statement not covered" >				res.secret = d.secret;</span>
 <span class="cstat-no" title="statement not covered" >				console.debug("Loaded user access: ", res);</span>
 			}
@@ -194,15 +204,8 @@ export const deleteUserAccess = <span class="fstat-no" title="function not cover
 <span class="cstat-no" title="statement not covered" >	localStorage.removeItem("U");</span>
 };
 &nbsp;
-export const saveUserAccess = <span class="fstat-no" title="function not covered" >({</span> id, secret }: UserAccess) =&gt; {
-<span class="cstat-no" title="statement not covered" >	localStorage.setItem(</span>
-		"U",
-		encode({
-			id,
-			secret
-		})
-	);
-};
+export const saveUserAccess = <span class="fstat-no" title="function not covered" >(a</span>ccess: UserAccess) =&gt;
+<span class="cstat-no" title="statement not covered" >	localStorage.setItem("U", encode&lt;UserAccess&gt;(access));</span>
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -210,7 +213,7 @@ export const saveUserAccess = <span class="fstat-no" title="function not covered
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Sun Apr 19 2020 17:43:37 GMT+0000 (Coordinated Universal Time)
+                at Tue Apr 21 2020 21:03:08 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../prettify.js"></script>

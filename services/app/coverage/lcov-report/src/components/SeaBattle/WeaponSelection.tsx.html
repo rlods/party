@@ -24,14 +24,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/27</span>
+                <span class='fraction'>0/22</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/4</span>
+                <span class='fraction'>0/6</span>
             </div>
         
             
@@ -45,7 +45,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/27</span>
+                <span class='fraction'>0/22</span>
             </div>
         
             
@@ -150,17 +150,9 @@
 <a name='L92'></a><a href='#L92'>92</a>
 <a name='L93'></a><a href='#L93'>93</a>
 <a name='L94'></a><a href='#L94'>94</a>
-<a name='L95'></a><a href='#L95'>95</a>
-<a name='L96'></a><a href='#L96'>96</a>
-<a name='L97'></a><a href='#L97'>97</a>
-<a name='L98'></a><a href='#L98'>98</a>
-<a name='L99'></a><a href='#L99'>99</a>
-<a name='L100'></a><a href='#L100'>100</a>
-<a name='L101'></a><a href='#L101'>101</a>
-<a name='L102'></a><a href='#L102'>102</a>
-<a name='L103'></a><a href='#L103'>103</a>
-<a name='L104'></a><a href='#L104'>104</a>
-<a name='L105'></a><a href='#L105'>105</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L95'></a><a href='#L95'>95</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -178,15 +170,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -204,22 +192,16 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -262,9 +244,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React, { useRef, useCallback, useState } from "react";
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React, { FC, useRef, useCallback, useState } from "react";
 //
 import { getSVGNormalizedPosition } from "../../utils/svg";
 import { BattleAssets } from "./BattleAssets";
@@ -273,59 +253,51 @@ import { Weapons } from "./Weapons";
 import {
 	SeaBattleAssetVisibility,
 	SeaBattlePosition,
-	SeaBattleWeaponData,
 	SeaBattleWeaponTypes,
-	SeaBattleWeaponType,
-	countWeapons
+	SeaBattleWeaponType
 } from "../../utils/games/seabattle";
 &nbsp;
 // ------------------------------------------------------------------
 &nbsp;
-export const WeaponSelection = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >({</span></span>
-	onSelectWeaponType,
-	weapons
-}: {
-	onSelectWeaponType: (type?: SeaBattleWeaponType) =&gt; void;
-	weapons: SeaBattleWeaponData[];
-}) =&gt; {
+export const WeaponSelection: FC&lt;{
+	onSelect: (type: SeaBattleWeaponType) =&gt; void;
+	weapons: { [type: string]: number };
+	weaponType: SeaBattleWeaponType;
+}&gt; = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >({</span> onSelect, weapons, weaponType }) =&gt; {</span>
 	const svg = <span class="cstat-no" title="statement not covered" >useRef&lt;SVGSVGElement&gt;(null);</span>
 &nbsp;
-	const [selectedPosition, setSelectedPosition] = <span class="cstat-no" title="statement not covered" >useState&lt;number&gt;(-1);</span>
-	const [selectedVisibility, setSelectedVisibility] = <span class="cstat-no" title="statement not covered" >useState&lt;</span>
-		SeaBattleAssetVisibility
-	&gt;("hidden");
+	const [selectedPos, setSelectedPos] = <span class="cstat-no" title="statement not covered" >useState&lt;number&gt;(</span>
+		SeaBattleWeaponTypes.indexOf(weaponType)
+	);
+	const [selectedVis, setSelectedVis] = <span class="cstat-no" title="statement not covered" >useState&lt;SeaBattleAssetVisibility&gt;(</span>
+		selectedPos &gt;= 0 ? "visible" : "hidden"
+	);
 &nbsp;
-	const [selectionPosition, setSelectionPosition] = <span class="cstat-no" title="statement not covered" >useState&lt;number&gt;(-1);</span>
-	const [selectionVisibility, setSelectionVisibility] = <span class="cstat-no" title="statement not covered" >useState&lt;</span>
-		SeaBattleAssetVisibility
-	&gt;("hidden");
+	const [selectionPos, setSelectionPos] = <span class="cstat-no" title="statement not covered" >useState&lt;number&gt;(-1);</span>
+	const [selectionVis, setSelectionVis] = <span class="cstat-no" title="statement not covered" >useState&lt;SeaBattleAssetVisibility&gt;(</span>
+		"hidden"
+	);
 &nbsp;
 	const onClick = <span class="cstat-no" title="statement not covered" >useCallback(</span>
 <span class="fstat-no" title="function not covered" >		(p</span>osition: SeaBattlePosition) =&gt; {
 			const { x } = <span class="cstat-no" title="statement not covered" >getSVGNormalizedPosition(svg.current!, position);</span>
-<span class="cstat-no" title="statement not covered" >			if (selectedPosition === x) {</span>
-				// Reset
-<span class="cstat-no" title="statement not covered" >				setSelectedPosition(-1);</span>
-<span class="cstat-no" title="statement not covered" >				setSelectedVisibility("hidden");</span>
-<span class="cstat-no" title="statement not covered" >				onSelectWeaponType(void 0);</span>
-<span class="cstat-no" title="statement not covered" >				return;</span>
+<span class="cstat-no" title="statement not covered" >			if (selectedPos !== x) {</span>
+				// Set
+<span class="cstat-no" title="statement not covered" >				setSelectedPos(x);</span>
+<span class="cstat-no" title="statement not covered" >				setSelectedVis("visible");</span>
+<span class="cstat-no" title="statement not covered" >				onSelect(SeaBattleWeaponTypes[x]);</span>
 			}
-			// Set
-<span class="cstat-no" title="statement not covered" >			setSelectedPosition(x);</span>
-<span class="cstat-no" title="statement not covered" >			setSelectedVisibility("visible");</span>
-<span class="cstat-no" title="statement not covered" >			onSelectWeaponType(SeaBattleWeaponTypes[x]);</span>
 		},
-		[onSelectWeaponType, selectedPosition]
+		[onSelect, selectedPos]
 	);
 &nbsp;
-	const onOver = <span class="cstat-no" title="statement not covered" >useCallback(<span class="fstat-no" title="function not covered" >(p</span>osition: SeaBattlePosition) =&gt; {</span>
-		const { x } = <span class="cstat-no" title="statement not covered" >getSVGNormalizedPosition(svg.current!, position);</span>
-<span class="cstat-no" title="statement not covered" >		setSelectionPosition(x);</span>
-<span class="cstat-no" title="statement not covered" >		setSelectionVisibility("visible");</span>
+	const onLeave = <span class="cstat-no" title="statement not covered" >useCallback(<span class="fstat-no" title="function not covered" >()</span> =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >		setSelectionVis("hidden");</span>
 	}, []);
 &nbsp;
-	const onLeave = <span class="cstat-no" title="statement not covered" >useCallback(<span class="fstat-no" title="function not covered" >()</span> =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >		setSelectionVisibility("hidden");</span>
+	const onOver = <span class="cstat-no" title="statement not covered" >useCallback(<span class="fstat-no" title="function not covered" >(p</span>osition: SeaBattlePosition) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >		setSelectionPos(getSVGNormalizedPosition(svg.current!, position).x);</span>
+<span class="cstat-no" title="statement not covered" >		setSelectionVis("visible");</span>
 	}, []);
 &nbsp;
 <span class="cstat-no" title="statement not covered" >	return (</span>
@@ -340,17 +312,17 @@ export const WeaponSelection = <span class="cstat-no" title="statement not cover
 			&lt;rect width="400" height="400" fill="url(#sea-grid)" /&gt;
 			&lt;Cell
 				type="cell-selection"
-				position={{ x: selectionPosition, y: 0 }}
-				visibility={selectionVisibility}
+				position={{ x: selectionPos, y: 0 }}
+				visibility={selectionVis}
 			/&gt;
 			&lt;Cell
 				type="cell-selected"
-				position={{ x: selectedPosition, y: 0 }}
-				visibility={selectedVisibility}
+				position={{ x: selectedPos, y: 0 }}
+				visibility={selectedVis}
 			/&gt;
 			&lt;Weapons
 				weapons={SeaBattleWeaponTypes.map(<span class="fstat-no" title="function not covered" >(t</span>ype, index) =&gt; (<span class="cstat-no" title="statement not covered" >{</span>
-					count: 1,
+					opponentId: "",
 					position: { x: index, y: 0 },
 					type
 				}))}
@@ -360,9 +332,7 @@ export const WeaponSelection = <span class="cstat-no" title="statement not cover
 					key={index}
 					type="cell-crossed"
 					position={{ x: index, y: 0 }}
-					visibility={
-						countWeapons(weapons, type) === 0 ? "visible" : "hidden"
-					}
+					visibility={!weapons[type] ? "visible" : "hidden"}
 				/&gt;
 			))}
 		&lt;/svg&gt;
@@ -375,7 +345,7 @@ export const WeaponSelection = <span class="cstat-no" title="statement not cover
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Sun Apr 19 2020 17:43:37 GMT+0000 (Coordinated Universal Time)
+                at Tue Apr 21 2020 21:03:08 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../prettify.js"></script>

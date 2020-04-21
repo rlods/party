@@ -176,53 +176,37 @@ export const generateGrid = (
 export const checkCollisions = (
 	fleet: SeaBattleBoatData[],
 	boat: SeaBattleBoatData,
-	newPos: SeaBattlePosition,
-	newDir: SeaBattleDirection
+	pos: SeaBattlePosition,
+	dir: SeaBattleDirection
 ) => {
 	const grid = generateGrid(fleet, boat);
 	// console.debug("[SeaBattle] Collision grid", grid);
-	const boatLength = SeaBattleBoatLengthMappings[boat.type];
-	switch (newDir) {
+	const length = SeaBattleBoatLengthMappings[boat.type];
+	switch (dir) {
 		case "N":
-			for (let i = 0; i < boatLength; ++i) {
-				const cell = getGridCell(grid, {
-					x: newPos.x,
-					y: newPos.y - i
-				});
-				if (null !== cell) {
+			for (let i = 0; i < length; ++i) {
+				if (null !== getGridCell(grid, { x: pos.x, y: pos.y - i })) {
 					return false;
 				}
 			}
 			break;
 		case "E":
-			for (let i = 0; i < boatLength; ++i) {
-				const cell = getGridCell(grid, {
-					x: newPos.x + i,
-					y: newPos.y
-				});
-				if (null !== cell) {
+			for (let i = 0; i < length; ++i) {
+				if (null !== getGridCell(grid, { x: pos.x + i, y: pos.y })) {
 					return false;
 				}
 			}
 			break;
 		case "S":
-			for (let i = 0; i < boatLength; ++i) {
-				const cell = getGridCell(grid, {
-					x: newPos.x,
-					y: newPos.y + i
-				});
-				if (null !== cell) {
+			for (let i = 0; i < length; ++i) {
+				if (null !== getGridCell(grid, { x: pos.x, y: pos.y + i })) {
 					return false;
 				}
 			}
 			break;
 		case "W":
-			for (let i = 0; i < boatLength; ++i) {
-				const cell = getGridCell(grid, {
-					x: newPos.x - i,
-					y: newPos.y
-				});
-				if (null !== cell) {
+			for (let i = 0; i < length; ++i) {
+				if (null !== getGridCell(grid, { x: pos.x - i, y: pos.y })) {
 					return false;
 				}
 			}

@@ -1,5 +1,7 @@
 import { encode, decode } from "./encoder";
 
+// ------------------------------------------------------------------
+
 export type UserInfo = {
 	name: string;
 	online: boolean;
@@ -44,13 +46,5 @@ export const deleteUserAccess = () => {
 	localStorage.removeItem("U");
 };
 
-export const saveUserAccess = ({ dbId, userId, secret }: UserAccess) => {
-	localStorage.setItem(
-		"U",
-		encode({
-			dbId,
-			userId,
-			secret
-		})
-	);
-};
+export const saveUserAccess = (access: UserAccess) =>
+	localStorage.setItem("U", encode<UserAccess>(access));
