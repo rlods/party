@@ -9,8 +9,8 @@ services:
   app:
     build:
       args:
-        DATABASE_IDS: "azjk|odsk|zjkd"
-        DATABASE_PREFIX: "rlods-party-"
+        DATABASE_IDS: "erte"
+        DATABASE_PREFIX: "rlods-test-party-"
         NODE_ENV: development
     command: npm run start
     tty: true
