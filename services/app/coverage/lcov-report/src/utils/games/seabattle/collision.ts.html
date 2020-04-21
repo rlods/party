@@ -24,7 +24,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/79</span>
+                <span class='fraction'>0/75</span>
             </div>
         
             
@@ -45,7 +45,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/74</span>
+                <span class='fraction'>0/70</span>
             </div>
         
             
@@ -291,23 +291,7 @@
 <a name='L233'></a><a href='#L233'>233</a>
 <a name='L234'></a><a href='#L234'>234</a>
 <a name='L235'></a><a href='#L235'>235</a>
-<a name='L236'></a><a href='#L236'>236</a>
-<a name='L237'></a><a href='#L237'>237</a>
-<a name='L238'></a><a href='#L238'>238</a>
-<a name='L239'></a><a href='#L239'>239</a>
-<a name='L240'></a><a href='#L240'>240</a>
-<a name='L241'></a><a href='#L241'>241</a>
-<a name='L242'></a><a href='#L242'>242</a>
-<a name='L243'></a><a href='#L243'>243</a>
-<a name='L244'></a><a href='#L244'>244</a>
-<a name='L245'></a><a href='#L245'>245</a>
-<a name='L246'></a><a href='#L246'>246</a>
-<a name='L247'></a><a href='#L247'>247</a>
-<a name='L248'></a><a href='#L248'>248</a>
-<a name='L249'></a><a href='#L249'>249</a>
-<a name='L250'></a><a href='#L250'>250</a>
-<a name='L251'></a><a href='#L251'>251</a>
-<a name='L252'></a><a href='#L252'>252</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L236'></a><a href='#L236'>236</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -495,20 +479,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -517,20 +493,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -736,53 +704,37 @@ export const generateGrid = <span class="cstat-no" title="statement not covered"
 export const checkCollisions = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(</span></span>
 	fleet: SeaBattleBoatData[],
 	boat: SeaBattleBoatData,
-	newPos: SeaBattlePosition,
-	newDir: SeaBattleDirection
+	pos: SeaBattlePosition,
+	dir: SeaBattleDirection
 ) =&gt; {
 	const grid = <span class="cstat-no" title="statement not covered" >generateGrid(fleet, boat);</span>
 	// console.debug("[SeaBattle] Collision grid", grid);
-	const boatLength = <span class="cstat-no" title="statement not covered" >SeaBattleBoatLengthMappings[boat.type];</span>
-<span class="cstat-no" title="statement not covered" >	switch (newDir) {</span>
+	const length = <span class="cstat-no" title="statement not covered" >SeaBattleBoatLengthMappings[boat.type];</span>
+<span class="cstat-no" title="statement not covered" >	switch (dir) {</span>
 		case "N":
-<span class="cstat-no" title="statement not covered" >			for (let i = <span class="cstat-no" title="statement not covered" >0;</span> i &lt; boatLength; ++i) {</span>
-				const cell = <span class="cstat-no" title="statement not covered" >getGridCell(grid, {</span>
-					x: newPos.x,
-					y: newPos.y - i
-				});
-<span class="cstat-no" title="statement not covered" >				if (null !== cell) {</span>
+<span class="cstat-no" title="statement not covered" >			for (let i = <span class="cstat-no" title="statement not covered" >0;</span> i &lt; length; ++i) {</span>
+<span class="cstat-no" title="statement not covered" >				if (null !== getGridCell(grid, { x: pos.x, y: pos.y - i })) {</span>
 <span class="cstat-no" title="statement not covered" >					return false;</span>
 				}
 			}
 <span class="cstat-no" title="statement not covered" >			break;</span>
 		case "E":
-<span class="cstat-no" title="statement not covered" >			for (let i = <span class="cstat-no" title="statement not covered" >0;</span> i &lt; boatLength; ++i) {</span>
-				const cell = <span class="cstat-no" title="statement not covered" >getGridCell(grid, {</span>
-					x: newPos.x + i,
-					y: newPos.y
-				});
-<span class="cstat-no" title="statement not covered" >				if (null !== cell) {</span>
+<span class="cstat-no" title="statement not covered" >			for (let i = <span class="cstat-no" title="statement not covered" >0;</span> i &lt; length; ++i) {</span>
+<span class="cstat-no" title="statement not covered" >				if (null !== getGridCell(grid, { x: pos.x + i, y: pos.y })) {</span>
 <span class="cstat-no" title="statement not covered" >					return false;</span>
 				}
 			}
 <span class="cstat-no" title="statement not covered" >			break;</span>
 		case "S":
-<span class="cstat-no" title="statement not covered" >			for (let i = <span class="cstat-no" title="statement not covered" >0;</span> i &lt; boatLength; ++i) {</span>
-				const cell = <span class="cstat-no" title="statement not covered" >getGridCell(grid, {</span>
-					x: newPos.x,
-					y: newPos.y + i
-				});
-<span class="cstat-no" title="statement not covered" >				if (null !== cell) {</span>
+<span class="cstat-no" title="statement not covered" >			for (let i = <span class="cstat-no" title="statement not covered" >0;</span> i &lt; length; ++i) {</span>
+<span class="cstat-no" title="statement not covered" >				if (null !== getGridCell(grid, { x: pos.x, y: pos.y + i })) {</span>
 <span class="cstat-no" title="statement not covered" >					return false;</span>
 				}
 			}
 <span class="cstat-no" title="statement not covered" >			break;</span>
 		case "W":
-<span class="cstat-no" title="statement not covered" >			for (let i = <span class="cstat-no" title="statement not covered" >0;</span> i &lt; boatLength; ++i) {</span>
-				const cell = <span class="cstat-no" title="statement not covered" >getGridCell(grid, {</span>
-					x: newPos.x - i,
-					y: newPos.y
-				});
-<span class="cstat-no" title="statement not covered" >				if (null !== cell) {</span>
+<span class="cstat-no" title="statement not covered" >			for (let i = <span class="cstat-no" title="statement not covered" >0;</span> i &lt; length; ++i) {</span>
+<span class="cstat-no" title="statement not covered" >				if (null !== getGridCell(grid, { x: pos.x - i, y: pos.y })) {</span>
 <span class="cstat-no" title="statement not covered" >					return false;</span>
 				}
 			}
@@ -816,7 +768,7 @@ export const movementIsPossible = <span class="cstat-no" title="statement not co
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Apr 21 2020 21:03:08 GMT+0000 (Coordinated Universal Time)
+                at Tue Apr 21 2020 22:45:00 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>

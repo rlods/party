@@ -62,13 +62,13 @@ lint-app:
 
 # TESTS
 tests:
-	$(compose_dev_run) app npm run test;
+	$(compose_dev_run) app npm run test
 tests-coverage:
-	$(compose_dev_run) app npm run test:coverage;
+	$(compose_dev_run) app npm run test:coverage
 tests-update:
-	$(compose_dev_run) app npm run test:update;
+	$(compose_dev_run) app npm run test:update
 tests-watch:
-	$(compose_dev_run) app npm run test:watch;
+	$(compose_dev_run) app npm run test:watch
 
 # PROD
 prod:

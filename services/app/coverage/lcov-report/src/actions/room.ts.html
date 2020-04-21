@@ -24,7 +24,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/128</span>
+                <span class='fraction'>0/126</span>
             </div>
         
             
@@ -45,7 +45,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/124</span>
+                <span class='fraction'>0/122</span>
             </div>
         
             
@@ -437,25 +437,7 @@
 <a name='L379'></a><a href='#L379'>379</a>
 <a name='L380'></a><a href='#L380'>380</a>
 <a name='L381'></a><a href='#L381'>381</a>
-<a name='L382'></a><a href='#L382'>382</a>
-<a name='L383'></a><a href='#L383'>383</a>
-<a name='L384'></a><a href='#L384'>384</a>
-<a name='L385'></a><a href='#L385'>385</a>
-<a name='L386'></a><a href='#L386'>386</a>
-<a name='L387'></a><a href='#L387'>387</a>
-<a name='L388'></a><a href='#L388'>388</a>
-<a name='L389'></a><a href='#L389'>389</a>
-<a name='L390'></a><a href='#L390'>390</a>
-<a name='L391'></a><a href='#L391'>391</a>
-<a name='L392'></a><a href='#L392'>392</a>
-<a name='L393'></a><a href='#L393'>393</a>
-<a name='L394'></a><a href='#L394'>394</a>
-<a name='L395'></a><a href='#L395'>395</a>
-<a name='L396'></a><a href='#L396'>396</a>
-<a name='L397'></a><a href='#L397'>397</a>
-<a name='L398'></a><a href='#L398'>398</a>
-<a name='L399'></a><a href='#L399'>399</a>
-<a name='L400'></a><a href='#L400'>400</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L382'></a><a href='#L382'>382</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -534,18 +516,8 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -591,16 +563,8 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -875,7 +839,7 @@ import {
 	extractTracks,
 	ContextualizedTrackAccess
 } from "../utils/medias";
-import { openModal } from "../reducers/modals";
+import { connectAndRetry } from "./modals";
 &nbsp;
 // ------------------------------------------------------------------
 &nbsp;
@@ -931,21 +895,11 @@ export const createRoom = <span class="cstat-no" title="statement not covered" >
 		}
 	} = <span class="cstat-no" title="statement not covered" >getState();</span>
 <span class="cstat-no" title="statement not covered" >	if (!userId) {</span>
-<span class="cstat-no" title="statement not covered" >		console.debug("[Room] Not connected");</span>
 <span class="cstat-no" title="statement not covered" >		dispatch(displayError("users.not_connected"));</span>
 <span class="cstat-no" title="statement not covered" >		dispatch(</span>
-			openModal({
-				type: "CreateUser",
-				props: {
-					options: {
-						onSuccess: <span class="fstat-no" title="function not covered" >()</span> =&gt; {
-<span class="cstat-no" title="statement not covered" >							dispatch(</span>
-								createRoom(dbId, name, secret, type, options)
-							);
-						}
-					}
-				}
-			})
+			connectAndRetry(<span class="fstat-no" title="function not covered" >()</span> =&gt;
+<span class="cstat-no" title="statement not covered" >				dispatch(createRoom(dbId, name, secret, type, options))</span>
+			)
 		);
 <span class="cstat-no" title="statement not covered" >		return;</span>
 	}
@@ -988,19 +942,11 @@ export const enterRoom = <span class="cstat-no" title="statement not covered" ><
 <span class="cstat-no" title="statement not covered" >		return;</span>
 	}
 <span class="cstat-no" title="statement not covered" >	if (!userId) {</span>
-<span class="cstat-no" title="statement not covered" >		console.debug("[Room] Not connected");</span>
 <span class="cstat-no" title="statement not covered" >		dispatch(displayError("users.not_connected"));</span>
 <span class="cstat-no" title="statement not covered" >		dispatch(</span>
-			openModal({
-				type: "CreateUser",
-				props: {
-					options: {
-						onSuccess: <span class="fstat-no" title="function not covered" >()</span> =&gt; {
-<span class="cstat-no" title="statement not covered" >							dispatch(enterRoom(dbId, roomId, secret, options));</span>
-						}
-					}
-				}
-			})
+			connectAndRetry(<span class="fstat-no" title="function not covered" >()</span> =&gt;
+<span class="cstat-no" title="statement not covered" >				dispatch(enterRoom(dbId, roomId, secret, options))</span>
+			)
 		);
 <span class="cstat-no" title="statement not covered" >		return;</span>
 	}
@@ -1260,7 +1206,7 @@ const _scheduleTimer = <span class="cstat-no" title="statement not covered" ><sp
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Apr 21 2020 21:03:08 GMT+0000 (Coordinated Universal Time)
+                at Tue Apr 21 2020 22:45:00 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../prettify.js"></script>

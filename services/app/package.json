@@ -7,7 +7,7 @@
 		"start": "PORT=8080 CHOKIDAR_USEPOLLING=true ./node_modules/.bin/react-scripts start",
 		"serve": "./node_modules/.bin/serve -s build -p 8080",
 		"test": "./node_modules/.bin/react-scripts test --verbose=true --forceExit=true --runInBand=true --detectOpenHandles=true --ci=true --watchAll=false",
-		"test:coverage": "./node_modules/.bin/react-scripts test --verbose=true --forceExit=true --runInBand=true --detectOpenHandles=true --ci=true --watchAll=false --coverage=true",
+		"test:coverage": "./node_modules/.bin/react-scripts test --verbose=true --forceExit=true --runInBand=true --detectOpenHandles=true --ci=true --watchAll=false --coverage=true && make-coverage-badge",
 		"test:update": "./node_modules/.bin/react-scripts test --verbose=true --forceExit=true --runInBand=true --detectOpenHandles=true --ci=true --watchAll=false --updateSnapshot=true",
 		"test:watch": "./node_modules/.bin/react-scripts test --verbose=true --forceExit=true --runInBand=true --detectOpenHandles=true --ci=true --watchAll=true",
 		"lint": "./node_modules/.bin/eslint --ext js,ts,tsx ./src"
@@ -59,9 +59,17 @@
 		"@types/react-router-dom": "^5.1.0",
 		"@types/react-transition-group": "^2.9.0",
 		"@types/uuid": "^7.0.2",
+		"make-coverage-badge": "^1.2.0",
 		"node-sass": "^4.13.1",
 		"redux-devtools-extension": "^2.13.8",
 		"ts-jest": "^25.3.1",
 		"typescript": "^3.8.3"
+	},
+	"jest": {
+		"coverageReporters": [
+			"json-summary",
+			"text",
+			"lcov"
+		]
 	}
 }
