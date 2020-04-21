@@ -12,14 +12,16 @@ export const SeaBattleOpponentControls = ({
 	onSelectPreviousOpponent,
 	onSelectNextOpponent,
 	onSelectWeaponType,
-	weapons
+	weapons,
+	weaponType
 }: {
 	opponentsCount: number;
 	opponentIndex: number;
 	onSelectPreviousOpponent?: () => void;
 	onSelectNextOpponent?: () => void;
-	onSelectWeaponType: (type?: SeaBattleWeaponType) => void;
+	onSelectWeaponType: (type: SeaBattleWeaponType) => void;
 	weapons: { [type: string]: number };
+	weaponType: SeaBattleWeaponType;
 }) => (
 	<div className="SeaBattleOpponentControls SeaBattleControls">
 		<OpponentSelection
@@ -28,6 +30,10 @@ export const SeaBattleOpponentControls = ({
 			onSelectPreviousOpponent={onSelectPreviousOpponent}
 			onSelectNextOpponent={onSelectNextOpponent}
 		/>
-		<WeaponSelection onSelect={onSelectWeaponType} weapons={weapons} />
+		<WeaponSelection
+			onSelect={onSelectWeaponType}
+			weapons={weapons}
+			weaponType={weaponType}
+		/>
 	</div>
 );

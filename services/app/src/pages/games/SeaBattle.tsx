@@ -37,9 +37,9 @@ export const SeaBattle = () => {
 	const [previousMapIndex, setPreviousMapIndex] = useState<number>(-1);
 	const [boatIndex, setSelectedBoatIndex] = useState<number>(-1);
 	const [opponentIndex, setSelectedOpponent] = useState<number>(0);
-	const [weaponType, setSelectedWeaponType] = useState<
-		SeaBattleWeaponType | undefined
-	>();
+	const [weaponType, setSelectedWeaponType] = useState<SeaBattleWeaponType>(
+		"bullet1"
+	);
 
 	const userId = useSelector<RootState, string>(
 		state => state.user.access.userId
@@ -243,6 +243,7 @@ export const SeaBattle = () => {
 					}
 					onSelectWeaponType={setSelectedWeaponType}
 					weapons={playerMap?.weapons || {}}
+					weaponType={weaponType}
 				/>
 				<Map
 					map={

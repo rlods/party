@@ -75,3 +75,7 @@ prod:
 	rm -Rf $(shell pwd)/docs/*.* $(shell pwd)/docs/static/css/*.* $(shell pwd)/docs/static/js/*.*; \
 	$(compose_prod) build; \
 	$(compose_prod_run) -v $(shell pwd)/docs:/output app sh -c 'cp -R build/* /output'
+prod-app:
+	rm -Rf $(shell pwd)/docs/*.* $(shell pwd)/docs/static/css/*.* $(shell pwd)/docs/static/js/*.*; \
+	$(compose_prod) build app; \
+	$(compose_prod_run) -v $(shell pwd)/docs:/output app sh -c 'cp -R build/* /output'

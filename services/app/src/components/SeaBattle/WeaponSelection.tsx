@@ -15,16 +15,20 @@ import {
 
 export const WeaponSelection = ({
 	onSelect,
-	weapons
+	weapons,
+	weaponType
 }: {
-	onSelect: (type?: SeaBattleWeaponType) => void;
+	onSelect: (type: SeaBattleWeaponType) => void;
 	weapons: { [type: string]: number };
+	weaponType: SeaBattleWeaponType;
 }) => {
 	const svg = useRef<SVGSVGElement>(null);
 
-	const [selectedPos, setSelectedPos] = useState<number>(-1);
+	const [selectedPos, setSelectedPos] = useState<number>(
+		SeaBattleWeaponTypes.indexOf(weaponType)
+	);
 	const [selectedVis, setSelectedVis] = useState<SeaBattleAssetVisibility>(
-		"hidden"
+		selectedPos >= 0 ? "visible" : "hidden"
 	);
 
 	const [selectionPos, setSelectionPos] = useState<number>(-1);
@@ -35,12 +39,7 @@ export const WeaponSelection = ({
 	const onClick = useCallback(
 		(position: SeaBattlePosition) => {
 			const { x } = getSVGNormalizedPosition(svg.current!, position);
-			if (selectedPos === x) {
-				// Reset
-				setSelectedPos(-1);
-				setSelectedVis("hidden");
-				onSelect(void 0);
-			} else {
+			if (selectedPos !== x) {
 				// Set
 				setSelectedPos(x);
 				setSelectedVis("visible");
