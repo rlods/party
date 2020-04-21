@@ -3,6 +3,7 @@ import { createAction } from "../actions";
 import { ConnectUserModalProps } from "../components/Users/ConnectUserModal";
 import { CreateUserModalProps } from "../components/Users/CreateUserModal";
 import { ConfirmModalProps } from "../components/Modals/ConfirmModal";
+import { UnlockRoomModalProps } from "../components/Room/UnlockRoomModal";
 
 // ------------------------------------------------------------------
 
@@ -19,7 +20,7 @@ export type ModalPrereq =
 	| ModalPrereqT<"Help", null>
 	| ModalPrereqT<"JoinRoom", null>
 	| ModalPrereqT<"Search", null>
-	| ModalPrereqT<"UnlockRoom", null>;
+	| ModalPrereqT<"UnlockRoom", UnlockRoomModalProps>;
 
 // ------------------------------------------------------------------
 

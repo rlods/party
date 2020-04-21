@@ -5,14 +5,16 @@ import { useTranslation } from "react-i18next";
 import { FormModal } from "../Modals/FormModal";
 import { IconButton } from "../Common/IconButton";
 import { CancelButton } from "../Common/CancelButton";
-import { Dispatch } from "../../actions";
+import { Dispatch, ActionOptions } from "../../actions";
 import { popModal } from "../../reducers/modals";
 import { unlockRoom } from "../../actions/room";
 import { SECRET_FIELD_SIZE, InputField } from "../Modals/ModalFields";
 
 // ------------------------------------------------------------------
 
-export const UnlockRoomModal = () => {
+export type UnlockRoomModalProps = { options?: ActionOptions };
+
+export const UnlockRoomModal = ({ options }: UnlockRoomModalProps) => {
 	const dispatch = useDispatch<Dispatch>();
 	const [secret, setSecret] = useState("");
 	const secretRef = useRef<HTMLInputElement>(null);
@@ -30,11 +32,14 @@ export const UnlockRoomModal = () => {
 		dispatch(
 			unlockRoom(secret, {
 				onSuccess: () => {
+					if (options && options.onSuccess) {
+						options.onSuccess();
+					}
 					dispatch(popModal());
 				}
 			})
 		);
-	}, [dispatch, secret]);
+	}, [dispatch, secret, options]);
 
 	return (
 		<FormModal

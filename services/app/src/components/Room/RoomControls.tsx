@@ -48,7 +48,7 @@ export const RoomControls = ({
 	}, [dispatch, t]);
 
 	const onUnlock = useCallback(() => {
-		dispatch(openModal({ type: "UnlockRoom", props: null }));
+		dispatch(openModal({ type: "UnlockRoom", props: {} }));
 	}, [dispatch]);
 
 	const onSearch = useCallback(

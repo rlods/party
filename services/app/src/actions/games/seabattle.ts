@@ -38,6 +38,18 @@ export const joinBattle = (): AsyncAction => async (dispatch, getState) => {
 	} = getState();
 	if (!room || room.isLocked() || !info) {
 		dispatch(displayError("rooms.errors.locked"));
+		dispatch(
+			openModal({
+				type: "UnlockRoom",
+				props: {
+					options: {
+						onSuccess: () => {
+							dispatch(joinBattle());
+						}
+					}
+				}
+			})
+		);
 		return;
 	}
 	if (!userId) {
@@ -95,6 +107,18 @@ export const moveBoat = ({
 	} = getState();
 	if (!room || room.isLocked() || !info) {
 		dispatch(displayError("rooms.errors.locked"));
+		dispatch(
+			openModal({
+				type: "UnlockRoom",
+				props: {
+					options: {
+						onSuccess: () => {
+							dispatch(moveBoat({ boatIndex, movement }));
+						}
+					}
+				}
+			})
+		);
 		return;
 	}
 	if (!userId) {
@@ -239,6 +263,24 @@ export const attackOpponent = ({
 	} = getState();
 	if (!room || room.isLocked() || !info) {
 		dispatch(displayError("rooms.errors.locked"));
+		dispatch(
+			openModal({
+				type: "UnlockRoom",
+				props: {
+					options: {
+						onSuccess: () => {
+							dispatch(
+								attackOpponent({
+									opponentIndex,
+									position,
+									weaponType
+								})
+							);
+						}
+					}
+				}
+			})
+		);
 		return;
 	}
 	if (!userId) {

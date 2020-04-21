@@ -39,7 +39,7 @@ export const getModal = (prereq?: ModalPrereq) => {
 			case "Search":
 				return <SearchModal />;
 			case "UnlockRoom":
-				return <UnlockRoomModal />;
+				return <UnlockRoomModal {...prereq.props} />;
 		}
 	}
 	return null;
