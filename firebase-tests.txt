@@ -1,4 +1,0 @@
-curl -X PUT -d '{"info":{"name":"toto","queue":{},"queue_position":0,"timestamp":1},"secret":"AAAAAAAB"}' https://test-rl-7ffe8.firebaseio.com/rooms/53372339-9583-4D08-B696-22F30841FF52.json
-
-
-curl -X PUT -d '{"info":{"name":"toto","queue":{"0":{"id":"0","type":"deezer"}},"queue_position":0,"timestamp":2},"secret":"AAAAAAAB"}' https://test-rl-7ffe8.firebaseio.com/rooms/53372339-9583-4D08-B696-22F30841FF52.json
