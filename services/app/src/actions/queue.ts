@@ -5,6 +5,7 @@ import { MediaAccess, findContextFromTrackIndex } from "../utils/medias";
 import { extractErrorMessage } from "../utils/messages";
 import { createQueueMerging, createQueueRemoving } from "../utils/rooms";
 import { generateRandomPosition } from "../utils/player";
+import { openModal } from "../reducers/modals";
 
 // ------------------------------------------------------------------
 
@@ -14,6 +15,18 @@ export const clearQueue = (): AsyncAction => async (dispatch, getState) => {
 	} = getState();
 	if (!room || room.isLocked() || !info) {
 		dispatch(displayError("rooms.errors.locked"));
+		dispatch(
+			openModal({
+				type: "UnlockRoom",
+				props: {
+					options: {
+						onSuccess: () => {
+							dispatch(clearQueue());
+						}
+					}
+				}
+			})
+		);
 		return;
 	}
 	try {
@@ -41,6 +54,18 @@ export const appendToQueue = (newMedias: MediaAccess[]): AsyncAction => async (
 	} = getState();
 	if (!room || room.isLocked() || !info) {
 		dispatch(displayError("rooms.errors.locked"));
+		dispatch(
+			openModal({
+				type: "UnlockRoom",
+				props: {
+					options: {
+						onSuccess: () => {
+							dispatch(appendToQueue(newMedias));
+						}
+					}
+				}
+			})
+		);
 		return;
 	}
 	if (newMedias.length === 0) {
@@ -73,6 +98,18 @@ export const removeFromQueue = (
 	} = getState();
 	if (!room || room.isLocked() || !info) {
 		dispatch(displayError("rooms.errors.locked"));
+		dispatch(
+			openModal({
+				type: "UnlockRoom",
+				props: {
+					options: {
+						onSuccess: () => {
+							dispatch(removeFromQueue(removedTrackIndex));
+						}
+					}
+				}
+			})
+		);
 		return;
 	}
 	const {
@@ -144,6 +181,18 @@ export const setQueuePosition = (newTrackIndex: number): AsyncAction => async (
 	} = getState();
 	if (!room || room.isLocked() || !info) {
 		dispatch(displayError("rooms.errors.locked"));
+		dispatch(
+			openModal({
+				type: "UnlockRoom",
+				props: {
+					options: {
+						onSuccess: () => {
+							dispatch(setQueuePosition(newTrackIndex));
+						}
+					}
+				}
+			})
+		);
 		return;
 	}
 	const oldTrackIndex = info.queue_position;
