@@ -1,5 +1,5 @@
 import { AsyncAction } from "..";
-import { displayError, displaySuccess, displayInfo } from "../messages";
+import { displayError, displaySuccess } from "../messages";
 import { extractErrorMessage } from "../../utils/messages";
 import {
 	SeaBattleMovementType,
@@ -24,8 +24,8 @@ import {
 	generateGrid,
 	getGridCell
 } from "../../utils/games/seabattle/collision";
-import { openModal } from "../../reducers/modals";
 import { generateFleet } from "../../utils/games/seabattle/generator";
+import { unlockAndRetry, connectAndRetry } from "../modals";
 
 // ------------------------------------------------------------------
 
@@ -38,35 +38,12 @@ export const joinBattle = (): AsyncAction => async (dispatch, getState) => {
 	} = getState();
 	if (!room || room.isLocked() || !info) {
 		dispatch(displayError("rooms.errors.locked"));
-		dispatch(
-			openModal({
-				type: "UnlockRoom",
-				props: {
-					options: {
-						onSuccess: () => {
-							dispatch(joinBattle());
-						}
-					}
-				}
-			})
-		);
+		dispatch(unlockAndRetry(() => dispatch(joinBattle())));
 		return;
 	}
 	if (!userId) {
-		console.debug("[SeaBattle] Not connected");
 		dispatch(displayError("users.not_connected"));
-		dispatch(
-			openModal({
-				type: "CreateUser",
-				props: {
-					options: {
-						onSuccess: () => {
-							dispatch(joinBattle());
-						}
-					}
-				}
-			})
-		);
+		dispatch(connectAndRetry(() => dispatch(joinBattle())));
 		return;
 	}
 	try {
@@ -108,33 +85,14 @@ export const moveBoat = ({
 	if (!room || room.isLocked() || !info) {
 		dispatch(displayError("rooms.errors.locked"));
 		dispatch(
-			openModal({
-				type: "UnlockRoom",
-				props: {
-					options: {
-						onSuccess: () => {
-							dispatch(moveBoat({ boatIndex, movement }));
-						}
-					}
-				}
-			})
+			unlockAndRetry(() => dispatch(moveBoat({ boatIndex, movement })))
 		);
 		return;
 	}
 	if (!userId) {
-		console.debug("[SeaBattle] Not connected");
 		dispatch(displayError("users.not_connected"));
 		dispatch(
-			openModal({
-				type: "CreateUser",
-				props: {
-					options: {
-						onSuccess: () => {
-							dispatch(moveBoat({ boatIndex, movement }));
-						}
-					}
-				}
-			})
+			connectAndRetry(() => dispatch(moveBoat({ boatIndex, movement })))
 		);
 		return;
 	}
@@ -264,51 +222,35 @@ export const attackOpponent = ({
 	if (!room || room.isLocked() || !info) {
 		dispatch(displayError("rooms.errors.locked"));
 		dispatch(
-			openModal({
-				type: "UnlockRoom",
-				props: {
-					options: {
-						onSuccess: () => {
-							dispatch(
-								attackOpponent({
-									opponentIndex,
-									position,
-									weaponType
-								})
-							);
-						}
-					}
-				}
-			})
+			unlockAndRetry(() =>
+				dispatch(
+					attackOpponent({
+						opponentIndex,
+						position,
+						weaponType
+					})
+				)
+			)
 		);
 		return;
 	}
 	if (!userId) {
-		console.debug("[SeaBattle] Not connected");
 		dispatch(displayError("users.not_connected"));
 		dispatch(
-			openModal({
-				type: "CreateUser",
-				props: {
-					options: {
-						onSuccess: () => {
-							dispatch(
-								attackOpponent({
-									opponentIndex,
-									position,
-									weaponType
-								})
-							);
-						}
-					}
-				}
-			})
+			connectAndRetry(() =>
+				dispatch(
+					attackOpponent({
+						opponentIndex,
+						position,
+						weaponType
+					})
+				)
+			)
 		);
 		return;
 	}
 	try {
 		const battle = decodeBattle(info.extra);
-
 		const playerMap = battle.maps.find(other => other.userId === userId);
 		if (!playerMap) {
 			console.debug("[SeaBattle] Cannot find map for current user");
@@ -319,9 +261,8 @@ export const attackOpponent = ({
 			return;
 		}
 
-		const weaponCount = playerMap.weapons[weaponType];
-		if (weaponCount <= 0) {
-			dispatch(displayInfo("games.seabattle.weapon_not_available"));
+		if (playerMap.weapons[weaponType] <= 0) {
+			dispatch(displayError("games.seabattle.weapon_not_available"));
 			return;
 		}
 

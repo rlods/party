@@ -2,7 +2,7 @@ import { AsyncAction } from ".";
 import { lockRoom } from "./room";
 import { displayError } from "./messages";
 import { extractErrorMessage } from "../utils/messages";
-import { openModal } from "../reducers/modals";
+import { unlockAndRetry } from "./modals";
 
 // ------------------------------------------------------------------
 
@@ -12,18 +12,7 @@ export const startPlayer = (): AsyncAction => async (dispatch, getState) => {
 	} = getState();
 	if (!room || room.isLocked() || !info) {
 		dispatch(displayError("rooms.errors.locked"));
-		dispatch(
-			openModal({
-				type: "UnlockRoom",
-				props: {
-					options: {
-						onSuccess: () => {
-							dispatch(startPlayer());
-						}
-					}
-				}
-			})
-		);
+		dispatch(unlockAndRetry(() => dispatch(startPlayer())));
 		return;
 	}
 	if (info.playing) {
@@ -50,18 +39,7 @@ export const stopPlayer = (): AsyncAction => async (dispatch, getState) => {
 	} = getState();
 	if (!room || room.isLocked() || !info) {
 		dispatch(displayError("rooms.errors.locked"));
-		dispatch(
-			openModal({
-				type: "UnlockRoom",
-				props: {
-					options: {
-						onSuccess: () => {
-							dispatch(stopPlayer());
-						}
-					}
-				}
-			})
-		);
+		dispatch(unlockAndRetry(() => dispatch(stopPlayer())));
 		return;
 	}
 	if (!info.playing) {

@@ -5,7 +5,7 @@ import { MediaAccess, findContextFromTrackIndex } from "../utils/medias";
 import { extractErrorMessage } from "../utils/messages";
 import { createQueueMerging, createQueueRemoving } from "../utils/rooms";
 import { generateRandomPosition } from "../utils/player";
-import { openModal } from "../reducers/modals";
+import { unlockAndRetry } from "./modals";
 
 // ------------------------------------------------------------------
 
@@ -15,18 +15,7 @@ export const clearQueue = (): AsyncAction => async (dispatch, getState) => {
 	} = getState();
 	if (!room || room.isLocked() || !info) {
 		dispatch(displayError("rooms.errors.locked"));
-		dispatch(
-			openModal({
-				type: "UnlockRoom",
-				props: {
-					options: {
-						onSuccess: () => {
-							dispatch(clearQueue());
-						}
-					}
-				}
-			})
-		);
+		dispatch(unlockAndRetry(() => dispatch(clearQueue())));
 		return;
 	}
 	try {
@@ -54,18 +43,7 @@ export const appendToQueue = (newMedias: MediaAccess[]): AsyncAction => async (
 	} = getState();
 	if (!room || room.isLocked() || !info) {
 		dispatch(displayError("rooms.errors.locked"));
-		dispatch(
-			openModal({
-				type: "UnlockRoom",
-				props: {
-					options: {
-						onSuccess: () => {
-							dispatch(appendToQueue(newMedias));
-						}
-					}
-				}
-			})
-		);
+		dispatch(unlockAndRetry(() => dispatch(appendToQueue(newMedias))));
 		return;
 	}
 	if (newMedias.length === 0) {
@@ -99,16 +77,7 @@ export const removeFromQueue = (
 	if (!room || room.isLocked() || !info) {
 		dispatch(displayError("rooms.errors.locked"));
 		dispatch(
-			openModal({
-				type: "UnlockRoom",
-				props: {
-					options: {
-						onSuccess: () => {
-							dispatch(removeFromQueue(removedTrackIndex));
-						}
-					}
-				}
-			})
+			unlockAndRetry(() => dispatch(removeFromQueue(removedTrackIndex)))
 		);
 		return;
 	}
@@ -182,16 +151,7 @@ export const setQueuePosition = (newTrackIndex: number): AsyncAction => async (
 	if (!room || room.isLocked() || !info) {
 		dispatch(displayError("rooms.errors.locked"));
 		dispatch(
-			openModal({
-				type: "UnlockRoom",
-				props: {
-					options: {
-						onSuccess: () => {
-							dispatch(setQueuePosition(newTrackIndex));
-						}
-					}
-				}
-			})
+			unlockAndRetry(() => dispatch(setQueuePosition(newTrackIndex)))
 		);
 		return;
 	}

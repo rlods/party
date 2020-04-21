@@ -19,7 +19,7 @@ import {
 	extractTracks,
 	ContextualizedTrackAccess
 } from "../utils/medias";
-import { openModal } from "../reducers/modals";
+import { connectAndRetry } from "./modals";
 
 // ------------------------------------------------------------------
 
@@ -75,21 +75,11 @@ export const createRoom = (
 		}
 	} = getState();
 	if (!userId) {
-		console.debug("[Room] Not connected");
 		dispatch(displayError("users.not_connected"));
 		dispatch(
-			openModal({
-				type: "CreateUser",
-				props: {
-					options: {
-						onSuccess: () => {
-							dispatch(
-								createRoom(dbId, name, secret, type, options)
-							);
-						}
-					}
-				}
-			})
+			connectAndRetry(() =>
+				dispatch(createRoom(dbId, name, secret, type, options))
+			)
 		);
 		return;
 	}
@@ -132,19 +122,11 @@ export const enterRoom = (
 		return;
 	}
 	if (!userId) {
-		console.debug("[Room] Not connected");
 		dispatch(displayError("users.not_connected"));
 		dispatch(
-			openModal({
-				type: "CreateUser",
-				props: {
-					options: {
-						onSuccess: () => {
-							dispatch(enterRoom(dbId, roomId, secret, options));
-						}
-					}
-				}
-			})
+			connectAndRetry(() =>
+				dispatch(enterRoom(dbId, roomId, secret, options))
+			)
 		);
 		return;
 	}
