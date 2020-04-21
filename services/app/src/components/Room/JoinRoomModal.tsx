@@ -5,17 +5,18 @@ import { useTranslation } from "react-i18next";
 import { FormModal } from "../Modals/FormModal";
 import { IconButton } from "../Common/IconButton";
 import { CancelButton } from "../Common/CancelButton";
-import { InputField } from "../Modals/ModalFields";
+import { InputField, SelectField } from "../Modals/ModalFields";
 import { Dispatch } from "../../actions";
 import { popModal } from "../../reducers/modals";
 import { displayError } from "../../actions/messages";
 import { enterRoom } from "../../actions/room";
-import { DEFAULT_ROOM_DATABASE_ID } from "../../config/firebase";
+import config, { selectRoomDatabaseId } from "../../config/firebase";
 
 // ------------------------------------------------------------------
 
 export const JoinRoomModal = () => {
 	const dispatch = useDispatch<Dispatch>();
+	const [serverId, setServerId] = useState(selectRoomDatabaseId());
 	const [roomId, setRoomId] = useState("");
 	const roomIdRef = useRef<HTMLInputElement>(null);
 	const { t } = useTranslation();
@@ -29,18 +30,22 @@ export const JoinRoomModal = () => {
 	const onClose = useCallback(() => dispatch(popModal()), [dispatch]);
 
 	const onJoin = useCallback(() => {
+		if (serverId.trim().length === 0) {
+			dispatch(displayError("rooms.id_is_invalid"));
+			return;
+		}
 		if (roomId.trim().length === 0) {
 			dispatch(displayError("rooms.id_is_invalid"));
 			return;
 		}
 		dispatch(
-			enterRoom(DEFAULT_ROOM_DATABASE_ID, roomId, "", {
+			enterRoom(serverId, roomId, "", {
 				onSuccess: () => {
 					dispatch(popModal());
 				}
 			})
 		);
-	}, [dispatch, roomId]);
+	}, [dispatch, roomId, serverId]);
 
 	return (
 		<FormModal
@@ -60,6 +65,19 @@ export const JoinRoomModal = () => {
 					<CancelButton onClick={onClose} />
 				</>
 			)}>
+			<SelectField
+				id="modal-serverId"
+				label={t("rooms.server_id")}
+				placeholder={t("rooms.server_id_placeholder")}
+				options={config.dbIDs
+					.sort((s1, s2) => s1.localeCompare(s2))
+					.map(serverId => ({
+						id: serverId,
+						label: serverId
+					}))}
+				value={serverId}
+				onChange={e => setServerId(e.target.value)}
+			/>
 			<InputField
 				id="modal-roomId"
 				label={t("rooms.id")}

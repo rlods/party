@@ -3,8 +3,10 @@ const config = {
 	dbPrefix: process.env.REACT_APP_DATABASE_PREFIX || ""
 };
 
-export const DEFAULT_ROOM_DATABASE_ID = config.dbIDs[0];
-export const DEFAULT_USER_DATABASE_ID = config.dbIDs[0];
+export const selectRoomDatabaseId = () =>
+	config.dbIDs[Math.floor(Math.random() * config.dbIDs.length)];
+
+export const selectUserDatabaseId = () => config.dbIDs[0];
 
 // console.debug('[Firebase] Config', config);
 

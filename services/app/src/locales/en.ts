@@ -92,6 +92,8 @@ export default {
 		exit: "Exit Room",
 		id: "Room ID",
 		id_placeholder: "Room ID...",
+		server_id: "Server ID",
+		server_id_placeholder: "Server ID...",
 		key_placeholder: "Room Key...",
 		type_placeholder: "Room Type...",
 		key: "Room Key",

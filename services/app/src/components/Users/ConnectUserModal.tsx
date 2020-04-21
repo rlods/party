@@ -10,7 +10,7 @@ import { displayError } from "../../actions/messages";
 import { connectUser } from "../../actions/user";
 import { Dispatch, ActionOptions } from "../../actions";
 import { SECRET_FIELD_SIZE, InputField } from "../Modals/ModalFields";
-import { DEFAULT_USER_DATABASE_ID } from "../../config/firebase";
+import { selectUserDatabaseId } from "../../config/firebase";
 
 // ------------------------------------------------------------------
 
@@ -41,7 +41,7 @@ export const ConnectUserModal = ({ options }: ConnectUserModalProps) => {
 			return;
 		}
 		dispatch(
-			connectUser(DEFAULT_USER_DATABASE_ID, userId, secret, {
+			connectUser(selectUserDatabaseId(), userId, secret, {
 				onSuccess: () => {
 					if (options && options.onSuccess) {
 						options.onSuccess();

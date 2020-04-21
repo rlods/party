@@ -15,7 +15,7 @@ import { popModal } from "../../reducers/modals";
 import { displayError } from "../../actions/messages";
 import { createUser } from "../../actions/user";
 import { Dispatch, ActionOptions } from "../../actions";
-import { DEFAULT_USER_DATABASE_ID } from "../../config/firebase";
+import { selectUserDatabaseId } from "../../config/firebase";
 
 // ------------------------------------------------------------------
 
@@ -51,7 +51,7 @@ export const CreateUserModal = ({ options }: CreateUserModalProps) => {
 			return;
 		}
 		dispatch(
-			createUser(DEFAULT_USER_DATABASE_ID, name, secret, {
+			createUser(selectUserDatabaseId(), name, secret, {
 				onSuccess: () => {
 					if (options && options.onSuccess) {
 						options.onSuccess();

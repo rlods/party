@@ -95,7 +95,7 @@ export const createRoom = (
 	}
 	try {
 		const roomId = v4();
-		console.debug("[Room] Creating...", { roomId, secret });
+		console.debug("[Room] Creating...", { dbId, roomId, secret });
 
 		await FirebaseRoom({ dbId, roomId, secret }).update({
 			extra: generateRoomExtra(userId, type),
@@ -150,7 +150,7 @@ export const enterRoom = (
 	}
 	dispatch(exitRoom());
 	try {
-		console.debug("[Room] Entering...", { roomId, secret });
+		console.debug("[Room] Entering...", { dbId, roomId, secret });
 		const newRoom = FirebaseRoom({ dbId, roomId, secret });
 		dispatch(
 			setRoom({

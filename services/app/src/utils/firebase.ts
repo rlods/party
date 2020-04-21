@@ -25,7 +25,7 @@ const createOrGetApp = (dbId: string) => {
 	if (!res) {
 		console.debug("[Firebase] Creating app", { dbId });
 		const databaseURL = `https://${firebaseConfig.dbPrefix}${dbId}.firebaseio.com`;
-		const app = firebase.initializeApp({ databaseURL });
+		const app = firebase.initializeApp({ databaseURL }, dbId);
 		const database = firebase.database(app);
 		APPS[dbId] = res = {
 			app,

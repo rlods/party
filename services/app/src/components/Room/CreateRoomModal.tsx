@@ -17,7 +17,7 @@ import { popModal } from "../../reducers/modals";
 import { createRoom } from "../../actions/room";
 import { displayError } from "../../actions/messages";
 import { RoomType, RoomTypes, DEFAULT_ROOM_TYPE } from "../../utils/rooms";
-import { DEFAULT_ROOM_DATABASE_ID } from "../../config/firebase";
+import { selectRoomDatabaseId } from "../../config/firebase";
 
 // ------------------------------------------------------------------
 
@@ -52,7 +52,7 @@ export const CreateRoomModal = () => {
 			return;
 		}
 		dispatch(
-			createRoom(DEFAULT_ROOM_DATABASE_ID, name, secret, type, {
+			createRoom(selectRoomDatabaseId(), name, secret, type, {
 				onSuccess: () => {
 					dispatch(popModal());
 				}

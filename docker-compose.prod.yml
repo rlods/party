@@ -4,6 +4,6 @@ services:
   app:
     build:
       args:
-        DATABASE_IDS: "7ffe8"
-        DATABASE_PREFIX: "test-rl-"
+        DATABASE_IDS: "azjk|odsk|zjkd"
+        DATABASE_PREFIX: "rlods-party-"
         NODE_ENV: production
