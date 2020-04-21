@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect, useCallback } from "react";
+import React, { FC, useRef, useState, useEffect, useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
 //
@@ -14,7 +14,7 @@ import { SECRET_FIELD_SIZE, InputField } from "../Modals/ModalFields";
 
 export type UnlockRoomModalProps = { options?: ActionOptions };
 
-export const UnlockRoomModal = ({ options }: UnlockRoomModalProps) => {
+export const UnlockRoomModal: FC<UnlockRoomModalProps> = ({ options }) => {
 	const dispatch = useDispatch<Dispatch>();
 	const [secret, setSecret] = useState("");
 	const secretRef = useRef<HTMLInputElement>(null);

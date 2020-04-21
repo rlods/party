@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { FC, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 //
@@ -17,13 +17,10 @@ import "./RoomControls.scss";
 
 // ------------------------------------------------------------------
 
-export const RoomControls = ({
-	extended,
-	propagate
-}: {
+export const RoomControls: FC<{
 	extended: boolean;
 	propagate: boolean;
-}) => {
+}> = ({ extended, propagate }) => {
 	const dispatch = useDispatch<Dispatch>();
 	const { t } = useTranslation();
 	const tracksCount = useSelector<RootState, number>(

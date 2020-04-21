@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { FC, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation, useParams } from "react-router-dom";
 import classNames from "classnames";
@@ -18,7 +18,7 @@ import { Messages } from "../components/Common/Messages";
 
 // ------------------------------------------------------------------
 
-export const Room = () => {
+export const Room: FC = () => {
 	const dispatch = useDispatch<Dispatch>();
 	const { fg, bg } = useSelector<RootState, CombinedColor>(
 		state => state.room.color

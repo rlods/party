@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FC } from "react";
 import {
 	SeaBattleAssetType,
 	SeaBattleCellData,
@@ -8,15 +8,7 @@ import {
 
 // ------------------------------------------------------------------
 
-export const Asset = ({
-	className,
-	onClick,
-	position,
-	stopPropagation = false,
-	transform,
-	type,
-	visibility
-}: {
+export const Asset: FC<{
 	className?: string;
 	onClick?: () => void;
 	position: SeaBattlePosition;
@@ -24,6 +16,14 @@ export const Asset = ({
 	transform?: string;
 	type: SeaBattleAssetType;
 	visibility?: string;
+}> = ({
+	className,
+	onClick,
+	position,
+	stopPropagation = false,
+	transform,
+	type,
+	visibility
 }) => (
 	<use
 		onClick={e => {
@@ -44,7 +44,7 @@ export const Asset = ({
 
 // ------------------------------------------------------------------
 
-export const Cell = ({ type, visibility, ...asset }: SeaBattleCellData) => (
+export const Cell: FC<SeaBattleCellData> = ({ type, visibility, ...asset }) => (
 	<Asset
 		className="SeaBattleCell"
 		type={type}

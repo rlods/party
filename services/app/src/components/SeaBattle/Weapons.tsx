@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FC } from "react";
 //
 import { Asset } from "./Assets";
 import {
@@ -9,7 +9,7 @@ import {
 
 // ------------------------------------------------------------------
 
-export const Weapon = ({ type, ...asset }: SeaBattleWeaponData) => (
+export const Weapon: FC<SeaBattleWeaponData> = ({ type, ...asset }) => (
 	<Asset
 		className="SeaBattleWeapon"
 		type={type}

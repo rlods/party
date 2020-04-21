@@ -1,21 +1,16 @@
-import React from "react";
+import React, { FC } from "react";
 //
 import { Boat } from "./Boats";
 import { SeaBattleBoatData } from "../../utils/games/seabattle";
 
 // ------------------------------------------------------------------
 
-export const Fleet = ({
-	fleet,
-	hideFleet,
-	selectedBoatIndex,
-	onSelectBoatIndex
-}: {
+export const Fleet: FC<{
 	fleet: SeaBattleBoatData[];
 	hideFleet: boolean;
 	selectedBoatIndex?: number;
 	onSelectBoatIndex?: (index: number) => void;
-}) => (
+}> = ({ fleet, hideFleet, selectedBoatIndex, onSelectBoatIndex }) => (
 	<>
 		{fleet.map((boat, index) => (
 			<Boat

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 //
 import { IconButton } from "../Common/IconButton";
@@ -10,20 +10,20 @@ import { SeaBattleMovementIconMappings } from "../../utils/games/seabattle/mappi
 
 // ------------------------------------------------------------------
 
-export const SeaBattlePlayerControls = ({
-	boat,
-	disabled = false,
-	onMoveBackward,
-	onMoveForward,
-	onRotateLeft,
-	onRotateRight
-}: {
+export const SeaBattlePlayerControls: FC<{
 	boat?: SeaBattleBoatData;
 	disabled?: boolean;
 	onMoveBackward: () => void;
 	onMoveForward: () => void;
 	onRotateLeft: () => void;
 	onRotateRight: () => void;
+}> = ({
+	boat,
+	disabled = false,
+	onMoveBackward,
+	onMoveForward,
+	onRotateLeft,
+	onRotateRight
 }) => {
 	const { t } = useTranslation();
 

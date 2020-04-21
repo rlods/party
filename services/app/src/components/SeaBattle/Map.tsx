@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from "react";
+import React, { FC, useCallback, useRef, useState } from "react";
 import { Cell } from "./Assets";
 import { Weapons } from "./Weapons";
 import { Hits } from "./Hits";
@@ -14,7 +14,13 @@ import {
 // ------------------------------------------------------------------
 
 // Order is important : Weapons under Boats under Hits
-export const Map = ({
+export const Map: FC<{
+	hideFleet: boolean;
+	onCellClick?: (position: SeaBattlePosition) => void;
+	map?: SeaBattleMapData;
+	selectedBoatIndex?: number;
+	onSelectBoatIndex?: (index: number) => void;
+}> = ({
 	hideFleet,
 	onCellClick,
 	map: { fleet, hits, opponentsWeapons } = {
@@ -27,12 +33,6 @@ export const Map = ({
 	},
 	selectedBoatIndex,
 	onSelectBoatIndex
-}: {
-	hideFleet: boolean;
-	onCellClick?: (position: SeaBattlePosition) => void;
-	map?: SeaBattleMapData;
-	selectedBoatIndex?: number;
-	onSelectBoatIndex?: (index: number) => void;
 }) => {
 	const svg = useRef<SVGSVGElement>(null);
 

@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { FC, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
@@ -17,15 +17,11 @@ import "./AudioPlayerControls.scss";
 
 // ------------------------------------------------------------------
 
-export const AudioPlayerControls = ({
-	className,
-	propagate,
-	size
-}: {
+export const AudioPlayerControls: FC<{
 	className?: string;
 	propagate: boolean;
 	size?: IconSize;
-}) => {
+}> = ({ className, propagate, size }) => {
 	const dispatch = useDispatch<Dispatch>();
 
 	const { t } = useTranslation();

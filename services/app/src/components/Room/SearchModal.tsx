@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect, useCallback } from "react";
+import React, { FC, useRef, useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 //
@@ -31,7 +31,7 @@ const VIEW_MORE_RESULTS_COUNT = 50;
 
 // ------------------------------------------------------------------
 
-export const SearchModal = () => {
+export const SearchModal: FC = () => {
 	const dispatch = useDispatch<Dispatch>();
 	const { t } = useTranslation();
 	const queryRef = useRef<HTMLInputElement>(null);

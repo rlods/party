@@ -1,9 +1,9 @@
-import React from "react";
+import React, { FC } from "react";
 import { Icon, IconSize } from "./Icon";
 
 // ------------------------------------------------------------------
 
-export const LoadingIcon = React.memo(({ size }: { size?: IconSize }) => (
+export const LoadingIcon: FC<{ size?: IconSize }> = React.memo(({ size }) => (
 	<Icon
 		className="rotating"
 		icon="circle-o-notch"

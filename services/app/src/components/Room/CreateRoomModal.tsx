@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import React, { FC, useState, useRef, useEffect, useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { v4 } from "uuid";
@@ -25,7 +25,7 @@ let ROOM_COUNTER = 1;
 
 // ------------------------------------------------------------------
 
-export const CreateRoomModal = () => {
+export const CreateRoomModal: FC = () => {
 	const dispatch = useDispatch<Dispatch>();
 	const [name, setName] = useState("");
 	const [secret, setSecret] = useState(v4());

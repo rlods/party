@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { FC, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 //
@@ -21,7 +21,7 @@ import "./Queue.scss";
 
 // ------------------------------------------------------------------
 
-export const Queue = () => {
+export const Queue: FC = () => {
 	const dispatch = useDispatch<Dispatch>();
 	const loaded = useSelector<RootState, boolean>(isRoomLoaded);
 	const locked = useSelector<RootState, boolean>(isRoomLocked);

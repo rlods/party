@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FC } from "react";
 import FontAwesome from "react-fontawesome";
 import classNames from "classnames";
 //
@@ -10,25 +10,17 @@ export type IconSize = "S" | "M" | "L" | "XL";
 
 // ------------------------------------------------------------------
 
-export const Icon = React.memo(
-	({
-		className,
-		color,
-		icon,
-		size = "M",
-		title
-	}: {
-		className?: string;
-		color?: string;
-		icon: string;
-		size?: IconSize;
-		title?: string;
-	}) => (
-		<FontAwesome
-			className={classNames("Icon", className, size)}
-			name={icon}
-			style={{ color }}
-			title={title}
-		/>
-	)
-);
+export const Icon: FC<{
+	className?: string;
+	color?: string;
+	icon: string;
+	size?: IconSize;
+	title?: string;
+}> = React.memo(({ className, color, icon, size = "M", title }) => (
+	<FontAwesome
+		className={classNames("Icon", className, size)}
+		name={icon}
+		style={{ color }}
+		title={title}
+	/>
+));

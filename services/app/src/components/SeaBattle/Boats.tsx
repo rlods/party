@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FC } from "react";
 import classNames from "classnames";
 //
 import { Asset } from "./Assets";
@@ -11,16 +11,16 @@ import {
 
 // ------------------------------------------------------------------
 
-export const Boat = ({
-	boat: { angle, hits, type, status = "ok", ...asset },
-	hideFleet,
-	onClick,
-	selected
-}: {
+export const Boat: FC<{
 	boat: SeaBattleBoatData;
 	hideFleet: boolean;
 	onClick?: () => void;
 	selected: boolean;
+}> = ({
+	boat: { angle, hits, type, status = "ok", ...asset },
+	hideFleet,
+	onClick,
+	selected
 }) => (
 	<g
 		className="SeaBattleBoatAnim"

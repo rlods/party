@@ -1,4 +1,4 @@
-import React, { FormEvent, ReactNode, useCallback } from "react";
+import React, { FC, FormEvent, ReactNode, useCallback } from "react";
 import classNames from "classnames";
 import { useTranslation } from "react-i18next";
 //
@@ -10,19 +10,13 @@ import { popModal, closeModal } from "../../reducers/modals";
 
 // ------------------------------------------------------------------
 
-export const Modal = ({
-	children,
-	className,
-	title,
-	renderFoot,
-	onSubmit
-}: {
+export const Modal: FC<{
 	children: ReactNode;
 	className?: string;
 	title: string;
 	renderFoot?: () => React.ReactNode;
 	onSubmit?: () => void;
-}) => {
+}> = ({ children, className, title, renderFoot, onSubmit }) => {
 	const dispatch = useDispatch<Dispatch>();
 	const { t } = useTranslation();
 	const has_prev_modal = useSelector<RootState, boolean>(

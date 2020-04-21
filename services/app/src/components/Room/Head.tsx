@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { FC, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
@@ -16,7 +16,7 @@ import "./Head.scss";
 
 // ------------------------------------------------------------------
 
-export const Head = () => {
+export const Head: FC = () => {
 	const dispatch = useDispatch<Dispatch>();
 	const { t } = useTranslation();
 	const history = useHistory();

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FC } from "react";
 import classNames from "classnames";
 //
 import { Icon, IconSize } from "./Icon";
@@ -8,7 +8,18 @@ import "./IconButton.scss";
 
 type ButtonType = "button" | "submit";
 
-export const IconButton = React.memo(
+export const IconButton: FC<{
+	className?: string;
+	color?: string;
+	disabled?: boolean;
+	displayTitle?: boolean;
+	icon: string;
+	kind?: "default" | "primary" | "danger" | "special";
+	onClick?: () => void;
+	size?: IconSize;
+	title: string;
+	type?: ButtonType;
+}> = React.memo(
 	({
 		className,
 		color,
@@ -20,17 +31,6 @@ export const IconButton = React.memo(
 		size,
 		title,
 		type = "button"
-	}: {
-		className?: string;
-		color?: string;
-		disabled?: boolean;
-		displayTitle?: boolean;
-		icon: string;
-		kind?: "default" | "primary" | "danger" | "special";
-		onClick?: () => void;
-		size?: IconSize;
-		title: string;
-		type?: ButtonType;
 	}) => (
 		<button
 			type={type}

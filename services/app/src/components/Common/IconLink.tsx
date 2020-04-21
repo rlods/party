@@ -1,28 +1,20 @@
-import React from "react";
+import React, { FC } from "react";
 import classNames from "classnames";
 //
 import { Icon, IconSize } from "../Common/Icon";
 
 // ------------------------------------------------------------------
 
-export const IconLink = React.memo(
-	({
-		blank = false,
-		className,
-		color,
-		icon,
-		size,
-		title,
-		url
-	}: {
-		blank?: boolean;
-		className?: string;
-		color?: string;
-		icon: string;
-		size?: IconSize;
-		title: string;
-		url: string;
-	}) => {
+export const IconLink: FC<{
+	blank?: boolean;
+	className?: string;
+	color?: string;
+	icon: string;
+	size?: IconSize;
+	title: string;
+	url: string;
+}> = React.memo(
+	({ blank = false, className, color, icon, size, title, url }) => {
 		return (
 			<a
 				className={classNames("IconLink", className)}

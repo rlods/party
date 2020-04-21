@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { FC, useState, useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
 //
@@ -31,7 +31,7 @@ import { clearMessages } from "../../reducers/messages";
 
 // ------------------------------------------------------------------
 
-export const SeaBattle = () => {
+export const SeaBattle: FC = () => {
 	const dispatch = useDispatch<Dispatch>();
 	const { t } = useTranslation();
 	const [previousMapIndex, setPreviousMapIndex] = useState<number>(-1);

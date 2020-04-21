@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { FC, forwardRef, useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
 //
@@ -14,7 +14,7 @@ export const ModalField = ({ children }: { children?: React.ReactNode }) => (
 
 // ------------------------------------------------------------------
 
-export const InputField = React.forwardRef(
+export const InputField = forwardRef(
 	(
 		props: { label: string } & React.DetailedHTMLProps<
 			React.InputHTMLAttributes<HTMLInputElement>,
@@ -35,19 +35,13 @@ export const InputField = React.forwardRef(
 
 export const SECRET_FIELD_SIZE = 36;
 
-export const SecretField = ({
-	id,
-	label,
-	onChange,
-	placeholder,
-	value
-}: {
+export const SecretField: FC<{
 	id: string;
 	label: string;
 	onChange: (value: string) => void;
 	placeholder: string;
 	value: string;
-}) => {
+}> = ({ id, label, onChange, placeholder, value }) => {
 	const dispatch = useDispatch();
 	const { t } = useTranslation();
 
@@ -95,7 +89,7 @@ export const SecretField = ({
 
 // ------------------------------------------------------------------
 
-export const SelectField = React.forwardRef(
+export const SelectField = forwardRef(
 	(
 		props: {
 			label: string;

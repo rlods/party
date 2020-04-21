@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { FC, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 //
@@ -10,7 +10,7 @@ import "./HelpModal.scss";
 
 // ------------------------------------------------------------------
 
-export const HelpModal = () => {
+export const HelpModal: FC = () => {
 	const { t } = useTranslation();
 	const dispatch = useDispatch<Dispatch>();
 

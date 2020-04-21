@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FC } from "react";
 import classNames from "classnames";
 //
 import { IconSize } from "./Icon";
@@ -6,7 +6,17 @@ import "./SwitchButton.scss";
 
 // ------------------------------------------------------------------
 
-export const SwitchButton = React.memo(
+export const SwitchButton: FC<{
+	className?: string;
+	checked: boolean;
+	disabled?: boolean;
+	displayLabel?: boolean;
+	onClick?: (checked: boolean) => void;
+	size?: IconSize;
+	labelOff: string;
+	labelOn: string;
+	title: string;
+}> = React.memo(
 	({
 		className,
 		checked,
@@ -17,16 +27,6 @@ export const SwitchButton = React.memo(
 		labelOff,
 		labelOn,
 		title
-	}: {
-		className?: string;
-		checked: boolean;
-		disabled?: boolean;
-		displayLabel?: boolean;
-		onClick?: (checked: boolean) => void;
-		size?: IconSize;
-		labelOff: string;
-		labelOn: string;
-		title: string;
 	}) => (
 		<button
 			type="button"

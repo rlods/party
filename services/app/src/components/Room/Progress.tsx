@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 //
 import { QUEUE_PLAYER } from "../../utils/player";
 import "./Progress.scss";
 
 // ------------------------------------------------------------------
 
-export const Progress = () => {
-	const [value, setValue] = useState(0);
+export const Progress: FC = () => {
+	const [value, setValue] = useState<number>(0);
 
 	useEffect(() => {
 		const timer = setInterval(() => {
@@ -15,7 +15,7 @@ export const Progress = () => {
 		return () => {
 			clearInterval(timer);
 		};
-	}, [setValue]);
+	}, []);
 
 	return (
 		<div className="Progress">

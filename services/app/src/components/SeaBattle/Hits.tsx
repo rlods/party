@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FC } from "react";
 //
 import { Asset } from "./Assets";
 import {
@@ -9,7 +9,7 @@ import {
 
 // ------------------------------------------------------------------
 
-export const Hit = ({ type, ...asset }: SeaBattleHitData) => (
+export const Hit: FC<SeaBattleHitData> = ({ type, ...asset }) => (
 	<Asset
 		className="SeaBattleHit"
 		type={type}
@@ -26,7 +26,7 @@ export const Hit = ({ type, ...asset }: SeaBattleHitData) => (
 
 // ------------------------------------------------------------------
 
-export const Hits = ({ hits }: { hits: SeaBattleHitData[] }) => {
+export const Hits: FC<{ hits: SeaBattleHitData[] }> = ({ hits }) => {
 	return (
 		<>
 			{hits.map((hit, index) => (

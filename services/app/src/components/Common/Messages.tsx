@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FC } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
@@ -14,13 +14,10 @@ import "./Messages.scss";
 
 // ------------------------------------------------------------------
 
-export const Messages = ({
-	className,
-	bottomPosition
-}: {
+export const Messages: FC<{
 	className?: string;
 	bottomPosition?: string;
-}) => {
+}> = ({ className, bottomPosition }) => {
 	const { t } = useTranslation();
 	const dispatch = useDispatch<Dispatch>();
 	const messages = useSelector<RootState, Message[]>(selectMessages);

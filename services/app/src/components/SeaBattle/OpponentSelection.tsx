@@ -1,20 +1,20 @@
-import React from "react";
+import React, { FC } from "react";
 //
 import { IconButton } from "../Common/IconButton";
 import { useTranslation } from "react-i18next";
 
 // ------------------------------------------------------------------
 
-export const OpponentSelection = ({
-	opponentsCount,
-	opponentIndex,
-	onSelectPreviousOpponent,
-	onSelectNextOpponent
-}: {
+export const OpponentSelection: FC<{
 	opponentsCount: number;
 	opponentIndex: number;
 	onSelectPreviousOpponent?: () => void;
 	onSelectNextOpponent?: () => void;
+}> = ({
+	opponentsCount,
+	opponentIndex,
+	onSelectPreviousOpponent,
+	onSelectNextOpponent
 }) => {
 	const { t } = useTranslation();
 

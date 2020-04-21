@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import React, { FC, useState, useRef, useEffect, useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
 //
@@ -14,7 +14,7 @@ import config, { selectRoomDatabaseId } from "../../config/firebase";
 
 // ------------------------------------------------------------------
 
-export const JoinRoomModal = () => {
+export const JoinRoomModal: FC = () => {
 	const dispatch = useDispatch<Dispatch>();
 	const [serverId, setServerId] = useState(selectRoomDatabaseId());
 	const [roomId, setRoomId] = useState("");

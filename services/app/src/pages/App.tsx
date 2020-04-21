@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { FC, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { Redirect, Route, Switch } from "react-router-dom";
 //
@@ -11,7 +11,7 @@ import "./App.scss";
 
 // ------------------------------------------------------------------
 
-export const App = () => {
+export const App: FC = () => {
 	const dispatch = useDispatch<Dispatch>();
 
 	useEffect(() => {

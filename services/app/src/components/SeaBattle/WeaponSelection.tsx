@@ -1,4 +1,4 @@
-import React, { useRef, useCallback, useState } from "react";
+import React, { FC, useRef, useCallback, useState } from "react";
 //
 import { getSVGNormalizedPosition } from "../../utils/svg";
 import { BattleAssets } from "./BattleAssets";
@@ -13,15 +13,11 @@ import {
 
 // ------------------------------------------------------------------
 
-export const WeaponSelection = ({
-	onSelect,
-	weapons,
-	weaponType
-}: {
+export const WeaponSelection: FC<{
 	onSelect: (type: SeaBattleWeaponType) => void;
 	weapons: { [type: string]: number };
 	weaponType: SeaBattleWeaponType;
-}) => {
+}> = ({ onSelect, weapons, weaponType }) => {
 	const svg = useRef<SVGSVGElement>(null);
 
 	const [selectedPos, setSelectedPos] = useState<number>(

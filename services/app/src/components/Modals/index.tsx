@@ -1,4 +1,4 @@
-import React, { MouseEvent, useState, useEffect, useCallback } from "react";
+import React, { FC, MouseEvent, useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { CSSTransition } from "react-transition-group";
 //
@@ -47,7 +47,7 @@ export const getModal = (prereq?: ModalPrereq) => {
 
 // ------------------------------------------------------------------
 
-export const Modals = () => {
+export const Modals: FC = () => {
 	const dispatch = useDispatch<Dispatch>();
 	const prereq = useSelector<RootState, ModalPrereq | undefined>(state =>
 		state.modals.stack.length > 0
@@ -82,7 +82,7 @@ export const Modals = () => {
 		// Hide current modal before showing new one (if there is a new one)
 		setCurrPrereq(void 0);
 		setPrevPrereq(prereq);
-	}, [prereq, setCurrPrereq, setPrevPrereq]);
+	}, [prereq]);
 
 	useEffect(() => {
 		if (prereq) {
@@ -90,7 +90,7 @@ export const Modals = () => {
 				setCurrPrereq(prereq);
 			}, TRANSITION_TIMEOUT);
 		}
-	}, [prereq, setCurrPrereq]);
+	}, [prereq]);
 
 	const modal = getModal(currPrereq || prevPrereq);
 	return (

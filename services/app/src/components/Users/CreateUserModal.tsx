@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { FC, useState, useEffect, useRef, useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { v4 } from "uuid";
@@ -25,7 +25,7 @@ let USER_COUNTER = 1;
 
 export type CreateUserModalProps = { options?: ActionOptions };
 
-export const CreateUserModal = ({ options }: CreateUserModalProps) => {
+export const CreateUserModal: FC<CreateUserModalProps> = ({ options }) => {
 	const dispatch = useDispatch<Dispatch>();
 	const [name, setName] = useState("");
 	const [secret, setSecret] = useState(v4());

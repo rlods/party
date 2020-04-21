@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React, { FC, ReactNode } from "react";
 //
 import { Media } from "../../utils/medias";
 import { ModalField } from "../Modals/ModalFields";
@@ -6,17 +6,12 @@ import { IconButton } from "../Common/IconButton";
 
 // ------------------------------------------------------------------
 
-export const SearchResultCategory = ({
-	items,
-	label,
-	onViewMore,
-	cb
-}: {
+export const SearchResultCategory: FC<{
 	items: Media[];
 	label: string;
 	onViewMore: () => void;
 	cb: (item: Media) => ReactNode;
-}) =>
+}> = ({ items, label, onViewMore, cb }) =>
 	items.length > 0 ? (
 		<>
 			<ModalField>

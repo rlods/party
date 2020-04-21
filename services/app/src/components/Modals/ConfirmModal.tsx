@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { FC, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 //
 import { FormModal } from "../Modals/FormModal";
@@ -16,11 +16,11 @@ export type ConfirmModalProps = {
 	onConfirmed: () => void;
 };
 
-export const ConfirmModal = ({
+export const ConfirmModal: FC<ConfirmModalProps> = ({
 	question,
 	onCanceled,
 	onConfirmed
-}: ConfirmModalProps) => {
+}) => {
 	const dispatch = useDispatch<Dispatch>();
 	const { t } = useTranslation();
 

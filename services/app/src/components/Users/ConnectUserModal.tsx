@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect, useCallback } from "react";
+import React, { FC, useRef, useState, useEffect, useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
 //
@@ -16,7 +16,7 @@ import { selectUserDatabaseId } from "../../config/firebase";
 
 export type ConnectUserModalProps = { options?: ActionOptions };
 
-export const ConnectUserModal = ({ options }: ConnectUserModalProps) => {
+export const ConnectUserModal: FC<ConnectUserModalProps> = ({ options }) => {
 	const dispatch = useDispatch<Dispatch>();
 	const [userId, setUserId] = useState("");
 	const [secret, setSecret] = useState("");

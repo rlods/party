@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { FC, useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -13,7 +13,7 @@ import "./Splash.scss";
 
 // ------------------------------------------------------------------
 
-export const Splash = () => {
+export const Splash: FC = () => {
 	const dispatch = useDispatch();
 	const loggedIn = useSelector<RootState, boolean>(
 		state => !!state.user.access.dbId && !!state.user.access.userId

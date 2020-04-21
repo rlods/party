@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FC } from "react";
 import { GRID_CELL_UNIT_SIZE } from "../../utils/games/seabattle";
 
 // ------------------------------------------------------------------
@@ -8,7 +8,7 @@ const SEA_COLOR2 = "#50a3db";
 
 // ------------------------------------------------------------------
 
-export const BattleAssets = () => (
+export const BattleAssets: FC = () => (
 	<defs>
 		<circle id="hitted" cx="10" cy="10" r="8" fill="#e52524" />
 		<circle id="missed" cx="10" cy="10" r="8" fill="#fff" />
