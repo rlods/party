@@ -133,8 +133,8 @@ export default {
 				click_opponent_cell: "Click on opponent grid",
 				//
 				to_react: "To react following an attack:",
-				hitted_hit: "A red dot is a hit",
-				missed_hit: "A white dot is a miss"
+				hitted_hit: "Red dot = opponent hitted",
+				missed_hit: "White dot = opponent missed"
 			},
 			turn_left: "Turn Left",
 			turn_right: "Turn Right",

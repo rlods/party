@@ -132,11 +132,11 @@ export default {
 				//
 				to_attack: "Pour réaliser une attaque :",
 				select_weapon: "Sélectionnez une de vos armes",
-				click_opponent_cell: "Cliquez sur la grille de votre ennemi",
+				click_opponent_cell: "Cliquez sur la grille ennemi",
 				//
 				to_react: "Pour réagir à une attaque :",
-				hitted_hit: "Un rond rouge correspond à une blessure",
-				missed_hit: "Un rond blanc correspond à un échec"
+				hitted_hit: "Rond rouge = ennemi blessé",
+				missed_hit: "Rond blanc = ennemi raté"
 			},
 			turn_left: "Tourner à gauche",
 			turn_right: "Tourner à droite",
