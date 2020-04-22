@@ -1,46 +1,43 @@
 import React, { FC, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useTranslation } from "react-i18next";
 //
-import { IconButton } from "../Common/IconButton";
-import { LoadingIcon } from "../Common/LoadingIcon";
-import { QueueItem } from "./QueueItem";
+import { QueueList, EmptyQueueList } from "./QueueList";
 import { Dispatch } from "../../actions";
 import { RootState } from "../../reducers";
-import {
-	isRoomLoaded,
-	isRoomLocked,
-	isRoomPlaying
-} from "../../selectors/room";
 import { selectTracks } from "../../selectors/medias";
 import { Track } from "../../utils/medias";
 import { startPlayer, stopPlayer } from "../../actions/player";
 import { setQueuePosition, removeFromQueue } from "../../actions/queue";
 import { openModal } from "../../reducers/modals";
+import { selectQueuePosition } from "../../selectors/queue";
+import {
+	isRoomLoaded,
+	isRoomLocked,
+	isRoomPlaying
+} from "../../selectors/room";
 import "./Queue.scss";
 
 // ------------------------------------------------------------------
 
 export const Queue: FC = () => {
 	const dispatch = useDispatch<Dispatch>();
+
 	const loaded = useSelector<RootState, boolean>(isRoomLoaded);
 	const locked = useSelector<RootState, boolean>(isRoomLocked);
 	const playing = useSelector<RootState, boolean>(isRoomPlaying);
-	const playingIndex = useSelector<RootState, number>(state =>
-		null !== state.room.info ? state.room.info.queue_position : 0
-	);
+	const playingIndex = useSelector<RootState, number>(selectQueuePosition);
 	const tracks = useSelector<RootState, Array<Track | null>>(selectTracks);
 
 	const onPlay = useCallback(
-		(index: number) => {
-			dispatch(startPlayer());
-			dispatch(setQueuePosition(index));
+		(position: number) => {
+			dispatch(startPlayer({ propagate: true }));
+			dispatch(setQueuePosition({ position, propagate: true }));
 		},
 		[dispatch]
 	);
 
 	const onRemove = useCallback(
-		(index: number) => dispatch(removeFromQueue(index)),
+		(position: number) => dispatch(removeFromQueue({ position })),
 		[dispatch]
 	);
 
@@ -49,7 +46,10 @@ export const Queue: FC = () => {
 		[dispatch]
 	);
 
-	const onStop = useCallback(() => dispatch(stopPlayer()), [dispatch]);
+	const onStop = useCallback(
+		() => dispatch(stopPlayer({ propagate: true })),
+		[dispatch]
+	);
 
 	return (
 		<div className="Queue">
@@ -73,77 +73,3 @@ export const Queue: FC = () => {
 		</div>
 	);
 };
-
-// ------------------------------------------------------------------
-
-const EmptyQueueList = React.memo(
-	({
-		loaded,
-		locked,
-		onSearch
-	}: {
-		loaded: boolean;
-		locked: boolean;
-		onSearch: () => void;
-	}) => {
-		const { t } = useTranslation();
-		return (
-			<div className="QueueEmpty">
-				{loaded ? (
-					<>
-						<IconButton
-							title="..."
-							icon="shower"
-							onClick={onSearch}
-							size="L"
-						/>
-						<span onClick={onSearch}>
-							{t(locked ? "rooms.empty_for_now" : "rooms.empty")}
-						</span>
-					</>
-				) : (
-					<>
-						<LoadingIcon size="L" />
-						<span>{t("rooms.loading")}</span>
-					</>
-				)}
-			</div>
-		);
-	}
-);
-
-// ------------------------------------------------------------------
-
-const QueueList = React.memo(
-	({
-		locked,
-		tracks,
-		playing,
-		playingIndex,
-		onPlay,
-		onRemove,
-		onStop
-	}: {
-		locked: boolean;
-		tracks: Array<Track | null>;
-		playing: boolean;
-		playingIndex: number;
-		onPlay: (index: number) => void;
-		onRemove: (index: number) => void;
-		onStop: () => void;
-	}) => (
-		<>
-			{tracks.map((track, index) => (
-				<QueueItem
-					key={index}
-					locked={locked}
-					playing={playing && playingIndex === index}
-					track={track}
-					onPlay={() => onPlay(index)}
-					onRemove={() => onRemove(index)}
-					onStop={onStop}
-				/>
-			))}
-		</>
-	)
-);

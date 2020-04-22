@@ -4,10 +4,15 @@ import { lockRoom } from "./room";
 import { MediaAccess, findContextFromTrackIndex } from "../utils/medias";
 import { createQueueMerging, createQueueRemoving } from "../utils/rooms";
 import { generateRandomPosition } from "../utils/player";
+import { setRoom } from "../reducers/room";
 
 // ------------------------------------------------------------------
 
-export const clearQueue = (): AsyncAction => (dispatch, getState) =>
+export const clearQueue = ({
+	propagate
+}: {
+	propagate: boolean;
+}): AsyncAction => (dispatch, getState) =>
 	dispatch(
 		trySomething({
 			onAction: async () => {
@@ -19,6 +24,19 @@ export const clearQueue = (): AsyncAction => (dispatch, getState) =>
 					return "unlock-and-retry";
 				}
 				console.debug("[Queue] Clearing...");
+				if (!propagate) {
+					dispatch(
+						setRoom({
+							info: {
+								...info,
+								playing: false,
+								queue: {},
+								queue_position: 0
+							}
+						})
+					);
+					return true;
+				}
 				await room.update({
 					...info,
 					playing: false,
@@ -66,10 +84,11 @@ export const appendToQueue = (newMedias: MediaAccess[]): AsyncAction => (
 // ------------------------------------------------------------------
 
 // TODO: DECOMPLEXIFY removeFromQueue
-export const removeFromQueue = (removedTrackIndex: number): AsyncAction => (
-	dispatch,
-	getState
-) =>
+export const removeFromQueue = ({
+	position: removedTrackIndex
+}: {
+	position: number;
+}): AsyncAction => (dispatch, getState) =>
 	dispatch(
 		trySomething({
 			onAction: async () => {
@@ -144,10 +163,13 @@ export const removeFromQueue = (removedTrackIndex: number): AsyncAction => (
 
 // ------------------------------------------------------------------
 
-export const setQueuePosition = (newPosition: number): AsyncAction => (
-	dispatch,
-	getState
-) =>
+export const setQueuePosition = ({
+	position: newPosition,
+	propagate
+}: {
+	position: number;
+	propagate: boolean;
+}): AsyncAction => (dispatch, getState) =>
 	dispatch(
 		trySomething({
 			onAction: async () => {
@@ -164,8 +186,21 @@ export const setQueuePosition = (newPosition: number): AsyncAction => (
 				}
 				console.debug("[Queue] Setting position...", {
 					oldPosition,
-					newPosition
+					newPosition,
+					propagate
 				});
+				if (!propagate) {
+					dispatch(
+						setRoom({
+							info: {
+								...info,
+								playing: true,
+								queue_position: newPosition
+							}
+						})
+					);
+					return true;
+				}
 				await room.update({
 					...info,
 					playing: true, // Important: user setting queue position will start the play
@@ -179,7 +214,11 @@ export const setQueuePosition = (newPosition: number): AsyncAction => (
 
 // ------------------------------------------------------------------
 
-export const moveToPreviousTrack = (): AsyncAction => (dispatch, getState) =>
+export const moveToPreviousTrack = ({
+	propagate
+}: {
+	propagate: boolean;
+}): AsyncAction => (dispatch, getState) =>
 	dispatch(
 		trySomething({
 			onAction: async () => {
@@ -190,11 +229,13 @@ export const moveToPreviousTrack = (): AsyncAction => (dispatch, getState) =>
 					return true; // Nothing to do
 				}
 				dispatch(
-					setQueuePosition(
-						info.queue_position > 0
-							? info.queue_position - 1
-							: tracks.length - 1
-					)
+					setQueuePosition({
+						position:
+							info.queue_position > 0
+								? info.queue_position - 1
+								: tracks.length - 1,
+						propagate
+					})
 				);
 				return true;
 			}
@@ -203,7 +244,11 @@ export const moveToPreviousTrack = (): AsyncAction => (dispatch, getState) =>
 
 // ------------------------------------------------------------------
 
-export const moveToNextTrack = (): AsyncAction => (dispatch, getState) =>
+export const moveToNextTrack = ({
+	propagate
+}: {
+	propagate: boolean;
+}): AsyncAction => (dispatch, getState) =>
 	dispatch(
 		trySomething({
 			onAction: async () => {
@@ -214,11 +259,13 @@ export const moveToNextTrack = (): AsyncAction => (dispatch, getState) =>
 					return true; // Nothing to do
 				}
 				dispatch(
-					setQueuePosition(
-						info.playmode === "shuffle"
-							? generateRandomPosition() % tracks.length
-							: (info.queue_position + 1) % tracks.length
-					)
+					setQueuePosition({
+						position:
+							info.playmode === "shuffle"
+								? generateRandomPosition() % tracks.length
+								: (info.queue_position + 1) % tracks.length,
+						propagate
+					})
 				);
 				return true;
 			}

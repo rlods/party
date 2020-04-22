@@ -31,11 +31,11 @@ export const RoomControls: FC<{
 	const onClear = useCallback(() => {
 		dispatch(
 			confirmModal(t("rooms.confirm_clear"), () => {
-				dispatch(clearQueue());
-				dispatch(stopPlayer());
+				dispatch(clearQueue({ propagate }));
+				dispatch(stopPlayer({ propagate }));
 			})
 		);
-	}, [dispatch, t]);
+	}, [dispatch, t, propagate]);
 
 	const onLock = useCallback(() => {
 		dispatch(
