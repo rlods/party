@@ -38,27 +38,29 @@ export const joinBattle = (): AsyncAction => (dispatch, getState) =>
 						access: { userId }
 					}
 				} = getState();
-				console.log("****** joinBattle1");
 				if (!userId) {
 					dispatch(displayError("user.not_connected"));
 					return "connect-and-retry";
 				}
-				console.log("****** joinBattle2");
 				if (!room || room.isLocked() || !info) {
 					dispatch(displayError("rooms.errors.locked"));
 					return "unlock-and-retry";
 				}
-				console.log("****** joinBattle3");
+
 				console.debug("[SeaBattle] Joining battle...", { userId });
 				const battle = decodeBattle(info.extra);
 				const map = battle.maps.find(other => other.userId === userId);
 				if (map) {
-					return true; // User is already in the battle
+					return true; // Nothing to do, user is already in the battle
 				}
 				if (Object.keys(battle.maps).length >= MAX_PLAYER_COUNT) {
 					dispatch(displayError("games.max_players_count"));
 					return true;
 				}
+
+				// Warning: Here it could overwrite last update pushed in the battle by other user at the same time
+				// But there is very few chance for that to happen with small number of players
+
 				generateFleet(battle, userId);
 				await room.update({
 					...info,
