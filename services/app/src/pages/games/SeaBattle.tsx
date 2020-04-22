@@ -26,8 +26,8 @@ import {
 } from "../../utils/games/seabattle";
 import { displayInfo } from "../../actions/messages";
 import { openModal } from "../../reducers/modals";
-import "./SeaBattle.scss";
 import { clearMessages } from "../../reducers/messages";
+import "./SeaBattle.scss";
 
 // ------------------------------------------------------------------
 

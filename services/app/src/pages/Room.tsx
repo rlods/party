@@ -13,8 +13,8 @@ import { exitRoom, enterRoom } from "../actions/room";
 import { Dispatch } from "../actions";
 import { RoomInfo } from "../utils/rooms";
 import { SeaBattle } from "./games/SeaBattle";
-import "./Room.scss";
 import { Messages } from "../components/Common/Messages";
+import "./Room.scss";
 
 // ------------------------------------------------------------------
 

@@ -1,6 +1,6 @@
 import { v4 } from "uuid";
 //
-import { AsyncAction, Dispatch, ActionOptions } from ".";
+import { AsyncAction, Dispatch, ActionOptions, trySomething } from ".";
 import { displayError } from "./messages";
 import { RoomInfo, RoomType, generateRoomExtra } from "../utils/rooms";
 import { FirebaseRoom } from "../utils/firebase";
@@ -19,7 +19,6 @@ import {
 	extractTracks,
 	ContextualizedTrackAccess
 } from "../utils/medias";
-import { connectAndRetry } from "./modals";
 
 // ------------------------------------------------------------------
 
@@ -68,40 +67,39 @@ export const createRoom = (
 	secret: string,
 	type: RoomType,
 	options?: ActionOptions
-): AsyncAction => async (dispatch, getState) => {
-	const {
-		user: {
-			access: { userId }
-		}
-	} = getState();
-	if (!userId) {
-		dispatch(displayError("users.not_connected"));
-		dispatch(
-			connectAndRetry(() =>
-				dispatch(createRoom(dbId, name, secret, type, options))
-			)
-		);
-		return;
-	}
-	try {
-		const roomId = v4();
-		console.debug("[Room] Creating...", { dbId, roomId, secret });
+): AsyncAction => (dispatch, getState) =>
+	dispatch(
+		trySomething({
+			onAction: async () => {
+				const {
+					user: {
+						access: { userId }
+					}
+				} = getState();
+				if (!userId) {
+					dispatch(displayError("users.not_connected"));
+					return "connect-and-retry";
+				}
+				const roomId = v4();
+				console.debug("[Room] Creating...", {
+					dbId,
+					roomId,
+					secret
+				});
 
-		await FirebaseRoom({ dbId, roomId, secret }).update({
-			extra: generateRoomExtra(userId, type),
-			name,
-			queue_position: 0,
-			type,
-			...DEFAULT_QUEUE_INFO_BY_TYPE[type]
-		});
-		dispatch(enterRoom(dbId, roomId, secret));
-		if (options && options.onSuccess) {
-			options.onSuccess();
-		}
-	} catch (err) {
-		dispatch(displayError(extractErrorMessage(err)));
-	}
-};
+				await FirebaseRoom({ dbId, roomId, secret }).update({
+					extra: generateRoomExtra(userId, type),
+					name,
+					queue_position: 0,
+					type,
+					...DEFAULT_QUEUE_INFO_BY_TYPE[type]
+				});
+				dispatch(enterRoom(dbId, roomId, secret));
+				return true;
+			},
+			...options
+		})
+	);
 
 // ------------------------------------------------------------------
 
@@ -110,108 +108,121 @@ export const enterRoom = (
 	roomId: string,
 	secret: string,
 	options?: ActionOptions
-): AsyncAction => async (dispatch, getState) => {
-	const {
-		room: { room },
-		user: {
-			access: { userId }
-		}
-	} = getState();
-	if (room && room.dbId === dbId && room.roomId === roomId) {
-		// Nothing to do
-		return;
-	}
-	if (!userId) {
-		dispatch(displayError("users.not_connected"));
-		dispatch(
-			connectAndRetry(() =>
-				dispatch(enterRoom(dbId, roomId, secret, options))
-			)
-		);
-		return;
-	}
-	dispatch(exitRoom());
-	try {
-		console.debug("[Room] Entering...", { dbId, roomId, secret });
-		const newRoom = FirebaseRoom({ dbId, roomId, secret });
-		dispatch(
-			setRoom({
-				access: { dbId, roomId, secret },
-				room: newRoom,
-				info: await newRoom.wait()
-			})
-		);
-		dispatch(_watchRoom(newRoom));
-		dispatch(_watchPlayer());
-		history.push(`/room/${dbId}/${roomId}?secret=${secret}`); // TODO: should push only if we're not already in it
-		if (options && options.onSuccess) {
-			options.onSuccess();
-		}
-	} catch (err) {
-		dispatch(displayError(extractErrorMessage(err)));
-	}
-};
+): AsyncAction => (dispatch, getState) =>
+	dispatch(
+		trySomething({
+			onAction: async () => {
+				const {
+					room: { room },
+					user: {
+						access: { userId }
+					}
+				} = getState();
+				if (room && room.dbId === dbId && room.roomId === roomId) {
+					return true; // Nothing to do
+				}
+				dispatch(exitRoom());
+				if (!userId) {
+					dispatch(displayError("users.not_connected"));
+					return "connect-and-retry";
+				}
+				console.debug("[Room] Entering...", { dbId, roomId, secret });
+				const newRoom = FirebaseRoom({ dbId, roomId, secret });
+				dispatch(
+					setRoom({
+						access: { dbId, roomId, secret },
+						room: newRoom,
+						info: await newRoom.wait()
+					})
+				);
+				dispatch(_watchRoom(newRoom));
+				dispatch(_watchPlayer());
+				history.push(`/room/${dbId}/${roomId}?secret=${secret}`); // TODO: should push only if we're not already in it
+				return true;
+			},
+			...options
+		})
+	);
 
-export const exitRoom = (): AsyncAction => async (dispatch, getState) => {
-	const {
-		room: { room }
-	} = getState();
-	if (!room) {
-		// Nothing to do
-		return;
-	}
-	console.debug("[Room] Exiting...");
-	dispatch(_unwatchPlayer());
-	dispatch(_unwatchRoom(room));
-	dispatch(resetRoom());
-};
+export const exitRoom = (): AsyncAction => (dispatch, getState) =>
+	dispatch(
+		trySomething({
+			onAction: async () => {
+				const {
+					room: { room }
+				} = getState();
+				if (!room) {
+					return true; // Nothing to do
+				}
+				console.debug("[Room] Exiting...");
+				dispatch(_unwatchPlayer());
+				dispatch(_unwatchRoom(room));
+				dispatch(resetRoom());
+				return true;
+			}
+		})
+	);
 
 // ------------------------------------------------------------------
 
-export const lockRoom = (): AsyncAction => async (dispatch, getState) => {
-	const {
-		room: {
-			room,
-			access: { dbId, roomId, secret: oldSecret }
-		}
-	} = getState();
-	if (!room || room.dbId !== dbId || room.roomId !== roomId || !oldSecret) {
-		// Nothing to do
-		return;
-	}
-	console.debug("[Room] Locking...", { dbId, roomId });
-	room.setSecret("");
-	// TODO : not history.replace(`/room/${dbId}/${roomId}`); as it would trigger a page refresh
-	dispatch(setRoom({ access: { dbId, roomId, secret: "" } }));
-};
+export const lockRoom = (): AsyncAction => (dispatch, getState) =>
+	dispatch(
+		trySomething({
+			onAction: async () => {
+				const {
+					room: {
+						room,
+						access: { dbId, roomId, secret: oldSecret }
+					}
+				} = getState();
+				if (
+					!room ||
+					room.dbId !== dbId ||
+					room.roomId !== roomId ||
+					!oldSecret
+				) {
+					return true; // Nothing to do
+				}
+				console.debug("[Room] Locking...", { dbId, roomId });
+				room.setSecret("");
+				// TODO : not history.replace(`/room/${dbId}/${roomId}`); as it would trigger a page refresh
+				dispatch(setRoom({ access: { dbId, roomId, secret: "" } }));
+				return true;
+			}
+		})
+	);
 
 export const unlockRoom = (
 	secret: string,
 	options?: ActionOptions
-): AsyncAction => async (dispatch, getState) => {
-	const {
-		room: {
-			room,
-			access: { dbId, roomId, secret: oldSecret }
-		}
-	} = getState();
-	if (
-		!room ||
-		room.dbId !== dbId ||
-		room.roomId !== roomId ||
-		oldSecret === secret
-	) {
-		// Nothing to do
-		return;
-	}
-	console.debug("[Room] Unlocking...", { dbId, roomId, secret });
-	room.setSecret(secret);
-	// TODO : not history.replace(`/room/${id}?secret=${secret}`); as it would trigger a page refresh
-	dispatch(setRoom({ access: { dbId, roomId, secret } }));
-	if (options && options.onSuccess) {
-		options.onSuccess();
-	}
-};
+): AsyncAction => (dispatch, getState) =>
+	dispatch(
+		trySomething({
+			onAction: async () => {
+				const {
+					room: {
+						room,
+						access: { dbId, roomId, secret: oldSecret }
+					}
+				} = getState();
+				if (
+					!room ||
+					room.dbId !== dbId ||
+					room.roomId !== roomId ||
+					oldSecret === secret
+				) {
+					return true; // Nothing to do
+				}
+				console.debug("[Room] Unlocking...", { dbId, roomId, secret });
+				room.setSecret(secret);
+				// TODO : not history.replace(`/room/${id}?secret=${secret}`); as it would trigger a page refresh
+				dispatch(setRoom({ access: { dbId, roomId, secret } }));
+
+				return true;
+			},
+			...options
+		})
+	);
 
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
@@ -224,8 +235,7 @@ const _watchRoom = (
 ): AsyncAction => async (dispatch, getState, { player }) => {
 	console.debug("[Room] Watching...");
 	if (!!ROOM_WATCHER) {
-		// Nothing to do
-		return;
+		return; // Nothing to do
 	}
 	ROOM_WATCHER = room.subscribe(
 		async (snapshot: firebase.database.DataSnapshot) => {
@@ -275,8 +285,7 @@ const _unwatchRoom = (
 	room: ReturnType<typeof FirebaseRoom>
 ): AsyncAction => async () => {
 	if (!ROOM_WATCHER) {
-		// Nothing to do
-		return;
+		return; // Nothing to do
 	}
 	console.debug("Unwatching room...");
 	room.unsubscribe(ROOM_WATCHER);
