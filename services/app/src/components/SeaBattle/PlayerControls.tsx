@@ -32,7 +32,7 @@ export const SeaBattlePlayerControls: FC<{
 			<IconButton
 				disabled={disabled}
 				icon="rotate-left"
-				title={t("Rotate Left")}
+				title={t("games.seabattle.turn_left")}
 				onClick={onRotateLeft}
 			/>
 			<IconButton
@@ -44,7 +44,7 @@ export const SeaBattlePlayerControls: FC<{
 						  ].backward
 						: "arrow-down"
 				}
-				title={t("Move Backward")}
+				title={t("games.seabattle.move_backward")}
 				onClick={onMoveBackward}
 			/>
 			<IconButton
@@ -56,13 +56,13 @@ export const SeaBattlePlayerControls: FC<{
 						  ].forward
 						: "arrow-up"
 				}
-				title={t("Move Forward")}
+				title={t("games.seabattle.move_forward")}
 				onClick={onMoveForward}
 			/>
 			<IconButton
 				disabled={disabled}
 				icon="rotate-right"
-				title={t("Rotate Right")}
+				title={t("games.seabattle.turn_right")}
 				onClick={onRotateRight}
 			/>
 		</div>

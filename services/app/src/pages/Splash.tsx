@@ -40,7 +40,7 @@ export const Splash: FC = () => {
 	]);
 
 	const onShowHelp = useCallback(
-		() => dispatch(openModal({ type: "Help", props: null })),
+		() => dispatch(openModal({ type: "GeneralHelp", props: null })),
 		[dispatch]
 	);
 

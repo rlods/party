@@ -10,7 +10,8 @@ import { ConnectUserModal } from "../Users/ConnectUserModal";
 import { CreateRoomModal } from "../Room/CreateRoomModal";
 import { CreateUserModal } from "..//Users/CreateUserModal";
 import { HelpModal } from "./HelpModal";
-import { SearchModal } from "..//Room/SearchModal";
+import { HelpModal as SeaBattleHelpModal } from "../SeaBattle/HelpModal";
+import { SearchModal } from "../Room/SearchModal";
 import { JoinRoomModal } from "../Room/JoinRoomModal";
 import { UnlockRoomModal } from "../Room/UnlockRoomModal";
 import "./index.scss";
@@ -32,10 +33,12 @@ export const getModal = (prereq?: ModalPrereq) => {
 				return <CreateRoomModal />;
 			case "CreateUser":
 				return <CreateUserModal {...prereq.props} />;
-			case "Help":
+			case "GeneralHelp":
 				return <HelpModal />;
 			case "JoinRoom":
 				return <JoinRoomModal />;
+			case "SeaBattleHelp":
+				return <SeaBattleHelpModal />;
 			case "Search":
 				return <SearchModal />;
 			case "UnlockRoom":

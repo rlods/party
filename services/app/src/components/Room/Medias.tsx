@@ -8,9 +8,9 @@ import "./Medias.scss";
 
 // ------------------------------------------------------------------
 
-export const renderMediaInToaster = (media: MediaData): React.ReactNode => {
-	return <Media media={media} playable={false} playing={true} />;
-};
+export const renderMediaInToaster = (media: MediaData): React.ReactNode => (
+	<Media media={media} playable={false} playing={true} />
+);
 
 // ------------------------------------------------------------------
 

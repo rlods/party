@@ -20,7 +20,8 @@ import "./RoomControls.scss";
 export const RoomControls: FC<{
 	extended: boolean;
 	propagate: boolean;
-}> = ({ extended, propagate }) => {
+	onHelp?: () => void;
+}> = ({ extended, propagate, onHelp }) => {
 	const dispatch = useDispatch<Dispatch>();
 	const { t } = useTranslation();
 	const tracksCount = useSelector<RootState, number>(
@@ -64,6 +65,15 @@ export const RoomControls: FC<{
 						/>
 						<Progress />
 						<div className="ControlsSet RoomControlsSet">
+							{onHelp ? (
+								<div className="Control">
+									<IconButton
+										icon="question-circle"
+										title={t("rooms.tutorial")}
+										onClick={onHelp}
+									/>
+								</div>
+							) : null}
 							<div className="Control">
 								{locked ? (
 									<IconButton
@@ -99,11 +109,22 @@ export const RoomControls: FC<{
 						</div>
 					</>
 				) : (
-					<AudioPlayerControls
-						className="ControlsSet"
-						propagate={propagate}
-						size="S"
-					/>
+					<>
+						{onHelp ? (
+							<div className="HelpControl">
+								<IconButton
+									icon="question-circle"
+									title={t("rooms.tutorial")}
+									onClick={onHelp}
+								/>
+							</div>
+						) : null}
+						<AudioPlayerControls
+							className="ControlsSet"
+							propagate={propagate}
+							size="S"
+						/>
+					</>
 				)}
 			</div>
 		</div>

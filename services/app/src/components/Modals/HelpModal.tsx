@@ -44,7 +44,7 @@ export const HelpModal: FC = () => {
 						<IconButton
 							icon="user-plus"
 							size="S"
-							title=""
+							title={t("users.create")}
 							onClick={onCreateUser}
 						/>
 						<br />
@@ -52,7 +52,7 @@ export const HelpModal: FC = () => {
 						<IconButton
 							icon="sign-in"
 							size="S"
-							title=""
+							title={t("users.connect")}
 							onClick={onConnectUser}
 						/>
 					</li>
@@ -61,7 +61,7 @@ export const HelpModal: FC = () => {
 						<IconButton
 							icon="play"
 							size="S"
-							title=""
+							title={t("rooms.create")}
 							onClick={onCreateRoom}
 						/>
 						<br />
@@ -69,7 +69,7 @@ export const HelpModal: FC = () => {
 						<IconButton
 							icon="sign-in"
 							size="S"
-							title=""
+							title={t("rooms.join")}
 							onClick={onJoinRoom}
 						/>
 					</li>

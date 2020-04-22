@@ -12,14 +12,14 @@ export default {
 	},
 	help: {
 		help: "Aide",
-		rules: "Règles",
-		rule1: "Créez un compte utilisateur",
+		rules: "Règles :",
+		rule1: "Créez un compte",
 		rule1b: "ou connectez-vous",
 		rule2: "Créez une salle",
 		rule2b: "ou rejoignez en une",
-		notes: "Notes",
+		notes: "Notes :",
 		note1:
-			"Un salle est protégée par un secret : elle peut-être accédée sans son secret mais aucune action ne pourra y être réalisée.",
+			"Un salle est protégée par un secret : elle peut être accédée sans son secret mais aucune action ne pourra y être réalisée.",
 		note2: "Aucune donnée personnelle n'est manipulée ou stockée."
 	},
 	users: {
@@ -43,34 +43,6 @@ export default {
 		secret: "Secret",
 		user_creation: "Création d'un utilisateur",
 		not_connected: "Aucun utilisateur identifié"
-	},
-	games: {
-		seabattle: {
-			movement_not_possible: "Ce déplacement est impossible !",
-			movement_not_possible_because_hitted:
-				"Un bateau touché ne peut plus se déplacer !",
-			opponent_index: "Adversaire {{index}}",
-			join_battle: "Participer à la bataille",
-			opponent_already_killed:
-				"Tous les bateaux de l'ennemi ont déjà été tués",
-			ship_already_hitted: "Le bateau est touché touché à cette position",
-			ship_already_killed: "Le bateau a déjà été tué",
-			hitted_opponent: "Vous avez touché un bateau ennemi",
-			killed_opponent: "Vous avez tué tous les bateaux de l'ennemi",
-			killed_opponent_boat: "Vous avez tué un bateau ennemi",
-			missed_opponent: "Vous n'avez pas touché de bateau ennemi",
-			no_weapon_selected: "Sélectionnez une arme pour attaquer",
-			weapon_not_available: "L'arme sélectionnée n'est plus disponible",
-			not_your_turn: "Ce n'est pas à votre tour de jouer",
-			opponent_turn: "C'est au tour de votre adversaire de jouer",
-			player_turn: "C'est à votre tour de bouger ou d'attaquer",
-			you_have_been_killed: "Tous vos bateaux ont été tués"
-		},
-		max_players_count: "Le nombre maximal de joueurs est déjà atteint",
-		no_opponents: "Aucun ennemi",
-		no_opponents_to_attack: "Il n'y aucun ennemi à attaquer ...",
-		connect_to_join: "Vous devez vous connecter pour participer ...",
-		watch_or_join: "Vous pouvez regarder ou ..."
 	},
 	rooms: {
 		errors: {
@@ -141,5 +113,62 @@ export default {
 	cancel: "Annuler",
 	clear: "Supprimer",
 	copy_to_clipboard: "Copier dans le presse-papier",
-	secret_copied_to_clipboard: "Le secret a été copié dans le presse-papier"
+	secret_copied_to_clipboard: "Le secret a été copié dans le presse-papier",
+
+	// --------------------------------------------------------------
+
+	games: {
+		seabattle: {
+			help: {
+				you_can: "À chaque tour, vous pouvez :",
+				move_boat: "Déplacer un de vos navires",
+				attack_opponent: "Attaquer un de vos ennemis",
+				//
+				to_move: "Pour réaliser un déplacements :",
+				select_boat: "Sélectionnez un de vos navires",
+				move_with_keyboard: "Déplacez le avec le clavier",
+				or_use_the_buttons: "Ou utilisez les boutons :",
+				//
+				to_attack: "Pour réaliser une attaque :",
+				select_weapon: "Sélectionnez une de vos armes",
+				click_opponent_cell: "Cliquez sur la grille de votre ennemi",
+				//
+				to_react: "Pour réagir à une attaque :",
+				hitted_hit: "Un rond rouge correspond à une blessure",
+				missed_hit: "Un rond blanc correspond à un échec"
+			},
+			turn_left: "Tourner à gauche",
+			turn_right: "Tourner à droite",
+			move_forward: "Avancer",
+			move_backward: "Reculer",
+			move_down: "Aller vers le bas",
+			move_left: "Aller vers la gauche",
+			move_right: "Aller vers la droite",
+			move_up: "Aller vers le haut",
+			movement_not_possible: "Ce déplacement est impossible !",
+			movement_not_possible_because_hitted:
+				"Un navire touché ne peut plus se déplacer !",
+			opponent_index: "Adversaire {{index}}",
+			join_battle: "Participer à la bataille",
+			opponent_already_killed:
+				"Tous les navirex de l'ennemi ont déjà été tués",
+			ship_already_hitted: "Le navire est touché touché à cette position",
+			ship_already_killed: "Le navire a déjà été tué",
+			hitted_opponent: "Vous avez touché un navire ennemi",
+			killed_opponent: "Vous avez tué tous les navirex de l'ennemi",
+			killed_opponent_boat: "Vous avez tué un navire ennemi",
+			missed_opponent: "Vous n'avez pas touché de navire ennemi",
+			no_weapon_selected: "Sélectionnez une arme pour attaquer",
+			weapon_not_available: "L'arme sélectionnée n'est plus disponible",
+			not_your_turn: "Ce n'est pas à votre tour de jouer",
+			opponent_turn: "C'est au tour de votre adversaire de jouer",
+			player_turn: "C'est à votre tour de bouger ou d'attaquer",
+			you_have_been_killed: "Tous vos navirex ont été tués"
+		},
+		max_players_count: "Le nombre maximal de joueurs est déjà atteint",
+		no_opponents: "Aucun ennemi",
+		no_opponents_to_attack: "Il n'y aucun ennemi à attaquer ...",
+		connect_to_join: "Vous devez vous connecter pour participer ...",
+		watch_or_join: "Vous pouvez regarder ou ..."
+	}
 };

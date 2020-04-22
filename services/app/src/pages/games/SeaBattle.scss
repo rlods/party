@@ -27,6 +27,12 @@
 		); /* color will be overriden in Room.scss */
 	}
 
+	.SeaBattleHelp {
+		position: fixed;
+		bottom: 0.5rem;
+		left: 0.5rem;
+	}
+
 	.SeaBattleJoin {
 		display: flex;
 		flex-direction: column;

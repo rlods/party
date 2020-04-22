@@ -65,11 +65,7 @@ export const trySomething = (
 					type: "UnlockRoom",
 					props: {
 						options: {
-							onFailure: () => {
-								if (options.onFailure) {
-									options.onFailure();
-								}
-							},
+							onFailure: options.onFailure,
 							onSuccess: () => dispatch(trySomething(options))
 						}
 					}
@@ -83,11 +79,7 @@ export const trySomething = (
 					type: "CreateUser",
 					props: {
 						options: {
-							onFailure: () => {
-								if (options.onFailure) {
-									options.onFailure();
-								}
-							},
+							onFailure: options.onFailure,
 							onSuccess: () => dispatch(trySomething(options))
 						}
 					}

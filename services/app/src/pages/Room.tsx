@@ -15,6 +15,7 @@ import { RoomInfo } from "../utils/rooms";
 import { SeaBattle } from "./games/SeaBattle";
 import { Messages } from "../components/Common/Messages";
 import "./Room.scss";
+import { openModal } from "../reducers/modals";
 
 // ------------------------------------------------------------------
 
@@ -81,6 +82,14 @@ export const Room: FC = () => {
 								<RoomControls
 									extended={false}
 									propagate={false}
+									onHelp={() => {
+										dispatch(
+											openModal({
+												type: "SeaBattleHelp",
+												props: null
+											})
+										);
+									}}
 								/>
 								<Messages
 									className="SeaBattleMessages"

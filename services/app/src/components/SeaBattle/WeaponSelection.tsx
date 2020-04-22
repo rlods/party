@@ -14,7 +14,7 @@ import {
 // ------------------------------------------------------------------
 
 export const WeaponSelection: FC<{
-	onSelect: (type: SeaBattleWeaponType) => void;
+	onSelect?: (type: SeaBattleWeaponType) => void;
 	weapons: { [type: string]: number };
 	weaponType: SeaBattleWeaponType;
 }> = ({ onSelect, weapons, weaponType }) => {
@@ -35,7 +35,7 @@ export const WeaponSelection: FC<{
 	const onClick = useCallback(
 		(position: SeaBattlePosition) => {
 			const { x } = getSVGNormalizedPosition(svg.current!, position);
-			if (selectedPos !== x) {
+			if (selectedPos !== x && onSelect) {
 				// Set
 				setSelectedPos(x);
 				setSelectedVis("visible");
@@ -49,10 +49,17 @@ export const WeaponSelection: FC<{
 		setSelectionVis("hidden");
 	}, []);
 
-	const onOver = useCallback((position: SeaBattlePosition) => {
-		setSelectionPos(getSVGNormalizedPosition(svg.current!, position).x);
-		setSelectionVis("visible");
-	}, []);
+	const onOver = useCallback(
+		(position: SeaBattlePosition) => {
+			if (onSelect) {
+				setSelectionPos(
+					getSVGNormalizedPosition(svg.current!, position).x
+				);
+				setSelectionVis("visible");
+			}
+		},
+		[onSelect]
+	);
 
 	return (
 		<svg

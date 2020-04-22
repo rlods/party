@@ -17,10 +17,19 @@ export type ModalPrereq =
 	| ModalPrereqT<"ConnectUser", ConnectUserModalProps>
 	| ModalPrereqT<"CreateRoom", null>
 	| ModalPrereqT<"CreateUser", CreateUserModalProps>
-	| ModalPrereqT<"Help", null>
+	| ModalPrereqT<"GeneralHelp", null>
 	| ModalPrereqT<"JoinRoom", null>
+	| ModalPrereqT<"SeaBattleHelp", null>
 	| ModalPrereqT<"Search", null>
 	| ModalPrereqT<"UnlockRoom", UnlockRoomModalProps>;
+
+type PropType<TObj, TProp extends keyof TObj> = TObj[TProp];
+
+type Filter<T, U> = T extends U ? T : never;
+
+export type ModalType = PropType<ModalPrereq, "type">;
+
+export type ModalProps<TYPE> = Filter<ModalPrereq, { type: TYPE }>["props"];
 
 // ------------------------------------------------------------------
 

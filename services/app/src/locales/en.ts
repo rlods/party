@@ -12,12 +12,12 @@ export default {
 	},
 	help: {
 		help: "Help",
-		rules: "Rules",
-		rule1: "Create an user account",
+		rules: "Rules:",
+		rule1: "Create an account",
 		rule1b: "or connect",
 		rule2: "Create a room",
 		rule2b: "or join one",
-		notes: "Notes",
+		notes: "Notes:",
 		note1:
 			"A room is protected with a secret: it can be accessed without its secret but then no action can be done in it.",
 		note2: "No personal data is accessed or stored."
@@ -43,33 +43,6 @@ export default {
 		secret: "User Secret",
 		user_creation: "User Registration",
 		not_connected: "No user is identified"
-	},
-	games: {
-		seabattle: {
-			movement_not_possible: "This movement is not possible!",
-			movement_not_possible_because_hitted: "A hitted boat cannot move!",
-			opponent_index: "Opponent {{index}}",
-			join_battle: "Join the battle",
-			opponent_already_killed:
-				"All opponent boats have already been killed",
-			ship_already_hitted: "Boat is already hitten at this position",
-			ship_already_killed: "Boat has already been killed",
-			hitted_opponent: "You've hitted opponent boat",
-			killed_opponent: "You've killed all opponent boats",
-			killed_opponent_boat: "You've killed opponent boat",
-			missed_opponent: "You've missed opponent boat",
-			no_weapon_selected: "Select a weapon to attack",
-			weapon_not_available: "Selected weapon is not available",
-			not_your_turn: "This is not your turn",
-			opponent_turn: "It's your opponent turn to play",
-			player_turn: "It's your turn to move or attack",
-			you_have_been_killed: "All your boats have been killed"
-		},
-		max_players_count: "Maximum players number has been already reached",
-		no_opponents: "No opponents",
-		no_opponents_to_attack: "There is no opponent to attack...",
-		connect_to_join: "You have to connect to join...",
-		watch_or_join: "You can watch or..."
 	},
 	rooms: {
 		errors: {
@@ -138,5 +111,61 @@ export default {
 	cancel: "Cancel",
 	clear: "Clear",
 	copy_to_clipboard: "Copy to Clipboard",
-	secret_copied_to_clipboard: "Secret has been copied to clipboard"
+	secret_copied_to_clipboard: "Secret has been copied to clipboard",
+
+	// --------------------------------------------------------------
+
+	games: {
+		seabattle: {
+			help: {
+				you_can: "At each turn, you can:",
+				move_boat: "Move one of your boat",
+				attack_opponent: "Attack an opponent",
+				//
+				to_move: "To move:",
+				select_boat: "Select one of your boat",
+				move_with_keyboard: "Move it with the keyboard",
+				or_use_the_buttons: "Or move it using buttons",
+				//
+				to_attack: "To attack:",
+				select_weapon: "Select one your weapon",
+				click_opponent_cell: "Click on opponent grid",
+				//
+				to_react: "To react following an attack:",
+				hitted_hit: "A red dot is a hit",
+				missed_hit: "A white dot is a miss"
+			},
+			turn_left: "Turn Left",
+			turn_right: "Turn Right",
+			move_forward: "Move Forward",
+			move_backward: "Move Backward",
+			move_down: "Move Down",
+			move_left: "Move Left",
+			move_right: "Move Right",
+			move_up: "Move Up",
+			movement_not_possible: "This movement is not possible!",
+			movement_not_possible_because_hitted: "A hitted boat cannot move!",
+			opponent_index: "Opponent {{index}}",
+			join_battle: "Join the battle",
+			opponent_already_killed:
+				"All opponent boats have already been killed",
+			ship_already_hitted: "Boat is already hitten at this position",
+			ship_already_killed: "Boat has already been killed",
+			hitted_opponent: "You've hitted opponent boat",
+			killed_opponent: "You've killed all opponent boats",
+			killed_opponent_boat: "You've killed opponent boat",
+			missed_opponent: "You've missed opponent boat",
+			no_weapon_selected: "Select a weapon to attack",
+			weapon_not_available: "Selected weapon is not available",
+			not_your_turn: "This is not your turn",
+			opponent_turn: "It's your opponent turn to play",
+			player_turn: "It's your turn to move or attack",
+			you_have_been_killed: "All your boats have been killed"
+		},
+		max_players_count: "Maximum players number has been already reached",
+		no_opponents: "No opponents",
+		no_opponents_to_attack: "There is no opponent to attack...",
+		connect_to_join: "You have to connect to join...",
+		watch_or_join: "You can watch or..."
+	}
 };
