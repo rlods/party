@@ -41,12 +41,17 @@ export const ConnectUserModal: FC<ConnectUserModalProps> = ({ options }) => {
 			return;
 		}
 		dispatch(
-			connectUser(selectUserDatabaseId(), userId, secret, {
-				onSuccess: () => {
-					if (options && options.onSuccess) {
-						options.onSuccess();
+			connectUser({
+				dbId: selectUserDatabaseId(),
+				userId,
+				secret,
+				options: {
+					onSuccess: () => {
+						if (options && options.onSuccess) {
+							options.onSuccess();
+						}
+						dispatch(popModal());
 					}
-					dispatch(popModal());
 				}
 			})
 		);

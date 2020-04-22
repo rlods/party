@@ -29,22 +29,22 @@ export const Room: FC = () => {
 	);
 
 	const { search } = useLocation();
-	const { db_id, room_id } = useParams<{
-		db_id: string;
-		room_id: string;
+	const { dbId, roomId } = useParams<{
+		dbId: string;
+		roomId: string;
 	}>();
 
-	const { secret } = qs.parse(search.substr(1)) as {
+	const { secret = "" } = qs.parse(search.substr(1)) as {
 		secret?: string;
 	};
 
 	useEffect(() => {
-		dispatch(enterRoom(db_id, room_id, secret || ""));
+		dispatch(enterRoom({ dbId, roomId, secret }));
 
 		return () => {
 			dispatch(exitRoom());
 		};
-	}, [dispatch, db_id, room_id, secret]);
+	}, [dispatch, dbId, roomId, secret]);
 
 	useEffect(() => {
 		document.body.className = fg;

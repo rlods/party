@@ -52,9 +52,15 @@ export const CreateRoomModal: FC = () => {
 			return;
 		}
 		dispatch(
-			createRoom(selectRoomDatabaseId(), name, secret, type, {
-				onSuccess: () => {
-					dispatch(popModal());
+			createRoom({
+				dbId: selectRoomDatabaseId(),
+				name,
+				secret,
+				type,
+				options: {
+					onSuccess: () => {
+						dispatch(popModal());
+					}
 				}
 			})
 		);

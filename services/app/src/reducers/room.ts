@@ -27,7 +27,7 @@ export type RoomData = {
 	info: RoomInfo | null;
 	medias: MediaAccess[];
 	room: ReturnType<typeof FirebaseRoom> | null;
-	tracks: Array<ContextualizedTrackAccess>; // TODO expanded medias (containers are replaced by their tracks)
+	tracks: Array<ContextualizedTrackAccess>;
 };
 
 export type State = RoomData & {

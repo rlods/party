@@ -30,12 +30,15 @@ export const UnlockRoomModal: FC<UnlockRoomModalProps> = ({ options }) => {
 
 	const onUnlock = useCallback(() => {
 		dispatch(
-			unlockRoom(secret, {
-				onSuccess: () => {
-					if (options && options.onSuccess) {
-						options.onSuccess();
+			unlockRoom({
+				secret,
+				options: {
+					onSuccess: () => {
+						if (options && options.onSuccess) {
+							options.onSuccess();
+						}
+						dispatch(popModal());
 					}
-					dispatch(popModal());
 				}
 			})
 		);

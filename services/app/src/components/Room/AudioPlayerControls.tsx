@@ -64,15 +64,20 @@ export const AudioPlayerControls: FC<{
 		if (!roomInfo || tracksCount === 0) {
 			return;
 		}
-		// TODO: onMoveForward_NoPropagate (handle non shuffle mode)
-		dispatch(
-			setRoom({
-				info: {
-					...roomInfo,
-					playing: true,
-					queue_position: generateRandomPosition() % tracksCount
-				}
-			})
+		if (roomInfo.playmode === "shuffle") {
+			dispatch(
+				setRoom({
+					info: {
+						...roomInfo,
+						playing: true,
+						queue_position: generateRandomPosition() % tracksCount
+					}
+				})
+			);
+			return;
+		}
+		console.debug(
+			"TODO: onMoveForward_NoPropagate (handle non shuffle mode)"
 		);
 	}, [dispatch, roomInfo, tracksCount]);
 
@@ -84,16 +89,19 @@ export const AudioPlayerControls: FC<{
 		if (!roomInfo || tracksCount === 0) {
 			return;
 		}
-		// TODO: onPlay_NoPropagate (handle non shuffle mode)
-		dispatch(
-			setRoom({
-				info: {
-					...roomInfo,
-					playing: true,
-					queue_position: generateRandomPosition() % tracksCount
-				}
-			})
-		);
+		if (roomInfo.playmode === "shuffle") {
+			dispatch(
+				setRoom({
+					info: {
+						...roomInfo,
+						playing: true,
+						queue_position: generateRandomPosition() % tracksCount
+					}
+				})
+			);
+			return;
+		}
+		console.debug("TODO: onPlay_NoPropagate (handle non shuffle mode)");
 	}, [dispatch, roomInfo, tracksCount]);
 
 	const onStop_NoPropagate = useCallback(() => {

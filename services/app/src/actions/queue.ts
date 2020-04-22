@@ -18,7 +18,7 @@ export const clearQueue = (): AsyncAction => (dispatch, getState) =>
 					dispatch(displayError("rooms.errors.locked"));
 					return "unlock-and-retry";
 				}
-				console.debug("[Queue] Clearing medias...");
+				console.debug("[Queue] Clearing...");
 				await room.update({
 					...info,
 					playing: false,
@@ -50,7 +50,7 @@ export const appendToQueue = (newMedias: MediaAccess[]): AsyncAction => (
 				if (newMedias.length === 0) {
 					return true; // Nothing to do
 				}
-				console.debug("[Queue] Appending medias...", {
+				console.debug("[Queue] Appending...", {
 					newMedias
 				});
 				await room.update({
@@ -94,7 +94,7 @@ export const removeFromQueue = (removedTrackIndex: number): AsyncAction => (
 					return true; // Nothing to do
 				}
 				const playingTrackIndex = info.queue_position;
-				console.debug("[Queue] Removing track...", {
+				console.debug("[Queue] Removing...", {
 					playingTrackIndex,
 					removedMediaIndex,
 					removedTrackCount,
@@ -103,7 +103,7 @@ export const removeFromQueue = (removedTrackIndex: number): AsyncAction => (
 				});
 				const queue = createQueueRemoving(medias, removedMediaIndex, 1);
 				if (Object.keys(queue).length === 0) {
-					console.debug("[Queue] Removing last media...");
+					console.debug("[Queue] Removing last...");
 					await room.update({
 						...info,
 						playing: false,
@@ -144,7 +144,7 @@ export const removeFromQueue = (removedTrackIndex: number): AsyncAction => (
 
 // ------------------------------------------------------------------
 
-export const setQueuePosition = (newTrackIndex: number): AsyncAction => (
+export const setQueuePosition = (newPosition: number): AsyncAction => (
 	dispatch,
 	getState
 ) =>
@@ -158,18 +158,18 @@ export const setQueuePosition = (newTrackIndex: number): AsyncAction => (
 					dispatch(displayError("rooms.errors.locked"));
 					return "unlock-and-retry";
 				}
-				const oldTrackIndex = info.queue_position;
-				if (oldTrackIndex === newTrackIndex) {
+				const oldPosition = info.queue_position;
+				if (oldPosition === newPosition) {
 					return true; // Nothing to do
 				}
-				console.debug("[Queue] Set position...", {
-					oldTrackIndex,
-					newTrackIndex
+				console.debug("[Queue] Setting position...", {
+					oldPosition,
+					newPosition
 				});
 				await room.update({
 					...info,
-					playing: true, // important
-					queue_position: newTrackIndex
+					playing: true, // Important: user setting queue position will start the play
+					queue_position: newPosition
 				});
 				return true;
 			},
@@ -189,7 +189,6 @@ export const moveToPreviousTrack = (): AsyncAction => (dispatch, getState) =>
 				if (!info || tracks.length === 0) {
 					return true; // Nothing to do
 				}
-				console.debug("[Queue] Moving backward...");
 				dispatch(
 					setQueuePosition(
 						info.queue_position > 0
@@ -214,21 +213,13 @@ export const moveToNextTrack = (): AsyncAction => (dispatch, getState) =>
 				if (!info || tracks.length === 0) {
 					return true; // Nothing to do
 				}
-				if (info.playmode === "shuffle") {
-					console.debug("[Queue] Randomizing next track...");
-					dispatch(
-						setQueuePosition(
-							generateRandomPosition() % tracks.length
-						)
-					);
-				} else {
-					console.debug("[Queue] Moving forward...");
-					dispatch(
-						setQueuePosition(
-							(info.queue_position + 1) % tracks.length
-						)
-					);
-				}
+				dispatch(
+					setQueuePosition(
+						info.playmode === "shuffle"
+							? generateRandomPosition() % tracks.length
+							: (info.queue_position + 1) % tracks.length
+					)
+				);
 				return true;
 			}
 		})

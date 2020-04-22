@@ -24,7 +24,7 @@ export const App: FC = () => {
 			<Switch>
 				<Route
 					exact={true}
-					path="/room/:db_id/:room_id"
+					path="/room/:dbId/:roomId"
 					component={Room}
 				/>
 				<Route exact={true} path="/" component={Splash} />

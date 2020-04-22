@@ -51,12 +51,17 @@ export const CreateUserModal: FC<CreateUserModalProps> = ({ options }) => {
 			return;
 		}
 		dispatch(
-			createUser(selectUserDatabaseId(), name, secret, {
-				onSuccess: () => {
-					if (options && options.onSuccess) {
-						options.onSuccess();
+			createUser({
+				dbId: selectUserDatabaseId(),
+				name,
+				secret,
+				options: {
+					onSuccess: () => {
+						if (options && options.onSuccess) {
+							options.onSuccess();
+						}
+						dispatch(popModal());
 					}
-					dispatch(popModal());
 				}
 			})
 		);

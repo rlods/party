@@ -2,7 +2,7 @@ import { v4 } from "uuid";
 //
 import { AsyncAction, Dispatch, ActionOptions, trySomething } from ".";
 import { displayError } from "./messages";
-import { RoomInfo, RoomType, generateRoomExtra } from "../utils/rooms";
+import { RoomInfo, RoomType, initializeRoom } from "../utils/rooms";
 import { FirebaseRoom } from "../utils/firebase";
 import { extractErrorMessage } from "../utils/messages";
 import { pickColor } from "../utils/colorpicker";
@@ -22,52 +22,19 @@ import {
 
 // ------------------------------------------------------------------
 
-const DEFAULT_QUEUE_INFO_BY_TYPE: {
-	// Keys are room types
-	[type: string]: Pick<RoomInfo, "playing" | "playmode" | "queue">;
-} = {
-	dj: {
-		playing: false,
-		playmode: "default",
-		queue: {}
-	},
-	seabattle: {
-		playing: true,
-		playmode: "shuffle",
-		queue: {
-			0: {
-				id: "301013", // Pirates Of The Caribbean OST
-				provider: "deezer",
-				type: "album"
-			},
-			1: {
-				id: "7358507", // Stalingrad OST
-				provider: "deezer",
-				type: "album"
-			},
-			2: {
-				id: "558976", // Master & Commander OST
-				provider: "deezer",
-				type: "album"
-			},
-			3: {
-				id: "87375582", // Le chant du loup OST
-				provider: "deezer",
-				type: "album"
-			}
-		}
-	}
-};
-
-// ------------------------------------------------------------------
-
-export const createRoom = (
-	dbId: string,
-	name: string,
-	secret: string,
-	type: RoomType,
-	options?: ActionOptions
-): AsyncAction => (dispatch, getState) =>
+export const createRoom = ({
+	dbId,
+	name,
+	secret,
+	type,
+	options
+}: {
+	dbId: string;
+	name: string;
+	secret: string;
+	type: RoomType;
+	options?: ActionOptions;
+}): AsyncAction => (dispatch, getState) =>
 	dispatch(
 		trySomething({
 			onAction: async () => {
@@ -88,13 +55,11 @@ export const createRoom = (
 				});
 
 				await FirebaseRoom({ dbId, roomId, secret }).update({
-					extra: generateRoomExtra(userId, type),
 					name,
-					queue_position: 0,
 					type,
-					...DEFAULT_QUEUE_INFO_BY_TYPE[type]
+					...initializeRoom({ type, userId })
 				});
-				dispatch(enterRoom(dbId, roomId, secret, options));
+				dispatch(enterRoom({ dbId, roomId, secret, options }));
 				return true;
 			},
 			onFailure: () => {
@@ -107,12 +72,17 @@ export const createRoom = (
 
 // ------------------------------------------------------------------
 
-export const enterRoom = (
-	dbId: string,
-	roomId: string,
-	secret: string,
-	options?: ActionOptions
-): AsyncAction => (dispatch, getState) =>
+export const enterRoom = ({
+	dbId,
+	roomId,
+	secret,
+	options
+}: {
+	dbId: string;
+	roomId: string;
+	secret: string;
+	options?: ActionOptions;
+}): AsyncAction => (dispatch, getState) =>
 	dispatch(
 		trySomething({
 			onAction: async () => {
@@ -208,10 +178,13 @@ export const lockRoom = (): AsyncAction => (dispatch, getState) =>
 		})
 	);
 
-export const unlockRoom = (
-	secret: string,
-	options?: ActionOptions
-): AsyncAction => (dispatch, getState) =>
+export const unlockRoom = ({
+	secret,
+	options
+}: {
+	secret: string;
+	options?: ActionOptions;
+}): AsyncAction => (dispatch, getState) =>
 	dispatch(
 		trySomething({
 			onAction: async () => {
@@ -233,7 +206,6 @@ export const unlockRoom = (
 				room.setSecret(secret);
 				// TODO : not history.replace(`/room/${id}?secret=${secret}`); as it would trigger a page refresh
 				dispatch(setRoom({ access: { dbId, roomId, secret } }));
-
 				return true;
 			},
 			...options
@@ -320,7 +292,7 @@ const _watchPlayer = (): AsyncAction => async (
 	{ player }
 ) => {
 	if (!PLAYER_TIMER) {
-		console.debug("[Room] Watching player... ********************");
+		console.debug("[Room] Watching player...");
 		_scheduleTimer(dispatch, getState, player, 250);
 	}
 };
@@ -331,7 +303,7 @@ const _unwatchPlayer = (): AsyncAction => async (
 	{ player }
 ) => {
 	if (PLAYER_TIMER) {
-		console.debug("[Room] Unwatching player... ********************");
+		console.debug("[Room] Unwatching player...");
 		clearTimeout(PLAYER_TIMER);
 		PLAYER_TIMER = null;
 	}

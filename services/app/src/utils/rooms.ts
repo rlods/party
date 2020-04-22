@@ -73,13 +73,61 @@ export const createQueueRemoving = (
 
 // ------------------------------------------------------------------
 
-export const generateRoomExtra = (userId: string, type: RoomType): string => {
+export const initializeRoom = ({
+	type,
+	userId
+}: {
+	type: RoomType;
+	userId: string;
+}): Pick<
+	RoomInfo,
+	"extra" | "playing" | "playmode" | "queue" | "queue_position"
+> => {
 	switch (type) {
 		case "blind":
-			return "";
+			return {
+				extra: "",
+				playing: false,
+				playmode: "default",
+				queue: {},
+				queue_position: 0
+			};
 		case "dj":
-			return "";
+			return {
+				extra: "",
+				playing: false,
+				playmode: "default",
+				queue: {},
+				queue_position: 0
+			};
 		case "seabattle":
-			return encodeBattle(generateBattle(userId));
+			return {
+				extra: encodeBattle(generateBattle(userId)),
+				playing: true,
+				playmode: "shuffle",
+				queue: {
+					0: {
+						id: "301013", // Pirates Of The Caribbean OST
+						provider: "deezer",
+						type: "album"
+					},
+					1: {
+						id: "7358507", // Stalingrad OST
+						provider: "deezer",
+						type: "album"
+					},
+					2: {
+						id: "558976", // Master & Commander OST
+						provider: "deezer",
+						type: "album"
+					},
+					3: {
+						id: "87375582", // Le chant du loup OST
+						provider: "deezer",
+						type: "album"
+					}
+				},
+				queue_position: 0
+			};
 	}
 };

@@ -16,7 +16,7 @@ import config, { selectRoomDatabaseId } from "../../config/firebase";
 
 export const JoinRoomModal: FC = () => {
 	const dispatch = useDispatch<Dispatch>();
-	const [serverId, setServerId] = useState(selectRoomDatabaseId());
+	const [dbId, setDbId] = useState(selectRoomDatabaseId());
 	const [roomId, setRoomId] = useState("");
 	const roomIdRef = useRef<HTMLInputElement>(null);
 	const { t } = useTranslation();
@@ -30,7 +30,7 @@ export const JoinRoomModal: FC = () => {
 	const onClose = useCallback(() => dispatch(popModal()), [dispatch]);
 
 	const onJoin = useCallback(() => {
-		if (serverId.trim().length === 0) {
+		if (dbId.trim().length === 0) {
 			dispatch(displayError("rooms.id_is_invalid"));
 			return;
 		}
@@ -39,13 +39,18 @@ export const JoinRoomModal: FC = () => {
 			return;
 		}
 		dispatch(
-			enterRoom(serverId, roomId, "", {
-				onSuccess: () => {
-					dispatch(popModal());
+			enterRoom({
+				dbId,
+				roomId,
+				secret: "",
+				options: {
+					onSuccess: () => {
+						dispatch(popModal());
+					}
 				}
 			})
 		);
-	}, [dispatch, roomId, serverId]);
+	}, [dispatch, roomId, dbId]);
 
 	return (
 		<FormModal
@@ -71,12 +76,12 @@ export const JoinRoomModal: FC = () => {
 				placeholder={t("rooms.server_id_placeholder")}
 				options={config.dbIDs
 					.sort((s1, s2) => s1.localeCompare(s2))
-					.map(serverId => ({
-						id: serverId,
-						label: serverId
+					.map(otherId => ({
+						id: otherId,
+						label: otherId
 					}))}
-				value={serverId}
-				onChange={e => setServerId(e.target.value)}
+				value={dbId}
+				onChange={e => setDbId(e.target.value)}
 			/>
 			<InputField
 				id="modal-roomId"

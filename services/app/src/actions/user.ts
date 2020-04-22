@@ -7,19 +7,24 @@ import { setUser, resetUser, fetching, error } from "../reducers/user";
 
 // ------------------------------------------------------------------
 
-export const createUser = (
-	dbId: string,
-	name: string,
-	secret: string,
-	options?: ActionOptions
-): AsyncAction => dispatch =>
+export const createUser = ({
+	dbId,
+	name,
+	secret,
+	options
+}: {
+	dbId: string;
+	name: string;
+	secret: string;
+	options?: ActionOptions;
+}): AsyncAction => dispatch =>
 	dispatch(
 		trySomething({
 			onAction: async () => {
 				console.debug("[User] Creating...");
 				const userId = v4();
 				await FirebaseUser({ dbId, userId, secret }).update({ name });
-				dispatch(connectUser(dbId, userId, secret, options));
+				dispatch(connectUser({ dbId, userId, secret, options }));
 				return true;
 			},
 			onFailure: () => {
@@ -34,12 +39,17 @@ export const createUser = (
 
 let FIREBASE_CB: any = null;
 
-export const connectUser = (
-	dbId: string,
-	userId: string,
-	secret: string,
-	options?: ActionOptions
-): AsyncAction => (dispatch, getState) =>
+export const connectUser = ({
+	dbId,
+	userId,
+	secret,
+	options
+}: {
+	dbId: string;
+	userId: string;
+	secret: string;
+	options?: ActionOptions;
+}): AsyncAction => (dispatch, getState) =>
 	dispatch(
 		trySomething({
 			onAction: async () => {
@@ -135,7 +145,7 @@ export const reconnectUser = (): AsyncAction => (dispatch, getState) =>
 					userId,
 					secret
 				});
-				dispatch(connectUser(dbId, userId, secret));
+				dispatch(connectUser({ dbId, userId, secret }));
 				return true;
 			}
 		})
