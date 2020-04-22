@@ -1,5 +1,4 @@
 import { Reducer } from "redux";
-import { AxiosError } from "axios";
 import {
 	deleteUserAccess,
 	saveUserAccess,
@@ -19,7 +18,7 @@ type UserAction =
 	| ReturnType<typeof setUser>;
 
 export const fetching = () => createAction("user/FETCHING");
-export const error = (error: AxiosError) => createAction("user/ERROR", error);
+export const error = (error: string) => createAction("user/ERROR", error);
 export const resetUser = () => createAction("user/RESET");
 export const setUser = (values: Partial<UserData>) =>
 	createAction("user/SET", values);
@@ -34,7 +33,7 @@ export type UserData = {
 
 export type State = UserData & {
 	fetching: boolean;
-	error: null | AxiosError;
+	error: null | string;
 };
 
 const INITIAL_STATE: State = {

@@ -22,7 +22,7 @@ export default {
 			"A room is protected with a secret: it can be accessed without its secret but then no action can be done in it.",
 		note2: "No personal data is accessed or stored."
 	},
-	users: {
+	user: {
 		errors: {
 			invalid: "User is invalid"
 		},
@@ -111,6 +111,7 @@ export default {
 	cancel: "Cancel",
 	clear: "Clear",
 	copy_to_clipboard: "Copy to Clipboard",
+	loading: "Loading...",
 	secret_copied_to_clipboard: "Secret has been copied to clipboard",
 
 	// --------------------------------------------------------------

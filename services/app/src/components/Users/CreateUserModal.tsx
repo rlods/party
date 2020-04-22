@@ -33,7 +33,7 @@ export const CreateUserModal: FC<CreateUserModalProps> = ({ options }) => {
 	const { t } = useTranslation();
 
 	useEffect(() => {
-		setName(`${t("users.user")} ${USER_COUNTER}`);
+		setName(`${t("user.user")} ${USER_COUNTER}`);
 		if (nameRef.current) {
 			nameRef.current.focus();
 		}
@@ -43,11 +43,11 @@ export const CreateUserModal: FC<CreateUserModalProps> = ({ options }) => {
 
 	const onCreate = useCallback(() => {
 		if (name.trim().length === 0) {
-			dispatch(displayError("users.name_is_invalid"));
+			dispatch(displayError("user.name_is_invalid"));
 			return;
 		}
 		if (secret.trim().length === 0) {
-			dispatch(displayError("users.secret_is_invalid"));
+			dispatch(displayError("user.secret_is_invalid"));
 			return;
 		}
 		dispatch(
@@ -65,7 +65,7 @@ export const CreateUserModal: FC<CreateUserModalProps> = ({ options }) => {
 
 	return (
 		<FormModal
-			title={t("users.user_creation")}
+			title={t("user.user_creation")}
 			onSubmit={onCreate}
 			renderButtons={() => (
 				<>
@@ -74,7 +74,7 @@ export const CreateUserModal: FC<CreateUserModalProps> = ({ options }) => {
 							name.trim().length === 0 ||
 							secret.length !== SECRET_FIELD_SIZE
 						}
-						title={t("users.create")}
+						title={t("user.create")}
 						kind="primary"
 						icon="sign-in"
 						type="submit"
@@ -84,9 +84,9 @@ export const CreateUserModal: FC<CreateUserModalProps> = ({ options }) => {
 			)}>
 			<InputField
 				id="modal-name"
-				label={t("users.name")}
+				label={t("user.name")}
 				type="text"
-				placeholder={t("users.name_placeholder")}
+				placeholder={t("user.name_placeholder")}
 				maxLength={100}
 				minLength={2}
 				required={true}
@@ -96,8 +96,8 @@ export const CreateUserModal: FC<CreateUserModalProps> = ({ options }) => {
 			/>
 			<SecretField
 				id="modal-secret"
-				label={t("users.secret")}
-				placeholder={t("users.secret_placeholder")}
+				label={t("user.secret")}
+				placeholder={t("user.secret_placeholder")}
 				value={secret}
 				onChange={newSecret => setSecret(newSecret)}
 			/>

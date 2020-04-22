@@ -33,11 +33,11 @@ export const ConnectUserModal: FC<ConnectUserModalProps> = ({ options }) => {
 
 	const onConnect = useCallback(() => {
 		if (userId.trim().length === 0) {
-			dispatch(displayError("users.id_is_invalid"));
+			dispatch(displayError("user.id_is_invalid"));
 			return;
 		}
 		if (secret.trim().length === 0) {
-			dispatch(displayError("users.secret_is_invalid"));
+			dispatch(displayError("user.secret_is_invalid"));
 			return;
 		}
 		dispatch(
@@ -54,7 +54,7 @@ export const ConnectUserModal: FC<ConnectUserModalProps> = ({ options }) => {
 
 	return (
 		<FormModal
-			title={t("users.connection")}
+			title={t("user.connection")}
 			onSubmit={onConnect}
 			renderButtons={() => (
 				<>
@@ -64,7 +64,7 @@ export const ConnectUserModal: FC<ConnectUserModalProps> = ({ options }) => {
 							userId.length !== 36 ||
 							secret.length !== SECRET_FIELD_SIZE
 						}
-						title={t("users.connect")}
+						title={t("user.connect")}
 						kind="primary"
 						icon="sign-in"
 						type="submit"
@@ -74,9 +74,9 @@ export const ConnectUserModal: FC<ConnectUserModalProps> = ({ options }) => {
 			)}>
 			<InputField
 				id="modal-userId"
-				label={t("users.id")}
+				label={t("user.id")}
 				type="text"
-				placeholder={t("users.id_placeholder")}
+				placeholder={t("user.id_placeholder")}
 				maxLength={36}
 				minLength={36}
 				required={true}
@@ -86,10 +86,10 @@ export const ConnectUserModal: FC<ConnectUserModalProps> = ({ options }) => {
 			/>
 			<InputField
 				id="modal-secret"
-				label={t("users.secret")}
+				label={t("user.secret")}
 				type="password"
 				autoComplete="password"
-				placeholder={t("users.secret_placeholder")}
+				placeholder={t("user.secret_placeholder")}
 				maxLength={36}
 				minLength={36}
 				required={true}

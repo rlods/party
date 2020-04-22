@@ -44,7 +44,7 @@ export const HelpModal: FC = () => {
 						<IconButton
 							icon="user-plus"
 							size="S"
-							title={t("users.create")}
+							title={t("user.create")}
 							onClick={onCreateUser}
 						/>
 						<br />
@@ -52,7 +52,7 @@ export const HelpModal: FC = () => {
 						<IconButton
 							icon="sign-in"
 							size="S"
-							title={t("users.connect")}
+							title={t("user.connect")}
 							onClick={onConnectUser}
 						/>
 					</li>

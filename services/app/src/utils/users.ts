@@ -37,7 +37,10 @@ export const loadUserAccess = (): UserAccess => {
 				res.secret = d.secret;
 				console.debug("Loaded user access: ", res);
 			}
-		} catch (err) {}
+		} catch (err) {
+			console.debug("User cannot be loaded: ", err);
+			deleteUserAccess();
+		}
 	}
 	return res;
 };

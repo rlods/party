@@ -193,7 +193,7 @@ export const FirebaseUser = ({
 					_values = newValues;
 					resolve(newValues);
 				} else {
-					reject(new Error("users.errors.invalid"));
+					reject(new Error("user.errors.invalid"));
 				}
 			});
 		});

@@ -40,7 +40,7 @@ export const joinBattle = (): AsyncAction => (dispatch, getState) =>
 				} = getState();
 				console.log("****** joinBattle1");
 				if (!userId) {
-					dispatch(displayError("users.not_connected"));
+					dispatch(displayError("user.not_connected"));
 					return "connect-and-retry";
 				}
 				console.log("****** joinBattle2");
@@ -93,7 +93,7 @@ export const moveBoat = ({
 					return "unlock-and-retry";
 				}
 				if (!userId) {
-					dispatch(displayError("users.not_connected"));
+					dispatch(displayError("user.not_connected"));
 					return "connect-and-retry";
 				}
 
@@ -242,7 +242,7 @@ export const attackOpponent = ({
 					return "unlock-and-retry";
 				}
 				if (!userId) {
-					dispatch(displayError("users.not_connected"));
+					dispatch(displayError("user.not_connected"));
 					return "connect-and-retry";
 				}
 

@@ -3,7 +3,7 @@ import { v4 } from "uuid";
 import { AsyncAction, ActionOptions, trySomething } from ".";
 import { UserInfo } from "../utils/users";
 import { FirebaseUser } from "../utils/firebase";
-import { setUser, resetUser } from "../reducers/user";
+import { setUser, resetUser, fetching, error } from "../reducers/user";
 
 // ------------------------------------------------------------------
 
@@ -21,6 +21,11 @@ export const createUser = (
 				await FirebaseUser({ dbId, userId, secret }).update({ name });
 				dispatch(connectUser(dbId, userId, secret, options));
 				return true;
+			},
+			onFailure: () => {
+				if (options?.onFailure) {
+					options.onFailure();
+				}
 			}
 		})
 	);
@@ -47,6 +52,8 @@ export const connectUser = (
 
 				dispatch(disconnectUser());
 
+				dispatch(fetching());
+
 				console.debug("[User] Connecting...", { dbId, userId, secret });
 				const newUser = FirebaseUser({ dbId, userId, secret });
 				dispatch(
@@ -69,6 +76,7 @@ export const connectUser = (
 				return true;
 			},
 			onFailure: () => {
+				dispatch(error("Cannot connect")); // TODO: wording
 				dispatch(disconnectUser());
 				if (options?.onFailure) {
 					options.onFailure();

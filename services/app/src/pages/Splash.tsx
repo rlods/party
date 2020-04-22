@@ -9,12 +9,16 @@ import { openModal } from "../reducers/modals";
 import { disconnectUser } from "../actions/user";
 import { clearMessages } from "../reducers/messages";
 import { Messages } from "../components/Common/Messages";
+import { Icon } from "../components/Common/Icon";
 import "./Splash.scss";
 
 // ------------------------------------------------------------------
 
 export const Splash: FC = () => {
 	const dispatch = useDispatch();
+	const fetching = useSelector<RootState, boolean>(
+		state => state.user.fetching
+	);
 	const loggedIn = useSelector<RootState, boolean>(
 		state => !!state.user.access.dbId && !!state.user.access.userId
 	);
@@ -81,17 +85,24 @@ export const Splash: FC = () => {
 				</div>
 				<div className="Middle">
 					<div className="Menu">
-						{loggedIn ? (
-							<>
-								<div className="MenuItem">
-									<IconButton
-										onClick={onCreateRoom}
-										icon="play"
-										size="XL"
-										title={t("rooms.create")}
-									/>
-								</div>
-							</>
+						{fetching ? (
+							<div className="MenuItem">
+								<Icon
+									className="rotating"
+									icon="refresh"
+									size="XL"
+									title={t("loading")}
+								/>
+							</div>
+						) : loggedIn ? (
+							<div className="MenuItem">
+								<IconButton
+									onClick={onCreateRoom}
+									icon="play"
+									size="XL"
+									title={t("rooms.create")}
+								/>
+							</div>
 						) : (
 							<>
 								<div className="MenuItem">
@@ -99,7 +110,7 @@ export const Splash: FC = () => {
 										onClick={onCreateUser}
 										icon="user-plus"
 										size="XL"
-										title={t("users.create")}
+										title={t("user.create")}
 									/>
 								</div>
 								<div className="MenuItem">
@@ -107,7 +118,7 @@ export const Splash: FC = () => {
 										onClick={onConnectUser}
 										icon="sign-in"
 										size="XL"
-										title={t("users.connect")}
+										title={t("user.connect")}
 									/>
 								</div>
 							</>
@@ -116,13 +127,13 @@ export const Splash: FC = () => {
 				</div>
 				<div className="Bottom">
 					<div className="Menu">
-						{loggedIn ? (
+						{fetching ? null : loggedIn ? (
 							<div className="MenuItem">
 								<IconButton
 									icon="sign-out"
 									onClick={onDisconnect}
 									size="M"
-									title={t("users.disconnect")}
+									title={t("user.disconnect")}
 								/>
 							</div>
 						) : (

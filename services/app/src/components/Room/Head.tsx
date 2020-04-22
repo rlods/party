@@ -13,11 +13,15 @@ import { confirmModal } from "../../actions/modals";
 import { RoomInfo } from "../../utils/rooms";
 import { selectTracksCount } from "../../selectors/medias";
 import "./Head.scss";
+import { Icon } from "../Common/Icon";
 
 // ------------------------------------------------------------------
 
 export const Head: FC = () => {
 	const dispatch = useDispatch<Dispatch>();
+	const fetching = useSelector<RootState, boolean>(
+		state => state.room.fetching
+	);
 	const { t } = useTranslation();
 	const history = useHistory();
 	const room = useSelector<RootState, RoomInfo | null>(selectRoom);
@@ -51,7 +55,13 @@ export const Head: FC = () => {
 					/>
 				</div>
 				<div className="RoomMeta">
-					{room ? (
+					{fetching ? (
+						<Icon
+							className="rotating"
+							icon="refresh"
+							title={t("loading")}
+						/>
+					) : room ? (
 						<>
 							<div
 								className="RoomName"

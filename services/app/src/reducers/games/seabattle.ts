@@ -1,5 +1,4 @@
 import { Reducer } from "redux";
-import { AxiosError } from "axios";
 //
 import { createAction } from "../../actions";
 import { SeaBattleData } from "../../utils/games/seabattle";
@@ -13,7 +12,7 @@ type SeaBattleAction =
 	| ReturnType<typeof set>;
 
 export const fetching = () => createAction("games/seabattle/FETCHING");
-export const error = (error: AxiosError) =>
+export const error = (error: string) =>
 	createAction("games/seabattle/ERROR", error);
 export const reset = () => createAction("games/seabattle/RESET", error);
 export const set = (data: SeaBattleData) =>
@@ -23,7 +22,7 @@ export const set = (data: SeaBattleData) =>
 
 export type State = {
 	fetching: boolean;
-	error: null | AxiosError;
+	error: null | string;
 	battle: SeaBattleData;
 };
 

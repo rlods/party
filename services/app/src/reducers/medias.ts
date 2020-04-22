@@ -1,5 +1,4 @@
 import { Reducer } from "redux";
-import { AxiosError } from "axios";
 import { StructuredMedias, Media } from "../utils/medias";
 import { createAction } from "../actions";
 
@@ -12,7 +11,7 @@ type MediasAction =
 	| ReturnType<typeof setMedias>;
 
 export const fetching = () => createAction("medias/FETCHING");
-export const error = (error: AxiosError) => createAction("medias/ERROR", error);
+export const error = (error: string) => createAction("medias/ERROR", error);
 export const resetMedias = () => createAction("medias/RESET");
 export const setMedias = (medias: Media[]) =>
 	createAction("medias/SET", medias);
@@ -20,7 +19,7 @@ export const setMedias = (medias: Media[]) =>
 // ------------------------------------------------------------------
 
 export type State = {
-	error: null | AxiosError;
+	error: null | string;
 	fetching: boolean;
 	medias: StructuredMedias;
 };

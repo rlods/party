@@ -197,7 +197,7 @@ export const SeaBattle: FC = () => {
 								<span>{t("games.connect_to_join")}</span>
 								<IconButton
 									icon="sign-in"
-									title={t("users.connect")}
+									title={t("user.connect")}
 									size="L"
 									displayTitle={true}
 									onClick={onConnectUser}

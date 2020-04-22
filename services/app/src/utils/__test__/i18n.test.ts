@@ -3,15 +3,15 @@ import { changeLanguage, initLocales } from "../i18n";
 
 // ------------------------------------------------------------------
 
-describe("I18n Utilities", () => {
+describe("I18N Utilities", () => {
 	beforeAll(() => {
 		initLocales();
 	});
 
 	it("t - valid", async () => {
-		expect(i18n.t("users.user")).toEqual("User");
+		expect(i18n.t("user.user")).toEqual("User");
 		changeLanguage("fr");
-		expect(i18n.t("users.user")).toEqual("Utilisateur");
+		expect(i18n.t("user.user")).toEqual("Utilisateur");
 	});
 
 	it("t - invalid", async () => {

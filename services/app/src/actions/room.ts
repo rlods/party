@@ -11,7 +11,7 @@ import { computePlayerNextPosition } from "../utils/player";
 import { loadNewMedias } from "../utils/providers";
 import { RootState } from "../reducers";
 import { setMedias } from "../reducers/medias";
-import { setRoom, resetRoom } from "../reducers/room";
+import { setRoom, resetRoom, fetching, error } from "../reducers/room";
 import { displayMediaInfo } from "./medias";
 import history from "../utils/history";
 import {
@@ -77,7 +77,7 @@ export const createRoom = (
 					}
 				} = getState();
 				if (!userId) {
-					dispatch(displayError("users.not_connected"));
+					dispatch(displayError("user.not_connected"));
 					return "connect-and-retry";
 				}
 				const roomId = v4();
@@ -94,10 +94,14 @@ export const createRoom = (
 					type,
 					...DEFAULT_QUEUE_INFO_BY_TYPE[type]
 				});
-				dispatch(enterRoom(dbId, roomId, secret));
+				dispatch(enterRoom(dbId, roomId, secret, options));
 				return true;
 			},
-			...options
+			onFailure: () => {
+				if (options?.onFailure) {
+					options.onFailure();
+				}
+			}
 		})
 	);
 
@@ -121,11 +125,16 @@ export const enterRoom = (
 				if (room && room.dbId === dbId && room.roomId === roomId) {
 					return true; // Nothing to do
 				}
+
 				dispatch(exitRoom());
+
 				if (!userId) {
-					dispatch(displayError("users.not_connected"));
+					dispatch(displayError("user.not_connected"));
 					return "connect-and-retry";
 				}
+
+				dispatch(fetching());
+
 				console.debug("[Room] Entering...", { dbId, roomId, secret });
 				const newRoom = FirebaseRoom({ dbId, roomId, secret });
 				dispatch(
@@ -139,6 +148,13 @@ export const enterRoom = (
 				dispatch(_watchPlayer());
 				history.push(`/room/${dbId}/${roomId}?secret=${secret}`); // TODO: should push only if we're not already in it
 				return true;
+			},
+			onFailure: () => {
+				dispatch(error("Cannot enter")); // TODO: wording
+				dispatch(exitRoom());
+				if (options?.onFailure) {
+					options.onFailure();
+				}
 			},
 			...options
 		})

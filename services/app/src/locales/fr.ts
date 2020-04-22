@@ -22,7 +22,7 @@ export default {
 			"Un salle est protégée par un secret : elle peut être accédée sans son secret mais aucune action ne pourra y être réalisée.",
 		note2: "Aucune donnée personnelle n'est manipulée ou stockée."
 	},
-	users: {
+	user: {
 		errors: {
 			invalid: "L'utilisateur est invalide"
 		},
@@ -113,6 +113,7 @@ export default {
 	cancel: "Annuler",
 	clear: "Supprimer",
 	copy_to_clipboard: "Copier dans le presse-papier",
+	loading: "Chargement...",
 	secret_copied_to_clipboard: "Le secret a été copié dans le presse-papier",
 
 	// --------------------------------------------------------------
