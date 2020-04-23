@@ -1,14 +1,19 @@
-import { SeaBattlePosition, SeaBattleMovementType } from ".";
+import {
+	SeaBattlePosition,
+	SeaBattleMovementType,
+	SeaBattleBoatType,
+	SeaBattleDirection,
+	SeaBattleTranslationType
+} from ".";
 import { KEY_RIGHT, KEY_LEFT, KEY_DOWN, KEY_UP } from "../../keyboards";
 
 // ------------------------------------------------------------------
 
 export const SeaBattleBoatRotationTransformationMappings: {
-	[type: string]: {
-		[direction: string]: SeaBattlePosition;
+	[type in SeaBattleBoatType]: {
+		[direction in SeaBattleDirection]: SeaBattlePosition;
 	};
 } = {
-	// Keys are boat types
 	boat1: {
 		N: { x: 0, y: 0 },
 		E: { x: 0, y: 0 },
@@ -32,60 +37,64 @@ export const SeaBattleBoatRotationTransformationMappings: {
 // ------------------------------------------------------------------
 
 export const SeaBattleKeyboardMoveMappings: {
-	[direction: string]: { [key: string]: SeaBattleMovementType };
+	[direction in SeaBattleDirection]: { [key: string]: SeaBattleMovementType };
 } = {
 	N: {
-		[KEY_UP]: "move-forward",
-		[KEY_DOWN]: "move-backward",
-		[KEY_LEFT]: "rotate-left",
-		[KEY_RIGHT]: "rotate-right"
+		[KEY_UP]: "move_forward",
+		[KEY_DOWN]: "move_backward",
+		[KEY_LEFT]: "rotate_left",
+		[KEY_RIGHT]: "rotate_right"
 	},
 	E: {
-		[KEY_UP]: "rotate-left",
-		[KEY_DOWN]: "rotate-right",
-		[KEY_LEFT]: "move-backward",
-		[KEY_RIGHT]: "move-forward"
+		[KEY_UP]: "rotate_left",
+		[KEY_DOWN]: "rotate_right",
+		[KEY_LEFT]: "move_backward",
+		[KEY_RIGHT]: "move_forward"
 	},
 	S: {
-		[KEY_UP]: "move-backward",
-		[KEY_DOWN]: "move-forward",
-		[KEY_LEFT]: "rotate-right",
-		[KEY_RIGHT]: "rotate-left"
+		[KEY_UP]: "move_backward",
+		[KEY_DOWN]: "move_forward",
+		[KEY_LEFT]: "rotate_right",
+		[KEY_RIGHT]: "rotate_left"
 	},
 	W: {
-		[KEY_UP]: "rotate-right",
-		[KEY_DOWN]: "rotate-left",
-		[KEY_LEFT]: "move-forward",
-		[KEY_RIGHT]: "move-backward"
+		[KEY_UP]: "rotate_right",
+		[KEY_DOWN]: "rotate_left",
+		[KEY_LEFT]: "move_forward",
+		[KEY_RIGHT]: "move_backward"
 	}
 };
 
 // ------------------------------------------------------------------
 
 export const SeaBattleBoatTranslationMappings: {
-	[direction: string]: { [rotation: string]: SeaBattlePosition };
+	[direction in SeaBattleDirection]: {
+		[translation in SeaBattleTranslationType]: SeaBattlePosition;
+	};
 } = {
 	N: {
-		"move-forward": { x: 0, y: -1 },
-		"move-backward": { x: 0, y: 1 }
+		move_forward: { x: 0, y: -1 },
+		move_backward: { x: 0, y: 1 }
 	},
 	E: {
-		"move-forward": { x: 1, y: 0 },
-		"move-backward": { x: -1, y: 0 }
+		move_forward: { x: 1, y: 0 },
+		move_backward: { x: -1, y: 0 }
 	},
 	S: {
-		"move-forward": { x: 0, y: 1 },
-		"move-backward": { x: 0, y: -1 }
+		move_forward: { x: 0, y: 1 },
+		move_backward: { x: 0, y: -1 }
 	},
 	W: {
-		"move-forward": { x: -1, y: 0 },
-		"move-backward": { x: 1, y: 0 }
+		move_forward: { x: -1, y: 0 },
+		move_backward: { x: 1, y: 0 }
 	}
 };
 
 // ------------------------------------------------------------------
 
-export const SeaBattleBoatLengthMappings = {
+export const SeaBattleBoatLengthMappings: {
+	[type in SeaBattleBoatType]: number;
+} = {
 	boat1: 1,
 	boat2: 2,
 	boat3: 3
@@ -93,21 +102,25 @@ export const SeaBattleBoatLengthMappings = {
 
 // ------------------------------------------------------------------
 
-export const SeaBattleMovementIconMappings = {
+export const SeaBattleMovementIconMappings: {
+	[direction in SeaBattleDirection]: {
+		[translation in SeaBattleTranslationType]: string;
+	};
+} = {
 	N: {
-		forward: "arrow-up",
-		backward: "arrow-down"
+		move_forward: "arrow-up",
+		move_backward: "arrow-down"
 	},
 	E: {
-		forward: "arrow-right",
-		backward: "arrow-left"
+		move_forward: "arrow-right",
+		move_backward: "arrow-left"
 	},
 	S: {
-		forward: "arrow-down",
-		backward: "arrow-up"
+		move_forward: "arrow-down",
+		move_backward: "arrow-up"
 	},
 	W: {
-		forward: "arrow-left",
-		backward: "arrow-right"
+		move_forward: "arrow-left",
+		move_backward: "arrow-right"
 	}
 };

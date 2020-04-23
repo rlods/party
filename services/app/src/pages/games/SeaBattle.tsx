@@ -175,10 +175,10 @@ export const SeaBattle: FC = () => {
 				<SeaBattlePlayerControls
 					boat={boat}
 					disabled={!boat}
-					onMoveForward={() => onMove("move-forward")}
-					onMoveBackward={() => onMove("move-backward")}
-					onRotateLeft={() => onMove("rotate-left")}
-					onRotateRight={() => onMove("rotate-right")}
+					onMoveForward={() => onMove("move_forward")}
+					onMoveBackward={() => onMove("move_backward")}
+					onRotateLeft={() => onMove("rotate_left")}
+					onRotateRight={() => onMove("rotate_right")}
 				/>
 				{playerMap ? (
 					<Map

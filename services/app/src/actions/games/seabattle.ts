@@ -130,8 +130,8 @@ export const moveBoat = ({
 
 				let newPosition = { ...oldPosition };
 				if (
-					movement === "move-forward" ||
-					movement === "move-backward"
+					movement === "move_forward" ||
+					movement === "move_backward"
 				) {
 					newPosition.x +=
 						SeaBattleBoatTranslationMappings[oldDirection][
@@ -145,11 +145,11 @@ export const moveBoat = ({
 
 				let newAngle = oldAngle;
 				let newDirection = oldDirection;
-				if (movement === "rotate-left" || movement === "rotate-right") {
-					if (movement === "rotate-left") {
+				if (movement === "rotate_left" || movement === "rotate_right") {
+					if (movement === "rotate_left") {
 						newAngle--;
 					}
-					if (movement === "rotate-right") {
+					if (movement === "rotate_right") {
 						newAngle++;
 					}
 					newDirection = AngleToDirection(newAngle);

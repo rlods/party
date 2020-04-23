@@ -211,7 +211,7 @@ describe("Providers Utilities", () => {
 		);
 		await expect(DEFAULT_API.loadAlbums(["42"])).resolves.toEqual<Album[]>(
 			[]
-		); // invalid albumds are just ignored
+		); // invalid albumIds are just ignored
 	});
 
 	// --------------------------------------------------------------

@@ -51,23 +51,32 @@ export const SeaBattleDirections: SeaBattleDirection[] = ["E", "S", "W", "N"]; /
 export const AngleToDirection = (angle: number): SeaBattleDirection =>
 	augmentedArrayIndexAccess(SeaBattleDirections, angle);
 
-export const DirectionToAngle = {
-	// Keys are direction
+export const DirectionToAngle: {
+	[type in SeaBattleDirection]: number;
+} = {
 	E: 0,
 	S: 1,
 	W: 2,
 	N: 3
 };
 
+export type SeaBattleRotationType = "rotate_left" | "rotate_right";
+
+export type SeaBattleTranslationType = "move_forward" | "move_backward";
+
 export type SeaBattleMovementType =
-	| "move-forward"
-	| "move-backward"
-	| "rotate-left"
-	| "rotate-right";
+	| SeaBattleTranslationType
+	| SeaBattleRotationType;
 
 export type SeaBattleBoatStatus = "ok" | "ko";
 
 export type SeaBattleBoatType = "boat1" | "boat2" | "boat3";
+
+export const SeaBattleBoatTypes: SeaBattleBoatType[] = [
+	"boat1",
+	"boat2",
+	"boat3"
+];
 
 export type SeaBattleBoatData = {
 	angle: number;
@@ -77,11 +86,16 @@ export type SeaBattleBoatData = {
 	type: SeaBattleBoatType;
 };
 
-export const BoatsOffsetMappings = {
-	// Keys are boat types
+export const BoatsOffsetMappings: {
+	[type in SeaBattleBoatType]: SeaBattlePosition;
+} = {
 	boat1: { x: 6, y: 6 },
 	boat2: { x: 6, y: 6 },
 	boat3: { x: 6, y: 6 }
+};
+
+export type SeaBattleFleetSet = {
+	[type in SeaBattleBoatType]: number;
 };
 
 // ------------------------------------------------------------------
@@ -101,14 +115,16 @@ export type SeaBattleHitData = {
 	type: SeaBattleHitType;
 };
 
-export const HitsOffsetInBoatappings = {
-	// Keys are hits types
+export const HitsOffsetInBoatMappings: {
+	[type in SeaBattleHitType]: SeaBattlePosition;
+} = {
 	hitted: { x: 4, y: 4 },
 	missed: { x: 4, y: 4 }
 };
 
-export const HitsOffsetInCellMappings = {
-	// Keys are hits types
+export const HitsOffsetInCellMappings: {
+	[type in SeaBattleHitType]: SeaBattlePosition;
+} = {
 	hitted: { x: 10, y: 10 },
 	missed: { x: 10, y: 10 }
 };
@@ -130,8 +146,9 @@ export type SeaBattleWeaponData = {
 	type: SeaBattleWeaponType;
 };
 
-export const SeaBattleWeaponsOffsetMappings = {
-	// Keys are weapon types
+export const SeaBattleWeaponsOffsetMappings: {
+	[type in SeaBattleWeaponType]: SeaBattlePosition;
+} = {
 	bullet1: { x: 12, y: 16 },
 	bullet2: { x: 12, y: 16 },
 	bullet3: { x: 12, y: 16 },
@@ -139,8 +156,7 @@ export const SeaBattleWeaponsOffsetMappings = {
 };
 
 export type SeaBattleWeaponsSet = {
-	// Keys are weapon types
-	[type: string]: number;
+	[type in SeaBattleWeaponType]: number;
 };
 
 // ------------------------------------------------------------------

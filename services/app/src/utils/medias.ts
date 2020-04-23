@@ -108,8 +108,7 @@ export type Container = Album | Playlist;
 export type Media = Container | Track;
 
 export type StructuredMedias = {
-	// keys are ProvideType
-	deezer: {
+	[provider in ProviderType]: {
 		// keys are MediaType
 		album: { [id: string]: Album };
 		playlist: { [id: string]: Playlist };

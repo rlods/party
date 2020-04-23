@@ -5,7 +5,8 @@ import {
 	Album,
 	Playlist,
 	Track,
-	MediaType
+	MediaType,
+	ProviderType
 } from "../medias";
 import { DEFAULT_API } from "./deezer";
 
@@ -16,9 +17,7 @@ export type SearchOptions = {
 };
 
 export type SearchResults = {
-	// keys are ProviderType
-	deezer: {
-		// keys are MediaType
+	[provider in ProviderType]: {
 		album: Album[];
 		playlist: Playlist[];
 		track: Track[];
@@ -29,11 +28,11 @@ export type SearchResults = {
 
 export const loadMedias = async (accesses: MediaAccess[]): Promise<Media[]> => {
 	const ids: {
-		deezer: { album: string[]; playlist: string[]; track: string[] };
+		[provider in ProviderType]: {
+			[media in MediaType]: string[];
+		};
 	} = {
-		// keys are ProviderType
 		deezer: {
-			// keys are MediaType
 			album: [],
 			playlist: [],
 			track: []
@@ -42,10 +41,8 @@ export const loadMedias = async (accesses: MediaAccess[]): Promise<Media[]> => {
 	for (const access of accesses) {
 		ids[access.provider][access.type].push(access.id);
 	}
-	const medias = {
-		// keys are ProviderType
+	const medias: SearchResults = {
 		deezer: {
-			// keys are MediaType
 			album: await DEFAULT_API.loadAlbums(ids.deezer.album),
 			playlist: await DEFAULT_API.loadPlaylists(ids.deezer.playlist),
 			track: await DEFAULT_API.loadTracks(ids.deezer.track)
@@ -110,9 +107,7 @@ export const searchMedias = async (
 			DEFAULT_API.searchTracks(query, options)
 		]);
 		return {
-			// keys are ProviderType
 			deezer: {
-				// keys are MediaType
 				album: album,
 				playlist: playlist,
 				track: track

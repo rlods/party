@@ -6,7 +6,7 @@ import {
 	SeaBattleBoatData,
 	GRID_CELL_UNIT_SIZE,
 	BoatsOffsetMappings,
-	HitsOffsetInBoatappings
+	HitsOffsetInBoatMappings
 } from "../../utils/games/seabattle";
 
 // ------------------------------------------------------------------
@@ -51,10 +51,10 @@ export const Boat: FC<{
 				type={hit.type}
 				position={{
 					x:
-						HitsOffsetInBoatappings[hit.type].x +
+						HitsOffsetInBoatMappings[hit.type].x +
 						hit.position.x * GRID_CELL_UNIT_SIZE,
 					y:
-						HitsOffsetInBoatappings[hit.type].y +
+						HitsOffsetInBoatMappings[hit.type].y +
 						hit.position.y * GRID_CELL_UNIT_SIZE
 				}}
 			/>

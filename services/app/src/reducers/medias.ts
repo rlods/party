@@ -28,9 +28,7 @@ const INITIAL_STATE: State = {
 	error: null,
 	fetching: false,
 	medias: {
-		// keys are ProvideType
 		deezer: {
-			// keys are MediaType
 			album: {},
 			playlist: {},
 			track: {}
@@ -63,9 +61,7 @@ export const mediasReducer: Reducer<State, MediasAction> = (
 				fetching: false,
 				error: null,
 				medias: {
-					// keys are ProvideType
 					deezer: {
-						// keys are MediaType
 						album: { ...state.medias.deezer.album },
 						playlist: { ...state.medias.deezer.playlist },
 						track: { ...state.medias.deezer.track }

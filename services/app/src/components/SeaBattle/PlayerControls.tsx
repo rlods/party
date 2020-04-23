@@ -41,7 +41,7 @@ export const SeaBattlePlayerControls: FC<{
 					boat
 						? SeaBattleMovementIconMappings[
 								AngleToDirection(boat.angle)
-						  ].backward
+						  ].move_backward
 						: "arrow-down"
 				}
 				title={t("games.seabattle.move_backward")}
@@ -53,7 +53,7 @@ export const SeaBattlePlayerControls: FC<{
 					boat
 						? SeaBattleMovementIconMappings[
 								AngleToDirection(boat.angle)
-						  ].forward
+						  ].move_forward
 						: "arrow-up"
 				}
 				title={t("games.seabattle.move_forward")}

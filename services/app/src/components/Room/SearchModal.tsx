@@ -45,9 +45,7 @@ export const SearchModal: FC = () => {
 	);
 	const [query, setQuery] = useState("");
 	const [results, setResults] = useState<SearchResults>({
-		// keys are ProviderType
 		deezer: {
-			// keys are MediaType
 			album: [],
 			playlist: [],
 			track: []
