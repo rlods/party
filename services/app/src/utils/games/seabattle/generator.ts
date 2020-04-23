@@ -1,30 +1,23 @@
 import {
+	DirectionToAngle,
+	GRID_CELL_COUNT,
 	SeaBattleBoatData,
 	SeaBattleBoatType,
+	SeaBattleBoatTypes,
 	SeaBattleData,
+	SeaBattleDirection,
 	SeaBattleDirections,
+	SeaBattleFleetSet,
 	SeaBattleMapData,
-	SeaBattleWeaponsSet,
-	GRID_CELL_COUNT,
-	DirectionToAngle,
 	SeaBattlePosition,
-	SeaBattleDirection
+	SeaBattleWeaponsSet
 } from ".";
 import { SeaBattleBoatLengthMappings } from "./mappings";
 
 // ------------------------------------------------------------------
 
-const FleetDefaultSet = {
-	// Keys are boat types
-	boat1: 4,
-	boat2: 3,
-	boat3: 2
-};
-
-// ------------------------------------------------------------------
-
 export const generateWeaponsSet = (): SeaBattleWeaponsSet => ({
-	// Keys are weapon types: Following counts are abitrary choices (to validate or adjust ^_^) - TODO
+	// Following counts are abitrary choices (to validate or adjust ^_^) - TODO
 	bullet1: 100,
 	bullet2: 6,
 	bullet3: 3,
@@ -99,6 +92,8 @@ export const checkAvailable = (
 	return true;
 };
 
+// ------------------------------------------------------------------
+
 export const generatePlace = (grid: number[][], boatLength: number) => {
 	while (true) {
 		const pos = {
@@ -140,6 +135,13 @@ export const generatePlace = (grid: number[][], boatLength: number) => {
 	}
 };
 
+// ------------------------------------------------------------------
+
+const getValidBoatTypes = (maxLength: number) =>
+	SeaBattleBoatTypes.filter(
+		type => SeaBattleBoatLengthMappings[type] <= maxLength
+	);
+
 export const generateFleet = (battle: SeaBattleData, userId: string) => {
 	const oldMap = battle.maps.find(other => other.userId === userId);
 	if (oldMap) {
@@ -153,8 +155,29 @@ export const generateFleet = (battle: SeaBattleData, userId: string) => {
 		.fill(0)
 		.map(_ => Array<number>(GRID_CELL_COUNT).fill(0));
 
+	let fleetCumulatedSize = 16;
+	// for example 16 as a fleet cumulated size means:
+	//     4 x boat1 + 3 x boat2 + 3 x boat3
+	// or 10 x boat1 + 2 x boat3
+	// or ...
+
+	// Generate random fleet set based on specified cumulated size
+	const fleetSet: SeaBattleFleetSet = {
+		boat1: 0,
+		boat2: 0,
+		boat3: 0
+	};
+	while (fleetCumulatedSize > 0) {
+		const typeChoices = getValidBoatTypes(fleetCumulatedSize);
+		const typeChoice =
+			typeChoices[Math.floor(Math.random() * typeChoices.length)];
+		fleetSet[typeChoice]++;
+		fleetCumulatedSize -= SeaBattleBoatLengthMappings[typeChoice];
+	}
+
+	// Place boats
 	const fleet: SeaBattleBoatData[] = [];
-	for (const boatSetting of Object.entries(FleetDefaultSet).reverse()) {
+	for (const boatSetting of Object.entries(fleetSet).reverse()) {
 		const [rawType, count] = boatSetting;
 		const type = rawType as SeaBattleBoatType;
 		const boatLength = SeaBattleBoatLengthMappings[type];
