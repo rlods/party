@@ -4,7 +4,6 @@ import {
 	SeaBattleMovementType,
 	AngleToDirection,
 	MAX_PLAYER_COUNT,
-	INVALID_MOVE_MESSAGE_TAG,
 	SeaBattlePosition,
 	SeaBattleWeaponType,
 	extractOpponentMaps,
@@ -165,14 +164,17 @@ export const moveBoat = ({
 
 				const boat = fleet[boatIndex];
 				if (boat.hits.find(hit => hit.type === "hitted")) {
-					dispatch(
-						displayError(
-							"games.seabattle.movement_not_possible_because_hitted",
-							{
-								tag: INVALID_MOVE_MESSAGE_TAG
-							}
-						)
-					);
+					console.debug("[SeaBattle] Hitted boat cannot move...", {
+						boatIndex
+					});
+					// dispatch(
+					// 	displayError(
+					// 		"games.seabattle.movement_not_possible_because_hitted",
+					// 		{
+					// 			tag: INVALID_MOVE_MESSAGE_TAG
+					// 		}
+					// 	)
+					// );
 					return true;
 				}
 
@@ -187,11 +189,11 @@ export const moveBoat = ({
 						oldPosition,
 						newPosition
 					});
-					dispatch(
-						displayError("games.seabattle.movement_not_possible", {
-							tag: INVALID_MOVE_MESSAGE_TAG
-						})
-					);
+					// dispatch(
+					// 	displayError("games.seabattle.movement_not_possible", {
+					// 		tag: INVALID_MOVE_MESSAGE_TAG
+					// 	})
+					// );
 					return true;
 				}
 
