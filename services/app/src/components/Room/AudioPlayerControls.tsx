@@ -10,17 +10,16 @@ import { isRoomLocked, isRoomPlaying, selectRoom } from "../../selectors/room";
 import { stopPlayer, startPlayer } from "../../actions/player";
 import { moveToPreviousTrack, moveToNextTrack } from "../../actions/queue";
 import { RoomInfo } from "../../utils/rooms";
-import { IconSize } from "../Common/Icon";
 import { selectTracksCount } from "../../selectors/medias";
 import "./AudioPlayerControls.scss";
 
 // ------------------------------------------------------------------
 
 export const AudioPlayerControls: FC<{
+	bigPlayer: boolean;
 	className?: string;
 	propagate: boolean;
-	size?: IconSize;
-}> = ({ className, propagate, size }) => {
+}> = ({ bigPlayer, className, propagate }) => {
 	const dispatch = useDispatch<Dispatch>();
 
 	const { t } = useTranslation();
@@ -64,7 +63,7 @@ export const AudioPlayerControls: FC<{
 					}
 					icon="step-backward"
 					onClick={onMoveBackward}
-					size={size || "M"}
+					size={"M"}
 					title={t("player.backward")}
 				/>
 			</div>
@@ -72,18 +71,18 @@ export const AudioPlayerControls: FC<{
 				{!playing ? (
 					<IconButton
 						disabled={locked || tracksCount === 0}
-						onClick={onPlay}
 						icon="play"
-						size={size || "L"}
+						onClick={onPlay}
+						size={bigPlayer ? "L" : "M"}
 						title={t("player.play")}
 					/>
 				) : (
 					<IconButton
 						disabled={locked || tracksCount === 0}
-						onClick={onStop}
 						icon="pause"
+						onClick={onStop}
+						size={bigPlayer ? "L" : "M"}
 						title={t("player.stop")}
-						size={size || "L"}
 					/>
 				)}
 			</div>
@@ -92,7 +91,7 @@ export const AudioPlayerControls: FC<{
 					disabled={locked || tracksCount === 0}
 					icon="step-forward"
 					onClick={onMoveForward}
-					size={size || "M"}
+					size={"M"}
 					title={t("player.forward")}
 				/>
 			</div>

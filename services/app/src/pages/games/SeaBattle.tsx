@@ -158,8 +158,8 @@ export const SeaBattle: FC = () => {
 					})
 				);
 			}
+			setPreviousMapIndex(currentMapIndex);
 		}
-		setPreviousMapIndex(currentMapIndex);
 	}, [
 		currentMapIndex,
 		dispatch,

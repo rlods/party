@@ -6,7 +6,6 @@ import { augmentedArrayIndexAccess } from "../../";
 export const GRID_CELL_COUNT = 10;
 export const GRID_CELL_UNIT_SIZE = 40;
 export const MAX_PLAYER_COUNT = 3;
-export const INVALID_MOVE_MESSAGE_TAG = "seabattle/invalid_move";
 export const PLAYER_TURN_MESSAGE_TAG = "seabattle/player_turn";
 
 // ------------------------------------------------------------------
