@@ -6,7 +6,7 @@ import {
 	UserAccess,
 	UserInfo
 } from "../utils/users";
-import { FirebaseUser } from "../utils/firebase";
+import { FirebaseUser } from "../utils/firebase/user";
 import { createAction } from "../actions";
 
 // ------------------------------------------------------------------
@@ -26,7 +26,7 @@ export const setUser = (values: Partial<UserData>) =>
 // ------------------------------------------------------------------
 
 export type UserData = {
-	user: ReturnType<typeof FirebaseUser> | null;
+	_fbUser: ReturnType<typeof FirebaseUser> | null;
 	access: UserAccess;
 	info: UserInfo | null;
 };
@@ -37,11 +37,11 @@ export type State = UserData & {
 };
 
 const INITIAL_STATE: State = {
+	_fbUser: null,
 	access: { dbId: "", userId: "", secret: "" },
 	error: null,
 	fetching: false,
-	info: null,
-	user: null
+	info: null
 };
 
 // ------------------------------------------------------------------

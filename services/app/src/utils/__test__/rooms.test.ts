@@ -1,5 +1,9 @@
 import { createFakeAlbum, createFakePlaylist, extractAccess } from ".";
-import { createQueueMerging, createQueueRemoving, RoomQueue } from "../rooms";
+import {
+	createQueueMerging,
+	createQueueRemoving,
+	RoomQueueMedias
+} from "../rooms";
 
 // ------------------------------------------------------------------
 
@@ -8,7 +12,9 @@ describe("Rooms Utilities", () => {
 		const album1 = extractAccess(createFakeAlbum());
 		const playlist1 = extractAccess(createFakePlaylist());
 
-		expect(createQueueMerging([album1], [playlist1])).toEqual<RoomQueue>({
+		expect(createQueueMerging([album1], [playlist1])).toEqual<
+			RoomQueueMedias
+		>({
 			0: album1,
 			1: playlist1
 		});
@@ -19,13 +25,13 @@ describe("Rooms Utilities", () => {
 	it("createQueueMerging - edge", () => {
 		const album1 = extractAccess(createFakeAlbum());
 
-		expect(createQueueMerging([], [])).toEqual<RoomQueue>({});
+		expect(createQueueMerging([], [])).toEqual<RoomQueueMedias>({});
 
-		expect(createQueueMerging([album1], [])).toEqual<RoomQueue>({
+		expect(createQueueMerging([album1], [])).toEqual<RoomQueueMedias>({
 			0: album1
 		});
 
-		expect(createQueueMerging([], [album1])).toEqual<RoomQueue>({
+		expect(createQueueMerging([], [album1])).toEqual<RoomQueueMedias>({
 			0: album1
 		});
 	});
@@ -37,14 +43,14 @@ describe("Rooms Utilities", () => {
 		const playlist1 = extractAccess(createFakePlaylist());
 
 		expect(createQueueRemoving([album1, playlist1], 0, 0)).toEqual<
-			RoomQueue
+			RoomQueueMedias
 		>({
 			0: album1,
 			1: playlist1
 		});
 
 		expect(createQueueRemoving([album1, playlist1], 1, 1)).toEqual<
-			RoomQueue
+			RoomQueueMedias
 		>({
 			0: album1
 		});

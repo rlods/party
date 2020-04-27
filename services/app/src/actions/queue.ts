@@ -17,9 +17,9 @@ export const clearQueue = ({
 		trySomething({
 			onAction: async () => {
 				const {
-					room: { info, room }
+					room: { _fbRoom, queue }
 				} = getState();
-				if (!room || room.isLocked() || !info) {
+				if (!_fbRoom || _fbRoom.isLocked() || !queue) {
 					dispatch(displayError("rooms.errors.locked"));
 					return "unlock-and-retry";
 				}
@@ -27,21 +27,21 @@ export const clearQueue = ({
 				if (!propagate) {
 					dispatch(
 						setRoom({
-							info: {
-								...info,
+							queue: {
+								...queue,
 								playing: false,
-								queue: {},
-								queue_position: 0
+								medias: {},
+								position: 0
 							}
 						})
 					);
 					return true;
 				}
-				await room.update({
-					...info,
+				await _fbRoom.updateQueue({
+					...queue,
+					medias: {},
 					playing: false,
-					queue: {},
-					queue_position: 0
+					position: 0
 				});
 				return true;
 			},
@@ -59,9 +59,9 @@ export const appendToQueue = (newMedias: MediaAccess[]): AsyncAction => (
 		trySomething({
 			onAction: async () => {
 				const {
-					room: { info, medias: oldMedias, room }
+					room: { _fbRoom, queue, medias: oldMedias }
 				} = getState();
-				if (!room || room.isLocked() || !info) {
+				if (!_fbRoom || _fbRoom.isLocked() || !queue) {
 					dispatch(displayError("rooms.errors.locked"));
 					return "unlock-and-retry";
 				}
@@ -71,9 +71,9 @@ export const appendToQueue = (newMedias: MediaAccess[]): AsyncAction => (
 				console.debug("[Queue] Appending...", {
 					newMedias
 				});
-				await room.update({
-					...info,
-					queue: createQueueMerging(oldMedias, newMedias)
+				await _fbRoom.updateQueue({
+					...queue,
+					medias: createQueueMerging(oldMedias, newMedias)
 				});
 				return true;
 			},
@@ -94,9 +94,9 @@ export const removeFromQueue = ({
 			onAction: async () => {
 				const {
 					medias: { medias: allMedias },
-					room: { info, medias, room, tracks }
+					room: { _fbRoom, queue, medias: oldMedias, tracks }
 				} = getState();
-				if (!room || room.isLocked() || !info) {
+				if (!_fbRoom || _fbRoom.isLocked() || !queue) {
 					dispatch(displayError("rooms.errors.locked"));
 					return "unlock-and-retry";
 				}
@@ -105,14 +105,14 @@ export const removeFromQueue = ({
 					mediaIndex: removedMediaIndex,
 					mediaSize: removedTrackCount
 				} = findContextFromTrackIndex(
-					medias,
+					oldMedias,
 					removedTrackIndex,
 					allMedias
 				);
 				if (removedMediaIndex < 0) {
 					return true; // Nothing to do
 				}
-				const playingTrackIndex = info.queue_position;
+				const playingTrackIndex = queue.position;
 				console.debug("[Queue] Removing...", {
 					playingTrackIndex,
 					removedMediaIndex,
@@ -120,39 +120,43 @@ export const removeFromQueue = ({
 					removedTrackIndex,
 					removedMediaFirstTrackIndex
 				});
-				const queue = createQueueRemoving(medias, removedMediaIndex, 1);
-				if (Object.keys(queue).length === 0) {
+				const newMedias = createQueueRemoving(
+					oldMedias,
+					removedMediaIndex,
+					1
+				);
+				if (Object.keys(newMedias).length === 0) {
 					console.debug("[Queue] Removing last...");
-					await room.update({
-						...info,
+					await _fbRoom.updateQueue({
+						...queue,
+						medias: {},
 						playing: false,
-						queue: {},
-						queue_position: 0
+						position: 0
 					});
 				} else if (playingTrackIndex < removedTrackIndex) {
-					await room.update({
-						...info,
-						queue
+					await _fbRoom.updateQueue({
+						...queue,
+						medias: newMedias
 					});
 				} else if (
 					playingTrackIndex >= removedMediaFirstTrackIndex &&
 					playingTrackIndex <
 						removedMediaFirstTrackIndex + removedTrackCount
 				) {
-					await room.update({
-						...info,
-						queue,
-						queue_position:
+					await _fbRoom.updateQueue({
+						...queue,
+						medias: newMedias,
+						position:
 							removedMediaFirstTrackIndex + removedTrackCount ===
 							tracks.length
 								? removedMediaFirstTrackIndex - 1
 								: removedMediaFirstTrackIndex
 					});
 				} else {
-					await room.update({
-						...info,
-						queue,
-						queue_position: playingTrackIndex - removedTrackCount
+					await _fbRoom.updateQueue({
+						...queue,
+						medias: newMedias,
+						position: playingTrackIndex - removedTrackCount
 					});
 				}
 				return true;
@@ -174,13 +178,13 @@ export const setQueuePosition = ({
 		trySomething({
 			onAction: async () => {
 				const {
-					room: { info, room }
+					room: { _fbRoom, queue }
 				} = getState();
-				if (!room || room.isLocked() || !info) {
+				if (!_fbRoom || _fbRoom.isLocked() || !queue) {
 					dispatch(displayError("rooms.errors.locked"));
 					return "unlock-and-retry";
 				}
-				const oldPosition = info.queue_position;
+				const oldPosition = queue.position;
 				if (oldPosition === newPosition) {
 					return true; // Nothing to do
 				}
@@ -192,19 +196,19 @@ export const setQueuePosition = ({
 				if (!propagate) {
 					dispatch(
 						setRoom({
-							info: {
-								...info,
+							queue: {
+								...queue,
 								playing: true,
-								queue_position: newPosition
+								position: newPosition
 							}
 						})
 					);
 					return true;
 				}
-				await room.update({
-					...info,
+				await _fbRoom.updateQueue({
+					...queue,
 					playing: true, // Important: user setting queue position will start the play
-					queue_position: newPosition
+					position: newPosition
 				});
 				return true;
 			},
@@ -223,16 +227,16 @@ export const moveToPreviousTrack = ({
 		trySomething({
 			onAction: async () => {
 				const {
-					room: { info, tracks }
+					room: { queue, tracks }
 				} = getState();
-				if (!info || tracks.length === 0) {
+				if (!queue || tracks.length === 0) {
 					return true; // Nothing to do
 				}
 				dispatch(
 					setQueuePosition({
 						position:
-							info.queue_position > 0
-								? info.queue_position - 1
+							queue.position > 0
+								? queue.position - 1
 								: tracks.length - 1,
 						propagate
 					})
@@ -253,17 +257,17 @@ export const moveToNextTrack = ({
 		trySomething({
 			onAction: async () => {
 				const {
-					room: { info, tracks }
+					room: { queue, tracks }
 				} = getState();
-				if (!info || tracks.length === 0) {
+				if (!queue || tracks.length === 0) {
 					return true; // Nothing to do
 				}
 				dispatch(
 					setQueuePosition({
 						position:
-							info.playmode === "shuffle"
+							queue.playmode === "shuffle"
 								? generateRandomPosition() % tracks.length
-								: (info.queue_position + 1) % tracks.length,
+								: (queue.position + 1) % tracks.length,
 						propagate
 					})
 				);

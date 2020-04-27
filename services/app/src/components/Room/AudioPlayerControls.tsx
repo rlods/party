@@ -6,10 +6,11 @@ import classNames from "classnames";
 import { IconButton } from "../Common/IconButton";
 import { Dispatch } from "../../actions";
 import { RootState } from "../../reducers";
-import { isRoomLocked, isRoomPlaying, selectRoom } from "../../selectors/room";
+import { isRoomLocked } from "../../selectors/room";
+import { isRoomPlaying, selectRoomPlaymode } from "../../selectors/queue";
 import { stopPlayer, startPlayer } from "../../actions/player";
 import { moveToPreviousTrack, moveToNextTrack } from "../../actions/queue";
-import { RoomInfo } from "../../utils/rooms";
+import { PlayMode } from "../../utils/rooms";
 import { selectTracksCount } from "../../selectors/medias";
 import "./AudioPlayerControls.scss";
 
@@ -30,7 +31,7 @@ export const AudioPlayerControls: FC<{
 
 	const tracksCount = useSelector<RootState, number>(selectTracksCount);
 
-	const roomInfo = useSelector<RootState, RoomInfo | null>(selectRoom);
+	const playmode = useSelector<RootState, PlayMode>(selectRoomPlaymode);
 
 	const onMoveBackward = useCallback(
 		() => dispatch(moveToPreviousTrack({ propagate })),
@@ -57,9 +58,7 @@ export const AudioPlayerControls: FC<{
 			<div className="Control">
 				<IconButton
 					disabled={
-						locked ||
-						tracksCount === 0 ||
-						roomInfo?.playmode === "shuffle"
+						locked || tracksCount === 0 || playmode === "shuffle"
 					}
 					icon="step-backward"
 					onClick={onMoveBackward}

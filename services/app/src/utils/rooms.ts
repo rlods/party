@@ -19,13 +19,7 @@ export const RoomTypes = [
 ];
 
 export type RoomInfo = {
-	extra: string;
 	name: string;
-	queue?: RoomQueue;
-	queue_position: number;
-	playing: boolean;
-	playmode: PlayMode;
-	timestamp: number;
 	type: RoomType;
 };
 
@@ -36,6 +30,13 @@ export type RoomAccess = {
 };
 
 export type RoomQueue = {
+	medias?: RoomQueueMedias;
+	position: number;
+	playing: boolean;
+	playmode: PlayMode;
+};
+
+export type RoomQueueMedias = {
 	[index: string]: MediaAccess;
 };
 
@@ -44,12 +45,12 @@ export type RoomQueue = {
 export const createQueueMerging = (
 	accesses1: MediaAccess[],
 	accesses2: MediaAccess[]
-): RoomQueue => {
-	const queue: RoomQueue = {};
+): RoomQueueMedias => {
+	const medias: RoomQueueMedias = {};
 	[...accesses1, ...accesses2].forEach(({ id, provider, type }, index) => {
-		queue[index] = { id, provider, type };
+		medias[index] = { id, provider, type };
 	});
-	return queue;
+	return medias;
 };
 
 // ------------------------------------------------------------------
@@ -58,17 +59,17 @@ export const createQueueRemoving = (
 	accesses: MediaAccess[],
 	index: number,
 	count: number
-): RoomQueue => {
+): RoomQueueMedias => {
 	if (index < 0 || index >= accesses.length) {
 		throw new Error("Media index is out of range");
 	}
-	const queue: RoomQueue = {};
+	const medias: RoomQueueMedias = {};
 	const copy = [...accesses];
 	copy.splice(index, count);
 	copy.forEach(({ id, provider, type }, index) => {
-		queue[index] = { id, provider, type };
+		medias[index] = { id, provider, type };
 	});
-	return queue;
+	return medias;
 };
 
 // ------------------------------------------------------------------
@@ -79,55 +80,58 @@ export const initializeRoom = ({
 }: {
 	type: RoomType;
 	userId: string;
-}): Pick<
-	RoomInfo,
-	"extra" | "playing" | "playmode" | "queue" | "queue_position"
-> => {
+}): { extra: string; queue: RoomQueue } => {
 	switch (type) {
 		case "blind":
 			return {
 				extra: "",
-				playing: false,
-				playmode: "default",
-				queue: {},
-				queue_position: 0
+				queue: {
+					medias: {},
+					playing: false,
+					playmode: "default",
+					position: 0
+				}
 			};
 		case "dj":
 			return {
 				extra: "",
-				playing: false,
-				playmode: "default",
-				queue: {},
-				queue_position: 0
+				queue: {
+					medias: {},
+					playing: false,
+					playmode: "default",
+					position: 0
+				}
 			};
 		case "seabattle":
 			return {
 				extra: encodeBattle(generateBattle(userId)),
-				playing: true,
-				playmode: "shuffle",
 				queue: {
-					0: {
-						id: "301013", // Pirates Of The Caribbean OST
-						provider: "deezer",
-						type: "album"
+					medias: {
+						0: {
+							id: "301013", // Pirates Of The Caribbean OST
+							provider: "deezer",
+							type: "album"
+						},
+						1: {
+							id: "7358507", // Stalingrad OST
+							provider: "deezer",
+							type: "album"
+						},
+						2: {
+							id: "558976", // Master & Commander OST
+							provider: "deezer",
+							type: "album"
+						},
+						3: {
+							id: "87375582", // Le chant du loup OST
+							provider: "deezer",
+							type: "album"
+						}
 					},
-					1: {
-						id: "7358507", // Stalingrad OST
-						provider: "deezer",
-						type: "album"
-					},
-					2: {
-						id: "558976", // Master & Commander OST
-						provider: "deezer",
-						type: "album"
-					},
-					3: {
-						id: "87375582", // Le chant du loup OST
-						provider: "deezer",
-						type: "album"
-					}
-				},
-				queue_position: 0
+					playing: true,
+					playmode: "shuffle",
+					position: 0
+				}
 			};
 	}
 };

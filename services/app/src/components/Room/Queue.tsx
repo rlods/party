@@ -10,11 +10,8 @@ import { startPlayer, stopPlayer } from "../../actions/player";
 import { setQueuePosition, removeFromQueue } from "../../actions/queue";
 import { openModal } from "../../reducers/modals";
 import { selectQueuePosition } from "../../selectors/queue";
-import {
-	isRoomLoaded,
-	isRoomLocked,
-	isRoomPlaying
-} from "../../selectors/room";
+import { isRoomLoaded, isRoomLocked } from "../../selectors/room";
+import { isRoomPlaying } from "../../selectors/queue";
 import "./Queue.scss";
 
 // ------------------------------------------------------------------

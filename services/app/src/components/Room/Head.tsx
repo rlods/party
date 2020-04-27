@@ -7,13 +7,12 @@ import { IconButton } from "../Common/IconButton";
 import { copyToClipboard } from "../../utils/clipboard";
 import { Dispatch } from "../../actions";
 import { RootState } from "../../reducers";
-import { selectRoom } from "../../selectors/room";
+import { isRoomLoaded, selectRoomName } from "../../selectors/room";
 import { displaySuccess } from "../../actions/messages";
 import { confirmModal } from "../../actions/modals";
-import { RoomInfo } from "../../utils/rooms";
 import { selectTracksCount } from "../../selectors/medias";
-import "./Head.scss";
 import { Icon } from "../Common/Icon";
+import "./Head.scss";
 
 // ------------------------------------------------------------------
 
@@ -24,7 +23,8 @@ export const Head: FC = () => {
 	);
 	const { t } = useTranslation();
 	const history = useHistory();
-	const room = useSelector<RootState, RoomInfo | null>(selectRoom);
+	const name = useSelector<RootState, string>(selectRoomName);
+	const loaded = useSelector<RootState, boolean>(isRoomLoaded);
 	const mediasCount = useSelector<RootState, number>(
 		state => state.room.medias.length
 	);
@@ -61,7 +61,7 @@ export const Head: FC = () => {
 							icon="refresh"
 							title={t("loading")}
 						/>
-					) : room ? (
+					) : loaded ? (
 						<>
 							<div
 								className="RoomName"
@@ -70,7 +70,7 @@ export const Head: FC = () => {
 								})} / ${t("rooms.track_count", {
 									count: tracksCount
 								})}`}>
-								{room.name}
+								{name}
 							</div>
 						</>
 					) : null}

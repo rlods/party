@@ -2,8 +2,8 @@ import { v4 } from "uuid";
 //
 import { AsyncAction, Dispatch, ActionOptions, trySomething } from ".";
 import { displayError } from "./messages";
-import { RoomInfo, RoomType, initializeRoom } from "../utils/rooms";
-import { FirebaseRoom } from "../utils/firebase";
+import { RoomInfo, RoomType, initializeRoom, RoomQueue } from "../utils/rooms";
+import { FirebaseRoom } from "../utils/firebase/room";
 import { extractErrorMessage } from "../utils/messages";
 import { pickColor } from "../utils/colorpicker";
 import { Player } from "../utils/player";
@@ -54,10 +54,14 @@ export const createRoom = ({
 					secret
 				});
 
-				await FirebaseRoom({ dbId, roomId, secret }).update({
-					name,
-					type,
-					...initializeRoom({ type, userId })
+				const { extra, queue } = initializeRoom({ type, userId });
+				await FirebaseRoom({ dbId, roomId, secret }).init({
+					extra,
+					info: {
+						name,
+						type
+					},
+					queue
 				});
 				dispatch(enterRoom({ dbId, roomId, secret, options }));
 				return true;
@@ -87,12 +91,16 @@ export const enterRoom = ({
 		trySomething({
 			onAction: async () => {
 				const {
-					room: { room },
+					room: { _fbRoom },
 					user: {
 						access: { userId }
 					}
 				} = getState();
-				if (room && room.dbId === dbId && room.roomId === roomId) {
+				if (
+					_fbRoom &&
+					_fbRoom.dbId === dbId &&
+					_fbRoom.roomId === roomId
+				) {
 					return true; // Nothing to do
 				}
 
@@ -106,15 +114,17 @@ export const enterRoom = ({
 				dispatch(fetching());
 
 				console.debug("[Room] Entering...", { dbId, roomId, secret });
-				const newRoom = FirebaseRoom({ dbId, roomId, secret });
+				const newFbRoom = FirebaseRoom({ dbId, roomId, secret });
+				const { extra, info } = await newFbRoom.wait();
 				dispatch(
 					setRoom({
+						_fbRoom: newFbRoom,
 						access: { dbId, roomId, secret },
-						room: newRoom,
-						info: await newRoom.wait()
+						extra,
+						info
 					})
 				);
-				dispatch(_watchRoom(newRoom));
+				dispatch(_watchRoom(newFbRoom));
 				dispatch(_watchPlayer());
 				history.push(`/room/${dbId}/${roomId}?secret=${secret}`); // TODO: should push only if we're not already in it
 				return true;
@@ -135,14 +145,14 @@ export const exitRoom = (): AsyncAction => (dispatch, getState) =>
 		trySomething({
 			onAction: async () => {
 				const {
-					room: { room }
+					room: { _fbRoom }
 				} = getState();
-				if (!room) {
+				if (!_fbRoom) {
 					return true; // Nothing to do
 				}
 				console.debug("[Room] Exiting...");
 				dispatch(_unwatchPlayer());
-				dispatch(_unwatchRoom(room));
+				dispatch(_unwatchRoom(_fbRoom));
 				dispatch(resetRoom());
 				return true;
 			}
@@ -157,20 +167,20 @@ export const lockRoom = (): AsyncAction => (dispatch, getState) =>
 			onAction: async () => {
 				const {
 					room: {
-						room,
+						_fbRoom,
 						access: { dbId, roomId, secret: oldSecret }
 					}
 				} = getState();
 				if (
-					!room ||
-					room.dbId !== dbId ||
-					room.roomId !== roomId ||
+					!_fbRoom ||
+					_fbRoom.dbId !== dbId ||
+					_fbRoom.roomId !== roomId ||
 					!oldSecret
 				) {
 					return true; // Nothing to do
 				}
 				console.debug("[Room] Locking...", { dbId, roomId });
-				room.setSecret("");
+				_fbRoom.setSecret("");
 				// TODO : not history.replace(`/room/${dbId}/${roomId}`); as it would trigger a page refresh
 				dispatch(setRoom({ access: { dbId, roomId, secret: "" } }));
 				return true;
@@ -190,20 +200,20 @@ export const unlockRoom = ({
 			onAction: async () => {
 				const {
 					room: {
-						room,
+						_fbRoom,
 						access: { dbId, roomId, secret: oldSecret }
 					}
 				} = getState();
 				if (
-					!room ||
-					room.dbId !== dbId ||
-					room.roomId !== roomId ||
+					!_fbRoom ||
+					_fbRoom.dbId !== dbId ||
+					_fbRoom.roomId !== roomId ||
 					oldSecret === secret
 				) {
 					return true; // Nothing to do
 				}
 				console.debug("[Room] Unlocking...", { dbId, roomId, secret });
-				room.setSecret(secret);
+				_fbRoom.setSecret(secret);
 				// TODO : not history.replace(`/room/${id}?secret=${secret}`); as it would trigger a page refresh
 				dispatch(setRoom({ access: { dbId, roomId, secret } }));
 				return true;
@@ -216,68 +226,82 @@ export const unlockRoom = ({
 // ------------------------------------------------------------------
 // ------------------------------------------------------------------
 
-let ROOM_WATCHER: any = null;
+let EXTRA_SUBSCRIPTION: any = null;
+let INFO_SUBSCRIPTION: any = null;
+let QUEUE_SUBSCRIPTION: any = null;
 
 const _watchRoom = (
-	room: ReturnType<typeof FirebaseRoom>
-): AsyncAction => async (dispatch, getState, { player }) => {
+	fbRoom: ReturnType<typeof FirebaseRoom>
+): AsyncAction => async (dispatch, getState) => {
 	console.debug("[Room] Watching...");
-	if (!!ROOM_WATCHER) {
+	if (!!EXTRA_SUBSCRIPTION || !!INFO_SUBSCRIPTION || !!QUEUE_SUBSCRIPTION) {
 		return; // Nothing to do
 	}
-	ROOM_WATCHER = room.subscribe(
-		async (snapshot: firebase.database.DataSnapshot) => {
-			// TODO: we could add a queue in case too much updates are received
-			const {
-				medias: { medias: oldMedias }
-			} = getState();
-			const newInfo = snapshot.val() as RoomInfo | null;
-			console.debug("[Room] Received room update...", { newInfo });
-			if (!newInfo) {
-				return;
-			}
-
-			let medias: MediaAccess[] = [];
-			if (newInfo.queue) {
-				medias = Object.entries(newInfo.queue)
-					.sort(
-						(media1, media2) =>
-							Number(media1[0]) - Number(media2[0])
-					)
-					.map(media => media[1]);
-			}
-			let tracks: ContextualizedTrackAccess[] = [];
-			if (medias.length > 0) {
-				const { newMedias, newMediasAndTracks } = await loadNewMedias(
-					medias,
-					oldMedias
-				);
-				if (newMediasAndTracks.length > 0) {
-					dispatch(setMedias(newMediasAndTracks));
-				}
-				tracks = extractTracks(medias, oldMedias, newMedias);
-			}
-			dispatch(
-				setRoom({
-					info: newInfo,
-					medias,
-					room,
-					tracks
-				})
+	EXTRA_SUBSCRIPTION = fbRoom.subscribeExtra(async (newExtra: string) => {
+		console.debug("[Room] Received room extra update...", { newExtra });
+		dispatch(
+			setRoom({
+				extra: newExtra
+			})
+		);
+	});
+	INFO_SUBSCRIPTION = fbRoom.subscribeInfo(async (newInfo: RoomInfo) => {
+		console.debug("[Room] Received room info update...", { newInfo });
+		dispatch(
+			setRoom({
+				info: newInfo
+			})
+		);
+	});
+	QUEUE_SUBSCRIPTION = fbRoom.subscribeQueue(async (newQueue: RoomQueue) => {
+		console.debug("[Room] Received room queue update...", { newQueue });
+		const {
+			medias: { medias: oldMedias }
+		} = getState();
+		const medias: MediaAccess[] = !newQueue.medias
+			? []
+			: Object.entries(newQueue.medias)
+					.sort((m1, m2) => Number(m1[0]) - Number(m2[0]))
+					.map(m => m[1]);
+		let tracks: ContextualizedTrackAccess[] = [];
+		if (medias.length > 0) {
+			const { newMedias, newMediasAndTracks } = await loadNewMedias(
+				medias,
+				oldMedias
 			);
+			if (newMediasAndTracks.length > 0) {
+				dispatch(setMedias(newMediasAndTracks));
+			}
+			tracks = extractTracks(medias, oldMedias, newMedias);
 		}
-	);
+		dispatch(
+			setRoom({
+				queue: newQueue,
+				medias,
+				tracks
+			})
+		);
+	});
 };
 
 const _unwatchRoom = (
 	room: ReturnType<typeof FirebaseRoom>
 ): AsyncAction => async () => {
-	if (!ROOM_WATCHER) {
-		return; // Nothing to do
+	if (!!EXTRA_SUBSCRIPTION) {
+		console.debug("Unwatching room extra...");
+		room.unsubscribeExtra(EXTRA_SUBSCRIPTION);
+		EXTRA_SUBSCRIPTION = null;
 	}
-	console.debug("Unwatching room...");
-	room.unsubscribe(ROOM_WATCHER);
-	ROOM_WATCHER = null;
+	if (!!INFO_SUBSCRIPTION) {
+		console.debug("Unwatching room info...");
+		room.unsubscribeInfo(INFO_SUBSCRIPTION);
+		INFO_SUBSCRIPTION = null;
+	}
+	if (!!QUEUE_SUBSCRIPTION) {
+		console.debug("Unwatching room queue...");
+		room.unsubscribeQueue(QUEUE_SUBSCRIPTION);
+		QUEUE_SUBSCRIPTION = null;
+	}
 };
 
 // ------------------------------------------------------------------
@@ -319,19 +343,20 @@ const _scheduleTimer = (
 ) => {
 	PLAYER_TIMER = setTimeout(async () => {
 		const {
-			room: { info, tracks },
+			room: { queue, tracks },
 			medias: { medias }
 		} = getState();
+		if (queue) {
+			const { playing, playmode, position } = queue;
 
-		if (info) {
 			// Detect and apply change to queue and player
 			const nextTrackIndex = computePlayerNextPosition(
-				info.playing,
+				playing,
 				player.isPlaying(),
 				player.getPlayingTrackID(),
 				player.getPlayingTrackPosition() % tracks.length,
 				tracks,
-				info.queue_position
+				position
 			);
 
 			if (nextTrackIndex >= 0) {
@@ -352,7 +377,7 @@ const _scheduleTimer = (
 							nextTrack.preview,
 							0,
 							{
-								playmode: info.playmode
+								playmode: playmode
 							}
 						)
 					]);
@@ -360,13 +385,16 @@ const _scheduleTimer = (
 					dispatch(
 						setRoom({
 							color,
-							info: { ...info, queue_position: nextTrackIndex } // for info update because of player change without firebase
+							queue: {
+								...queue,
+								position: nextTrackIndex
+							}
 						})
 					);
 				} catch (err) {
 					dispatch(displayError(extractErrorMessage(err)));
 				}
-			} else if (!info.playing) {
+			} else if (!playing) {
 				player.stop();
 			}
 		}

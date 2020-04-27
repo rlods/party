@@ -46,7 +46,7 @@ export const SeaBattle: FC = () => {
 	);
 
 	const extra = useSelector<RootState, string>(
-		state => state.room.info?.extra || ""
+		state => state.room.extra || ""
 	);
 
 	const {

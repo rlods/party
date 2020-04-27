@@ -15,34 +15,34 @@ export const startPlayer = ({
 		trySomething({
 			onAction: async () => {
 				const {
-					room: { info, room, tracks }
+					room: { _fbRoom, queue, tracks }
 				} = getState();
-				if (!room || room.isLocked() || !info) {
+				if (!_fbRoom || _fbRoom.isLocked() || !queue) {
 					dispatch(displayError("rooms.errors.locked"));
 					return "unlock-and-retry";
 				}
-				if (info.playing) {
+				if (queue.playing) {
 					return true; // Nothing to do
 				}
 				console.debug("[Player] Starting...", { propagate });
 				if (!propagate) {
 					dispatch(
 						setRoom({
-							info: {
-								...info,
+							queue: {
+								...queue,
 								playing: true,
-								queue_position:
-									info.playmode === "shuffle"
+								position:
+									queue.playmode === "shuffle"
 										? generateRandomPosition() %
 										  tracks.length
-										: info.queue_position
+										: queue.position
 							}
 						})
 					);
 					return true;
 				}
-				await room.update({
-					...info,
+				await _fbRoom.updateQueue({
+					...queue,
 					playing: true
 				});
 				return true;
@@ -62,29 +62,29 @@ export const stopPlayer = ({
 		trySomething({
 			onAction: async () => {
 				const {
-					room: { info, room }
+					room: { _fbRoom, queue }
 				} = getState();
-				if (!room || room.isLocked() || !info) {
+				if (!_fbRoom || _fbRoom.isLocked() || !queue) {
 					dispatch(displayError("rooms.errors.locked"));
 					return "unlock-and-retry";
 				}
-				if (!info.playing) {
+				if (!queue.playing) {
 					return true; // Nothing to do
 				}
 				console.debug("[Player] Stopping...", { propagate });
 				if (!propagate) {
 					dispatch(
 						setRoom({
-							info: {
-								...info,
+							queue: {
+								...queue,
 								playing: false
 							}
 						})
 					);
 					return true;
 				}
-				await room.update({
-					...info,
+				await _fbRoom.updateQueue({
+					...queue,
 					playing: false
 				});
 				return true;

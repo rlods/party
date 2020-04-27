@@ -1,3 +1,8 @@
 import { RootState } from "../reducers";
 
-export const selectUser = (state: RootState) => state.user.info;
+// ------------------------------------------------------------------
+
+export const selectUserName = (state: RootState): string =>
+	state.user.info?.name || "";
+
+export const isUserLoaded = (state: RootState): boolean => !!state.user._fbUser;

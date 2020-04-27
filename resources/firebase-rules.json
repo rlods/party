@@ -5,24 +5,22 @@
 		"users": {
 			"$user_id": {
 				".write": "data.exists() ? data.child('secret').val() === newData.child('secret').val() : newData.exists()",
-				".validate": "newData.hasChildren(['info', 'secret'])",
+				".validate": "newData.hasChildren(['info', 'secret', 'timestamp'])",
 				"info": {
 					".read": true,
-					".validate": "newData.hasChildren(['name', 'online', 'status', 'timestamp'])",
+					".validate": "newData.hasChildren(['name', 'online'])",
 					"name": {
 						".validate": "newData.isString() && newData.val().length >= 2 && newData.val().length <= 100"
 					},
 					"online": { ".validate": "newData.isBoolean()" },
-					"status": {
-						".validate": "newData.isString() && newData.val().length > 0 && newData.val().length < 100"
-					},
-					"timestamp": {
-						".validate": "(!data.exists() || newData.val() > data.val()) && newData.val() <= now"
-					},
 					"$other": { ".validate": false }
 				},
 				"secret": {
 					".validate": "newData.isString() && newData.val().length === 36"
+				},
+				"timestamp": {
+					".read": true,
+					".validate": "(!data.exists() || newData.val() > data.val()) && newData.val() <= now"
 				},
 				"$other": { ".validate": false }
 			}
@@ -30,21 +28,26 @@
 		"rooms": {
 			"$room_id": {
 				".write": "data.exists() ? data.child('secret').val() === newData.child('secret').val() : newData.exists()",
-				".validate": "newData.hasChildren(['info', 'secret'])",
+				".validate": "newData.hasChildren(['secret', 'timestamp'])",
+				"extra": {
+					".read": true,
+					".validate": "newData.isString()"
+				},
 				"info": {
 					".read": true,
-					".validate": "newData.hasChildren(['name', 'playing', 'playmode', 'queue_position', 'timestamp', 'type'])",
-					"extra": {
-						".validate": "newData.isString()"
-					},
+					".validate": "newData.hasChildren(['name', 'type'])",
 					"name": {
 						".validate": "newData.isString() && newData.val().length >= 2 && newData.val().length <= 100"
 					},
-					"playing": { ".validate": "newData.isBoolean()" },
-					"playmode": {
+					"type": {
 						".validate": "newData.isString() && newData.val().length > 0 && newData.val().length < 20"
 					},
-					"queue": {
+					"$other": { ".validate": false }
+				},
+				"queue": {
+					".read": true,
+					".validate": "newData.hasChildren(['playing', 'playmode', 'position'])",
+					"medias": {
 						"$track_index": {
 							".validate": "$track_index.matches(/^[0-9]+$/) && newData.hasChildren(['id', 'provider', 'type'])",
 							"id": {
@@ -58,19 +61,20 @@
 							}
 						}
 					},
-					"queue_position": {
-						".validate": "newData.isNumber() && newData.val() >= 0"
-					},
-					"timestamp": {
-						".validate": "(!data.exists() || newData.val() > data.val()) && newData.val() <= now"
-					},
-					"type": {
+					"playing": { ".validate": "newData.isBoolean()" },
+					"playmode": {
 						".validate": "newData.isString() && newData.val().length > 0 && newData.val().length < 20"
 					},
-					"$other": { ".validate": false }
+					"position": {
+						".validate": "newData.isNumber() && newData.val() >= 0"
+					}
 				},
 				"secret": {
 					".validate": "newData.isString() && newData.val().length === 36"
+				},
+				"timestamp": {
+					".read": true,
+					".validate": "(!data.exists() || newData.val() > data.val()) && newData.val() <= now"
 				},
 				"$other": { ".validate": false }
 			}

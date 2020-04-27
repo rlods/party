@@ -1,7 +1,7 @@
 import { Reducer } from "redux";
-import { RoomAccess, RoomInfo } from "../utils/rooms";
+import { RoomAccess, RoomInfo, RoomQueue } from "../utils/rooms";
 import { CombinedColor } from "../utils/colorpicker";
-import { FirebaseRoom } from "../utils/firebase";
+import { FirebaseRoom } from "../utils/firebase/room";
 import { ContextualizedTrackAccess, MediaAccess } from "../utils/medias";
 import { createAction } from "../actions";
 
@@ -22,11 +22,13 @@ export const setRoom = (values: Partial<RoomData>) =>
 // ------------------------------------------------------------------
 
 export type RoomData = {
+	_fbRoom: ReturnType<typeof FirebaseRoom> | null;
 	access: RoomAccess;
 	color: CombinedColor;
+	extra: string;
 	info: RoomInfo | null;
 	medias: MediaAccess[];
-	room: ReturnType<typeof FirebaseRoom> | null;
+	queue: RoomQueue | null;
 	tracks: Array<ContextualizedTrackAccess>;
 };
 
@@ -36,13 +38,15 @@ export type State = RoomData & {
 };
 
 const INITIAL_STATE: State = {
+	_fbRoom: null,
 	access: { dbId: "", roomId: "", secret: "" },
 	color: { fg: "dark", bg: { r: 255, g: 255, b: 255 } },
 	error: null,
+	extra: "",
 	fetching: false,
 	info: null,
 	medias: [],
-	room: null,
+	queue: null,
 	tracks: []
 };
 

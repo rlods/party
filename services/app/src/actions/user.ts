@@ -2,7 +2,7 @@ import { v4 } from "uuid";
 //
 import { AsyncAction, ActionOptions, trySomething } from ".";
 import { UserInfo } from "../utils/users";
-import { FirebaseUser } from "../utils/firebase";
+import { FirebaseUser } from "../utils/firebase/user";
 import { setUser, resetUser, fetching, error } from "../reducers/user";
 
 // ------------------------------------------------------------------
@@ -37,7 +37,7 @@ export const createUser = ({
 
 // ------------------------------------------------------------------
 
-let FIREBASE_CB: any = null;
+let INFO_SUBSCRIPTION: any = null;
 
 export const connectUser = ({
 	dbId,
@@ -54,9 +54,13 @@ export const connectUser = ({
 		trySomething({
 			onAction: async () => {
 				const {
-					user: { user }
+					user: { _fbUser }
 				} = getState();
-				if (user && user.dbId === dbId && user.userId === userId) {
+				if (
+					_fbUser &&
+					_fbUser.dbId === dbId &&
+					_fbUser.userId === userId
+				) {
 					return true; // Nothing to do
 				}
 
@@ -65,22 +69,21 @@ export const connectUser = ({
 				dispatch(fetching());
 
 				console.debug("[User] Connecting...", { dbId, userId, secret });
-				const newUser = FirebaseUser({ dbId, userId, secret });
+				const newFbUser = FirebaseUser({ dbId, userId, secret });
 				dispatch(
 					setUser({
+						_fbUser: newFbUser,
 						access: { dbId, userId, secret },
-						user: newUser,
-						info: await newUser.wait()
+						info: await newFbUser.wait()
 					})
 				);
-				FIREBASE_CB = newUser.subscribe(
-					(snapshot: firebase.database.DataSnapshot) => {
-						const newInfo = snapshot.val() as UserInfo | null;
+				INFO_SUBSCRIPTION = newFbUser.subscribeInfo(
+					(newInfo: UserInfo) => {
 						console.debug(
 							"[User] Received user update...",
 							newInfo
 						);
-						dispatch(setUser({ user: newUser, info: newInfo }));
+						dispatch(setUser({ info: newInfo }));
 					}
 				);
 				return true;
@@ -104,11 +107,11 @@ export const disconnectUser = (): AsyncAction => (dispatch, getState) =>
 			onAction: async () => {
 				const {
 					user: {
-						access: { dbId, userId, secret },
-						user
+						_fbUser,
+						access: { dbId, userId, secret }
 					}
 				} = getState();
-				if (!dbId && !userId && !secret && !user) {
+				if (!dbId && !userId && !secret && !_fbUser) {
 					return true; // Nothing to do
 				}
 				console.debug("[User] Disconnecting...", {
@@ -116,9 +119,9 @@ export const disconnectUser = (): AsyncAction => (dispatch, getState) =>
 					userId,
 					secret
 				});
-				if (user) {
-					user.unsubscribe(FIREBASE_CB);
-					FIREBASE_CB = null;
+				if (_fbUser) {
+					_fbUser.unsubscribeInfo(INFO_SUBSCRIPTION);
+					INFO_SUBSCRIPTION = null;
 				}
 				dispatch(resetUser());
 				return true;

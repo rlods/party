@@ -5,8 +5,6 @@ import { encode, decode } from "./encoder";
 export type UserInfo = {
 	name: string;
 	online: boolean;
-	status: string;
-	timestamp: number;
 };
 
 export type UserAccess = {

@@ -32,7 +32,7 @@ export const joinBattle = (): AsyncAction => (dispatch, getState) =>
 		trySomething({
 			onAction: async () => {
 				const {
-					room: { info, room },
+					room: { _fbRoom, extra },
 					user: {
 						access: { userId }
 					}
@@ -41,13 +41,13 @@ export const joinBattle = (): AsyncAction => (dispatch, getState) =>
 					dispatch(displayError("user.not_connected"));
 					return "connect-and-retry";
 				}
-				if (!room || room.isLocked() || !info) {
+				if (!_fbRoom || _fbRoom.isLocked() || !extra) {
 					dispatch(displayError("rooms.errors.locked"));
 					return "unlock-and-retry";
 				}
 
 				console.debug("[SeaBattle] Joining battle...", { userId });
-				const battle = decodeBattle(info.extra);
+				const battle = decodeBattle(extra);
 				const map = battle.maps.find(other => other.userId === userId);
 				if (map) {
 					return true; // Nothing to do, user is already in the battle
@@ -61,10 +61,7 @@ export const joinBattle = (): AsyncAction => (dispatch, getState) =>
 				// But there is very few chance for that to happen with small number of players
 
 				generateFleet(battle, userId);
-				await room.update({
-					...info,
-					extra: encodeBattle(battle)
-				});
+				await _fbRoom.updateExtra(encodeBattle(battle));
 				return true;
 			},
 			onFailure: () => dispatch(lockRoom())
@@ -84,12 +81,12 @@ export const moveBoat = ({
 		trySomething({
 			onAction: async () => {
 				const {
-					room: { info, room },
+					room: { _fbRoom, extra },
 					user: {
 						access: { userId }
 					}
 				} = getState();
-				if (!room || room.isLocked() || !info) {
+				if (!_fbRoom || _fbRoom.isLocked() || !extra) {
 					dispatch(displayError("rooms.errors.locked"));
 					return "unlock-and-retry";
 				}
@@ -98,7 +95,7 @@ export const moveBoat = ({
 					return "connect-and-retry";
 				}
 
-				const battle = decodeBattle(info.extra);
+				const battle = decodeBattle(extra);
 
 				const playerMap = battle.maps.find(
 					other => other.userId === userId
@@ -210,10 +207,7 @@ export const moveBoat = ({
 				boat.angle = newAngle;
 				boat.position = newPosition;
 				passBatonToNextPlayer(battle);
-				await room.update({
-					...info,
-					extra: encodeBattle(battle)
-				});
+				await _fbRoom.updateExtra(encodeBattle(battle));
 
 				return true;
 			},
@@ -236,12 +230,12 @@ export const attackOpponent = ({
 		trySomething({
 			onAction: async () => {
 				const {
-					room: { info, room },
+					room: { _fbRoom, extra },
 					user: {
 						access: { userId }
 					}
 				} = getState();
-				if (!room || room.isLocked() || !info) {
+				if (!_fbRoom || _fbRoom.isLocked() || !extra) {
 					dispatch(displayError("rooms.errors.locked"));
 					return "unlock-and-retry";
 				}
@@ -250,7 +244,7 @@ export const attackOpponent = ({
 					return "connect-and-retry";
 				}
 
-				const battle = decodeBattle(info.extra);
+				const battle = decodeBattle(extra);
 				const playerMap = battle.maps.find(
 					other => other.userId === userId
 				);
@@ -374,10 +368,8 @@ export const attackOpponent = ({
 				}
 				playerMap.weapons[weaponType]--;
 				passBatonToNextPlayer(battle);
-				await room.update({
-					...info,
-					extra: encodeBattle(battle)
-				});
+				await _fbRoom.updateExtra(encodeBattle(battle));
+
 				return true;
 			},
 			onFailure: () => dispatch(lockRoom())
