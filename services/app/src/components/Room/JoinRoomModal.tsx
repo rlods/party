@@ -64,7 +64,7 @@ export const JoinRoomModal: FC = () => {
 						}
 						title={t("rooms.join")}
 						kind="primary"
-						icon="sign-in"
+						icon="check"
 						type="submit"
 					/>
 					<CancelButton onClick={onClose} />

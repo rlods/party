@@ -71,7 +71,7 @@ export const ConnectUserModal: FC<ConnectUserModalProps> = ({ options }) => {
 						}
 						title={t("user.connect")}
 						kind="primary"
-						icon="sign-in"
+						icon="check"
 						type="submit"
 					/>
 					<CancelButton onClick={onClose} />

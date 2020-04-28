@@ -81,7 +81,7 @@ export const CreateUserModal: FC<CreateUserModalProps> = ({ options }) => {
 						}
 						title={t("user.create")}
 						kind="primary"
-						icon="sign-in"
+						icon="check"
 						type="submit"
 					/>
 					<CancelButton onClick={onClose} />

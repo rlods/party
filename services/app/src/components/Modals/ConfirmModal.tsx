@@ -38,7 +38,7 @@ export const ConfirmModal: FC<ConfirmModalProps> = ({
 			renderButtons={() => (
 				<>
 					<IconButton
-						title={t("cancel")}
+						title={t("confirm")}
 						kind="primary"
 						icon="plus"
 						type="submit"

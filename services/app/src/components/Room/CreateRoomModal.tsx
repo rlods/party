@@ -80,7 +80,7 @@ export const CreateRoomModal: FC = () => {
 						}
 						title={t("rooms.create")}
 						kind="primary"
-						icon="sign-in"
+						icon="check"
 						type="submit"
 					/>
 					<CancelButton onClick={onClose} />
