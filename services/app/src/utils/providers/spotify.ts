@@ -49,10 +49,10 @@ export type SpotifyApiPlaylist = {
 	id: string;
 	images: SpotifyApiImage[];
 	name: string;
-	owners: SpotifyApiUser[];
-	public: boolean;
-	tracks?: {
-		items: SpotifyApiTrack[];
+	owner: SpotifyApiUser;
+	public: boolean | null;
+	tracks: {
+		items?: SpotifyApiTrack[];
 		total: number;
 	};
 };
@@ -96,16 +96,16 @@ const ConvertPlaylist = (playlist: SpotifyApiPlaylist): Playlist => ({
 	picture_small: playlist.images[0].url, // TODO
 	provider: "spotify",
 	tracks:
-		playlist.tracks !== void 0
+		playlist.tracks.items !== void 0
 			? playlist.tracks.items
 					.filter(track => track.preview_url)
 					.map(track => ConvertTrack(track, track.album!))
 			: [],
 	type: "playlist",
 	user: {
-		id: playlist.owners[0].id,
-		link: `${WWW_BASE}/user/${playlist.owners[0].id}`,
-		name: playlist.owners[0].display_name
+		id: playlist.owner.id,
+		link: `${WWW_BASE}/user/${playlist.owner.id}`,
+		name: playlist.owner.display_name
 	}
 });
 
@@ -258,7 +258,7 @@ const SpotifyApiImpl = (): ProviderApi => {
 			};
 		};
 		return res.playlists.items
-			.filter(playlist => playlist.public)
+			.filter(playlist => playlist.public !== false)
 			.map(ConvertPlaylist);
 	};
 
