@@ -1,5 +1,5 @@
 const config = {
-	dbIDs: (process.env.REACT_APP_DATABASE_IDS || "").split("|"),
+	dbIDs: (process.env.REACT_APP_DATABASE_IDS || "").split(","),
 	dbPrefix: process.env.REACT_APP_DATABASE_PREFIX || ""
 };
 
