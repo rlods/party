@@ -56,7 +56,7 @@ export const Media: FC<{
 							href={media.link}
 							target="_blank"
 							rel="noopener noreferrer">
-							{media.title}
+							{media.name}
 						</a>
 					</div>
 					<div className="Meta AlbumArtist">
@@ -88,7 +88,7 @@ export const Media: FC<{
 							href={media.link}
 							target="_blank"
 							rel="noopener noreferrer">
-							{media.title}
+							{media.name}
 						</a>
 					</div>
 					<div className="Meta PlaylistCreator">
@@ -120,7 +120,7 @@ export const Media: FC<{
 							href={media.link}
 							target="_blank"
 							rel="noopener noreferrer">
-							{media.title}
+							{media.name}
 						</a>
 					</div>
 					<div className="Meta TrackArtist">

@@ -49,6 +49,11 @@ export const SearchModal: FC = () => {
 			album: [],
 			playlist: [],
 			track: []
+		},
+		spotify: {
+			album: [],
+			playlist: [],
+			track: []
 		}
 	});
 
@@ -89,14 +94,15 @@ export const SearchModal: FC = () => {
 	}, []);
 
 	const onViewMore = useCallback(
-		async (type: MediaType) => {
+		async (providerType: ProviderType, mediaType: MediaType) => {
 			setResults(
 				await searchMedias(
 					query,
 					{
 						limit: VIEW_MORE_RESULTS_COUNT
 					},
-					type
+					providerType,
+					mediaType
 				)
 			);
 		},
@@ -145,10 +151,10 @@ export const SearchModal: FC = () => {
 			</ModalField>
 			{MEDIA_TYPE_DEFINITIONS.map(({ label, provider, type }) => (
 				<SearchResultCategory
-					key={type}
+					key={`${provider}.${type}`}
 					label={t(label)}
 					items={results[provider][type]}
-					onViewMore={() => onViewMore(type)}
+					onViewMore={() => onViewMore(provider, type)}
 					cb={media => (
 						<Media
 							actions={

@@ -5,7 +5,7 @@ jest.mock("../../jsonp");
 // ------------------------------------------------------------------
 
 import {
-	DEFAULT_API,
+	getDeezerApi,
 	DeezerApiSearchResult,
 	DeezerApiAlbum,
 	DeezerApiPlaylist,
@@ -132,7 +132,9 @@ describe("Providers Utilities", () => {
 		mockedJsonp.mockImplementation((url, qs) =>
 			Promise.resolve<DeezerApiAlbum>(album1)
 		);
-		await expect(DEFAULT_API.loadAlbums(["42"])).resolves.toEqual<Album[]>([
+		await expect(getDeezerApi().loadAlbums(["42"])).resolves.toEqual<
+			Album[]
+		>([
 			{
 				artist: {
 					id: `${album1.artist.id}`,
@@ -186,7 +188,9 @@ describe("Providers Utilities", () => {
 	// --------------------------------------------------------------
 
 	it("loadAlbums - edge", async () => {
-		await expect(DEFAULT_API.loadAlbums([])).resolves.toEqual<Album[]>([]);
+		await expect(getDeezerApi().loadAlbums([])).resolves.toEqual<Album[]>(
+			[]
+		);
 	});
 
 	// --------------------------------------------------------------
@@ -209,9 +213,9 @@ describe("Providers Utilities", () => {
 				tracks: { data: [] }
 			})
 		);
-		await expect(DEFAULT_API.loadAlbums(["42"])).resolves.toEqual<Album[]>(
-			[]
-		); // invalid albumIds are just ignored
+		await expect(getDeezerApi().loadAlbums(["42"])).resolves.toEqual<
+			Album[]
+		>([]); // invalid albumIds are just ignored
 	});
 
 	// --------------------------------------------------------------
@@ -222,7 +226,7 @@ describe("Providers Utilities", () => {
 		mockedJsonp.mockImplementation((url, qs) =>
 			Promise.resolve<DeezerApiPlaylist>(playlist1)
 		);
-		await expect(DEFAULT_API.loadPlaylists(["42"])).resolves.toEqual<
+		await expect(getDeezerApi().loadPlaylists(["42"])).resolves.toEqual<
 			Playlist[]
 		>([
 			{
@@ -278,7 +282,7 @@ describe("Providers Utilities", () => {
 	// --------------------------------------------------------------
 
 	it("loadPlaylists - edge", async () => {
-		await expect(DEFAULT_API.loadPlaylists([])).resolves.toEqual<
+		await expect(getDeezerApi().loadPlaylists([])).resolves.toEqual<
 			Playlist[]
 		>([]);
 	});
@@ -291,7 +295,9 @@ describe("Providers Utilities", () => {
 		mockedJsonp.mockImplementation((url, qs) =>
 			Promise.resolve<DeezerApiTrack>(track1)
 		);
-		await expect(DEFAULT_API.loadTracks(["42"])).resolves.toEqual<Track[]>([
+		await expect(getDeezerApi().loadTracks(["42"])).resolves.toEqual<
+			Track[]
+		>([
 			{
 				album: {
 					id: `${track1.album.id}`,
@@ -321,7 +327,9 @@ describe("Providers Utilities", () => {
 	// --------------------------------------------------------------
 
 	it("loadTracks - edge", async () => {
-		await expect(DEFAULT_API.loadTracks([])).resolves.toEqual<Track[]>([]);
+		await expect(getDeezerApi().loadTracks([])).resolves.toEqual<Track[]>(
+			[]
+		);
 	});
 
 	// --------------------------------------------------------------
@@ -336,7 +344,7 @@ describe("Providers Utilities", () => {
 			})
 		);
 		await expect(
-			DEFAULT_API.searchAlbums("dummy", { limit: 10 })
+			getDeezerApi().searchAlbums("dummy", { limit: 10 })
 		).resolves.toEqual<Album[]>([
 			{
 				artist: {
@@ -392,7 +400,7 @@ describe("Providers Utilities", () => {
 
 	it("searchAlbums - edge", async () => {
 		await expect(
-			DEFAULT_API.searchAlbums("", { limit: 10 })
+			getDeezerApi().searchAlbums("", { limit: 10 })
 		).resolves.toEqual<Album[]>([]);
 	});
 
@@ -408,7 +416,7 @@ describe("Providers Utilities", () => {
 			})
 		);
 		await expect(
-			DEFAULT_API.searchPlaylists("dummy", { limit: 10 })
+			getDeezerApi().searchPlaylists("dummy", { limit: 10 })
 		).resolves.toEqual<Playlist[]>([
 			{
 				id: `${playlist1.id}`,
@@ -464,7 +472,7 @@ describe("Providers Utilities", () => {
 
 	it("searchPlaylists - edge", async () => {
 		await expect(
-			DEFAULT_API.searchPlaylists("", { limit: 10 })
+			getDeezerApi().searchPlaylists("", { limit: 10 })
 		).resolves.toEqual<Playlist[]>([]);
 	});
 
@@ -480,7 +488,7 @@ describe("Providers Utilities", () => {
 			})
 		);
 		await expect(
-			DEFAULT_API.searchTracks("dummy", { limit: 10 })
+			getDeezerApi().searchTracks("dummy", { limit: 10 })
 		).resolves.toEqual<Track[]>([
 			{
 				album: {
@@ -512,7 +520,7 @@ describe("Providers Utilities", () => {
 
 	it("searchTracks - edge", async () => {
 		await expect(
-			DEFAULT_API.searchTracks("", { limit: 10 })
+			getDeezerApi().searchTracks("", { limit: 10 })
 		).resolves.toEqual<Track[]>([]);
 	});
 });

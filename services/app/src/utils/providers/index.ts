@@ -8,7 +8,8 @@ import {
 	MediaType,
 	ProviderType
 } from "../medias";
-import { DEFAULT_API } from "./deezer";
+import { getDeezerApi } from "./deezer";
+import { getSpotifyApi } from "./spotify";
 
 // ------------------------------------------------------------------
 
@@ -24,6 +25,23 @@ export type SearchResults = {
 	};
 };
 
+export type ProviderApi = {
+	loadAlbums: (ids: string[]) => Promise<Album[]>;
+
+	loadPlaylists: (ids: string[]) => Promise<Playlist[]>;
+
+	loadTracks: (ids: string[]) => Promise<Track[]>;
+
+	searchAlbums: (query: string, options?: SearchOptions) => Promise<Album[]>;
+
+	searchPlaylists: (
+		query: string,
+		options?: SearchOptions
+	) => Promise<Playlist[]>;
+
+	searchTracks: (query: string, options?: SearchOptions) => Promise<Track[]>;
+};
+
 // ------------------------------------------------------------------
 
 export const loadMedias = async (accesses: MediaAccess[]): Promise<Media[]> => {
@@ -36,16 +54,28 @@ export const loadMedias = async (accesses: MediaAccess[]): Promise<Media[]> => {
 			album: [],
 			playlist: [],
 			track: []
+		},
+		spotify: {
+			album: [],
+			playlist: [],
+			track: []
 		}
 	};
 	for (const access of accesses) {
 		ids[access.provider][access.type].push(access.id);
 	}
+	const deezerApi = getDeezerApi();
+	const spotifyApi = getSpotifyApi();
 	const medias: SearchResults = {
 		deezer: {
-			album: await DEFAULT_API.loadAlbums(ids.deezer.album),
-			playlist: await DEFAULT_API.loadPlaylists(ids.deezer.playlist),
-			track: await DEFAULT_API.loadTracks(ids.deezer.track)
+			album: await deezerApi.loadAlbums(ids.deezer.album),
+			playlist: await deezerApi.loadPlaylists(ids.deezer.playlist),
+			track: await deezerApi.loadTracks(ids.deezer.track)
+		},
+		spotify: {
+			album: await spotifyApi.loadAlbums(ids.spotify.album),
+			playlist: await spotifyApi.loadPlaylists(ids.spotify.playlist),
+			track: await spotifyApi.loadTracks(ids.spotify.track)
 		}
 	};
 	const flatten: Media[] = [];
@@ -96,21 +126,39 @@ export const loadNewMedias = async (
 // ------------------------------------------------------------------
 
 export const searchMedias = async (
-	query: string,
+	q: string,
 	options?: SearchOptions,
-	type?: MediaType
+	providerType?: ProviderType,
+	mediaType?: MediaType
 ): Promise<SearchResults> => {
-	if (!type) {
-		const [album, playlist, track] = await Promise.all([
-			DEFAULT_API.searchAlbums(query, options),
-			DEFAULT_API.searchPlaylists(query, options),
-			DEFAULT_API.searchTracks(query, options)
+	const deezerApi = getDeezerApi();
+	const spotifyApi = getSpotifyApi();
+	if (!providerType || !mediaType) {
+		const [
+			deezerAlbums,
+			deezerPlaylists,
+			deezerTracks,
+			spotifyAlbums,
+			spotifyPlaylists,
+			spotifyTracks
+		] = await Promise.all([
+			deezerApi.searchAlbums(q, options),
+			deezerApi.searchPlaylists(q, options),
+			deezerApi.searchTracks(q, options),
+			spotifyApi.searchAlbums(q, options),
+			spotifyApi.searchPlaylists(q, options),
+			spotifyApi.searchTracks(q, options)
 		]);
 		return {
 			deezer: {
-				album: album,
-				playlist: playlist,
-				track: track
+				album: deezerAlbums,
+				playlist: deezerPlaylists,
+				track: deezerTracks
+			},
+			spotify: {
+				album: spotifyAlbums,
+				playlist: spotifyPlaylists,
+				track: spotifyTracks
 			}
 		};
 	}
@@ -119,26 +167,24 @@ export const searchMedias = async (
 			album: [],
 			playlist: [],
 			track: []
+		},
+		spotify: {
+			album: [],
+			playlist: [],
+			track: []
 		}
 	};
-	switch (type) {
+	const collection = results[providerType];
+	const providerApi = providerType === "deezer" ? deezerApi : spotifyApi;
+	switch (mediaType) {
 		case "album":
-			results.deezer.album = await DEFAULT_API.searchAlbums(
-				query,
-				options
-			);
+			collection.album = await providerApi.searchAlbums(q, options);
 			break;
 		case "playlist":
-			results.deezer.playlist = await DEFAULT_API.searchPlaylists(
-				query,
-				options
-			);
+			collection.playlist = await providerApi.searchPlaylists(q, options);
 			break;
 		case "track":
-			results.deezer.track = await DEFAULT_API.searchTracks(
-				query,
-				options
-			);
+			collection.track = await providerApi.searchTracks(q, options);
 			break;
 	}
 	return results;

@@ -16,16 +16,14 @@ export const createFakeAlbum = (tracksCount = 0): Album => ({
 	artist: {
 		id: "",
 		link: "",
-		name: "",
-		picture_big: "",
-		picture_small: ""
+		name: ""
 	},
 	id: `${ALBUM_COUNTER++}`,
 	link: "",
+	name: "",
 	picture_big: "",
 	picture_small: "",
 	provider: "deezer",
-	title: "",
 	tracks: createFakeTracks(tracksCount),
 	type: "album"
 });
@@ -33,10 +31,10 @@ export const createFakeAlbum = (tracksCount = 0): Album => ({
 export const createFakePlaylist = (tracksCount = 0): Playlist => ({
 	id: `${PLAYLIST_COUNTER++}`,
 	link: "",
+	name: "",
 	picture_big: "",
 	picture_small: "",
 	provider: "deezer",
-	title: "",
 	tracks: createFakeTracks(tracksCount),
 	type: "playlist",
 	user: {
@@ -50,23 +48,20 @@ export const createFakeTrack = (): Track => ({
 	album: {
 		id: "",
 		link: "",
+		name: "",
 		picture_big: "",
-		picture_small: "",
-		title: ""
+		picture_small: ""
 	},
 	artist: {
 		id: "",
 		name: "",
-		link: "",
-		picture_big: "",
-		picture_small: ""
+		link: ""
 	},
-	duration: 0,
 	id: `${TRACK_COUNTER++}`,
 	link: "",
+	name: "",
 	preview: "",
 	provider: "deezer",
-	title: "",
 	type: "track"
 });
 

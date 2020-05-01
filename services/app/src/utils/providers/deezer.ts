@@ -1,6 +1,6 @@
 import { sleep } from "../";
 import { Album, MediaType, Playlist, Track } from "../medias";
-import { SearchOptions } from "../providers";
+import { SearchOptions, ProviderApi } from "../providers";
 import { asyncJsonp } from "../jsonp";
 
 // ------------------------------------------------------------------
@@ -8,6 +8,7 @@ import { asyncJsonp } from "../jsonp";
 const API_BASE = "https://api.deezer.com";
 const WWW_BASE = "https://www.deezer.com";
 const RATE_LIMIT_DELAY = 5000; // ms
+const DEFAULT_LIMIT = 10;
 
 // ------------------------------------------------------------------
 
@@ -24,6 +25,20 @@ export type DeezerApiDataCollection<T> = {
 export type DeezerApiSearchResult<T> = {
 	data: T[];
 	total: number;
+};
+
+// ------------------------------------------------------------------
+
+export type DeezerApiArtist = {
+	id: number;
+	name: string;
+	picture_big: string;
+	picture_small: string;
+};
+
+export type DeezerApiUser = {
+	id: number;
+	name: string;
 };
 
 // ------------------------------------------------------------------
@@ -45,18 +60,6 @@ export type DeezerApiAlbumLight = {
 	title: string;
 };
 
-export type DeezerApiUser = {
-	id: number;
-	name: string;
-};
-
-export type DeezerApiArtist = {
-	id: number;
-	name: string;
-	picture_big: string;
-	picture_small: string;
-};
-
 export type DeezerApiPlaylist = {
 	error?: DeezerApiError;
 	creator?: DeezerApiUser;
@@ -71,9 +74,8 @@ export type DeezerApiPlaylist = {
 
 export type DeezerApiTrack = {
 	error?: DeezerApiError;
-	album: DeezerApiAlbumLight;
+	album?: DeezerApiAlbumLight;
 	artist: DeezerApiArtist;
-	duration: number;
 	id: number;
 	preview: string;
 	readable: boolean;
@@ -86,16 +88,14 @@ const ConvertAlbum = (album: DeezerApiAlbum): Album => ({
 	artist: {
 		id: album.artist.id.toString(),
 		name: album.artist.name,
-		link: `${WWW_BASE}/artist/${album.artist.id}`,
-		picture_big: album.artist.picture_big,
-		picture_small: album.artist.picture_small
+		link: `${WWW_BASE}/artist/${album.artist.id}`
 	},
 	id: album.id.toString(),
 	link: `${WWW_BASE}/album/${album.id}`,
+	name: album.title,
 	picture_big: album.cover_big,
 	picture_small: album.cover_small,
 	provider: "deezer",
-	title: album.title,
 	tracks:
 		album.tracks !== void 0
 			? album.tracks.data
@@ -111,15 +111,15 @@ const ConvertPlaylist = (
 ): Playlist => ({
 	id: playlist.id.toString(),
 	link: `${WWW_BASE}/playlist/${playlist.id}`,
+	name: playlist.title,
 	picture_big: playlist.picture_big,
 	picture_small: playlist.picture_small,
 	provider: "deezer",
-	title: playlist.title,
 	tracks:
 		playlist.tracks !== void 0
 			? playlist.tracks.data
 					.filter(track => track.readable && track.preview)
-					.map(track => ConvertTrack(track, track.album))
+					.map(track => ConvertTrack(track, track.album!))
 			: [],
 	type: "playlist",
 	user: {
@@ -136,48 +136,26 @@ const ConvertTrack = (
 	album: {
 		id: album.id.toString(),
 		link: `${WWW_BASE}/album/${album.id}`,
-		title: album.title,
+		name: album.title,
 		picture_big: album.cover_big,
 		picture_small: album.cover_small
 	},
 	artist: {
 		id: track.artist.id.toString(),
-		name: track.artist.name,
 		link: `${WWW_BASE}/artist/${track.artist.id}`,
-		picture_big: track.artist.picture_big,
-		picture_small: track.artist.picture_small
+		name: track.artist.name
 	},
-	duration: track.duration,
 	id: track.id.toString(),
 	link: `${WWW_BASE}/track/${track.id}`,
+	name: track.title,
 	preview: track.preview,
 	provider: "deezer",
-	title: track.title,
 	type: "track"
 });
 
 // ------------------------------------------------------------------
 
-export type DeezerApi = {
-	searchAlbums: (query: string, options?: SearchOptions) => Promise<Album[]>;
-
-	searchPlaylists: (
-		query: string,
-		options?: SearchOptions
-	) => Promise<Playlist[]>;
-
-	searchTracks: (query: string, options?: SearchOptions) => Promise<Track[]>;
-
-	loadAlbums: (ids: string[]) => Promise<Album[]>;
-
-	loadPlaylists: (ids: string[]) => Promise<Playlist[]>;
-
-	loadTracks: (ids: string[]) => Promise<Track[]>;
-};
-
-// ------------------------------------------------------------------
-
-const DeezerApiImpl = (): DeezerApi => {
+const DeezerApiImpl = (): ProviderApi => {
 	const _call = <T>(path: string, qs?: string): Promise<T> => {
 		// We have to rely on jsonp because the Deezer api is CORS restricted
 		console.debug("[Deezer] Requesting... ", { path, qs });
@@ -191,8 +169,8 @@ const DeezerApiImpl = (): DeezerApi => {
 	) =>
 		_call<DeezerApiSearchResult<T>>(
 			`search/${type}`,
-			`q=${encodeURIComponent(query)}${
-				options && options.limit ? `&limit=${options.limit}` : ""
+			`q=${encodeURIComponent(query)}&limit=${
+				options?.limit || DEFAULT_LIMIT
 			}`
 		);
 
@@ -211,6 +189,7 @@ const DeezerApiImpl = (): DeezerApi => {
 			ids.map(async id => {
 				const media = await _call<T>(`${type}/${id}`);
 				if (!media.error) {
+					console.log("[Deezer] Loaded media", { type, id, media });
 					loadedMedias.push(media);
 					return;
 				}
@@ -288,7 +267,7 @@ const DeezerApiImpl = (): DeezerApi => {
 		}
 		return (await _search<DeezerApiTrack>("track", query, options)).data
 			.filter(track => track.readable && track.preview)
-			.map(track => ConvertTrack(track, track.album));
+			.map(track => ConvertTrack(track, track.album!));
 	};
 
 	const loadAlbums = async (ids: string[]): Promise<Album[]> => {
@@ -320,7 +299,7 @@ const DeezerApiImpl = (): DeezerApi => {
 		}
 		console.debug("[Deezer] Loading tracks...", { ids });
 		const tracks = await _loadWithRetry<DeezerApiTrack>("track", ids);
-		return tracks.map(track => ConvertTrack(track, track.album));
+		return tracks.map(track => ConvertTrack(track, track.album!));
 	};
 
 	return {
@@ -335,4 +314,11 @@ const DeezerApiImpl = (): DeezerApi => {
 
 // ------------------------------------------------------------------
 
-export const DEFAULT_API = DeezerApiImpl();
+let DEFAULT_IMPL: ProviderApi | null = null;
+
+export const getDeezerApi = (): ProviderApi => {
+	if (!DEFAULT_IMPL) {
+		DEFAULT_IMPL = DeezerApiImpl();
+	}
+	return DEFAULT_IMPL;
+};

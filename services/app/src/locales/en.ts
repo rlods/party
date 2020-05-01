@@ -97,9 +97,16 @@ export default {
 		search: "Search Media",
 		search_placeholder: "Search...",
 		medias_search: "Media Search",
-		albums: "Albums",
-		playlists: "Playlists",
-		tracks: "Tracks"
+		deezer: {
+			albums: "Deezer Albums",
+			playlists: "Deezer Playlists",
+			tracks: "Deezer Tracks"
+		},
+		spotify: {
+			albums: "Spotify Albums",
+			playlists: "Spotify Playlists",
+			tracks: "Spotify Tracks"
+		}
 	},
 	player: {
 		backward: "Backward",

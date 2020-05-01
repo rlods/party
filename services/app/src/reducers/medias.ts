@@ -32,6 +32,11 @@ const INITIAL_STATE: State = {
 			album: {},
 			playlist: {},
 			track: {}
+		},
+		spotify: {
+			album: {},
+			playlist: {},
+			track: {}
 		}
 	}
 };
@@ -56,12 +61,17 @@ export const mediasReducer: Reducer<State, MediasAction> = (
 				error: action.payload
 			};
 		case "medias/SET": {
-			const copy = {
+			const copy: State = {
 				...state,
 				fetching: false,
 				error: null,
 				medias: {
 					deezer: {
+						album: { ...state.medias.deezer.album },
+						playlist: { ...state.medias.deezer.playlist },
+						track: { ...state.medias.deezer.track }
+					},
+					spotify: {
 						album: { ...state.medias.deezer.album },
 						playlist: { ...state.medias.deezer.playlist },
 						track: { ...state.medias.deezer.track }

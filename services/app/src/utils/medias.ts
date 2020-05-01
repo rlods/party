@@ -10,9 +10,7 @@ export type MediaTypeDefinition = {
 	type: MediaType;
 };
 
-export type ProviderType = "deezer";
-
-export const ProviderTypes: ProviderType[] = ["deezer"];
+export type ProviderType = "deezer" | "spotify";
 
 export type TrackType = "track";
 
@@ -51,10 +49,10 @@ export type Album = {
 	artist: Artist;
 	id: string;
 	link: string;
+	name: string;
 	picture_big: string;
 	picture_small: string;
 	provider: ProviderType;
-	title: string;
 	tracks: Track[];
 	type: "album";
 };
@@ -62,26 +60,24 @@ export type Album = {
 export type AlbumLight = {
 	id: string;
 	link: string;
+	name: string;
 	picture_big: string;
 	picture_small: string;
-	title: string;
 };
 
 export type Artist = {
 	id: string;
 	link: string;
 	name: string;
-	picture_big: string;
-	picture_small: string;
 };
 
 export type Playlist = {
 	id: string;
 	link: string;
+	name: string;
 	picture_big: string;
 	picture_small: string;
 	provider: ProviderType;
-	title: string;
 	tracks: Track[];
 	type: "playlist";
 	user: {
@@ -94,12 +90,11 @@ export type Playlist = {
 export type Track = {
 	album: AlbumLight;
 	artist: Artist;
-	duration: number;
 	id: string;
 	link: string;
+	name: string;
 	preview: string;
 	provider: ProviderType;
-	title: string;
 	type: "track";
 };
 
@@ -120,18 +115,33 @@ export type StructuredMedias = {
 
 export const MEDIA_TYPE_DEFINITIONS: MediaTypeDefinition[] = [
 	{
-		label: "medias.albums",
+		label: "medias.deezer.albums",
 		provider: "deezer",
 		type: "album"
 	},
 	{
-		label: "medias.playlists",
+		label: "medias.deezer.playlists",
 		provider: "deezer",
 		type: "playlist"
 	},
 	{
-		label: "medias.tracks",
+		label: "medias.deezer.tracks",
 		provider: "deezer",
+		type: "track"
+	},
+	{
+		label: "medias.spotify.albums",
+		provider: "spotify",
+		type: "album"
+	},
+	{
+		label: "medias.spotify.playlists",
+		provider: "spotify",
+		type: "playlist"
+	},
+	{
+		label: "medias.spotify.tracks",
+		provider: "spotify",
 		type: "track"
 	}
 ];
