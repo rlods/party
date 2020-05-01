@@ -1,11 +1,13 @@
+import axios from "axios";
+//
 import { sleep } from "../";
 import { Album, MediaType, Playlist, Track } from "../medias";
 import { SearchOptions, ProviderApi } from "../providers";
-import { asyncJsonp } from "../jsonp";
+import proxyConfig from "../../config/proxy";
 
 // ------------------------------------------------------------------
 
-const API_BASE = "https://api.deezer.com";
+const API_BASE = `${proxyConfig.baseUrl}/deezer`;
 const WWW_BASE = "https://www.deezer.com";
 const RATE_LIMIT_DELAY = 5000; // ms
 const DEFAULT_LIMIT = 10;
@@ -156,10 +158,13 @@ const ConvertTrack = (
 // ------------------------------------------------------------------
 
 const DeezerApiImpl = (): ProviderApi => {
-	const _call = <T>(path: string, qs?: string): Promise<T> => {
+	const _call = async <T>(
+		path: string,
+		params?: { [key: string]: string }
+	): Promise<T> => {
 		// We have to rely on jsonp because the Deezer api is CORS restricted
-		console.debug("[Deezer] Requesting... ", { path, qs });
-		return asyncJsonp(`${API_BASE}/${path}`, qs);
+		console.debug("[Deezer] Requesting... ", { path, params });
+		return (await axios.get(`${API_BASE}/${path}`, { params })).data;
 	};
 
 	const _search = <T>(
@@ -167,12 +172,11 @@ const DeezerApiImpl = (): ProviderApi => {
 		query: string,
 		options?: SearchOptions
 	) =>
-		_call<DeezerApiSearchResult<T>>(
-			`search/${type}`,
-			`q=${encodeURIComponent(query)}&limit=${
-				options?.limit || DEFAULT_LIMIT
-			}`
-		);
+		_call<DeezerApiSearchResult<T>>("search", {
+			limit: (options?.limit || DEFAULT_LIMIT).toString(),
+			q: encodeURIComponent(query),
+			type: type
+		});
 
 	const _load = async <T extends { error?: DeezerApiError }>(
 		type: MediaType,
@@ -187,7 +191,7 @@ const DeezerApiImpl = (): ProviderApi => {
 		const loadedMedias: T[] = [];
 		await Promise.all(
 			ids.map(async id => {
-				const media = await _call<T>(`${type}/${id}`);
+				const media = await _call<T>("load", { id, type });
 				if (!media.error) {
 					console.log("[Deezer] Loaded media", { type, id, media });
 					loadedMedias.push(media);

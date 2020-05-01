@@ -1,12 +1,13 @@
 import axios from "axios";
 //
+import { sleep, chunkArray } from "..";
 import { Album, MediaType, Playlist, Track } from "../medias";
 import { SearchOptions, ProviderApi } from "../providers";
-import { sleep } from "..";
+import proxyConfig from "../../config/proxy";
 
 // ------------------------------------------------------------------
 
-const API_BASE = "https://proxy.rlods.now.sh/api/spotify";
+const API_BASE = `${proxyConfig.baseUrl}/spotify`;
 const WWW_BASE = "https://open.spotify.com";
 const RATE_LIMIT_DELAY = 5000; // ms
 const BATCH_CHUNK_SIZE = 50;
@@ -148,15 +149,6 @@ const SpotifyApiImpl = (): ProviderApi => {
 			q: encodeURIComponent(query),
 			type: type
 		});
-
-	const chunkArray = <T>(arr: T[], chunkSize: number) => {
-		const length = arr.length;
-		const res: T[][] = [];
-		for (let index = 0; index < length; index += chunkSize) {
-			res.push(arr.slice(index, index + chunkSize));
-		}
-		return res;
-	};
 
 	const _load = async <T>(
 		type: MediaType,
