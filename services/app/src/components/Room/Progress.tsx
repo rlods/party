@@ -32,7 +32,7 @@ export const Progress: FC = () => {
 
 	return (
 		<div className="Progress">
-			<progress max={1000} value={value} />
+			<progress max={1000} value={playing ? value : 0} />
 		</div>
 	);
 };

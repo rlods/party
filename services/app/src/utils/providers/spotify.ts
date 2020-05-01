@@ -52,7 +52,7 @@ export type SpotifyApiPlaylist = {
 	owner: SpotifyApiUser;
 	public: boolean | null;
 	tracks: {
-		items?: SpotifyApiTrack[];
+		items?: Array<{ track: SpotifyApiTrack }>;
 		total: number;
 	};
 };
@@ -98,8 +98,8 @@ const ConvertPlaylist = (playlist: SpotifyApiPlaylist): Playlist => ({
 	tracks:
 		playlist.tracks.items !== void 0
 			? playlist.tracks.items
-					.filter(track => track.preview_url)
-					.map(track => ConvertTrack(track, track.album!))
+					.filter(track => track.track.preview_url)
+					.map(track => ConvertTrack(track.track, track.track.album!))
 			: [],
 	type: "playlist",
 	user: {
