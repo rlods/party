@@ -162,7 +162,12 @@
 <a name='L104'></a><a href='#L104'>104</a>
 <a name='L105'></a><a href='#L105'>105</a>
 <a name='L106'></a><a href='#L106'>106</a>
-<a name='L107'></a><a href='#L107'>107</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L107'></a><a href='#L107'>107</a>
+<a name='L108'></a><a href='#L108'>108</a>
+<a name='L109'></a><a href='#L109'>109</a>
+<a name='L110'></a><a href='#L110'>110</a>
+<a name='L111'></a><a href='#L111'>111</a>
+<a name='L112'></a><a href='#L112'>112</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -217,10 +222,15 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -303,7 +313,7 @@ export const CreateUserModal: FC&lt;CreateUserModalProps&gt; = <span class="csta
 	const { t } = <span class="cstat-no" title="statement not covered" >useTranslation();</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >	useEffect(<span class="fstat-no" title="function not covered" >()</span> =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >		setName(`${t("users.user")} ${USER_COUNTER}`);</span>
+<span class="cstat-no" title="statement not covered" >		setName(`${t("user.user")} ${USER_COUNTER}`);</span>
 <span class="cstat-no" title="statement not covered" >		if (nameRef.current) {</span>
 <span class="cstat-no" title="statement not covered" >			nameRef.current.focus();</span>
 		}
@@ -313,20 +323,25 @@ export const CreateUserModal: FC&lt;CreateUserModalProps&gt; = <span class="csta
 &nbsp;
 	const onCreate = <span class="cstat-no" title="statement not covered" >useCallback(<span class="fstat-no" title="function not covered" >()</span> =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >		if (name.trim().length === 0) {</span>
-<span class="cstat-no" title="statement not covered" >			dispatch(displayError("users.name_is_invalid"));</span>
+<span class="cstat-no" title="statement not covered" >			dispatch(displayError("user.name_is_invalid"));</span>
 <span class="cstat-no" title="statement not covered" >			return;</span>
 		}
 <span class="cstat-no" title="statement not covered" >		if (secret.trim().length === 0) {</span>
-<span class="cstat-no" title="statement not covered" >			dispatch(displayError("users.secret_is_invalid"));</span>
+<span class="cstat-no" title="statement not covered" >			dispatch(displayError("user.secret_is_invalid"));</span>
 <span class="cstat-no" title="statement not covered" >			return;</span>
 		}
 <span class="cstat-no" title="statement not covered" >		dispatch(</span>
-			createUser(selectUserDatabaseId(), name, secret, {
-				onSuccess: <span class="fstat-no" title="function not covered" >()</span> =&gt; {
-<span class="cstat-no" title="statement not covered" >					if (options &amp;&amp; options.onSuccess) {</span>
-<span class="cstat-no" title="statement not covered" >						options.onSuccess();</span>
+			createUser({
+				dbId: selectUserDatabaseId(),
+				name,
+				secret,
+				options: {
+					onSuccess: <span class="fstat-no" title="function not covered" >()</span> =&gt; {
+<span class="cstat-no" title="statement not covered" >						if (options &amp;&amp; options.onSuccess) {</span>
+<span class="cstat-no" title="statement not covered" >							options.onSuccess();</span>
+						}
+<span class="cstat-no" title="statement not covered" >						dispatch(popModal());</span>
 					}
-<span class="cstat-no" title="statement not covered" >					dispatch(popModal());</span>
 				}
 			})
 		);
@@ -335,7 +350,7 @@ export const CreateUserModal: FC&lt;CreateUserModalProps&gt; = <span class="csta
 &nbsp;
 <span class="cstat-no" title="statement not covered" >	return (</span>
 		&lt;FormModal
-			title={t("users.user_creation")}
+			title={t("user.user_creation")}
 			onSubmit={onCreate}
 			renderButtons={<span class="fstat-no" title="function not covered" >()</span> =&gt; (
 <span class="cstat-no" title="statement not covered" >				&lt;&gt;</span>
@@ -344,9 +359,9 @@ export const CreateUserModal: FC&lt;CreateUserModalProps&gt; = <span class="csta
 							name.trim().length === 0 ||
 							secret.length !== SECRET_FIELD_SIZE
 						}
-						title={t("users.create")}
+						title={t("user.create")}
 						kind="primary"
-						icon="sign-in"
+						icon="check"
 						type="submit"
 					/&gt;
 					&lt;CancelButton onClick={onClose} /&gt;
@@ -354,9 +369,9 @@ export const CreateUserModal: FC&lt;CreateUserModalProps&gt; = <span class="csta
 			)}&gt;
 			&lt;InputField
 				id="modal-name"
-				label={t("users.name")}
+				label={t("user.name")}
 				type="text"
-				placeholder={t("users.name_placeholder")}
+				placeholder={t("user.name_placeholder")}
 				maxLength={100}
 				minLength={2}
 				required={true}
@@ -366,8 +381,8 @@ export const CreateUserModal: FC&lt;CreateUserModalProps&gt; = <span class="csta
 			/&gt;
 			&lt;SecretField
 				id="modal-secret"
-				label={t("users.secret")}
-				placeholder={t("users.secret_placeholder")}
+				label={t("user.secret")}
+				placeholder={t("user.secret_placeholder")}
 				value={secret}
 				onChange={<span class="fstat-no" title="function not covered" >ne</span>wSecret =&gt; <span class="cstat-no" title="statement not covered" >setSecret(newSecret)}</span>
 			/&gt;
@@ -381,7 +396,7 @@ export const CreateUserModal: FC&lt;CreateUserModalProps&gt; = <span class="csta
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Apr 21 2020 22:45:00 GMT+0000 (Coordinated Universal Time)
+                at Sat May 02 2020 16:12:28 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../prettify.js"></script>

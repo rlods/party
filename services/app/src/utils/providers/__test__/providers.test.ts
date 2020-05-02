@@ -13,7 +13,8 @@ describe("Providers Utilities", () => {
 	it("loadNewMedias - edge", async () => {
 		await expect(
 			loadNewMedias([], {
-				deezer: { album: {}, playlist: {}, track: {} }
+				deezer: { album: {}, playlist: {}, track: {} },
+				spotify: { album: {}, playlist: {}, track: {} }
 			})
 		).resolves.toEqual<{
 			newMedias: Media[];
@@ -30,7 +31,8 @@ describe("Providers Utilities", () => {
 		await expect(searchMedias("", { limit: 10 })).resolves.toEqual<
 			SearchResults
 		>({
-			deezer: { album: [], playlist: [], track: [] }
+			deezer: { album: [], playlist: [], track: [] },
+			spotify: { album: [], playlist: [], track: [] }
 		});
 	});
 });

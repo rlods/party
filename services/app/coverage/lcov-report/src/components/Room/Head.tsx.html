@@ -24,28 +24,28 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/15</span>
+                <span class='fraction'>0/18</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/2</span>
+                <span class='fraction'>0/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/5</span>
+                <span class='fraction'>0/6</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/15</span>
+                <span class='fraction'>0/18</span>
             </div>
         
             
@@ -135,7 +135,17 @@
 <a name='L77'></a><a href='#L77'>77</a>
 <a name='L78'></a><a href='#L78'>78</a>
 <a name='L79'></a><a href='#L79'>79</a>
-<a name='L80'></a><a href='#L80'>80</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L80'></a><a href='#L80'>80</a>
+<a name='L81'></a><a href='#L81'>81</a>
+<a name='L82'></a><a href='#L82'>82</a>
+<a name='L83'></a><a href='#L83'>83</a>
+<a name='L84'></a><a href='#L84'>84</a>
+<a name='L85'></a><a href='#L85'>85</a>
+<a name='L86'></a><a href='#L86'>86</a>
+<a name='L87'></a><a href='#L87'>87</a>
+<a name='L88'></a><a href='#L88'>88</a>
+<a name='L89'></a><a href='#L89'>89</a>
+<a name='L90'></a><a href='#L90'>90</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -157,6 +167,10 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -177,6 +191,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -223,20 +243,24 @@ import { IconButton } from "../Common/IconButton";
 import { copyToClipboard } from "../../utils/clipboard";
 import { Dispatch } from "../../actions";
 import { RootState } from "../../reducers";
-import { selectRoom } from "../../selectors/room";
+import { isRoomLoaded, selectRoomName } from "../../selectors/room";
 import { displaySuccess } from "../../actions/messages";
 import { confirmModal } from "../../actions/modals";
-import { RoomInfo } from "../../utils/rooms";
 import { selectTracksCount } from "../../selectors/medias";
+import { Icon } from "../Common/Icon";
 import "./Head.scss";
 &nbsp;
 // ------------------------------------------------------------------
 &nbsp;
 export const Head: FC = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >()</span> =&gt; {</span>
 	const dispatch = <span class="cstat-no" title="statement not covered" >useDispatch&lt;Dispatch&gt;();</span>
+	const fetching = <span class="cstat-no" title="statement not covered" >useSelector&lt;RootState, boolean&gt;(</span>
+<span class="fstat-no" title="function not covered" >		st</span>ate =&gt; <span class="cstat-no" title="statement not covered" >state.room.fetching</span>
+	);
 	const { t } = <span class="cstat-no" title="statement not covered" >useTranslation();</span>
 	const history = <span class="cstat-no" title="statement not covered" >useHistory();</span>
-	const room = <span class="cstat-no" title="statement not covered" >useSelector&lt;RootState, RoomInfo | null&gt;(selectRoom);</span>
+	const name = <span class="cstat-no" title="statement not covered" >useSelector&lt;RootState, string&gt;(selectRoomName);</span>
+	const loaded = <span class="cstat-no" title="statement not covered" >useSelector&lt;RootState, boolean&gt;(isRoomLoaded);</span>
 	const mediasCount = <span class="cstat-no" title="statement not covered" >useSelector&lt;RootState, number&gt;(</span>
 <span class="fstat-no" title="function not covered" >		st</span>ate =&gt; <span class="cstat-no" title="statement not covered" >state.room.medias.length</span>
 	);
@@ -267,7 +291,13 @@ export const Head: FC = <span class="cstat-no" title="statement not covered" ><s
 					/&gt;
 				&lt;/div&gt;
 				&lt;div className="RoomMeta"&gt;
-					{room ? (
+					{fetching ? (
+						&lt;Icon
+							className="rotating"
+							icon="refresh"
+							title={t("loading")}
+						/&gt;
+					) : loaded ? (
 						&lt;&gt;
 							&lt;div
 								className="RoomName"
@@ -276,7 +306,7 @@ export const Head: FC = <span class="cstat-no" title="statement not covered" ><s
 								})} / ${t("rooms.track_count", {
 									count: tracksCount
 								})}`}&gt;
-								{room.name}
+								{name}
 							&lt;/div&gt;
 						&lt;/&gt;
 					) : null}
@@ -300,7 +330,7 @@ export const Head: FC = <span class="cstat-no" title="statement not covered" ><s
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Apr 21 2020 22:45:00 GMT+0000 (Coordinated Universal Time)
+                at Sat May 02 2020 16:12:28 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../prettify.js"></script>

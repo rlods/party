@@ -31,8 +31,6 @@ export type DeezerApiSearchResult<T> = {
 export type DeezerApiArtist = {
 	id: number;
 	name: string;
-	picture_big: string;
-	picture_small: string;
 };
 
 export type DeezerApiUser = {

@@ -22,6 +22,11 @@ describe("Medias Reducer", () => {
 				album: {},
 				playlist: {},
 				track: {}
+			},
+			spotify: {
+				album: {},
+				playlist: {},
+				track: {}
 			}
 		});
 
@@ -32,6 +37,11 @@ describe("Medias Reducer", () => {
 				album: { [album1.id]: album1 },
 				playlist: { [playlist1.id]: playlist1 },
 				track: { [track1.id]: track1 }
+			},
+			spotify: {
+				album: {},
+				playlist: {},
+				track: {}
 			}
 		});
 	});
