@@ -15,22 +15,22 @@ export const HelpModal: FC = () => {
 	const dispatch = useDispatch<Dispatch>();
 
 	const onCreateRoom = useCallback(
-		() => dispatch(openModal({ type: "CreateRoom", props: null })),
+		() => dispatch(openModal({ type: "Room/Create", props: null })),
 		[dispatch]
 	);
 
 	const onJoinRoom = useCallback(
-		() => dispatch(openModal({ type: "JoinRoom", props: null })),
+		() => dispatch(openModal({ type: "Room/Join", props: null })),
 		[dispatch]
 	);
 
 	const onCreateUser = useCallback(
-		() => dispatch(openModal({ type: "CreateUser", props: {} })),
+		() => dispatch(openModal({ type: "User/Create", props: {} })),
 		[dispatch]
 	);
 
 	const onConnectUser = useCallback(
-		() => dispatch(openModal({ type: "ConnectUser", props: {} })),
+		() => dispatch(openModal({ type: "User/Connect", props: {} })),
 		[dispatch]
 	);
 

@@ -39,7 +39,7 @@ export const Queue: FC = () => {
 	);
 
 	const onSearch = useCallback(
-		() => dispatch(openModal({ type: "Search", props: null })),
+		() => dispatch(openModal({ type: "Room/Search", props: null })),
 		[dispatch]
 	);
 

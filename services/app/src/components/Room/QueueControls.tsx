@@ -43,11 +43,11 @@ export const QueueControls: FC<{
 	}, [dispatch, t]);
 
 	const onUnlock = useCallback(() => {
-		dispatch(openModal({ type: "UnlockRoom", props: {} }));
+		dispatch(openModal({ type: "Room/Unlock", props: {} }));
 	}, [dispatch]);
 
 	const onSearch = useCallback(
-		() => dispatch(openModal({ type: "Search", props: null })),
+		() => dispatch(openModal({ type: "Room/Search", props: null })),
 		[dispatch]
 	);
 

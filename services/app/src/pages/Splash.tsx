@@ -25,17 +25,17 @@ export const Splash: FC = () => {
 	const { t } = useTranslation();
 
 	const onCreateRoom = useCallback(
-		() => dispatch(openModal({ type: "CreateRoom", props: null })),
+		() => dispatch(openModal({ type: "Room/Create", props: null })),
 		[dispatch]
 	);
 
 	const onCreateUser = useCallback(
-		() => dispatch(openModal({ type: "CreateUser", props: {} })),
+		() => dispatch(openModal({ type: "User/Create", props: {} })),
 		[dispatch]
 	);
 
 	const onConnectUser = useCallback(
-		() => dispatch(openModal({ type: "ConnectUser", props: {} })),
+		() => dispatch(openModal({ type: "User/Connect", props: {} })),
 		[dispatch]
 	);
 
@@ -44,7 +44,7 @@ export const Splash: FC = () => {
 	]);
 
 	const onShowHelp = useCallback(
-		() => dispatch(openModal({ type: "GeneralHelp", props: null })),
+		() => dispatch(openModal({ type: "General/Help", props: null })),
 		[dispatch]
 	);
 

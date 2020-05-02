@@ -85,7 +85,7 @@ export const Room: FC = () => {
 									onHelp={() => {
 										dispatch(
 											openModal({
-												type: "SeaBattleHelp",
+												type: "SeaBattle/Help",
 												props: null
 											})
 										);

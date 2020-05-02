@@ -3,14 +3,13 @@ import { useTranslation } from "react-i18next";
 //
 import { Modal } from "../Modals/Modal";
 import { Icon } from "../Common/Icon";
-import "./HelpModal.scss";
 import { WeaponSelection } from "./WeaponSelection";
+import "./HelpModal.scss";
 
 // ------------------------------------------------------------------
 
-export const HelpModal: FC = () => {
+export const SeaBattleHelpModal: FC = () => {
 	const { t } = useTranslation();
-
 	return (
 		<Modal className="SeaBattleHelpModal" title={t("help.help")}>
 			<div className="HelpModalSection">

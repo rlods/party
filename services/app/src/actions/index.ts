@@ -62,7 +62,7 @@ export const trySomething = (
 		if (res === "unlock-and-retry") {
 			dispatch(
 				openModal({
-					type: "UnlockRoom",
+					type: "Room/Unlock",
 					props: {
 						options: {
 							onFailure: options.onFailure,
@@ -76,7 +76,7 @@ export const trySomething = (
 		if (res === "connect-and-retry") {
 			dispatch(
 				openModal({
-					type: "CreateUser",
+					type: "User/Create",
 					props: {
 						options: {
 							onFailure: options.onFailure,

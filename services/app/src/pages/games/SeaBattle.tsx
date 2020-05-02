@@ -102,7 +102,7 @@ export const SeaBattle: FC = () => {
 	);
 
 	const onConnectUser = useCallback(
-		() => dispatch(openModal({ type: "CreateUser", props: {} })),
+		() => dispatch(openModal({ type: "User/Create", props: {} })),
 		[dispatch]
 	);
 

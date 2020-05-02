@@ -10,7 +10,8 @@ import { ConnectUserModal } from "../Users/ConnectUserModal";
 import { CreateRoomModal } from "../Room/CreateRoomModal";
 import { CreateUserModal } from "..//Users/CreateUserModal";
 import { HelpModal } from "./HelpModal";
-import { HelpModal as SeaBattleHelpModal } from "../SeaBattle/HelpModal";
+import { SeaBattleGameOverModal } from "../SeaBattle/GameOverModal";
+import { SeaBattleHelpModal } from "../SeaBattle/HelpModal";
 import { SearchModal } from "../Room/SearchModal";
 import { JoinRoomModal } from "../Room/JoinRoomModal";
 import { UnlockRoomModal } from "../Room/UnlockRoomModal";
@@ -25,24 +26,30 @@ const TRANSITION_TIMEOUT = 300;
 export const getModal = (prereq?: ModalPrereq) => {
 	if (prereq) {
 		switch (prereq.type) {
-			case "Confirm":
+			// General
+			case "General/Confirm":
 				return <ConfirmModal {...prereq.props} />;
-			case "ConnectUser":
-				return <ConnectUserModal {...prereq.props} />;
-			case "CreateRoom":
-				return <CreateRoomModal />;
-			case "CreateUser":
-				return <CreateUserModal {...prereq.props} />;
-			case "GeneralHelp":
+			case "General/Help":
 				return <HelpModal />;
-			case "JoinRoom":
+			// User
+			case "User/Connect":
+				return <ConnectUserModal {...prereq.props} />;
+			case "User/Create":
+				return <CreateUserModal {...prereq.props} />;
+			// Room
+			case "Room/Create":
+				return <CreateRoomModal />;
+			case "Room/Join":
 				return <JoinRoomModal />;
-			case "SeaBattleHelp":
-				return <SeaBattleHelpModal />;
-			case "Search":
+			case "Room/Search":
 				return <SearchModal />;
-			case "UnlockRoom":
+			case "Room/Unlock":
 				return <UnlockRoomModal {...prereq.props} />;
+			// SeaBattle
+			case "SeaBattle/GameOver":
+				return <SeaBattleGameOverModal />;
+			case "SeaBattle/Help":
+				return <SeaBattleHelpModal />;
 		}
 	}
 	return null;

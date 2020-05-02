@@ -13,15 +13,16 @@ export type ModalPrereqT<T extends string, P> = {
 };
 
 export type ModalPrereq =
-	| ModalPrereqT<"Confirm", ConfirmModalProps>
-	| ModalPrereqT<"ConnectUser", ConnectUserModalProps>
-	| ModalPrereqT<"CreateRoom", null>
-	| ModalPrereqT<"CreateUser", CreateUserModalProps>
-	| ModalPrereqT<"GeneralHelp", null>
-	| ModalPrereqT<"JoinRoom", null>
-	| ModalPrereqT<"SeaBattleHelp", null>
-	| ModalPrereqT<"Search", null>
-	| ModalPrereqT<"UnlockRoom", UnlockRoomModalProps>;
+	| ModalPrereqT<"General/Confirm", ConfirmModalProps>
+	| ModalPrereqT<"General/Help", null>
+	| ModalPrereqT<"Room/Create", null>
+	| ModalPrereqT<"Room/Join", null>
+	| ModalPrereqT<"Room/Search", null>
+	| ModalPrereqT<"Room/Unlock", UnlockRoomModalProps>
+	| ModalPrereqT<"SeaBattle/GameOver", null>
+	| ModalPrereqT<"SeaBattle/Help", null>
+	| ModalPrereqT<"User/Connect", ConnectUserModalProps>
+	| ModalPrereqT<"User/Create", CreateUserModalProps>;
 
 type PropType<TObj, TProp extends keyof TObj> = TObj[TProp];
 
