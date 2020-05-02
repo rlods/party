@@ -1,13 +1,10 @@
-import axios from "axios";
-//
 import { sleep, chunkArray } from "..";
 import { Album, MediaType, Playlist, Track } from "../medias";
 import { SearchOptions, ProviderApi } from "../providers";
-import proxyConfig from "../../config/proxy";
+import { callProxy } from "../proxy";
 
 // ------------------------------------------------------------------
 
-const API_BASE = `${proxyConfig.baseUrl}/spotify`;
 const WWW_BASE = "https://open.spotify.com";
 const RATE_LIMIT_DELAY = 5000; // ms
 const BATCH_CHUNK_SIZE = 50;
@@ -137,10 +134,8 @@ const ConvertTrack = (
 // ------------------------------------------------------------------
 
 const SpotifyApiImpl = (): ProviderApi => {
-	const _call = async (path: string, params?: { [key: string]: string }) => {
-		console.debug("[Spotify] Requesting... ", { path, params });
-		return (await axios.get(`${API_BASE}/${path}`, { params })).data;
-	};
+	const _call = (path: string, params?: { [key: string]: string }) =>
+		callProxy(`/spotify/${path}`, params);
 
 	const _search = (type: MediaType, query: string, options?: SearchOptions) =>
 		_call("search", {

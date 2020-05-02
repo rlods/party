@@ -1,13 +1,10 @@
-import axios from "axios";
-//
 import { sleep } from "../";
 import { Album, MediaType, Playlist, Track } from "../medias";
 import { SearchOptions, ProviderApi } from "../providers";
-import proxyConfig from "../../config/proxy";
+import { callProxy } from "../proxy";
 
 // ------------------------------------------------------------------
 
-const API_BASE = `${proxyConfig.baseUrl}/deezer`;
 const WWW_BASE = "https://www.deezer.com";
 const RATE_LIMIT_DELAY = 5000; // ms
 const DEFAULT_LIMIT = 10;
@@ -158,14 +155,10 @@ const ConvertTrack = (
 // ------------------------------------------------------------------
 
 const DeezerApiImpl = (): ProviderApi => {
-	const _call = async <T>(
+	const _call = <T>(
 		path: string,
 		params?: { [key: string]: string }
-	): Promise<T> => {
-		// We have to rely on jsonp because the Deezer api is CORS restricted
-		console.debug("[Deezer] Requesting... ", { path, params });
-		return (await axios.get(`${API_BASE}/${path}`, { params })).data;
-	};
+	): Promise<T> => callProxy(`/deezer/${path}`, params);
 
 	const _search = <T>(
 		type: MediaType,
