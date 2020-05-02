@@ -277,8 +277,8 @@ export const attackOpponent = ({
 					return true;
 				}
 				if (opponentMap.status === "ko") {
-					dispatch(
-						displayError("games.seabattle.opponent_already_killed")
+					console.debug(
+						"[SeaBattle] Opponent has already been killed"
 					);
 					return true;
 				}
@@ -346,11 +346,6 @@ export const attackOpponent = ({
 									boat => boat.status === "ok"
 								)
 							) {
-								dispatch(
-									displaySuccess(
-										"games.seabattle.killed_opponent"
-									)
-								);
 								opponentMap.status = "ko";
 							}
 						} else {

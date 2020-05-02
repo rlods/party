@@ -38,7 +38,7 @@ export const getModal = (prereq?: ModalPrereq) => {
 				return <CreateUserModal {...prereq.props} />;
 			// Room
 			case "Room/Create":
-				return <CreateRoomModal />;
+				return <CreateRoomModal {...prereq.props} />;
 			case "Room/Join":
 				return <JoinRoomModal />;
 			case "Room/Search":
@@ -47,7 +47,7 @@ export const getModal = (prereq?: ModalPrereq) => {
 				return <UnlockRoomModal {...prereq.props} />;
 			// SeaBattle
 			case "SeaBattle/GameOver":
-				return <SeaBattleGameOverModal />;
+				return <SeaBattleGameOverModal {...prereq.props} />;
 			case "SeaBattle/Help":
 				return <SeaBattleHelpModal />;
 		}

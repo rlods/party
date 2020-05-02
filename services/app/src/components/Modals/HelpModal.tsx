@@ -15,7 +15,7 @@ export const HelpModal: FC = () => {
 	const dispatch = useDispatch<Dispatch>();
 
 	const onCreateRoom = useCallback(
-		() => dispatch(openModal({ type: "Room/Create", props: null })),
+		() => dispatch(openModal({ type: "Room/Create", props: {} })),
 		[dispatch]
 	);
 

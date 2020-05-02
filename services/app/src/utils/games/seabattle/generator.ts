@@ -16,8 +16,16 @@ import { SeaBattleBoatLengthMappings } from "./mappings";
 
 // ------------------------------------------------------------------
 
+const FLEET_CUMULATED_SIZE = 16;
+// for example 16 as a fleet cumulated size means:
+//     4 x boat1 + 3 x boat2 + 3 x boat3
+// or 10 x boat1 + 2 x boat3
+// or ...
+
+// ------------------------------------------------------------------
+
 export const generateWeaponsSet = (): SeaBattleWeaponsSet => ({
-	// Following counts are abitrary choices (to validate or adjust ^_^) - TODO
+	// Following counts are arbitrary choices (to validate or adjust ^_^) - TODO
 	bullet1: 100,
 	bullet2: 6,
 	bullet3: 3,
@@ -155,18 +163,13 @@ export const generateFleet = (battle: SeaBattleData, userId: string) => {
 		.fill(0)
 		.map(_ => Array<number>(GRID_CELL_COUNT).fill(0));
 
-	let fleetCumulatedSize = 16;
-	// for example 16 as a fleet cumulated size means:
-	//     4 x boat1 + 3 x boat2 + 3 x boat3
-	// or 10 x boat1 + 2 x boat3
-	// or ...
-
 	// Generate random fleet set based on specified cumulated size
 	const fleetSet: SeaBattleFleetSet = {
 		boat1: 0,
 		boat2: 0,
 		boat3: 0
 	};
+	let fleetCumulatedSize = FLEET_CUMULATED_SIZE;
 	while (fleetCumulatedSize > 0) {
 		const typeChoices = getValidBoatTypes(fleetCumulatedSize);
 		const typeChoice =

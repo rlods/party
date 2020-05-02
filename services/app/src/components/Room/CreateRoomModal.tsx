@@ -25,11 +25,17 @@ let ROOM_COUNTER = 1;
 
 // ------------------------------------------------------------------
 
-export const CreateRoomModal: FC = () => {
+export type CreateRoomModalProps = {
+	type?: RoomType;
+};
+
+export const CreateRoomModal: FC<CreateRoomModalProps> = ({
+	type: defaultType = DEFAULT_ROOM_TYPE
+}) => {
 	const dispatch = useDispatch<Dispatch>();
 	const [name, setName] = useState("");
 	const [secret, setSecret] = useState(v4());
-	const [type, setType] = useState<RoomType>(DEFAULT_ROOM_TYPE);
+	const [type, setType] = useState<RoomType>(defaultType);
 	const nameRef = useRef<HTMLInputElement>(null);
 	const { t } = useTranslation();
 

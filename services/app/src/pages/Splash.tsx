@@ -25,7 +25,7 @@ export const Splash: FC = () => {
 	const { t } = useTranslation();
 
 	const onCreateRoom = useCallback(
-		() => dispatch(openModal({ type: "Room/Create", props: null })),
+		() => dispatch(openModal({ type: "Room/Create", props: {} })),
 		[dispatch]
 	);
 

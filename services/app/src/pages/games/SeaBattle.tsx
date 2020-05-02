@@ -21,13 +21,16 @@ import {
 	SeaBattleMovementType,
 	SeaBattlePosition,
 	SeaBattleWeaponType,
-	AngleToDirection,
-	PLAYER_TURN_MESSAGE_TAG
+	AngleToDirection
 } from "../../utils/games/seabattle";
 import { displayInfo } from "../../actions/messages";
 import { openModal } from "../../reducers/modals";
 import { clearMessages } from "../../reducers/messages";
 import "./SeaBattle.scss";
+
+// ------------------------------------------------------------------
+
+export const PLAYER_TURN_MESSAGE_TAG = "seabattle/player_turn";
 
 // ------------------------------------------------------------------
 
@@ -132,13 +135,30 @@ export const SeaBattle: FC = () => {
 	useEffect(() => {
 		if (previousMapIndex !== currentMapIndex) {
 			dispatch(clearMessages(PLAYER_TURN_MESSAGE_TAG));
-			if (currentMapIndex === playerMapIndex) {
-				if (playerMap?.status === "ko") {
+			if (playerMap?.status === "ko") {
+				dispatch(
+					openModal({
+						type: "SeaBattle/GameOver",
+						props: {
+							status: "looser"
+						}
+					})
+				);
+			} else if (opponentMaps && opponentMaps.length > 0) {
+				if (
+					!opponentMaps.find(
+						opponentMap => opponentMap.status !== "ko"
+					)
+				) {
 					dispatch(
-						displayInfo("games.seabattle.you_have_been_killed")
+						openModal({
+							type: "SeaBattle/GameOver",
+							props: {
+								status: "winner"
+							}
+						})
 					);
-				} else if (opponentMaps && opponentMaps.length > 0) {
-					// More than one player...
+				} else if (currentMapIndex === playerMapIndex) {
 					dispatch(
 						displayInfo("games.seabattle.player_turn", {
 							autoclear: false,
@@ -147,16 +167,16 @@ export const SeaBattle: FC = () => {
 							weight: 1000000
 						})
 					);
+				} else {
+					dispatch(
+						displayInfo("games.seabattle.opponent_turn", {
+							autoclear: false,
+							closable: false,
+							tag: PLAYER_TURN_MESSAGE_TAG,
+							weight: 1000000
+						})
+					);
 				}
-			} else {
-				dispatch(
-					displayInfo("games.seabattle.opponent_turn", {
-						autoclear: false,
-						closable: false,
-						tag: PLAYER_TURN_MESSAGE_TAG,
-						weight: 1000000
-					})
-				);
 			}
 			setPreviousMapIndex(currentMapIndex);
 		}

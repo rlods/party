@@ -24,6 +24,7 @@ export const Modal: FC<{
 	);
 
 	const onClose = useCallback(() => dispatch(closeModal()), [dispatch]);
+
 	const onPop = useCallback(() => dispatch(popModal()), [dispatch]);
 
 	return (

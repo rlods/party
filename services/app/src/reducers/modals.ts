@@ -1,9 +1,11 @@
 import { Reducer } from "redux";
 import { createAction } from "../actions";
 import { ConnectUserModalProps } from "../components/Users/ConnectUserModal";
+import { CreateRoomModalProps } from "../components/Room/CreateRoomModal";
 import { CreateUserModalProps } from "../components/Users/CreateUserModal";
 import { ConfirmModalProps } from "../components/Modals/ConfirmModal";
 import { UnlockRoomModalProps } from "../components/Room/UnlockRoomModal";
+import { SeaBattleGameOverModalProps } from "../components/SeaBattle/GameOverModal";
 
 // ------------------------------------------------------------------
 
@@ -15,11 +17,11 @@ export type ModalPrereqT<T extends string, P> = {
 export type ModalPrereq =
 	| ModalPrereqT<"General/Confirm", ConfirmModalProps>
 	| ModalPrereqT<"General/Help", null>
-	| ModalPrereqT<"Room/Create", null>
+	| ModalPrereqT<"Room/Create", CreateRoomModalProps>
 	| ModalPrereqT<"Room/Join", null>
 	| ModalPrereqT<"Room/Search", null>
 	| ModalPrereqT<"Room/Unlock", UnlockRoomModalProps>
-	| ModalPrereqT<"SeaBattle/GameOver", null>
+	| ModalPrereqT<"SeaBattle/GameOver", SeaBattleGameOverModalProps>
 	| ModalPrereqT<"SeaBattle/Help", null>
 	| ModalPrereqT<"User/Connect", ConnectUserModalProps>
 	| ModalPrereqT<"User/Create", CreateUserModalProps>;
