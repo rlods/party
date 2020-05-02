@@ -1,5 +1,6 @@
 const config = {
-	baseUrl: process.env.REACT_APP_PROXY_URL || ""
+	secret: process.env.REACT_APP_PROXY_SECRET || "",
+	url: process.env.REACT_APP_PROXY_URL || ""
 };
 
 // console.debug('[Proxy] Config', config);

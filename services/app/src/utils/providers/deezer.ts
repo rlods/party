@@ -157,7 +157,7 @@ const ConvertTrack = (
 const DeezerApiImpl = (): ProviderApi => {
 	const _call = <T>(
 		path: string,
-		params?: { [key: string]: string }
+		params: { [key: string]: string }
 	): Promise<T> => callProxy(`/deezer/${path}`, params);
 
 	const _search = <T>(

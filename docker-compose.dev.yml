@@ -12,7 +12,8 @@ services:
         DATABASE_IDS: "erte"
         DATABASE_PREFIX: "rlods-test-party-"
         NODE_ENV: development
-        PROXY_URL: "https://proxy.rlods.now.sh/api"
+        PROXY_SECRET: "..."
+        PROXY_URL: "https://proxy.rlods.xyz/api"
     command: npm run start
     tty: true
     volumes:

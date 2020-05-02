@@ -134,7 +134,7 @@ const ConvertTrack = (
 // ------------------------------------------------------------------
 
 const SpotifyApiImpl = (): ProviderApi => {
-	const _call = (path: string, params?: { [key: string]: string }) =>
+	const _call = (path: string, params: { [key: string]: string }) =>
 		callProxy(`/spotify/${path}`, params);
 
 	const _search = (type: MediaType, query: string, options?: SearchOptions) =>
