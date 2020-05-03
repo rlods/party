@@ -11,3 +11,8 @@ https://party.rlods.xyz
 Sea Battle Mode
 
 ![Sea Battle](/resources/seabattle.png)
+
+# Prereq
+
+https://color.rlods.xyz
+https://proxy.rlods.xyz
