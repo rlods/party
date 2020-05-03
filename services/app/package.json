@@ -3,7 +3,8 @@
 	"version": "0.0.0",
 	"private": true,
 	"scripts": {
-		"build": "REACT_APP_DATABASE_IDS=${DATABASE_IDS} REACT_APP_DATABASE_PREFIX=${DATABASE_PREFIX} REACT_APP_PROXY_SECRET=${PROXY_SECRET} REACT_APP_PROXY_URL=${PROXY_URL} ./node_modules/.bin/react-scripts build",
+		"build": "REACT_APP_DATABASE_IDS=${DATABASE_IDS} REACT_APP_DATABASE_PREFIX=${DATABASE_PREFIX} REACT_APP_PROXY_SECRET=${PROXY_SECRET} REACT_APP_PROXY_URL=${PROXY_URL} GENERATE_SOURCEMAP=false ./node_modules/.bin/react-scripts build",
+		"build:staging": "REACT_APP_DATABASE_IDS=${DATABASE_IDS} REACT_APP_DATABASE_PREFIX=${DATABASE_PREFIX} REACT_APP_PROXY_SECRET=${PROXY_SECRET} REACT_APP_PROXY_URL=${PROXY_URL} ./node_modules/.bin/react-scripts build && ./node_modules/.bin/source-map-explorer 'build/static/js/*.js' --html build/analysis.html",
 		"start": "REACT_APP_DATABASE_IDS=${DATABASE_IDS} REACT_APP_DATABASE_PREFIX=${DATABASE_PREFIX} REACT_APP_PROXY_SECRET=${PROXY_SECRET} REACT_APP_PROXY_URL=${PROXY_URL} PORT=8080 CHOKIDAR_USEPOLLING=true ./node_modules/.bin/react-scripts start",
 		"serve": "./node_modules/.bin/serve -s build -p 8080",
 		"test": "REACT_APP_DATABASE_IDS=${DATABASE_IDS} REACT_APP_DATABASE_PREFIX=${DATABASE_PREFIX} REACT_APP_PROXY_SECRET=${PROXY_SECRET} REACT_APP_PROXY_URL=${PROXY_URL} ./node_modules/.bin/react-scripts test --verbose=true --forceExit=true --runInBand=true --detectOpenHandles=true --ci=true --watchAll=false",
@@ -60,6 +61,7 @@
 		"make-coverage-badge": "^1.2.0",
 		"node-sass": "^4.13.1",
 		"redux-devtools-extension": "^2.13.8",
+		"source-map-explorer": "^2.4.2",
 		"ts-jest": "^25.3.1",
 		"typescript": "^3.8.3"
 	},

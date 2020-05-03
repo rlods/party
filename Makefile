@@ -18,9 +18,9 @@ endef
 
 # BUILD
 build:
-	$(compose_dev) build
+	$(compose_dev) build --force-rm
 build-app:
-	$(compose_dev) build app
+	$(compose_dev) build --force-rm app
 
 # INSTALL
 install: install-app
@@ -60,6 +60,8 @@ tests-watch:
 
 # STAGING
 staging:
-	rm -Rf $(shell pwd)/docs/*.* $(shell pwd)/docs/static/css/*.* $(shell pwd)/docs/static/js/*.*; \
-	$(compose_staging) build; \
-	$(compose_staging_run) -v $(shell pwd)/docs:/output app sh -c 'cp -R build/* /output'
+	rm -Rf services/app/build; \
+	mkdir services/app/build; \
+	$(compose_staging) build --force-rm; \
+	$(compose_staging_run) app npm install --production=false --unsafe-perm=true --no-audit; \
+	$(compose_staging_run) app npm run build:staging;

@@ -1,6 +1,2 @@
-env/__generated__.env
-env/__private__.env
-.volumes/
-dist/
+build/
 node_modules/
-secrets/

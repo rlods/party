@@ -2,12 +2,13 @@ version: "3"
 
 services:
     app:
-        build:
-            context: .
-            dockerfile: ./docker/app/Dockerfile
-            args:
-                DATABASE_IDS: "erte"
-                DATABASE_PREFIX: "rlods-test-party-"
-                PROXY_SECRET: "..."
-                PROXY_URL: "https://proxy.rlods.xyz/api"
+        image: node:12-alpine
+        environment:
+            DATABASE_IDS: "erte"
+            DATABASE_PREFIX: "rlods-test-party-"
+            PROXY_SECRET: "..."
+            PROXY_URL: "https://proxy.rlods.xyz/api"
         restart: on-failure
+        volumes:
+            - ./services/app:/home/node/app/services/app:delegated # delegated for build & coverage generation
+        working_dir: /home/node/app/services/app

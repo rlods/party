@@ -2,19 +2,15 @@ version: "3"
 
 services:
     app:
-        build:
-            args:
-                NODE_ENV: development
         command: npm run start
+        environment:
+            NODE_ENV: development
         tty: true
-        volumes:
-            - ./services/app:/home/node/app/services/app:delegated # delegated for coverage generation
 
     proxy:
-        build:
-            context: ./docker/proxy
+        image: haproxy:1.8-alpine
         volumes:
-            - ./docker/proxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+            - ./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
         ports:
             - 80:80
             - 1936:1936
