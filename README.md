@@ -4,6 +4,8 @@
 
 Collaborative & Musical Games Experimentation
 
+https://party.rlods.xyz
+
 ![Party](/resources/logo.png)
 
 Sea Battle Mode
