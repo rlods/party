@@ -1,9 +1,4 @@
-import {
-	checkAvailable,
-	generateBattle,
-	generateFleet,
-	generatePlace
-} from "../generator";
+import { generateBattle } from "../generator";
 
 // ------------------------------------------------------------------
 

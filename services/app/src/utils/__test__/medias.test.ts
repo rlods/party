@@ -21,7 +21,8 @@ describe("Medias Utilities", () => {
 						album: { [album1.id]: album1 },
 						playlist: {},
 						track: {}
-					}
+					},
+					spotify: { album: {}, playlist: {}, track: {} }
 				},
 				[]
 			)
@@ -35,7 +36,8 @@ describe("Medias Utilities", () => {
 						album: {},
 						playlist: {},
 						track: {}
-					}
+					},
+					spotify: { album: {}, playlist: {}, track: {} }
 				},
 				[album1]
 			)
@@ -55,7 +57,8 @@ describe("Medias Utilities", () => {
 						album: { [album1.id]: album1 },
 						playlist: {},
 						track: {}
-					}
+					},
+					spotify: { album: {}, playlist: {}, track: {} }
 				},
 				[]
 			)
@@ -69,7 +72,8 @@ describe("Medias Utilities", () => {
 						album: {},
 						playlist: {},
 						track: {}
-					}
+					},
+					spotify: { album: {}, playlist: {}, track: {} }
 				},
 				[album1]
 			)
@@ -91,7 +95,8 @@ describe("Medias Utilities", () => {
 						album: { [album1.id]: album1 },
 						playlist: {},
 						track: {}
-					}
+					},
+					spotify: { album: {}, playlist: {}, track: {} }
 				},
 				[]
 			)
@@ -105,7 +110,8 @@ describe("Medias Utilities", () => {
 						album: {},
 						playlist: {},
 						track: {}
-					}
+					},
+					spotify: { album: {}, playlist: {}, track: {} }
 				},
 				[album1]
 			)
@@ -119,7 +125,8 @@ describe("Medias Utilities", () => {
 						album: {},
 						playlist: { [playlist1.id]: playlist1 },
 						track: {}
-					}
+					},
+					spotify: { album: {}, playlist: {}, track: {} }
 				},
 				[]
 			)
@@ -133,7 +140,8 @@ describe("Medias Utilities", () => {
 						album: {},
 						playlist: {},
 						track: {}
-					}
+					},
+					spotify: { album: {}, playlist: {}, track: {} }
 				},
 				[playlist1]
 			)
@@ -147,7 +155,8 @@ describe("Medias Utilities", () => {
 						album: {},
 						playlist: {},
 						track: { [track1.id]: track1 }
-					}
+					},
+					spotify: { album: {}, playlist: {}, track: {} }
 				},
 				[]
 			)
@@ -161,7 +170,8 @@ describe("Medias Utilities", () => {
 						album: {},
 						playlist: {},
 						track: {}
-					}
+					},
+					spotify: { album: {}, playlist: {}, track: {} }
 				},
 				[track1]
 			)
@@ -181,7 +191,8 @@ describe("Medias Utilities", () => {
 						album: {},
 						playlist: {},
 						track: {}
-					}
+					},
+					spotify: { album: {}, playlist: {}, track: {} }
 				},
 				[]
 			)
@@ -195,7 +206,8 @@ describe("Medias Utilities", () => {
 						album: { [album1.id]: album1 },
 						playlist: {},
 						track: {}
-					}
+					},
+					spotify: { album: {}, playlist: {}, track: {} }
 				},
 				[]
 			)
@@ -209,7 +221,8 @@ describe("Medias Utilities", () => {
 						album: {},
 						playlist: {},
 						track: {}
-					}
+					},
+					spotify: { album: {}, playlist: {}, track: {} }
 				},
 				[album1]
 			)
@@ -231,7 +244,8 @@ describe("Medias Utilities", () => {
 						album: { [album1.id]: album1 },
 						playlist: { [playlist1.id]: playlist1 },
 						track: { [track1.id]: track1 }
-					}
+					},
+					spotify: { album: {}, playlist: {}, track: {} }
 				},
 				[]
 			)
@@ -267,7 +281,8 @@ describe("Medias Utilities", () => {
 						album: {},
 						playlist: {},
 						track: {}
-					}
+					},
+					spotify: { album: {}, playlist: {}, track: {} }
 				},
 				[album1, playlist1, track1]
 			)
@@ -299,17 +314,12 @@ describe("Medias Utilities", () => {
 	// --------------------------------------------------------------
 
 	it("extractTracks - edge", () => {
-		const album1 = createFakeAlbum();
-
 		expect(
 			extractTracks(
 				[],
 				{
-					deezer: {
-						album: {},
-						playlist: {},
-						track: {}
-					}
+					deezer: { album: {}, playlist: {}, track: {} },
+					spotify: { album: {}, playlist: {}, track: {} }
 				},
 				[]
 			)
@@ -325,11 +335,8 @@ describe("Medias Utilities", () => {
 			extractTracks(
 				[album1],
 				{
-					deezer: {
-						album: {},
-						playlist: {},
-						track: {}
-					}
+					deezer: { album: {}, playlist: {}, track: {} },
+					spotify: { album: {}, playlist: {}, track: {} }
 				},
 				[]
 			)
@@ -349,7 +356,8 @@ describe("Medias Utilities", () => {
 					album: { [album1.id]: album1 },
 					playlist: { [playlist1.id]: playlist1 },
 					track: { [track1.id]: track1 }
-				}
+				},
+				spotify: { album: {}, playlist: {}, track: {} }
 			})
 		).toEqual<{
 			mediaFirstTrackIndex: number;
@@ -367,7 +375,8 @@ describe("Medias Utilities", () => {
 					album: { [album1.id]: album1 },
 					playlist: { [playlist1.id]: playlist1 },
 					track: { [track1.id]: track1 }
-				}
+				},
+				spotify: { album: {}, playlist: {}, track: {} }
 			})
 		).toEqual<{
 			mediaFirstTrackIndex: number;
@@ -387,7 +396,8 @@ describe("Medias Utilities", () => {
 
 		expect(() =>
 			findContextFromTrackIndex([album1], 0, {
-				deezer: { album: {}, playlist: {}, track: {} }
+				deezer: { album: {}, playlist: {}, track: {} },
+				spotify: { album: {}, playlist: {}, track: {} }
 			})
 		).toThrowError("Media is unknown");
 
@@ -397,7 +407,8 @@ describe("Medias Utilities", () => {
 					album: { [album1.id]: album1 },
 					playlist: {},
 					track: {}
-				}
+				},
+				spotify: { album: {}, playlist: {}, track: {} }
 			})
 		).toThrowError("Track index is out of range");
 
@@ -407,7 +418,8 @@ describe("Medias Utilities", () => {
 					album: { [album1.id]: album1 },
 					playlist: {},
 					track: {}
-				}
+				},
+				spotify: { album: {}, playlist: {}, track: {} }
 			})
 		).toThrowError("Track index is out of range");
 	});

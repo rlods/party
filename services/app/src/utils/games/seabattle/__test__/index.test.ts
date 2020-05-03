@@ -5,7 +5,6 @@ import {
 	checkUserHasBatton,
 	passBatonToNextPlayer,
 	encodeBattle,
-	SeaBattleMapData,
 	SeaBattleData
 } from "..";
 

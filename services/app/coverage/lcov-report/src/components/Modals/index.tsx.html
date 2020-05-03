@@ -24,14 +24,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/41</span>
+                <span class='fraction'>0/42</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/21</span>
+                <span class='fraction'>0/22</span>
             </div>
         
             
@@ -45,7 +45,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/40</span>
+                <span class='fraction'>0/41</span>
             </div>
         
             
@@ -181,7 +181,14 @@
 <a name='L123'></a><a href='#L123'>123</a>
 <a name='L124'></a><a href='#L124'>124</a>
 <a name='L125'></a><a href='#L125'>125</a>
-<a name='L126'></a><a href='#L126'>126</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L126'></a><a href='#L126'>126</a>
+<a name='L127'></a><a href='#L127'>127</a>
+<a name='L128'></a><a href='#L128'>128</a>
+<a name='L129'></a><a href='#L129'>129</a>
+<a name='L130'></a><a href='#L130'>130</a>
+<a name='L131'></a><a href='#L131'>131</a>
+<a name='L132'></a><a href='#L132'>132</a>
+<a name='L133'></a><a href='#L133'>133</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -198,22 +205,28 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -222,6 +235,7 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -318,7 +332,8 @@ import { ConnectUserModal } from "../Users/ConnectUserModal";
 import { CreateRoomModal } from "../Room/CreateRoomModal";
 import { CreateUserModal } from "..//Users/CreateUserModal";
 import { HelpModal } from "./HelpModal";
-import { HelpModal as SeaBattleHelpModal } from "../SeaBattle/HelpModal";
+import { SeaBattleGameOverModal } from "../SeaBattle/GameOverModal";
+import { SeaBattleHelpModal } from "../SeaBattle/HelpModal";
 import { SearchModal } from "../Room/SearchModal";
 import { JoinRoomModal } from "../Room/JoinRoomModal";
 import { UnlockRoomModal } from "../Room/UnlockRoomModal";
@@ -333,24 +348,30 @@ const TRANSITION_TIMEOUT = <span class="cstat-no" title="statement not covered" 
 export const getModal = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(p</span>rereq?: ModalPrereq) =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >	if (prereq) {</span>
 <span class="cstat-no" title="statement not covered" >		switch (prereq.type) {</span>
-			case "Confirm":
+			// General
+			case "General/Confirm":
 <span class="cstat-no" title="statement not covered" >				return &lt;ConfirmModal {...prereq.props} /&gt;;</span>
-			case "ConnectUser":
-<span class="cstat-no" title="statement not covered" >				return &lt;ConnectUserModal {...prereq.props} /&gt;;</span>
-			case "CreateRoom":
-<span class="cstat-no" title="statement not covered" >				return &lt;CreateRoomModal /&gt;;</span>
-			case "CreateUser":
-<span class="cstat-no" title="statement not covered" >				return &lt;CreateUserModal {...prereq.props} /&gt;;</span>
-			case "GeneralHelp":
+			case "General/Help":
 <span class="cstat-no" title="statement not covered" >				return &lt;HelpModal /&gt;;</span>
-			case "JoinRoom":
+			// User
+			case "User/Connect":
+<span class="cstat-no" title="statement not covered" >				return &lt;ConnectUserModal {...prereq.props} /&gt;;</span>
+			case "User/Create":
+<span class="cstat-no" title="statement not covered" >				return &lt;CreateUserModal {...prereq.props} /&gt;;</span>
+			// Room
+			case "Room/Create":
+<span class="cstat-no" title="statement not covered" >				return &lt;CreateRoomModal {...prereq.props} /&gt;;</span>
+			case "Room/Join":
 <span class="cstat-no" title="statement not covered" >				return &lt;JoinRoomModal /&gt;;</span>
-			case "SeaBattleHelp":
-<span class="cstat-no" title="statement not covered" >				return &lt;SeaBattleHelpModal /&gt;;</span>
-			case "Search":
+			case "Room/Search":
 <span class="cstat-no" title="statement not covered" >				return &lt;SearchModal /&gt;;</span>
-			case "UnlockRoom":
+			case "Room/Unlock":
 <span class="cstat-no" title="statement not covered" >				return &lt;UnlockRoomModal {...prereq.props} /&gt;;</span>
+			// SeaBattle
+			case "SeaBattle/GameOver":
+<span class="cstat-no" title="statement not covered" >				return &lt;SeaBattleGameOverModal {...prereq.props} /&gt;;</span>
+			case "SeaBattle/Help":
+<span class="cstat-no" title="statement not covered" >				return &lt;SeaBattleHelpModal /&gt;;</span>
 		}
 	}
 <span class="cstat-no" title="statement not covered" >	return null;</span>
@@ -438,7 +459,7 @@ export const Modals: FC = <span class="cstat-no" title="statement not covered" >
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Sat May 02 2020 16:12:28 GMT+0000 (Coordinated Universal Time)
+                at Sun May 03 2020 18:41:12 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../prettify.js"></script>

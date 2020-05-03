@@ -1,12 +1,4 @@
-import {
-	checkCollisions,
-	checkPositionInZone,
-	checkZone,
-	generateGrid,
-	getGridCell,
-	movementIsPossible,
-	setGridCell
-} from "../collision";
+import { checkCollisions } from "../collision";
 
 // ------------------------------------------------------------------
 

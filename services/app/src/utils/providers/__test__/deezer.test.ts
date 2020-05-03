@@ -1,9 +1,5 @@
 import { mocked } from "ts-jest/utils";
-import { callProxy } from "../../proxy";
-jest.mock("../../proxy");
-
-// ------------------------------------------------------------------
-
+import { Album, Playlist, Track } from "../../medias";
 import {
 	getDeezerApi,
 	DeezerApiSearchResult,
@@ -11,7 +7,8 @@ import {
 	DeezerApiPlaylist,
 	DeezerApiTrack
 } from "../deezer";
-import { Album, Playlist, Track } from "../../medias";
+import { callProxy } from "../../proxy";
+jest.mock("../../proxy");
 
 // ------------------------------------------------------------------
 
