@@ -6,5 +6,8 @@ services:
             context: .
             dockerfile: ./docker/app/Dockerfile
             args:
-                - NODE_ENV
+                DATABASE_IDS: "erte"
+                DATABASE_PREFIX: "rlods-test-party-"
+                PROXY_SECRET: "..."
+                PROXY_URL: "https://proxy.rlods.xyz/api"
         restart: on-failure

@@ -8,12 +8,12 @@ define compose_dev_run
 	$(compose_dev) run --rm --no-deps
 endef
 
-define compose_prod
-	docker-compose -p party_prod -f docker-compose.yml -f docker-compose.prod.yml
+define compose_staging
+	docker-compose -p party_staging -f docker-compose.yml -f docker-compose.staging.yml
 endef
 
-define compose_prod_run
-	$(compose_prod) run --rm --no-deps
+define compose_staging_run
+	$(compose_staging) run --rm --no-deps
 endef
 
 # BUILD
@@ -58,8 +58,8 @@ tests-update:
 tests-watch:
 	$(compose_dev_run) app npm run test:watch
 
-# PROD
-prod:
+# STAGING
+staging:
 	rm -Rf $(shell pwd)/docs/*.* $(shell pwd)/docs/static/css/*.* $(shell pwd)/docs/static/js/*.*; \
-	$(compose_prod) build; \
-	$(compose_prod_run) -v $(shell pwd)/docs:/output app sh -c 'cp -R build/* /output'
+	$(compose_staging) build; \
+	$(compose_staging_run) -v $(shell pwd)/docs:/output app sh -c 'cp -R build/* /output'
