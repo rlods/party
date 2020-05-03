@@ -1,4 +1,7 @@
-import { getImageMainColor } from "./images";
+import axios from "axios";
+//
+import colorConfig from "../config/color";
+import { sign } from "./sign";
 
 // ------------------------------------------------------------------
 
@@ -15,9 +18,29 @@ export type CombinedColor = {
 
 const CACHE: { [url: string]: CombinedColor } = {};
 
-const DEFAULT_COLOR = {
+const DEFAULT_COLOR: CombinedColor = {
 	bg: { r: 255, g: 255, b: 255 },
 	fg: "dark"
+};
+
+// ------------------------------------------------------------------
+
+export const getMainColor = async (
+	url: string
+): Promise<{
+	r: number;
+	g: number;
+	b: number;
+}> => {
+	url = Buffer.from(url).toString("base64");
+	return (
+		await axios.get(`${colorConfig.url}/main`, {
+			params: {
+				url,
+				s: sign("/main", { url }, colorConfig.secret)
+			}
+		})
+	).data;
 };
 
 // ------------------------------------------------------------------
@@ -29,7 +52,7 @@ export const pickColor = async (url: string) => {
 		res = CACHE[url];
 		if (!res) {
 			try {
-				const { r, g, b } = await getImageMainColor(url);
+				const { r, g, b } = await getMainColor(url);
 				CACHE[url] = res = {
 					bg: { r, g, b },
 					fg:
