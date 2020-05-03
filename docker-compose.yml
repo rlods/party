@@ -4,6 +4,8 @@ services:
     app:
         image: node:12-alpine
         environment:
+            COLOR_SECRET: "..."
+            COLOR_URL: "https://color.rlods.xyz/api"
             DATABASE_IDS: "erte"
             DATABASE_PREFIX: "rlods-test-party-"
             PROXY_SECRET: "..."
