@@ -1,22 +1,10 @@
 version: "3"
 
 services:
-  api:
-    build:
-      context: .
-      dockerfile: ./docker/api/Dockerfile
-    restart: on-failure
-
-  api2:
-    build:
-      context: .
-      dockerfile: ./docker/api2/Dockerfile
-    restart: on-failure
-
-  app:
-    build:
-      context: .
-      dockerfile: ./docker/app/Dockerfile
-      args:
-        - NODE_ENV
-    restart: on-failure
+    app:
+        build:
+            context: .
+            dockerfile: ./docker/app/Dockerfile
+            args:
+                - NODE_ENV
+        restart: on-failure

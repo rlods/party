@@ -3,14 +3,14 @@
 	"version": "0.0.0",
 	"private": true,
 	"scripts": {
-		"build": "./node_modules/.bin/react-scripts build",
-		"start": "PORT=8080 CHOKIDAR_USEPOLLING=true ./node_modules/.bin/react-scripts start",
+		"build": "REACT_APP_DATABASE_IDS=${DATABASE_IDS} REACT_APP_DATABASE_PREFIX=${DATABASE_PREFIX} REACT_APP_PROXY_SECRET=${PROXY_SECRET} REACT_APP_PROXY_URL=${PROXY_URL} ./node_modules/.bin/react-scripts build",
+		"start": "REACT_APP_DATABASE_IDS=${DATABASE_IDS} REACT_APP_DATABASE_PREFIX=${DATABASE_PREFIX} REACT_APP_PROXY_SECRET=${PROXY_SECRET} REACT_APP_PROXY_URL=${PROXY_URL} PORT=8080 CHOKIDAR_USEPOLLING=true ./node_modules/.bin/react-scripts start",
 		"serve": "./node_modules/.bin/serve -s build -p 8080",
-		"test": "./node_modules/.bin/react-scripts test --verbose=true --forceExit=true --runInBand=true --detectOpenHandles=true --ci=true --watchAll=false",
-		"test:coverage": "./node_modules/.bin/react-scripts test --verbose=true --forceExit=true --runInBand=true --detectOpenHandles=true --ci=true --watchAll=false --coverage=true && make-coverage-badge",
-		"test:update": "./node_modules/.bin/react-scripts test --verbose=true --forceExit=true --runInBand=true --detectOpenHandles=true --ci=true --watchAll=false --updateSnapshot=true",
-		"test:watch": "./node_modules/.bin/react-scripts test --verbose=true --forceExit=true --runInBand=true --detectOpenHandles=true --ci=true --watchAll=true",
-		"lint": "./node_modules/.bin/eslint --ext js,ts,tsx ./src"
+		"test": "REACT_APP_DATABASE_IDS=${DATABASE_IDS} REACT_APP_DATABASE_PREFIX=${DATABASE_PREFIX} REACT_APP_PROXY_SECRET=${PROXY_SECRET} REACT_APP_PROXY_URL=${PROXY_URL} ./node_modules/.bin/react-scripts test --verbose=true --forceExit=true --runInBand=true --detectOpenHandles=true --ci=true --watchAll=false",
+		"test:coverage": "REACT_APP_DATABASE_IDS=${DATABASE_IDS} REACT_APP_DATABASE_PREFIX=${DATABASE_PREFIX} REACT_APP_PROXY_SECRET=${PROXY_SECRET} REACT_APP_PROXY_URL=${PROXY_URL} ./node_modules/.bin/react-scripts test --verbose=true --forceExit=true --runInBand=true --detectOpenHandles=true --ci=true --watchAll=false --coverage=true && make-coverage-badge",
+		"test:update": "REACT_APP_DATABASE_IDS=${DATABASE_IDS} REACT_APP_DATABASE_PREFIX=${DATABASE_PREFIX} REACT_APP_PROXY_SECRET=${PROXY_SECRET} REACT_APP_PROXY_URL=${PROXY_URL} ./node_modules/.bin/react-scripts test --verbose=true --forceExit=true --runInBand=true --detectOpenHandles=true --ci=true --watchAll=false --updateSnapshot=true",
+		"test:watch": "REACT_APP_DATABASE_IDS=${DATABASE_IDS} REACT_APP_DATABASE_PREFIX=${DATABASE_PREFIX} REACT_APP_PROXY_SECRET=${PROXY_SECRET} REACT_APP_PROXY_URL=${PROXY_URL} ./node_modules/.bin/react-scripts test --verbose=true --forceExit=true --runInBand=true --detectOpenHandles=true --ci=true --watchAll=true",
+		"lint": "REACT_APP_DATABASE_IDS=${DATABASE_IDS} REACT_APP_DATABASE_PREFIX=${DATABASE_PREFIX} REACT_APP_PROXY_SECRET=${PROXY_SECRET} REACT_APP_PROXY_URL=${PROXY_URL} ./node_modules/.bin/eslint --ext js,ts,tsx ./src"
 	},
 	"eslintConfig": {
 		"extends": "react-app"

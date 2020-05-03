@@ -8,6 +8,6 @@ export const selectRoomDatabaseId = () =>
 
 export const selectUserDatabaseId = () => config.dbIDs[0];
 
-// console.debug('[Firebase] Config', config);
+// console.debug("[Firebase] Config", config);
 
 export default config;
