@@ -4,12 +4,12 @@ services:
     app:
         image: node:12-alpine
         environment:
-            COLOR_SECRET: "..."
-            COLOR_URL: "https://color.rlods.xyz/api"
-            DATABASE_IDS: "erte"
-            DATABASE_PREFIX: "rlods-test-party-"
-            PROXY_SECRET: "..."
-            PROXY_URL: "https://proxy.rlods.xyz/api"
+            REACT_APP_COLOR_SECRET: "..."
+            REACT_APP_COLOR_URL: "https://color.rlods.xyz/api"
+            REACT_APP_DATABASE_IDS: "erte"
+            REACT_APP_DATABASE_PREFIX: "rlods-test-party-"
+            REACT_APP_PROXY_SECRET: "..."
+            REACT_APP_PROXY_URL: "https://proxy.rlods.xyz/api"
         restart: on-failure
         volumes:
             - ./services/app:/home/node/app/services/app:delegated # delegated for build & coverage generation

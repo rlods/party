@@ -15,4 +15,5 @@ Sea Battle Mode
 # Prereq
 
 https://color.rlods.xyz
+
 https://proxy.rlods.xyz
