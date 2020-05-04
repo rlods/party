@@ -8,7 +8,8 @@ import {
 	SeaBattleAssetVisibility,
 	SeaBattlePosition,
 	SeaBattleWeaponTypes,
-	SeaBattleWeaponType
+	SeaBattleWeaponType,
+	GRID_CELL_UNIT_SIZE
 } from "../../utils/games/seabattle";
 
 // ------------------------------------------------------------------
@@ -34,7 +35,11 @@ export const WeaponSelection: FC<{
 
 	const onClick = useCallback(
 		(position: SeaBattlePosition) => {
-			const { x } = getSVGNormalizedPosition(svg.current!, position);
+			const { x } = getSVGNormalizedPosition(
+				svg.current!,
+				position,
+				GRID_CELL_UNIT_SIZE
+			);
 			if (selectedPos !== x && onSelect) {
 				// Set
 				setSelectedPos(x);
@@ -53,7 +58,11 @@ export const WeaponSelection: FC<{
 		(position: SeaBattlePosition) => {
 			if (onSelect) {
 				setSelectionPos(
-					getSVGNormalizedPosition(svg.current!, position).x
+					getSVGNormalizedPosition(
+						svg.current!,
+						position,
+						GRID_CELL_UNIT_SIZE
+					).x
 				);
 				setSelectionVis("visible");
 			}

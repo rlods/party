@@ -8,7 +8,7 @@ import { ModalPrereq, popModal } from "../../reducers/modals";
 import { ConfirmModal } from "./ConfirmModal";
 import { ConnectUserModal } from "../Users/ConnectUserModal";
 import { CreateRoomModal } from "../Room/CreateRoomModal";
-import { CreateUserModal } from "..//Users/CreateUserModal";
+import { CreateUserModal } from "../Users/CreateUserModal";
 import { HelpModal } from "./HelpModal";
 import { SeaBattleGameOverModal } from "../SeaBattle/GameOverModal";
 import { SeaBattleHelpModal } from "../SeaBattle/HelpModal";

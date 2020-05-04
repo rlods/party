@@ -13,6 +13,7 @@ import {
 	SeaBattleWeaponsSet
 } from ".";
 import { SeaBattleBoatLengthMappings } from "./mappings";
+import { RoomQueue } from "../../rooms";
 
 // ------------------------------------------------------------------
 
@@ -43,6 +44,36 @@ export const generateBattle = (userId: string): SeaBattleData => {
 	generateFleet(battle, userId);
 	return battle;
 };
+
+// ------------------------------------------------------------------
+
+export const generateBattleQueue = (): RoomQueue => ({
+	medias: {
+		0: {
+			id: "301013", // Pirates Of The Caribbean OST
+			provider: "deezer",
+			type: "album"
+		},
+		1: {
+			id: "7358507", // Stalingrad OST
+			provider: "deezer",
+			type: "album"
+		},
+		2: {
+			id: "558976", // Master & Commander OST
+			provider: "deezer",
+			type: "album"
+		},
+		3: {
+			id: "87375582", // Le chant du loup OST
+			provider: "deezer",
+			type: "album"
+		}
+	},
+	playing: true,
+	playmode: "shuffle",
+	position: 0
+});
 
 // ------------------------------------------------------------------
 

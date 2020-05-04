@@ -1,4 +1,6 @@
 import { Reducer } from "redux";
+import { FirebaseUser } from "../utils/firebase/user";
+import { createAction } from "../actions";
 import {
 	deleteUserAccess,
 	saveUserAccess,
@@ -6,8 +8,6 @@ import {
 	UserAccess,
 	UserInfo
 } from "../utils/users";
-import { FirebaseUser } from "../utils/firebase/user";
-import { createAction } from "../actions";
 
 // ------------------------------------------------------------------
 

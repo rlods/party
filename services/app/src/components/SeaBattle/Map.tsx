@@ -8,7 +8,8 @@ import { getSVGNormalizedPosition } from "../../utils/svg";
 import {
 	SeaBattlePosition,
 	SeaBattleMapData,
-	SeaBattleAssetVisibility
+	SeaBattleAssetVisibility,
+	GRID_CELL_UNIT_SIZE
 } from "../../utils/games/seabattle";
 
 // ------------------------------------------------------------------
@@ -56,7 +57,8 @@ export const Map: FC<{
 		(position: SeaBattlePosition) => {
 			const normalizedPos = getSVGNormalizedPosition(
 				svg.current!,
-				position
+				position,
+				GRID_CELL_UNIT_SIZE
 			);
 			if (
 				selectedPos.x === normalizedPos.x &&
@@ -82,7 +84,13 @@ export const Map: FC<{
 	}, []);
 
 	const onOver = useCallback((position: SeaBattlePosition) => {
-		setSelectionPos(getSVGNormalizedPosition(svg.current!, position));
+		setSelectionPos(
+			getSVGNormalizedPosition(
+				svg.current!,
+				position,
+				GRID_CELL_UNIT_SIZE
+			)
+		);
 		setSelectionVis("visible");
 	}, []);
 
