@@ -5,7 +5,7 @@ import { CreateRoomModalProps } from "../components/Room/CreateRoomModal";
 import { CreateUserModalProps } from "../components/Users/CreateUserModal";
 import { ConfirmModalProps } from "../components/Modals/ConfirmModal";
 import { UnlockRoomModalProps } from "../components/Room/UnlockRoomModal";
-import { SeaBattleGameOverModalProps } from "../components/SeaBattle/GameOverModal";
+import { SeaBattleGameOverModalProps } from "../games/seabattle/components/GameOverModal";
 
 // ------------------------------------------------------------------
 

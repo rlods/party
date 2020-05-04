@@ -12,7 +12,7 @@ import { CombinedColor } from "../utils/colorpicker";
 import { exitRoom, enterRoom } from "../actions/room";
 import { Dispatch } from "../actions";
 import { RoomInfo } from "../utils/rooms";
-import { SeaBattle } from "./games/SeaBattle";
+import { SeaBattle } from "../games/seabattle/page";
 import { Messages } from "../components/Common/Messages";
 import { openModal } from "../reducers/modals";
 import "./Room.scss";

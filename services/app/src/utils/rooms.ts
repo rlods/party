@@ -1,9 +1,9 @@
 import { MediaAccess } from "./medias";
-import { encodeBattle } from "./games/seabattle";
+import { encodeBattle } from "../games/seabattle/utils";
 import {
 	generateBattle,
 	generateBattleQueue
-} from "./games/seabattle/generator";
+} from "../games/seabattle/utils/generator";
 
 // ------------------------------------------------------------------
 

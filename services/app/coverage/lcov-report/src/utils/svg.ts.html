@@ -24,7 +24,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/9</span>
+                <span class='fraction'>0/8</span>
             </div>
         
             
@@ -45,7 +45,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/9</span>
+                <span class='fraction'>0/8</span>
             </div>
         
             
@@ -79,17 +79,10 @@
 <a name='L21'></a><a href='#L21'>21</a>
 <a name='L22'></a><a href='#L22'>22</a>
 <a name='L23'></a><a href='#L23'>23</a>
-<a name='L24'></a><a href='#L24'>24</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L24'></a><a href='#L24'>24</a>
+<a name='L25'></a><a href='#L25'>25</a>
+<a name='L26'></a><a href='#L26'>26</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -98,31 +91,44 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { SeaBattlePosition, GRID_CELL_UNIT_SIZE } from "./games/seabattle";
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">type Position = { x: number; y: number };
+&nbsp;
+// ------------------------------------------------------------------
 &nbsp;
 export const getSVGPosition = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(</span></span>
 	svg: SVGSVGElement,
-	{ x, y }: { x: number; y: number }
-) =&gt; {
-	var pt = <span class="cstat-no" title="statement not covered" >svg.createSVGPoint();</span>
+	{ x, y }: Position
+): Position =&gt; {
+	const pt = <span class="cstat-no" title="statement not covered" >svg.createSVGPoint();</span>
 <span class="cstat-no" title="statement not covered" >	pt.x = x;</span>
 <span class="cstat-no" title="statement not covered" >	pt.y = y;</span>
-<span class="cstat-no" title="statement not covered" >	pt = pt.matrixTransform(svg.getScreenCTM()!.inverse());</span>
-<span class="cstat-no" title="statement not covered" >	return { tx: pt.x, ty: pt.y };</span>
+<span class="cstat-no" title="statement not covered" >	return pt.matrixTransform(svg.getScreenCTM()!.inverse());</span>
 };
 &nbsp;
 export const getSVGNormalizedPosition = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(</span></span>
 	svg: SVGSVGElement,
-	position: SeaBattlePosition
-): SeaBattlePosition =&gt; {
-	const { tx, ty } = <span class="cstat-no" title="statement not covered" >getSVGPosition(svg, position);</span>
+	position: Position,
+	unitSize: number
+): Position =&gt; {
+	const { x, y } = <span class="cstat-no" title="statement not covered" >getSVGPosition(svg, position);</span>
 <span class="cstat-no" title="statement not covered" >	return {</span>
-		x: Math.floor(tx / GRID_CELL_UNIT_SIZE),
-		y: Math.floor(ty / GRID_CELL_UNIT_SIZE)
+		x: Math.floor(x / unitSize),
+		y: Math.floor(y / unitSize)
 	};
 };
 &nbsp;</pre></td></tr></table></pre>
@@ -132,7 +138,7 @@ export const getSVGNormalizedPosition = <span class="cstat-no" title="statement 
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Sun May 03 2020 18:41:12 GMT+0000 (Coordinated Universal Time)
+                at Mon May 04 2020 20:56:05 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../prettify.js"></script>
