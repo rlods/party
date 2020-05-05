@@ -4,7 +4,7 @@ import { Redirect, Route, Switch } from "react-router-dom";
 //
 import { Room } from "./Room";
 import { Splash } from "./Splash";
-import { Modals } from "../components/Modals";
+import { Modals } from "../modals";
 import { reconnectUser } from "../actions/user";
 import { Dispatch } from "../actions";
 import { setApp } from "../reducers/app";

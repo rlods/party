@@ -26,6 +26,7 @@ export type RoomData = {
 	access: RoomAccess;
 	color: CombinedColor;
 	extra: string;
+	extraDecoded: any;
 	info: RoomInfo | null;
 	medias: MediaAccess[];
 	queue: RoomQueue | null;
@@ -43,6 +44,7 @@ const INITIAL_STATE: State = {
 	color: { fg: "dark", bg: { r: 255, g: 255, b: 255 } },
 	error: null,
 	extra: "",
+	extraDecoded: null,
 	fetching: false,
 	info: null,
 	medias: [],

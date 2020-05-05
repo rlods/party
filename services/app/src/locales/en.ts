@@ -18,9 +18,9 @@ export default {
 		rule2: "Create a room",
 		rule2b: "or join one",
 		notes: "Notes:",
-		note1:
-			"A room is protected with a secret: it can be accessed without its secret but then no action can be done in it.",
-		note2: "No personal data is accessed or stored."
+		note1: "A room is protected with a secret.",
+		note2: "No action can be performed in a locked room.",
+		note3: "No personal data is accessed or stored."
 	},
 	user: {
 		errors: {
@@ -165,12 +165,12 @@ export default {
 			not_your_turn: "This is not your turn",
 			opponent_turn: "It's your opponent turn to play",
 			player_turn: "It's your turn to move or attack",
-			you_lost1: "You lost!",
-			you_lost2: "All your ships have been destroyed",
-			you_won1: "You won!",
-			you_won2: "All opponent ships have been destroyed"
+			you_lost: "All your ships have been destroyed",
+			you_won: "All opponent ships have been destroyed"
 		},
 		gameover: "Game Over",
+		you_lost: "You lost!",
+		you_won: "You won!",
 		max_players_count: "Maximum players number has been already reached",
 		no_opponents: "No opponents",
 		no_opponents_to_attack: "There is no opponent to attack...",

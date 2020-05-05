@@ -19,6 +19,7 @@ import {
 	extractTracks,
 	ContextualizedTrackAccess
 } from "../utils/medias";
+import { decode } from "../utils/encoder";
 
 // ------------------------------------------------------------------
 
@@ -121,6 +122,7 @@ export const enterRoom = ({
 						_fbRoom: newFbRoom,
 						access: { dbId, roomId, secret },
 						extra,
+						extraDecoded: extra ? decode(extra) : null,
 						info
 					})
 				);
@@ -241,7 +243,8 @@ const _watchRoom = (
 		console.debug("[Room] Received room extra update...", { newExtra });
 		dispatch(
 			setRoom({
-				extra: newExtra
+				extra: newExtra,
+				extraDecoded: newExtra ? decode(newExtra) : null
 			})
 		);
 	});

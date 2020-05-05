@@ -3,19 +3,15 @@ import { useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { v4 } from "uuid";
 //
-import { FormModal } from "../Modals/FormModal";
-import { IconButton } from "../Common/IconButton";
-import { CancelButton } from "../Common/CancelButton";
-import {
-	SecretField,
-	SECRET_FIELD_SIZE,
-	InputField
-} from "../Modals/ModalFields";
-import { popModal } from "../../reducers/modals";
-import { displayError } from "../../actions/messages";
-import { createUser } from "../../actions/user";
-import { Dispatch, ActionOptions } from "../../actions";
-import { selectUserDatabaseId } from "../../config/firebase";
+import { FormModal } from "./FormModal";
+import { IconButton } from "../components/Common/IconButton";
+import { CancelButton } from "../components/Common/CancelButton";
+import { popModal } from "../reducers/modals";
+import { displayError } from "../actions/messages";
+import { createUser } from "../actions/user";
+import { Dispatch, ActionOptions } from "../actions";
+import { selectUserDatabaseId } from "../config/firebase";
+import { SecretField, SECRET_FIELD_SIZE, InputField } from "./ModalFields";
 
 // ------------------------------------------------------------------
 

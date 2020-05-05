@@ -1,4 +1,3 @@
-import { decode, encode } from "../../../utils/encoder";
 import { augmentedArrayIndexAccess } from "../../../utils";
 
 // ------------------------------------------------------------------
@@ -185,11 +184,11 @@ export const extractOpponentMaps = (maps: SeaBattleMapData[], userId: string) =>
 // ------------------------------------------------------------------
 
 export const extractBattleInfo = ({
-	extra,
+	battle,
 	userId,
 	boatIndex
 }: {
-	extra: string;
+	battle: SeaBattleData | null;
 	userId: string;
 	boatIndex: number;
 }): {
@@ -204,8 +203,7 @@ export const extractBattleInfo = ({
 	let opponentMaps: SeaBattleMapData[] | undefined = void 0;
 	let playerMap: SeaBattleMapData | undefined = void 0;
 	let playerMapIndex = -1;
-	if (extra) {
-		const battle = decodeBattle(extra);
+	if (battle) {
 		if (userId) {
 			currentMapIndex = battle.currentMapIndex;
 			playerMapIndex = battle.maps.findIndex(
@@ -237,11 +235,3 @@ export const checkUserHasBatton = (battle: SeaBattleData, userId: string) =>
 export const passBatonToNextPlayer = (battle: SeaBattleData) => {
 	battle.currentMapIndex = (battle.currentMapIndex + 1) % battle.maps.length;
 };
-
-// ------------------------------------------------------------------
-
-export const decodeBattle = (data: string): SeaBattleData =>
-	decode<SeaBattleData>(data);
-
-export const encodeBattle = (data: SeaBattleData): string =>
-	encode<SeaBattleData>(data);

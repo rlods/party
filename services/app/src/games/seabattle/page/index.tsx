@@ -19,7 +19,8 @@ import {
 	SeaBattleMovementType,
 	SeaBattlePosition,
 	SeaBattleWeaponType,
-	AngleToDirection
+	AngleToDirection,
+	SeaBattleData
 } from "../utils";
 import {
 	KEY_UP,
@@ -49,8 +50,8 @@ export const SeaBattle: FC = () => {
 		state => state.user.access.userId
 	);
 
-	const extra = useSelector<RootState, string>(
-		state => state.room.extra || ""
+	const battle = useSelector<RootState, SeaBattleData | null>(state =>
+		state.room.extraDecoded ? state.room.extraDecoded : null
 	);
 
 	const {
@@ -60,7 +61,7 @@ export const SeaBattle: FC = () => {
 		playerMap,
 		playerMapIndex
 	} = extractBattleInfo({
-		extra,
+		battle,
 		userId,
 		boatIndex
 	});
@@ -141,6 +142,7 @@ export const SeaBattle: FC = () => {
 					openModal({
 						type: "SeaBattle/GameOver",
 						props: {
+							roomType: "seabattle",
 							status: "looser"
 						}
 					})
@@ -155,6 +157,7 @@ export const SeaBattle: FC = () => {
 						openModal({
 							type: "SeaBattle/GameOver",
 							props: {
+								roomType: "seabattle",
 								status: "winner"
 							}
 						})

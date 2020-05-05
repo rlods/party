@@ -1,10 +1,10 @@
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 //
-import { Modal } from "../../../components/Modals/Modal";
-import { Icon } from "../../../components/Common/Icon";
-import { WeaponSelection } from "./WeaponSelection";
-import "./HelpModal.scss";
+import { Modal } from "./Modal";
+import { Icon } from "../components/Common/Icon";
+import { WeaponSelection } from "../games/seabattle/components/WeaponSelection";
+import "./SeaBattleHelpModal.scss";
 
 // ------------------------------------------------------------------
 

@@ -3,10 +3,10 @@ import { useSelector, useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 //
-import { IconButton } from "../Common/IconButton";
-import { RootState } from "../../reducers";
-import { Dispatch } from "../../actions";
-import { popModal, closeModal } from "../../reducers/modals";
+import { IconButton } from "../components/Common/IconButton";
+import { RootState } from "../reducers";
+import { Dispatch } from "../actions";
+import { popModal, closeModal } from "../reducers/modals";
 
 // ------------------------------------------------------------------
 

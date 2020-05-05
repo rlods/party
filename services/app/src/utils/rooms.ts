@@ -1,5 +1,5 @@
+import { encode } from "./encoder";
 import { MediaAccess } from "./medias";
-import { encodeBattle } from "../games/seabattle/utils";
 import {
 	generateBattle,
 	generateBattleQueue
@@ -107,7 +107,7 @@ export const initializeRoom = ({
 			};
 		case "seabattle":
 			return {
-				extra: encodeBattle(generateBattle(userId)),
+				extra: encode(generateBattle(userId)),
 				queue: generateBattleQueue()
 			};
 	}

@@ -4,7 +4,6 @@ import {
 	extractBattleInfo,
 	checkUserHasBatton,
 	passBatonToNextPlayer,
-	encodeBattle,
 	SeaBattleData
 } from "..";
 
@@ -136,8 +135,8 @@ describe("SeaBattle Utilities", () => {
 	it("extractBattleInfo - empty", () => {
 		expect(
 			extractBattleInfo({
+				battle: null,
 				boatIndex: 0,
-				extra: "",
 				userId: ""
 			})
 		).toEqual({
@@ -153,8 +152,8 @@ describe("SeaBattle Utilities", () => {
 		const battle = generateFakeBattle();
 		expect(
 			extractBattleInfo({
+				battle,
 				boatIndex: 1,
-				extra: encodeBattle(battle),
 				userId: battle.maps[1].userId
 			})
 		).toEqual({

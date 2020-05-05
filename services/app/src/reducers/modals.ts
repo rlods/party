@@ -1,11 +1,11 @@
 import { Reducer } from "redux";
 import { createAction } from "../actions";
-import { ConnectUserModalProps } from "../components/Users/ConnectUserModal";
-import { CreateRoomModalProps } from "../components/Room/CreateRoomModal";
-import { CreateUserModalProps } from "../components/Users/CreateUserModal";
-import { ConfirmModalProps } from "../components/Modals/ConfirmModal";
-import { UnlockRoomModalProps } from "../components/Room/UnlockRoomModal";
-import { SeaBattleGameOverModalProps } from "../games/seabattle/components/GameOverModal";
+import { ConnectUserModalProps } from "../modals/ConnectUserModal";
+import { CreateRoomModalProps } from "../modals/CreateRoomModal";
+import { CreateUserModalProps } from "../modals/CreateUserModal";
+import { ConfirmModalProps } from "../modals/ConfirmModal";
+import { UnlockRoomModalProps } from "../modals/UnlockRoomModal";
+import { GameOverModalProps } from "../modals/GameOverModal";
 
 // ------------------------------------------------------------------
 
@@ -21,7 +21,7 @@ export type ModalPrereq =
 	| ModalPrereqT<"Room/Join", null>
 	| ModalPrereqT<"Room/Search", null>
 	| ModalPrereqT<"Room/Unlock", UnlockRoomModalProps>
-	| ModalPrereqT<"SeaBattle/GameOver", SeaBattleGameOverModalProps>
+	| ModalPrereqT<"SeaBattle/GameOver", GameOverModalProps>
 	| ModalPrereqT<"SeaBattle/Help", null>
 	| ModalPrereqT<"User/Connect", ConnectUserModalProps>
 	| ModalPrereqT<"User/Create", CreateUserModalProps>;

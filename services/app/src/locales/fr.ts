@@ -18,9 +18,10 @@ export default {
 		rule2: "Créez une salle",
 		rule2b: "ou rejoignez en une",
 		notes: "Notes :",
-		note1:
-			"Un salle est protégée par un secret : elle peut être accédée sans son secret mais aucune action ne pourra y être réalisée.",
-		note2: "Aucune donnée personnelle n'est manipulée ou stockée."
+		note1: "Une salle est protégée par un secret.",
+		note2:
+			"Aucune action ne peut être réalisée dans une salle verrouillée.",
+		note3: "Aucune donnée personnelle n'est manipulée ou stockée."
 	},
 	user: {
 		errors: {
@@ -168,12 +169,12 @@ export default {
 			not_your_turn: "Ce n'est pas à votre tour de jouer",
 			opponent_turn: "C'est au tour de votre adversaire de jouer",
 			player_turn: "C'est à votre tour de bouger ou d'attaquer",
-			you_lost1: "Perdu !",
-			you_lost2: "Tous vos navires ont été abattus",
-			you_won1: "Gagné !",
-			you_won2: "Tous les navires ennemis ont été abattus"
+			you_lost: "Tous vos navires ont été abattus",
+			you_won: "Tous les navires ennemis ont été abattus"
 		},
 		gameover: "Game Over",
+		you_lost: "Perdu !",
+		you_won: "Gagné !",
 		max_players_count: "Le nombre maximal de joueurs est déjà atteint",
 		no_opponents: "Aucun ennemi",
 		no_opponents_to_attack: "Il n'y aucun ennemi à attaquer ...",

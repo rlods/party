@@ -1,8 +1,8 @@
 import React, { FC, ReactNode } from "react";
 //
-import { Media } from "../../utils/medias";
-import { ModalField } from "../Modals/ModalFields";
-import { IconButton } from "../Common/IconButton";
+import { Media } from "../utils/medias";
+import { ModalField } from "./ModalFields";
+import { IconButton } from "../components/Common/IconButton";
 
 // ------------------------------------------------------------------
 

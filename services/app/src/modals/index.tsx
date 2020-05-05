@@ -2,19 +2,19 @@ import React, { FC, MouseEvent, useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { CSSTransition } from "react-transition-group";
 //
-import { Dispatch } from "../../actions";
-import { RootState } from "../../reducers";
-import { ModalPrereq, popModal } from "../../reducers/modals";
+import { Dispatch } from "../actions";
+import { RootState } from "../reducers";
+import { ModalPrereq, popModal } from "../reducers/modals";
 import { ConfirmModal } from "./ConfirmModal";
-import { ConnectUserModal } from "../Users/ConnectUserModal";
-import { CreateRoomModal } from "../Room/CreateRoomModal";
-import { CreateUserModal } from "../Users/CreateUserModal";
+import { ConnectUserModal } from "./ConnectUserModal";
+import { CreateRoomModal } from "./CreateRoomModal";
+import { CreateUserModal } from "./CreateUserModal";
 import { HelpModal } from "./HelpModal";
-import { SeaBattleGameOverModal } from "../../games/seabattle/components/GameOverModal";
-import { SeaBattleHelpModal } from "../../games/seabattle/components/HelpModal";
-import { SearchModal } from "../Room/SearchModal";
-import { JoinRoomModal } from "../Room/JoinRoomModal";
-import { UnlockRoomModal } from "../Room/UnlockRoomModal";
+import { GameOverModal } from "./GameOverModal";
+import { SeaBattleHelpModal } from "./SeaBattleHelpModal";
+import { SearchModal } from "./SearchModal";
+import { JoinRoomModal } from "./JoinRoomModal";
+import { UnlockRoomModal } from "./UnlockRoomModal";
 import "./index.scss";
 
 // ------------------------------------------------------------------
@@ -47,7 +47,7 @@ export const getModal = (prereq?: ModalPrereq) => {
 				return <UnlockRoomModal {...prereq.props} />;
 			// SeaBattle
 			case "SeaBattle/GameOver":
-				return <SeaBattleGameOverModal {...prereq.props} />;
+				return <GameOverModal {...prereq.props} />;
 			case "SeaBattle/Help":
 				return <SeaBattleHelpModal />;
 		}

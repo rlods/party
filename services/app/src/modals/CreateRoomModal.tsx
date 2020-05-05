@@ -3,21 +3,21 @@ import { useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { v4 } from "uuid";
 //
-import { FormModal } from "../Modals/FormModal";
-import { IconButton } from "../Common/IconButton";
-import { CancelButton } from "../Common/CancelButton";
+import { FormModal } from "./FormModal";
+import { IconButton } from "../components/Common/IconButton";
+import { CancelButton } from "../components/Common/CancelButton";
+import { Dispatch } from "../actions";
+import { popModal } from "../reducers/modals";
+import { createRoom } from "../actions/room";
+import { displayError } from "../actions/messages";
+import { RoomType, RoomTypes, DEFAULT_ROOM_TYPE } from "../utils/rooms";
+import { selectRoomDatabaseId } from "../config/firebase";
 import {
 	InputField,
 	SecretField,
 	SECRET_FIELD_SIZE,
 	SelectField
-} from "../Modals/ModalFields";
-import { Dispatch } from "../../actions";
-import { popModal } from "../../reducers/modals";
-import { createRoom } from "../../actions/room";
-import { displayError } from "../../actions/messages";
-import { RoomType, RoomTypes, DEFAULT_ROOM_TYPE } from "../../utils/rooms";
-import { selectRoomDatabaseId } from "../../config/firebase";
+} from "./ModalFields";
 
 // ------------------------------------------------------------------
 

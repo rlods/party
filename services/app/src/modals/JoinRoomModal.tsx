@@ -2,15 +2,15 @@ import React, { FC, useState, useRef, useEffect, useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
 //
-import { FormModal } from "../Modals/FormModal";
-import { IconButton } from "../Common/IconButton";
-import { CancelButton } from "../Common/CancelButton";
-import { InputField, SelectField } from "../Modals/ModalFields";
-import { Dispatch } from "../../actions";
-import { popModal } from "../../reducers/modals";
-import { displayError } from "../../actions/messages";
-import { enterRoom } from "../../actions/room";
-import config, { selectRoomDatabaseId } from "../../config/firebase";
+import { FormModal } from "./FormModal";
+import { IconButton } from "../components/Common/IconButton";
+import { CancelButton } from "../components/Common/CancelButton";
+import { InputField, SelectField } from "./ModalFields";
+import { Dispatch } from "../actions";
+import { popModal } from "../reducers/modals";
+import { displayError } from "../actions/messages";
+import { enterRoom } from "../actions/room";
+import config, { selectRoomDatabaseId } from "../config/firebase";
 
 // ------------------------------------------------------------------
 

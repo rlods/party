@@ -2,9 +2,9 @@ import React, { FC, forwardRef, useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
 //
-import { copyToClipboard } from "../../utils/clipboard";
-import { IconButton } from "../Common/IconButton";
-import { displaySuccess } from "../../actions/messages";
+import { copyToClipboard } from "../utils/clipboard";
+import { IconButton } from "../components/Common/IconButton";
+import { displaySuccess } from "../actions/messages";
 
 // ------------------------------------------------------------------
 

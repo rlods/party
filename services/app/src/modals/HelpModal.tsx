@@ -2,10 +2,10 @@ import React, { FC, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 //
-import { Modal } from "../Modals/Modal";
-import { openModal } from "../../reducers/modals";
-import { Dispatch } from "../../actions";
-import { IconButton } from "../Common/IconButton";
+import { Modal } from "./Modal";
+import { openModal } from "../reducers/modals";
+import { Dispatch } from "../actions";
+import { IconButton } from "../components/Common/IconButton";
 import "./HelpModal.scss";
 
 // ------------------------------------------------------------------
@@ -83,6 +83,7 @@ export const HelpModal: FC = () => {
 				<ul>
 					<li>{t("help.note1")}</li>
 					<li>{t("help.note2")}</li>
+					<li>{t("help.note3")}</li>
 				</ul>
 			</div>
 		</Modal>
