@@ -1,14 +1,21 @@
-import React, { FC } from "react";
+import React, { FC, ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 //
 import { Modal } from "./Modal";
 import { Icon } from "../components/Common/Icon";
-import { WeaponSelection } from "../games/seabattle/components/WeaponSelection";
 import "./SeaBattleHelpModal.scss";
 
 // ------------------------------------------------------------------
 
-export const SeaBattleHelpModal: FC = () => {
+export type SeaBattleHelpModalProps = {
+	renderWeapons: () => ReactNode;
+};
+
+// ------------------------------------------------------------------
+
+export const SeaBattleHelpModal: FC<SeaBattleHelpModalProps> = ({
+	renderWeapons
+}) => {
 	const { t } = useTranslation();
 	return (
 		<Modal className="SeaBattleHelpModal" title={t("help.help")}>
@@ -85,15 +92,7 @@ export const SeaBattleHelpModal: FC = () => {
 					<li>
 						{t("games.seabattle.help.select_weapon")}
 						<br />
-						<WeaponSelection
-							weapons={{
-								bullet1: 1,
-								bullet2: 1,
-								bullet3: 0,
-								mine: 1
-							}}
-							weaponType={"bullet1"}
-						/>
+						{renderWeapons()}
 					</li>
 					<li>{t("games.seabattle.help.click_opponent_cell")}</li>
 				</ul>

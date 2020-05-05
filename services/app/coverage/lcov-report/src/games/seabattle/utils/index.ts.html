@@ -24,7 +24,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>42/42</span>
+                <span class='fraction'>37/37</span>
             </div>
         
             
@@ -38,14 +38,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>9/9</span>
+                <span class='fraction'>7/7</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>41/41</span>
+                <span class='fraction'>36/36</span>
             </div>
         
             
@@ -293,18 +293,7 @@
 <a name='L235'></a><a href='#L235'>235</a>
 <a name='L236'></a><a href='#L236'>236</a>
 <a name='L237'></a><a href='#L237'>237</a>
-<a name='L238'></a><a href='#L238'>238</a>
-<a name='L239'></a><a href='#L239'>239</a>
-<a name='L240'></a><a href='#L240'>240</a>
-<a name='L241'></a><a href='#L241'>241</a>
-<a name='L242'></a><a href='#L242'>242</a>
-<a name='L243'></a><a href='#L243'>243</a>
-<a name='L244'></a><a href='#L244'>244</a>
-<a name='L245'></a><a href='#L245'>245</a>
-<a name='L246'></a><a href='#L246'>246</a>
-<a name='L247'></a><a href='#L247'>247</a>
-<a name='L248'></a><a href='#L248'>248</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L238'></a><a href='#L238'>238</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -513,7 +502,6 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -542,16 +530,7 @@
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { decode, encode } from "../../../utils/encoder";
-import { augmentedArrayIndexAccess } from "../../../utils";
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { augmentedArrayIndexAccess } from "../../../utils";
 &nbsp;
 // ------------------------------------------------------------------
 &nbsp;
@@ -737,11 +716,11 @@ export const extractOpponentMaps = (maps: SeaBattleMapData[], userId: string) =&
 // ------------------------------------------------------------------
 &nbsp;
 export const extractBattleInfo = ({
-	extra,
+	battle,
 	userId,
 	boatIndex
 }: {
-	extra: string;
+	battle: SeaBattleData | null;
 	userId: string;
 	boatIndex: number;
 }): {
@@ -756,8 +735,7 @@ export const extractBattleInfo = ({
 	let opponentMaps: SeaBattleMapData[] | undefined = void 0;
 	let playerMap: SeaBattleMapData | undefined = void 0;
 	let playerMapIndex = -1;
-	if (extra) {
-		const battle = decodeBattle(extra);
+	if (battle) {
 		<span class="missing-if-branch" title="else path not taken" >E</span>if (userId) {
 			currentMapIndex = battle.currentMapIndex;
 			playerMapIndex = battle.maps.findIndex(
@@ -789,14 +767,6 @@ export const checkUserHasBatton = (battle: SeaBattleData, userId: string) =&gt;
 export const passBatonToNextPlayer = (battle: SeaBattleData) =&gt; {
 	battle.currentMapIndex = (battle.currentMapIndex + 1) % battle.maps.length;
 };
-&nbsp;
-// ------------------------------------------------------------------
-&nbsp;
-export const decodeBattle = (data: string): SeaBattleData =&gt;
-	decode&lt;SeaBattleData&gt;(data);
-&nbsp;
-export const encodeBattle = (data: SeaBattleData): string =&gt;
-	encode&lt;SeaBattleData&gt;(data);
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -804,7 +774,7 @@ export const encodeBattle = (data: SeaBattleData): string =&gt;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Mon May 04 2020 20:56:05 GMT+0000 (Coordinated Universal Time)
+                at Tue May 05 2020 18:55:33 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>

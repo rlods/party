@@ -49,7 +49,7 @@ export const getModal = (prereq?: ModalPrereq) => {
 			case "SeaBattle/GameOver":
 				return <GameOverModal {...prereq.props} />;
 			case "SeaBattle/Help":
-				return <SeaBattleHelpModal />;
+				return <SeaBattleHelpModal {...prereq.props} />;
 		}
 	}
 	return null;

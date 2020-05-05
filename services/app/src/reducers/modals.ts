@@ -6,6 +6,7 @@ import { CreateUserModalProps } from "../modals/CreateUserModal";
 import { ConfirmModalProps } from "../modals/ConfirmModal";
 import { UnlockRoomModalProps } from "../modals/UnlockRoomModal";
 import { GameOverModalProps } from "../modals/GameOverModal";
+import { SeaBattleHelpModalProps } from "../modals/SeaBattleHelpModal";
 
 // ------------------------------------------------------------------
 
@@ -22,7 +23,7 @@ export type ModalPrereq =
 	| ModalPrereqT<"Room/Search", null>
 	| ModalPrereqT<"Room/Unlock", UnlockRoomModalProps>
 	| ModalPrereqT<"SeaBattle/GameOver", GameOverModalProps>
-	| ModalPrereqT<"SeaBattle/Help", null>
+	| ModalPrereqT<"SeaBattle/Help", SeaBattleHelpModalProps>
 	| ModalPrereqT<"User/Connect", ConnectUserModalProps>
 	| ModalPrereqT<"User/Create", CreateUserModalProps>;
 

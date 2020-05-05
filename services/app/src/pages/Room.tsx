@@ -13,6 +13,7 @@ import { exitRoom, enterRoom } from "../actions/room";
 import { Dispatch } from "../actions";
 import { RoomInfo } from "../utils/rooms";
 import { SeaBattle } from "../games/seabattle/page";
+import { WeaponSelection } from "../games/seabattle/components/WeaponSelection";
 import { Messages } from "../components/Common/Messages";
 import { openModal } from "../reducers/modals";
 import "./Room.scss";
@@ -86,7 +87,21 @@ export const Room: FC = () => {
 										dispatch(
 											openModal({
 												type: "SeaBattle/Help",
-												props: null
+												props: {
+													renderWeapons: () => (
+														<WeaponSelection
+															weapons={{
+																bullet1: 1,
+																bullet2: 1,
+																bullet3: 0,
+																mine: 1
+															}}
+															weaponType={
+																"bullet1"
+															}
+														/>
+													)
+												}
 											})
 										);
 									}}

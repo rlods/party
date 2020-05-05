@@ -52,6 +52,7 @@ lint-app:
 tests:
 	$(compose_dev_run) app npm run test
 tests-coverage:
+	rm -Rf services/app/coverage; mkdir services/app/coverage; \
 	$(compose_dev_run) app npm run test:coverage
 tests-update:
 	$(compose_dev_run) app npm run test:update
@@ -60,8 +61,7 @@ tests-watch:
 
 # STAGING
 staging:
-	rm -Rf services/app/build; \
-	mkdir services/app/build; \
+	rm -Rf services/app/build; mkdir services/app/build; \
 	$(compose_staging) build --force-rm; \
 	$(compose_staging_run) app npm install --production=false --unsafe-perm=true --no-audit; \
 	$(compose_staging_run) app npm run build:staging;

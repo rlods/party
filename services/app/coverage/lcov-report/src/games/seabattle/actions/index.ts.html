@@ -813,8 +813,7 @@ import {
 	extractOpponentMaps,
 	passBatonToNextPlayer,
 	checkUserHasBatton,
-	decodeBattle,
-	encodeBattle
+	SeaBattleData
 } from "../utils";
 import {
 	SeaBattleBoatTranslationMappings,
@@ -826,6 +825,7 @@ import {
 	generateGrid,
 	getGridCell
 } from "../utils/collision";
+import { encode } from "../../../utils/encoder";
 &nbsp;
 // ------------------------------------------------------------------
 &nbsp;
@@ -834,7 +834,7 @@ export const joinBattle = <span class="cstat-no" title="statement not covered" >
 		trySomething({
 			onAction: <span class="fstat-no" title="function not covered" >as</span>ync () =&gt; {
 				const {
-					room: { _fbRoom, extra },
+					room: { _fbRoom, extraDecoded },
 					user: {
 						access: { userId }
 					}
@@ -843,13 +843,13 @@ export const joinBattle = <span class="cstat-no" title="statement not covered" >
 <span class="cstat-no" title="statement not covered" >					dispatch(displayError("user.not_connected"));</span>
 <span class="cstat-no" title="statement not covered" >					return "connect-and-retry";</span>
 				}
-<span class="cstat-no" title="statement not covered" >				if (!_fbRoom || _fbRoom.isLocked() || !extra) {</span>
+<span class="cstat-no" title="statement not covered" >				if (!_fbRoom || _fbRoom.isLocked() || !extraDecoded) {</span>
 <span class="cstat-no" title="statement not covered" >					dispatch(displayError("rooms.errors.locked"));</span>
 <span class="cstat-no" title="statement not covered" >					return "unlock-and-retry";</span>
 				}
 &nbsp;
 <span class="cstat-no" title="statement not covered" >				console.debug("[SeaBattle] Joining battle...", { userId });</span>
-				const battle = <span class="cstat-no" title="statement not covered" >decodeBattle(extra);</span>
+				const battle = <span class="cstat-no" title="statement not covered" >extraDecoded as SeaBattleData;</span>
 				const map = <span class="cstat-no" title="statement not covered" >battle.maps.find(<span class="fstat-no" title="function not covered" >ot</span>her =&gt; <span class="cstat-no" title="statement not covered" >other.userId === userId)</span>;</span>
 <span class="cstat-no" title="statement not covered" >				if (map) {</span>
 <span class="cstat-no" title="statement not covered" >					return true; </span>// Nothing to do, user is already in the battle
@@ -863,7 +863,7 @@ export const joinBattle = <span class="cstat-no" title="statement not covered" >
 				// But there is very few chance for that to happen with small number of players
 &nbsp;
 <span class="cstat-no" title="statement not covered" >				generateFleet(battle, userId);</span>
-<span class="cstat-no" title="statement not covered" >				await _fbRoom.updateExtra(encodeBattle(battle));</span>
+<span class="cstat-no" title="statement not covered" >				await _fbRoom.updateExtra(encode(battle));</span>
 <span class="cstat-no" title="statement not covered" >				return true;</span>
 			},
 			onFailure: <span class="fstat-no" title="function not covered" >()</span> =&gt; <span class="cstat-no" title="statement not covered" >dispatch(lockRoom())</span>
@@ -883,12 +883,12 @@ export const moveBoat = <span class="cstat-no" title="statement not covered" ><s
 		trySomething({
 			onAction: <span class="fstat-no" title="function not covered" >as</span>ync () =&gt; {
 				const {
-					room: { _fbRoom, extra },
+					room: { _fbRoom, extraDecoded },
 					user: {
 						access: { userId }
 					}
 				} = <span class="cstat-no" title="statement not covered" >getState();</span>
-<span class="cstat-no" title="statement not covered" >				if (!_fbRoom || _fbRoom.isLocked() || !extra) {</span>
+<span class="cstat-no" title="statement not covered" >				if (!_fbRoom || _fbRoom.isLocked() || !extraDecoded) {</span>
 <span class="cstat-no" title="statement not covered" >					dispatch(displayError("rooms.errors.locked"));</span>
 <span class="cstat-no" title="statement not covered" >					return "unlock-and-retry";</span>
 				}
@@ -897,7 +897,7 @@ export const moveBoat = <span class="cstat-no" title="statement not covered" ><s
 <span class="cstat-no" title="statement not covered" >					return "connect-and-retry";</span>
 				}
 &nbsp;
-				const battle = <span class="cstat-no" title="statement not covered" >decodeBattle(extra);</span>
+				const battle = <span class="cstat-no" title="statement not covered" >extraDecoded as SeaBattleData;</span>
 &nbsp;
 				const playerMap = <span class="cstat-no" title="statement not covered" >battle.maps.find(</span>
 <span class="fstat-no" title="function not covered" >					ot</span>her =&gt; <span class="cstat-no" title="statement not covered" >other.userId === userId</span>
@@ -1009,7 +1009,7 @@ export const moveBoat = <span class="cstat-no" title="statement not covered" ><s
 <span class="cstat-no" title="statement not covered" >				boat.angle = newAngle;</span>
 <span class="cstat-no" title="statement not covered" >				boat.position = newPosition;</span>
 <span class="cstat-no" title="statement not covered" >				passBatonToNextPlayer(battle);</span>
-<span class="cstat-no" title="statement not covered" >				await _fbRoom.updateExtra(encodeBattle(battle));</span>
+<span class="cstat-no" title="statement not covered" >				await _fbRoom.updateExtra(encode(battle));</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >				return true;</span>
 			},
@@ -1032,12 +1032,12 @@ export const attackOpponent = <span class="cstat-no" title="statement not covere
 		trySomething({
 			onAction: <span class="fstat-no" title="function not covered" >as</span>ync () =&gt; {
 				const {
-					room: { _fbRoom, extra },
+					room: { _fbRoom, extraDecoded },
 					user: {
 						access: { userId }
 					}
 				} = <span class="cstat-no" title="statement not covered" >getState();</span>
-<span class="cstat-no" title="statement not covered" >				if (!_fbRoom || _fbRoom.isLocked() || !extra) {</span>
+<span class="cstat-no" title="statement not covered" >				if (!_fbRoom || _fbRoom.isLocked() || !extraDecoded) {</span>
 <span class="cstat-no" title="statement not covered" >					dispatch(displayError("rooms.errors.locked"));</span>
 <span class="cstat-no" title="statement not covered" >					return "unlock-and-retry";</span>
 				}
@@ -1046,7 +1046,7 @@ export const attackOpponent = <span class="cstat-no" title="statement not covere
 <span class="cstat-no" title="statement not covered" >					return "connect-and-retry";</span>
 				}
 &nbsp;
-				const battle = <span class="cstat-no" title="statement not covered" >decodeBattle(extra);</span>
+				const battle = <span class="cstat-no" title="statement not covered" >extraDecoded as SeaBattleData;</span>
 				const playerMap = <span class="cstat-no" title="statement not covered" >battle.maps.find(</span>
 <span class="fstat-no" title="function not covered" >					ot</span>her =&gt; <span class="cstat-no" title="statement not covered" >other.userId === userId</span>
 				);
@@ -1165,7 +1165,7 @@ export const attackOpponent = <span class="cstat-no" title="statement not covere
 				}
 <span class="cstat-no" title="statement not covered" >				playerMap.weapons[weaponType]--;</span>
 <span class="cstat-no" title="statement not covered" >				passBatonToNextPlayer(battle);</span>
-<span class="cstat-no" title="statement not covered" >				await _fbRoom.updateExtra(encodeBattle(battle));</span>
+<span class="cstat-no" title="statement not covered" >				await _fbRoom.updateExtra(encode(battle));</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >				return true;</span>
 			},
@@ -1179,7 +1179,7 @@ export const attackOpponent = <span class="cstat-no" title="statement not covere
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Mon May 04 2020 20:56:05 GMT+0000 (Coordinated Universal Time)
+                at Tue May 05 2020 18:55:33 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
