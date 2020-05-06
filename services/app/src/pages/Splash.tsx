@@ -7,7 +7,7 @@ import { IconButton } from "../components/Common/IconButton";
 import { RootState } from "../reducers";
 import { Messages } from "../components/Common/Messages";
 import { Icon } from "../components/Common/Icon";
-import { AppContext } from "./App";
+import { AppContext } from "./AppContext";
 import { DEFAULT_ROOM_TYPE } from "../utils/rooms";
 import "./Splash.scss";
 

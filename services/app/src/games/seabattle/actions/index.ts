@@ -156,14 +156,6 @@ export const moveBoat = (
 				console.debug("[SeaBattle] Hitted boat cannot move...", {
 					boatIndex
 				});
-				// dispatch(
-				// 	displayError(
-				// 		"games.seabattle.movement_not_possible_because_hitted",
-				// 		{
-				// 			tag: INVALID_MOVE_MESSAGE_TAG
-				// 		}
-				// 	)
-				// );
 				return true;
 			}
 
@@ -176,11 +168,6 @@ export const moveBoat = (
 					oldPosition,
 					newPosition
 				});
-				// dispatch(
-				// 	displayError("games.seabattle.movement_not_possible", {
-				// 		tag: INVALID_MOVE_MESSAGE_TAG
-				// 	})
-				// );
 				return true;
 			}
 

@@ -6,7 +6,7 @@ import { FormModal } from "./FormModal";
 import { IconButton } from "../components/Common/IconButton";
 import { CancelButton } from "../components/Common/CancelButton";
 import { RoomType, RoomTypes } from "../utils/rooms";
-import { AppContext } from "../pages/App";
+import { AppContext } from "../pages/AppContext";
 import {
 	InputField,
 	SecretField,

@@ -5,7 +5,7 @@ import { IconButton } from "../Common/IconButton";
 import { LoadingIcon } from "../Common/LoadingIcon";
 import { QueueItem } from "./QueueItem";
 import { Track } from "../../utils/medias";
-import { AppContext } from "../../pages/App";
+import { AppContext } from "../../pages/AppContext";
 
 // ------------------------------------------------------------------
 

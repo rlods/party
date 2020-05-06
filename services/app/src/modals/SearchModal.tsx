@@ -19,7 +19,7 @@ import { SearchResultCategory } from "./SearchResultCategory";
 import { isRoomLocked } from "../selectors/room";
 import { RootState } from "../reducers";
 import { ModalField } from "./ModalFields";
-import { AppContext } from "../pages/App";
+import { AppContext } from "../pages/AppContext";
 import {
 	MEDIA_TYPE_DEFINITIONS,
 	MediaType,
@@ -36,10 +36,11 @@ const VIEW_MORE_RESULTS_COUNT = 50;
 
 export const SearchModal: FC = () => {
 	const {
-		onQueueAppend,
 		onModalClose,
 		onPreviewStart,
-		onPreviewStop
+		onPreviewStop,
+		onQueueAppend,
+		onRoomLock
 	} = useContext(AppContext);
 	const { t } = useTranslation();
 	const queryRef = useRef<HTMLInputElement>(null);
@@ -144,11 +145,17 @@ export const SearchModal: FC = () => {
 									title={t("medias.add")}
 									icon="plus"
 									onClick={() =>
-										onQueueAppend(true, {
-											provider,
-											type,
-											id: media.id
-										})
+										onQueueAppend(
+											true,
+											{
+												provider,
+												type,
+												id: media.id
+											},
+											{
+												onFailure: onRoomLock
+											}
+										)
 									}
 								/>
 							}

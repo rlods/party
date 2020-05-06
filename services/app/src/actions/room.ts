@@ -14,12 +14,12 @@ import { setMedias } from "../reducers/medias";
 import { setRoom, resetRoom, fetching, error } from "../reducers/room";
 import { displayMediaInfo } from "./medias";
 import history from "../utils/history";
+import { decode } from "../utils/encoder";
 import {
 	MediaAccess,
 	extractTracks,
 	ContextualizedTrackAccess
 } from "../utils/medias";
-import { decode } from "../utils/encoder";
 
 // ------------------------------------------------------------------
 

@@ -8,7 +8,7 @@ import { RootState } from "../../reducers";
 import { isRoomLoaded, selectRoomName } from "../../selectors/room";
 import { selectTracksCount } from "../../selectors/medias";
 import { Icon } from "../Common/Icon";
-import { AppContext } from "../../pages/App";
+import { AppContext } from "../../pages/AppContext";
 import "./Head.scss";
 
 // ------------------------------------------------------------------

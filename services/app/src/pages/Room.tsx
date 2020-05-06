@@ -11,7 +11,7 @@ import { Dispatch } from "../actions";
 import { RoomInfo } from "../utils/rooms";
 import { CollaborativeQueue } from "../games/dj/page";
 import { SeaBattle } from "../games/seabattle/page";
-import { AppContext } from "./App";
+import { AppContext } from "./AppContext";
 import "./Room.scss";
 
 // ------------------------------------------------------------------

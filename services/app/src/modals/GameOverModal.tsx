@@ -6,7 +6,7 @@ import { FormModal } from "./FormModal";
 import { Icon } from "../components/Common/Icon";
 import { IconButton } from "../components/Common/IconButton";
 import { RoomType } from "../utils/rooms";
-import { AppContext } from "../pages/App";
+import { AppContext } from "../pages/AppContext";
 import "./GameOverModal.scss";
 
 // ------------------------------------------------------------------

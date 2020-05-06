@@ -15,7 +15,7 @@ import { WeaponSelection } from "../components/WeaponSelection";
 import { RoomControls } from "../../../components/Room/RoomControls";
 import { selectUserId } from "../../../selectors/user";
 import { selectExtraDecoded } from "../../../selectors/room";
-import { AppContext } from "../../../pages/App";
+import { AppContext } from "../../../pages/AppContext";
 import {
 	extractBattleInfo,
 	MAX_PLAYER_COUNT,
@@ -222,10 +222,7 @@ export const SeaBattle: FC = () => {
 					<SeaBattlePlayerControls
 						boat={boat}
 						disabled={!boat}
-						onQueueMoveForward={() => onMoveBoat("move_forward")}
-						onQueueMoveBackward={() => onMoveBoat("move_backward")}
-						onRotateLeft={() => onMoveBoat("rotate_left")}
-						onRotateRight={() => onMoveBoat("rotate_right")}
+						onMove={onMoveBoat}
 					/>
 					{playerMap ? (
 						<Map

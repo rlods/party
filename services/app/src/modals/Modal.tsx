@@ -5,7 +5,7 @@ import classNames from "classnames";
 //
 import { IconButton } from "../components/Common/IconButton";
 import { RootState } from "../reducers";
-import { AppContext } from "../pages/App";
+import { AppContext } from "../pages/AppContext";
 
 // ------------------------------------------------------------------
 

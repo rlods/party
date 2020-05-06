@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 //
 import { Modal } from "./Modal";
 import { IconButton } from "../components/Common/IconButton";
-import { AppContext } from "../pages/App";
+import { AppContext } from "../pages/AppContext";
 import { DEFAULT_ROOM_TYPE } from "../utils/rooms";
 import "./HelpModal.scss";
 

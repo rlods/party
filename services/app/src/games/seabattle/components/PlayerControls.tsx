@@ -2,7 +2,11 @@ import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 //
 import { IconButton } from "../../../components/Common/IconButton";
-import { SeaBattleBoatData, AngleToDirection } from "../utils";
+import {
+	SeaBattleBoatData,
+	AngleToDirection,
+	SeaBattleMovementType
+} from "../utils";
 import { SeaBattleMovementIconMappings } from "../utils/mappings";
 
 // ------------------------------------------------------------------
@@ -10,18 +14,8 @@ import { SeaBattleMovementIconMappings } from "../utils/mappings";
 export const SeaBattlePlayerControls: FC<{
 	boat?: SeaBattleBoatData;
 	disabled?: boolean;
-	onQueueMoveBackward: () => void;
-	onQueueMoveForward: () => void;
-	onRotateLeft: () => void;
-	onRotateRight: () => void;
-}> = ({
-	boat,
-	disabled = false,
-	onQueueMoveBackward,
-	onQueueMoveForward,
-	onRotateLeft,
-	onRotateRight
-}) => {
+	onMove: (type: SeaBattleMovementType) => void;
+}> = ({ boat, disabled = false, onMove }) => {
 	const { t } = useTranslation();
 
 	return (
@@ -30,7 +24,7 @@ export const SeaBattlePlayerControls: FC<{
 				disabled={disabled}
 				icon="rotate-left"
 				title={t("games.seabattle.turn_left")}
-				onClick={onRotateLeft}
+				onClick={() => onMove("rotate_left")}
 			/>
 			<IconButton
 				disabled={disabled}
@@ -42,7 +36,7 @@ export const SeaBattlePlayerControls: FC<{
 						: "arrow-down"
 				}
 				title={t("games.seabattle.move_backward")}
-				onClick={onQueueMoveBackward}
+				onClick={() => onMove("move_backward")}
 			/>
 			<IconButton
 				disabled={disabled}
@@ -54,13 +48,13 @@ export const SeaBattlePlayerControls: FC<{
 						: "arrow-up"
 				}
 				title={t("games.seabattle.move_forward")}
-				onClick={onQueueMoveForward}
+				onClick={() => onMove("move_forward")}
 			/>
 			<IconButton
 				disabled={disabled}
 				icon="rotate-right"
 				title={t("games.seabattle.turn_right")}
-				onClick={onRotateRight}
+				onClick={() => onMove("rotate_right")}
 			/>
 		</div>
 	);

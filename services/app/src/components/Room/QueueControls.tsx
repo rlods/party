@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { IconButton } from "../Common/IconButton";
 import { RootState } from "../../reducers";
 import { isRoomLocked } from "../../selectors/room";
-import { AppContext } from "../../pages/App";
+import { AppContext } from "../../pages/AppContext";
 import "./QueueControls.scss";
 
 // ------------------------------------------------------------------
@@ -15,10 +15,10 @@ export const QueueControls: FC<{
 	onHelp?: () => void;
 }> = ({ propagate, onHelp }) => {
 	const {
-		onRoomUnlockAsk,
 		onQueueClear,
 		onQueueSearch,
-		onRoomLock
+		onRoomLock,
+		onRoomUnlockAsk
 	} = useContext(AppContext);
 	const { t } = useTranslation();
 	const tracksCount = useSelector<RootState, number>(
@@ -64,7 +64,11 @@ export const QueueControls: FC<{
 			<div className="Control">
 				<IconButton
 					disabled={locked || tracksCount === 0}
-					onClick={() => onQueueClear(propagate)}
+					onClick={() =>
+						onQueueClear(propagate, {
+							onFailure: onRoomLock
+						})
+					}
 					icon="trash"
 					title={t("rooms.clear")}
 				/>

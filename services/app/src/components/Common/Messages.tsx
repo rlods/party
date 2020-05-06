@@ -8,7 +8,7 @@ import { Message } from "../../utils/messages";
 import { selectMessages } from "../../selectors/messages";
 import { RootState } from "../../reducers";
 import { IconButton } from "../Common/IconButton";
-import { AppContext } from "../../pages/App";
+import { AppContext } from "../../pages/AppContext";
 import "./Messages.scss";
 
 // ------------------------------------------------------------------

@@ -13,7 +13,7 @@ import { IconButton } from "../components/Common/IconButton";
 import { CancelButton } from "../components/Common/CancelButton";
 import { InputField, SelectField } from "./ModalFields";
 import firebaseConfig, { selectRoomDatabaseId } from "../config/firebase";
-import { AppContext } from "../pages/App";
+import { AppContext } from "../pages/AppContext";
 
 // ------------------------------------------------------------------
 

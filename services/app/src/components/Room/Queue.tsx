@@ -8,15 +8,19 @@ import { Track } from "../../utils/medias";
 import { selectQueuePosition } from "../../selectors/queue";
 import { isRoomLoaded, isRoomLocked } from "../../selectors/room";
 import { isRoomPlaying } from "../../selectors/queue";
-import { AppContext } from "../../pages/App";
+import { AppContext } from "../../pages/AppContext";
 import "./Queue.scss";
 
 // ------------------------------------------------------------------
 
 export const Queue: FC = () => {
-	const { onPlayerStop, onQueueRemove, onQueueSetPosition } = useContext(
-		AppContext
-	);
+	const {
+		onPlayerStart,
+		onPlayerStop,
+		onRoomLock,
+		onQueueRemove,
+		onQueueSetPosition
+	} = useContext(AppContext);
 
 	const loaded = useSelector<RootState, boolean>(isRoomLoaded);
 	const locked = useSelector<RootState, boolean>(isRoomLocked);
@@ -32,9 +36,24 @@ export const Queue: FC = () => {
 					tracks={tracks}
 					playing={playing}
 					playingIndex={playingIndex}
-					onPlay={position => onQueueSetPosition(true, position)}
-					onRemove={position => onQueueRemove(true, position)}
-					onStop={() => onPlayerStop(true)}
+					onPlay={position => {
+						onPlayerStart(true, {
+							onFailure: onRoomLock
+						});
+						onQueueSetPosition(true, position, {
+							onFailure: onRoomLock
+						});
+					}}
+					onRemove={position =>
+						onQueueRemove(true, position, {
+							onFailure: onRoomLock
+						})
+					}
+					onStop={() =>
+						onPlayerStop(true, {
+							onFailure: onRoomLock
+						})
+					}
 				/>
 			) : (
 				<EmptyQueueList loaded={loaded} locked={locked} />

@@ -6,7 +6,7 @@ import { IconButton } from "../components/Common/IconButton";
 import { CancelButton } from "../components/Common/CancelButton";
 import { TrySomethingOptions } from "../actions";
 import { SECRET_FIELD_SIZE, InputField } from "./ModalFields";
-import { AppContext } from "../pages/App";
+import { AppContext } from "../pages/AppContext";
 
 // ------------------------------------------------------------------
 

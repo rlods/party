@@ -9,7 +9,7 @@ import { isRoomLocked } from "../../selectors/room";
 import { isRoomPlaying, selectRoomPlaymode } from "../../selectors/queue";
 import { PlayMode } from "../../utils/rooms";
 import { selectTracksCount } from "../../selectors/medias";
-import { AppContext } from "../../pages/App";
+import { AppContext } from "../../pages/AppContext";
 import "./AudioPlayerControls.scss";
 
 // ------------------------------------------------------------------
@@ -23,7 +23,8 @@ export const AudioPlayerControls: FC<{
 		onQueueMoveBackward,
 		onQueueMoveForward,
 		onPlayerStart,
-		onPlayerStop
+		onPlayerStop,
+		onRoomLock
 	} = useContext(AppContext);
 
 	const { t } = useTranslation();
@@ -54,7 +55,11 @@ export const AudioPlayerControls: FC<{
 					<IconButton
 						disabled={locked || tracksCount === 0}
 						icon="play"
-						onClick={() => onPlayerStart(propagate)}
+						onClick={() =>
+							onPlayerStart(propagate, {
+								onFailure: onRoomLock
+							})
+						}
 						size={bigPlayer ? "L" : "M"}
 						title={t("player.play")}
 					/>
@@ -62,7 +67,11 @@ export const AudioPlayerControls: FC<{
 					<IconButton
 						disabled={locked || tracksCount === 0}
 						icon="pause"
-						onClick={() => onPlayerStop(propagate)}
+						onClick={() =>
+							onPlayerStop(propagate, {
+								onFailure: onRoomLock
+							})
+						}
 						size={bigPlayer ? "L" : "M"}
 						title={t("player.stop")}
 					/>

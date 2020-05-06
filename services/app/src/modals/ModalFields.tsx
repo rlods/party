@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 //
 import { copyToClipboard } from "../utils/clipboard";
 import { IconButton } from "../components/Common/IconButton";
-import { AppContext } from "../pages/App";
+import { AppContext } from "../pages/AppContext";
 
 // ------------------------------------------------------------------
 

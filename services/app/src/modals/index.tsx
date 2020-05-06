@@ -14,7 +14,7 @@ import { SeaBattleHelpModal } from "./SeaBattleHelpModal";
 import { SearchModal } from "./SearchModal";
 import { JoinRoomModal } from "./JoinRoomModal";
 import { UnlockRoomModal } from "./UnlockRoomModal";
-import { AppContext } from "../pages/App";
+import { AppContext } from "../pages/AppContext";
 import "./index.scss";
 
 // ------------------------------------------------------------------
