@@ -24,7 +24,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/18</span>
+                <span class='fraction'>0/14</span>
             </div>
         
             
@@ -38,14 +38,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/6</span>
+                <span class='fraction'>0/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/18</span>
+                <span class='fraction'>0/14</span>
             </div>
         
             
@@ -133,22 +133,7 @@
 <a name='L75'></a><a href='#L75'>75</a>
 <a name='L76'></a><a href='#L76'>76</a>
 <a name='L77'></a><a href='#L77'>77</a>
-<a name='L78'></a><a href='#L78'>78</a>
-<a name='L79'></a><a href='#L79'>79</a>
-<a name='L80'></a><a href='#L80'>80</a>
-<a name='L81'></a><a href='#L81'>81</a>
-<a name='L82'></a><a href='#L82'>82</a>
-<a name='L83'></a><a href='#L83'>83</a>
-<a name='L84'></a><a href='#L84'>84</a>
-<a name='L85'></a><a href='#L85'>85</a>
-<a name='L86'></a><a href='#L86'>86</a>
-<a name='L87'></a><a href='#L87'>87</a>
-<a name='L88'></a><a href='#L88'>88</a>
-<a name='L89'></a><a href='#L89'>89</a>
-<a name='L90'></a><a href='#L90'>90</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L78'></a><a href='#L78'>78</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -173,7 +158,6 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -183,14 +167,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -234,31 +210,27 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React, { FC, useCallback } from "react";
-import { useDispatch, useSelector } from "react-redux";
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React, { FC, useCallback, useContext } from "react";
+import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
 //
 import { IconButton } from "../Common/IconButton";
 import { copyToClipboard } from "../../utils/clipboard";
-import { Dispatch } from "../../actions";
 import { RootState } from "../../reducers";
 import { isRoomLoaded, selectRoomName } from "../../selectors/room";
-import { displaySuccess } from "../../actions/messages";
-import { confirmModal } from "../../actions/modals";
 import { selectTracksCount } from "../../selectors/medias";
 import { Icon } from "../Common/Icon";
+import { AppContext } from "../../pages/App";
 import "./Head.scss";
 &nbsp;
 // ------------------------------------------------------------------
 &nbsp;
 export const Head: FC = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >()</span> =&gt; {</span>
-	const dispatch = <span class="cstat-no" title="statement not covered" >useDispatch&lt;Dispatch&gt;();</span>
+	const { onDisplayInfo, onExit } = <span class="cstat-no" title="statement not covered" >useContext(AppContext);</span>
 	const fetching = <span class="cstat-no" title="statement not covered" >useSelector&lt;RootState, boolean&gt;(</span>
 <span class="fstat-no" title="function not covered" >		st</span>ate =&gt; <span class="cstat-no" title="statement not covered" >state.room.fetching</span>
 	);
 	const { t } = <span class="cstat-no" title="statement not covered" >useTranslation();</span>
-	const history = <span class="cstat-no" title="statement not covered" >useHistory();</span>
 	const name = <span class="cstat-no" title="statement not covered" >useSelector&lt;RootState, string&gt;(selectRoomName);</span>
 	const loaded = <span class="cstat-no" title="statement not covered" >useSelector&lt;RootState, boolean&gt;(isRoomLoaded);</span>
 	const mediasCount = <span class="cstat-no" title="statement not covered" >useSelector&lt;RootState, number&gt;(</span>
@@ -268,16 +240,8 @@ export const Head: FC = <span class="cstat-no" title="statement not covered" ><s
 &nbsp;
 	const onCopy = <span class="cstat-no" title="statement not covered" >useCallback(<span class="fstat-no" title="function not covered" >as</span>ync () =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >		await copyToClipboard(document.location.href.split("?")[0]);</span>
-<span class="cstat-no" title="statement not covered" >		dispatch(displaySuccess("rooms.link_copied_to_clipboard"));</span>
-	}, [dispatch]);
-&nbsp;
-	const onExit = <span class="cstat-no" title="statement not covered" >useCallback(<span class="fstat-no" title="function not covered" >()</span> =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >		dispatch(</span>
-			confirmModal(t("rooms.confirm_exit"), <span class="fstat-no" title="function not covered" >()</span> =&gt; {
-<span class="cstat-no" title="statement not covered" >				history.push("/");</span>
-			})
-		);
-	}, [t, dispatch, history]);
+<span class="cstat-no" title="statement not covered" >		onDisplayInfo("rooms.link_copied_to_clipboard");</span>
+	}, [onDisplayInfo]);
 &nbsp;
 <span class="cstat-no" title="statement not covered" >	return (</span>
 		&lt;div className="Head"&gt;
@@ -330,7 +294,7 @@ export const Head: FC = <span class="cstat-no" title="statement not covered" ><s
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue May 05 2020 18:55:33 GMT+0000 (Coordinated Universal Time)
+                at Wed May 06 2020 21:27:07 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../prettify.js"></script>

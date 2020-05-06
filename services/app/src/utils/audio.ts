@@ -78,7 +78,8 @@ export const getOrLoadAudioBuffer = async (
 	url: string
 ): Promise<AudioBuffer> => {
 	if (!url) {
-		throw new Error("URL is invalid");
+		console.error("[Audio] Invalid URL");
+		throw new Error("Invalid URL");
 	}
 	let buffer: AudioBuffer | null = null;
 	const index = AUDIO_BUFFER_CACHES.findIndex(item => item.url === url);

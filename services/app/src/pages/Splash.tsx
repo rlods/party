@@ -1,56 +1,44 @@
-import React, { FC, useCallback, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { FC, useCallback, useEffect, useContext } from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 //
 import { IconButton } from "../components/Common/IconButton";
 import { RootState } from "../reducers";
-import { openModal } from "../reducers/modals";
-import { disconnectUser } from "../actions/user";
-import { clearMessages } from "../reducers/messages";
 import { Messages } from "../components/Common/Messages";
 import { Icon } from "../components/Common/Icon";
+import { AppContext } from "./App";
+import { DEFAULT_ROOM_TYPE } from "../utils/rooms";
 import "./Splash.scss";
 
 // ------------------------------------------------------------------
 
 export const Splash: FC = () => {
-	const dispatch = useDispatch();
+	const {
+		onMessagesClear,
+		onModalOpen,
+		onRoomCreateAsk,
+		onUserConnectAsk,
+		onUserCreateAsk,
+		onUserDisconnect
+	} = useContext(AppContext);
+	const { t } = useTranslation();
+
 	const fetching = useSelector<RootState, boolean>(
 		state => state.user.fetching
 	);
 	const loggedIn = useSelector<RootState, boolean>(
 		state => !!state.user.access.dbId && !!state.user.access.userId
 	);
-	const { t } = useTranslation();
-
-	const onCreateRoom = useCallback(
-		() => dispatch(openModal({ type: "Room/Create", props: {} })),
-		[dispatch]
-	);
-
-	const onCreateUser = useCallback(
-		() => dispatch(openModal({ type: "User/Create", props: {} })),
-		[dispatch]
-	);
-
-	const onConnectUser = useCallback(
-		() => dispatch(openModal({ type: "User/Connect", props: {} })),
-		[dispatch]
-	);
-
-	const onDisconnect = useCallback(() => dispatch(disconnectUser()), [
-		dispatch
-	]);
 
 	const onShowHelp = useCallback(
-		() => dispatch(openModal({ type: "General/Help", props: null })),
-		[dispatch]
+		() => onModalOpen({ type: "General/Help", props: null }),
+		[onModalOpen]
 	);
 
 	useEffect(() => {
-		dispatch(clearMessages());
-	}, [dispatch]);
+		onMessagesClear();
+	}, [onMessagesClear]);
 
 	/*
 	<div className="PoweredWith">
@@ -97,7 +85,9 @@ export const Splash: FC = () => {
 						) : loggedIn ? (
 							<div className="MenuItem">
 								<IconButton
-									onClick={onCreateRoom}
+									onClick={() =>
+										onRoomCreateAsk(DEFAULT_ROOM_TYPE)
+									}
 									icon="play"
 									size="XL"
 									title={t("rooms.create")}
@@ -107,7 +97,7 @@ export const Splash: FC = () => {
 							<>
 								<div className="MenuItem">
 									<IconButton
-										onClick={onCreateUser}
+										onClick={onUserCreateAsk}
 										icon="user-plus"
 										size="XL"
 										title={t("user.create")}
@@ -115,7 +105,7 @@ export const Splash: FC = () => {
 								</div>
 								<div className="MenuItem">
 									<IconButton
-										onClick={onConnectUser}
+										onClick={onUserConnectAsk}
 										icon="sign-in"
 										size="XL"
 										title={t("user.connect")}
@@ -131,7 +121,7 @@ export const Splash: FC = () => {
 							<div className="MenuItem">
 								<IconButton
 									icon="sign-out"
-									onClick={onDisconnect}
+									onClick={onUserDisconnect}
 									size="M"
 									title={t("user.disconnect")}
 								/>

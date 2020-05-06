@@ -330,17 +330,16 @@ describe("Medias Utilities", () => {
 
 	it("extractTracks - invalid", () => {
 		const album1 = createFakeAlbum();
-
-		expect(() =>
+		expect(
 			extractTracks(
-				[album1],
+				[album1], // Unknown media
 				{
 					deezer: { album: {}, playlist: {}, track: {} },
 					spotify: { album: {}, playlist: {}, track: {} }
 				},
 				[]
 			)
-		).toThrowError("Media is unknown");
+		).toEqual<ContextualizedTrackAccess[]>([]);
 	});
 
 	// --------------------------------------------------------------
@@ -395,10 +394,14 @@ describe("Medias Utilities", () => {
 		const album1 = createFakeAlbum(2);
 
 		expect(() =>
-			findContextFromTrackIndex([album1], 0, {
-				deezer: { album: {}, playlist: {}, track: {} },
-				spotify: { album: {}, playlist: {}, track: {} }
-			})
+			findContextFromTrackIndex(
+				[album1], // Unknown media
+				0,
+				{
+					deezer: { album: {}, playlist: {}, track: {} },
+					spotify: { album: {}, playlist: {}, track: {} }
+				}
+			)
 		).toThrowError("Media is unknown");
 
 		expect(() =>
@@ -410,7 +413,7 @@ describe("Medias Utilities", () => {
 				},
 				spotify: { album: {}, playlist: {}, track: {} }
 			})
-		).toThrowError("Track index is out of range");
+		).toThrowError("Index is out of range");
 
 		expect(() =>
 			findContextFromTrackIndex([album1], album1.tracks.length + 5, {
@@ -421,6 +424,6 @@ describe("Medias Utilities", () => {
 				},
 				spotify: { album: {}, playlist: {}, track: {} }
 			})
-		).toThrowError("Track index is out of range");
+		).toThrowError("Index is out of range");
 	});
 });

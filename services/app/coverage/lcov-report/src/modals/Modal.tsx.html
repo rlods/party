@@ -24,7 +24,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/13</span>
+                <span class='fraction'>0/9</span>
             </div>
         
             
@@ -38,14 +38,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/5</span>
+                <span class='fraction'>0/3</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/11</span>
+                <span class='fraction'>0/9</span>
             </div>
         
             
@@ -113,13 +113,7 @@
 <a name='L55'></a><a href='#L55'>55</a>
 <a name='L56'></a><a href='#L56'>56</a>
 <a name='L57'></a><a href='#L57'>57</a>
-<a name='L58'></a><a href='#L58'>58</a>
-<a name='L59'></a><a href='#L59'>59</a>
-<a name='L60'></a><a href='#L60'>60</a>
-<a name='L61'></a><a href='#L61'>61</a>
-<a name='L62'></a><a href='#L62'>62</a>
-<a name='L63'></a><a href='#L63'>63</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L58'></a><a href='#L58'>58</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -142,10 +136,6 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -180,15 +170,14 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React, { FC, FormEvent, ReactNode, useCallback } from "react";
-import { useSelector, useDispatch } from "react-redux";
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React, { FC, FormEvent, ReactNode, useContext } from "react";
+import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 //
 import { IconButton } from "../components/Common/IconButton";
 import { RootState } from "../reducers";
-import { Dispatch } from "../actions";
-import { popModal, closeModal } from "../reducers/modals";
+import { AppContext } from "../pages/App";
 &nbsp;
 // ------------------------------------------------------------------
 &nbsp;
@@ -199,15 +188,11 @@ export const Modal: FC&lt;{
 	renderFoot?: () =&gt; React.ReactNode;
 	onSubmit?: () =&gt; void;
 }&gt; = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >({</span> children, className, title, renderFoot, onSubmit }) =&gt; {</span>
-	const dispatch = <span class="cstat-no" title="statement not covered" >useDispatch&lt;Dispatch&gt;();</span>
+	const { onModalClose, onModalPop } = <span class="cstat-no" title="statement not covered" >useContext(AppContext);</span>
 	const { t } = <span class="cstat-no" title="statement not covered" >useTranslation();</span>
 	const has_prev_modal = <span class="cstat-no" title="statement not covered" >useSelector&lt;RootState, boolean&gt;(</span>
 <span class="fstat-no" title="function not covered" >		st</span>ate =&gt; <span class="cstat-no" title="statement not covered" >state.modals.stack.length &gt; 1</span>
 	);
-&nbsp;
-	const onClose = <span class="cstat-no" title="statement not covered" >useCallback(<span class="fstat-no" title="function not covered" >()</span> =&gt; <span class="cstat-no" title="statement not covered" >dispatch(closeModal()),</span> [dispatch]);</span>
-&nbsp;
-	const onPop = <span class="cstat-no" title="statement not covered" >useCallback(<span class="fstat-no" title="function not covered" >()</span> =&gt; <span class="cstat-no" title="statement not covered" >dispatch(popModal()),</span> [dispatch]);</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >	return (</span>
 		&lt;form
@@ -226,13 +211,13 @@ export const Modal: FC&lt;{
 					})}
 					icon="angle-left"
 					title="Back"
-					onClick={onPop}
+					onClick={onModalPop}
 				/&gt;
 				&lt;div className="ModalTitle"&gt;{title}&lt;/div&gt;
 				&lt;IconButton
 					kind="special"
 					className="ModalHeadClose"
-					onClick={onClose}
+					onClick={onModalClose}
 					title={t("cancel")}
 					icon="times"
 				/&gt;
@@ -249,7 +234,7 @@ export const Modal: FC&lt;{
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue May 05 2020 18:55:33 GMT+0000 (Coordinated Universal Time)
+                at Wed May 06 2020 21:27:07 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../prettify.js"></script>

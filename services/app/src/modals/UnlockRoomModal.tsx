@@ -1,21 +1,19 @@
-import React, { FC, useRef, useState, useEffect, useCallback } from "react";
-import { useDispatch } from "react-redux";
+import React, { FC, useRef, useState, useEffect, useContext } from "react";
 import { useTranslation } from "react-i18next";
 //
 import { FormModal } from "./FormModal";
 import { IconButton } from "../components/Common/IconButton";
 import { CancelButton } from "../components/Common/CancelButton";
-import { Dispatch, ActionOptions } from "../actions";
-import { popModal } from "../reducers/modals";
-import { unlockRoom } from "../actions/room";
+import { TrySomethingOptions } from "../actions";
 import { SECRET_FIELD_SIZE, InputField } from "./ModalFields";
+import { AppContext } from "../pages/App";
 
 // ------------------------------------------------------------------
 
-export type UnlockRoomModalProps = { options?: ActionOptions };
+export type UnlockRoomModalProps = { options?: TrySomethingOptions };
 
 export const UnlockRoomModal: FC<UnlockRoomModalProps> = ({ options }) => {
-	const dispatch = useDispatch<Dispatch>();
+	const { onModalClose, onRoomUnlock } = useContext(AppContext);
 	const [secret, setSecret] = useState("");
 	const secretRef = useRef<HTMLInputElement>(null);
 	const { t } = useTranslation();
@@ -26,28 +24,19 @@ export const UnlockRoomModal: FC<UnlockRoomModalProps> = ({ options }) => {
 		}
 	}, [secretRef]);
 
-	const onClose = useCallback(() => dispatch(popModal()), [dispatch]);
-
-	const onUnlock = useCallback(() => {
-		dispatch(
-			unlockRoom({
-				secret,
-				options: {
-					onSuccess: () => {
-						if (options && options.onSuccess) {
-							options.onSuccess();
-						}
-						dispatch(popModal());
-					}
-				}
-			})
-		);
-	}, [dispatch, secret, options]);
-
 	return (
 		<FormModal
 			title={t("rooms.room_unlocking")}
-			onSubmit={onUnlock}
+			onSubmit={() =>
+				onRoomUnlock(secret, {
+					onSuccess: () => {
+						if (options?.onSuccess) {
+							options.onSuccess();
+						}
+						onModalClose();
+					}
+				})
+			}
 			renderButtons={() => (
 				<>
 					<IconButton
@@ -57,7 +46,7 @@ export const UnlockRoomModal: FC<UnlockRoomModalProps> = ({ options }) => {
 						icon="unlock"
 						type="submit"
 					/>
-					<CancelButton onClick={onClose} />
+					<CancelButton onClick={onModalClose} />
 				</>
 			)}>
 			<InputField

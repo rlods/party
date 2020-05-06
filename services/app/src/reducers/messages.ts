@@ -7,15 +7,15 @@ import { createAction } from "../actions";
 type MessagesAction =
 	| ReturnType<typeof addMessage>
 	| ReturnType<typeof clearMessages>
-	| ReturnType<typeof removeMessage>;
+	| ReturnType<typeof removeMessages>;
 
 export const addMessage = (
 	id: number,
 	message: Message,
 	timer?: NodeJS.Timeout
 ) => createAction("message/ADD", { timer, id, message });
-export const removeMessage = (id: number) =>
-	createAction("message/REMOVE", { id });
+export const removeMessages = (ids: number[]) =>
+	createAction("message/REMOVE", { ids });
 export const clearMessages = (tag?: string) =>
 	createAction("message/RESET", { tag });
 
@@ -42,7 +42,9 @@ export const messagesReducer: Reducer<State, MessagesAction> = (
 			};
 		case "message/REMOVE": {
 			const copy = { ...state };
-			delete copy[action.payload.id];
+			for (const id of action.payload.ids) {
+				delete copy[id];
+			}
 			return copy;
 		}
 		case "message/RESET": {

@@ -91,6 +91,9 @@ export default {
 		track_count_plural: "{{count}} tracks"
 	},
 	medias: {
+		errors: {
+			no_preview: "No preview has been found..."
+		},
 		by: "by {{artist}}",
 		add: "Add",
 		remove: "Remove",

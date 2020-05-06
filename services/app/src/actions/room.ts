@@ -1,6 +1,6 @@
 import { v4 } from "uuid";
 //
-import { AsyncAction, Dispatch, ActionOptions, trySomething } from ".";
+import { AsyncAction, Dispatch, TrySomethingOptions, trySomething } from ".";
 import { displayError } from "./messages";
 import { RoomInfo, RoomType, initializeRoom, RoomQueue } from "../utils/rooms";
 import { FirebaseRoom } from "../utils/firebase/room";
@@ -23,29 +23,29 @@ import { decode } from "../utils/encoder";
 
 // ------------------------------------------------------------------
 
-export const createRoom = ({
-	dbId,
-	name,
-	secret,
-	type,
-	options
-}: {
-	dbId: string;
-	name: string;
-	secret: string;
-	type: RoomType;
-	options?: ActionOptions;
-}): AsyncAction => (dispatch, getState) =>
+export const createRoom = (
+	{
+		dbId,
+		name,
+		secret,
+		type
+	}: {
+		dbId: string;
+		name: string;
+		secret: string;
+		type: RoomType;
+	},
+	options?: TrySomethingOptions
+): AsyncAction => (dispatch, getState) =>
 	dispatch(
-		trySomething({
-			onAction: async () => {
+		trySomething(
+			async () => {
 				const {
 					user: {
 						access: { userId }
 					}
 				} = getState();
 				if (!userId) {
-					dispatch(displayError("user.not_connected"));
 					return "connect-and-retry";
 				}
 				const roomId = v4();
@@ -64,33 +64,34 @@ export const createRoom = ({
 					},
 					queue
 				});
-				dispatch(enterRoom({ dbId, roomId, secret, options }));
+				dispatch(enterRoom({ dbId, roomId, secret }, options));
 				return true;
 			},
-			onFailure: () => {
-				if (options?.onFailure) {
-					options.onFailure();
+			{
+				onFailure: () => {
+					if (options?.onFailure) {
+						options.onFailure();
+					}
 				}
 			}
-		})
+		)
 	);
 
 // ------------------------------------------------------------------
 
-export const enterRoom = ({
-	dbId,
-	roomId,
-	secret,
-	options
-}: {
+export type RoomAccess = {
 	dbId: string;
 	roomId: string;
 	secret: string;
-	options?: ActionOptions;
-}): AsyncAction => (dispatch, getState) =>
+};
+
+export const enterRoom = (
+	{ dbId, roomId, secret }: RoomAccess,
+	options?: TrySomethingOptions
+): AsyncAction => (dispatch, getState) =>
 	dispatch(
-		trySomething({
-			onAction: async () => {
+		trySomething(
+			async () => {
 				const {
 					room: { _fbRoom },
 					user: {
@@ -108,7 +109,6 @@ export const enterRoom = ({
 				dispatch(exitRoom());
 
 				if (!userId) {
-					dispatch(displayError("user.not_connected"));
 					return "connect-and-retry";
 				}
 
@@ -131,33 +131,33 @@ export const enterRoom = ({
 				history.push(`/room/${dbId}/${roomId}?secret=${secret}`); // TODO: should push only if we're not already in it
 				return true;
 			},
-			onFailure: () => {
-				dispatch(error("Cannot enter")); // TODO: wording
-				dispatch(exitRoom());
-				if (options?.onFailure) {
-					options.onFailure();
+			{
+				...options,
+				onFailure: () => {
+					dispatch(error("Cannot enter")); // TODO: wording
+					dispatch(exitRoom());
+					if (options?.onFailure) {
+						options.onFailure();
+					}
 				}
-			},
-			...options
-		})
+			}
+		)
 	);
 
 export const exitRoom = (): AsyncAction => (dispatch, getState) =>
 	dispatch(
-		trySomething({
-			onAction: async () => {
-				const {
-					room: { _fbRoom }
-				} = getState();
-				if (!_fbRoom) {
-					return true; // Nothing to do
-				}
-				console.debug("[Room] Exiting...");
-				dispatch(_unwatchPlayer());
-				dispatch(_unwatchRoom(_fbRoom));
-				dispatch(resetRoom());
-				return true;
+		trySomething(async () => {
+			const {
+				room: { _fbRoom }
+			} = getState();
+			if (!_fbRoom) {
+				return true; // Nothing to do
 			}
+			console.debug("[Room] Exiting...");
+			dispatch(_unwatchPlayer());
+			dispatch(_unwatchRoom(_fbRoom));
+			dispatch(resetRoom());
+			return true;
 		})
 	);
 
@@ -165,63 +165,59 @@ export const exitRoom = (): AsyncAction => (dispatch, getState) =>
 
 export const lockRoom = (): AsyncAction => (dispatch, getState) =>
 	dispatch(
-		trySomething({
-			onAction: async () => {
-				const {
-					room: {
-						_fbRoom,
-						access: { dbId, roomId, secret: oldSecret }
-					}
-				} = getState();
-				if (
-					!_fbRoom ||
-					_fbRoom.dbId !== dbId ||
-					_fbRoom.roomId !== roomId ||
-					!oldSecret
-				) {
-					return true; // Nothing to do
+		trySomething(async () => {
+			const {
+				room: {
+					_fbRoom,
+					access: { dbId, roomId, secret: oldSecret }
 				}
-				console.debug("[Room] Locking...", { dbId, roomId });
-				_fbRoom.setSecret("");
-				// TODO : not history.replace(`/room/${dbId}/${roomId}`); as it would trigger a page refresh
-				dispatch(setRoom({ access: { dbId, roomId, secret: "" } }));
-				return true;
+			} = getState();
+			if (
+				!_fbRoom ||
+				_fbRoom.dbId !== dbId ||
+				_fbRoom.roomId !== roomId ||
+				!oldSecret
+			) {
+				return true; // Nothing to do
 			}
+			console.debug("[Room] Locking...", { dbId, roomId });
+			_fbRoom.setSecret("");
+			// TODO : not history.replace(`/room/${dbId}/${roomId}`); as it would trigger a page refresh
+			dispatch(setRoom({ access: { dbId, roomId, secret: "" } }));
+			return true;
 		})
 	);
 
-export const unlockRoom = ({
-	secret,
-	options
-}: {
-	secret: string;
-	options?: ActionOptions;
-}): AsyncAction => (dispatch, getState) =>
+export const unlockRoom = (
+	{
+		secret
+	}: {
+		secret: string;
+	},
+	options?: TrySomethingOptions
+): AsyncAction => (dispatch, getState) =>
 	dispatch(
-		trySomething({
-			onAction: async () => {
-				const {
-					room: {
-						_fbRoom,
-						access: { dbId, roomId, secret: oldSecret }
-					}
-				} = getState();
-				if (
-					!_fbRoom ||
-					_fbRoom.dbId !== dbId ||
-					_fbRoom.roomId !== roomId ||
-					oldSecret === secret
-				) {
-					return true; // Nothing to do
+		trySomething(async () => {
+			const {
+				room: {
+					_fbRoom,
+					access: { dbId, roomId, secret: oldSecret }
 				}
-				console.debug("[Room] Unlocking...", { dbId, roomId, secret });
-				_fbRoom.setSecret(secret);
-				// TODO : not history.replace(`/room/${id}?secret=${secret}`); as it would trigger a page refresh
-				dispatch(setRoom({ access: { dbId, roomId, secret } }));
-				return true;
-			},
-			...options
-		})
+			} = getState();
+			if (
+				!_fbRoom ||
+				_fbRoom.dbId !== dbId ||
+				_fbRoom.roomId !== roomId ||
+				oldSecret === secret
+			) {
+				return true; // Nothing to do
+			}
+			console.debug("[Room] Unlocking...", { dbId, roomId, secret });
+			_fbRoom.setSecret(secret);
+			// TODO : not history.replace(`/room/${id}?secret=${secret}`); as it would trigger a page refresh
+			dispatch(setRoom({ access: { dbId, roomId, secret } }));
+			return true;
+		}, options)
 	);
 
 // ------------------------------------------------------------------

@@ -229,9 +229,9 @@ export const extractBattleInfo = ({
 
 // ------------------------------------------------------------------
 
-export const checkUserHasBatton = (battle: SeaBattleData, userId: string) =>
+export const checkUserTurn = (battle: SeaBattleData, userId: string) =>
 	battle.maps[battle.currentMapIndex]?.userId === userId;
 
-export const passBatonToNextPlayer = (battle: SeaBattleData) => {
+export const passUserTurn = (battle: SeaBattleData) => {
 	battle.currentMapIndex = (battle.currentMapIndex + 1) % battle.maps.length;
 };

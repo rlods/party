@@ -1,14 +1,12 @@
-import React, { FC, useCallback } from "react";
-import { useDispatch } from "react-redux";
+import React, { FC, useCallback, useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 //
 import { FormModal } from "./FormModal";
 import { Icon } from "../components/Common/Icon";
 import { IconButton } from "../components/Common/IconButton";
-import { Dispatch } from "../actions";
-import { popModal, openModal } from "../reducers/modals";
 import { RoomType } from "../utils/rooms";
+import { AppContext } from "../pages/App";
 import "./GameOverModal.scss";
 
 // ------------------------------------------------------------------
@@ -21,23 +19,19 @@ export type GameOverModalProps = {
 // ------------------------------------------------------------------
 
 export const GameOverModal: FC<GameOverModalProps> = ({ roomType, status }) => {
-	const dispatch = useDispatch<Dispatch>();
+	const { onModalClose, onRoomCreateAsk } = useContext(AppContext);
 	const history = useHistory();
 	const { t } = useTranslation();
 
-	const onRestart = useCallback(() => {
-		dispatch(openModal({ type: "Room/Create", props: { type: roomType } }));
-	}, [dispatch, roomType]);
-
 	const onExit = useCallback(() => {
 		history.push("/");
-		dispatch(popModal());
-	}, [dispatch, history]);
+		onModalClose();
+	}, [history, onModalClose]);
 
 	return (
 		<FormModal
 			className="GameOverModal"
-			onSubmit={onRestart}
+			onSubmit={() => onRoomCreateAsk(roomType)}
 			title={t("games.gameover")}
 			renderButtons={() => (
 				<>

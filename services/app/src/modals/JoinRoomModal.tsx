@@ -1,21 +1,26 @@
-import React, { FC, useState, useRef, useEffect, useCallback } from "react";
-import { useDispatch } from "react-redux";
+import React, {
+	FC,
+	useState,
+	useRef,
+	useEffect,
+	useCallback,
+	useContext
+} from "react";
 import { useTranslation } from "react-i18next";
 //
 import { FormModal } from "./FormModal";
 import { IconButton } from "../components/Common/IconButton";
 import { CancelButton } from "../components/Common/CancelButton";
 import { InputField, SelectField } from "./ModalFields";
-import { Dispatch } from "../actions";
-import { popModal } from "../reducers/modals";
-import { displayError } from "../actions/messages";
-import { enterRoom } from "../actions/room";
-import config, { selectRoomDatabaseId } from "../config/firebase";
+import firebaseConfig, { selectRoomDatabaseId } from "../config/firebase";
+import { AppContext } from "../pages/App";
 
 // ------------------------------------------------------------------
 
 export const JoinRoomModal: FC = () => {
-	const dispatch = useDispatch<Dispatch>();
+	const { onModalClose, onDisplayError, onRoomEnter } = useContext(
+		AppContext
+	);
 	const [dbId, setDbId] = useState(selectRoomDatabaseId());
 	const [roomId, setRoomId] = useState("");
 	const roomIdRef = useRef<HTMLInputElement>(null);
@@ -27,30 +32,26 @@ export const JoinRoomModal: FC = () => {
 		}
 	}, [roomIdRef]);
 
-	const onClose = useCallback(() => dispatch(popModal()), [dispatch]);
-
 	const onJoin = useCallback(() => {
 		if (dbId.trim().length === 0) {
-			dispatch(displayError("rooms.id_is_invalid"));
+			onDisplayError("rooms.id_is_invalid");
 			return;
 		}
 		if (roomId.trim().length === 0) {
-			dispatch(displayError("rooms.id_is_invalid"));
+			onDisplayError("rooms.id_is_invalid");
 			return;
 		}
-		dispatch(
-			enterRoom({
+		onRoomEnter(
+			{
 				dbId,
 				roomId,
-				secret: "",
-				options: {
-					onSuccess: () => {
-						dispatch(popModal());
-					}
-				}
-			})
+				secret: ""
+			},
+			{
+				onSuccess: onModalClose
+			}
 		);
-	}, [dispatch, roomId, dbId]);
+	}, [roomId, dbId, onModalClose, onDisplayError, onRoomEnter]);
 
 	return (
 		<FormModal
@@ -67,14 +68,14 @@ export const JoinRoomModal: FC = () => {
 						icon="check"
 						type="submit"
 					/>
-					<CancelButton onClick={onClose} />
+					<CancelButton onClick={onModalClose} />
 				</>
 			)}>
 			<SelectField
 				id="modal-serverId"
 				label={t("rooms.server_id")}
 				placeholder={t("rooms.server_id_placeholder")}
-				options={config.dbIDs
+				options={firebaseConfig.dbIDs
 					.sort((s1, s2) => s1.localeCompare(s2))
 					.map(otherId => ({
 						id: otherId,

@@ -1,16 +1,11 @@
-import React, { FC, useCallback } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { FC, useContext } from "react";
+import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 //
 import { IconButton } from "../Common/IconButton";
-import { Dispatch } from "../../actions";
 import { RootState } from "../../reducers";
 import { isRoomLocked } from "../../selectors/room";
-import { lockRoom } from "../../actions/room";
-import { stopPlayer } from "../../actions/player";
-import { confirmModal } from "../../actions/modals";
-import { openModal } from "../../reducers/modals";
-import { clearQueue } from "../../actions/queue";
+import { AppContext } from "../../pages/App";
 import "./QueueControls.scss";
 
 // ------------------------------------------------------------------
@@ -19,37 +14,17 @@ export const QueueControls: FC<{
 	propagate: boolean;
 	onHelp?: () => void;
 }> = ({ propagate, onHelp }) => {
-	const dispatch = useDispatch<Dispatch>();
+	const {
+		onRoomUnlockAsk,
+		onQueueClear,
+		onQueueSearch,
+		onRoomLock
+	} = useContext(AppContext);
 	const { t } = useTranslation();
 	const tracksCount = useSelector<RootState, number>(
 		state => state.room.medias.length
 	);
 	const locked = useSelector<RootState, boolean>(isRoomLocked);
-	const onClear = useCallback(() => {
-		dispatch(
-			confirmModal(t("rooms.confirm_clear"), () => {
-				dispatch(clearQueue({ propagate }));
-				dispatch(stopPlayer({ propagate }));
-			})
-		);
-	}, [dispatch, t, propagate]);
-
-	const onLock = useCallback(() => {
-		dispatch(
-			confirmModal(t("rooms.confirm_lock"), () => {
-				dispatch(lockRoom());
-			})
-		);
-	}, [dispatch, t]);
-
-	const onUnlock = useCallback(() => {
-		dispatch(openModal({ type: "Room/Unlock", props: {} }));
-	}, [dispatch]);
-
-	const onSearch = useCallback(
-		() => dispatch(openModal({ type: "Room/Search", props: null })),
-		[dispatch]
-	);
 
 	return (
 		<div className="QueueControls">
@@ -66,14 +41,14 @@ export const QueueControls: FC<{
 				{locked ? (
 					<IconButton
 						icon="lock"
-						onClick={onUnlock}
+						onClick={onRoomUnlockAsk}
 						size="M"
 						title={t("rooms.locked")}
 					/>
 				) : (
 					<IconButton
 						icon="unlock"
-						onClick={onLock}
+						onClick={onRoomLock}
 						size="M"
 						title={t("rooms.unlocked")}
 					/>
@@ -81,7 +56,7 @@ export const QueueControls: FC<{
 			</div>
 			<div className="Control">
 				<IconButton
-					onClick={onSearch}
+					onClick={onQueueSearch}
 					icon="search"
 					title={t("medias.search")}
 				/>
@@ -89,7 +64,7 @@ export const QueueControls: FC<{
 			<div className="Control">
 				<IconButton
 					disabled={locked || tracksCount === 0}
-					onClick={onClear}
+					onClick={() => onQueueClear(propagate)}
 					icon="trash"
 					title={t("rooms.clear")}
 				/>

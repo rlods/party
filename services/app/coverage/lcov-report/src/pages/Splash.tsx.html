@@ -24,7 +24,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/20</span>
+                <span class='fraction'>0/13</span>
             </div>
         
             
@@ -38,14 +38,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/9</span>
+                <span class='fraction'>0/6</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/19</span>
+                <span class='fraction'>0/13</span>
             </div>
         
             
@@ -201,18 +201,7 @@
 <a name='L143'></a><a href='#L143'>143</a>
 <a name='L144'></a><a href='#L144'>144</a>
 <a name='L145'></a><a href='#L145'>145</a>
-<a name='L146'></a><a href='#L146'>146</a>
-<a name='L147'></a><a href='#L147'>147</a>
-<a name='L148'></a><a href='#L148'>148</a>
-<a name='L149'></a><a href='#L149'>149</a>
-<a name='L150'></a><a href='#L150'>150</a>
-<a name='L151'></a><a href='#L151'>151</a>
-<a name='L152'></a><a href='#L152'>152</a>
-<a name='L153'></a><a href='#L153'>153</a>
-<a name='L154'></a><a href='#L154'>154</a>
-<a name='L155'></a><a href='#L155'>155</a>
-<a name='L156'></a><a href='#L156'>156</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L146'></a><a href='#L146'>146</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -228,32 +217,21 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -311,6 +289,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -366,59 +345,48 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React, { FC, useCallback, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React, { FC, useCallback, useEffect, useContext } from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 //
 import { IconButton } from "../components/Common/IconButton";
 import { RootState } from "../reducers";
-import { openModal } from "../reducers/modals";
-import { disconnectUser } from "../actions/user";
-import { clearMessages } from "../reducers/messages";
 import { Messages } from "../components/Common/Messages";
 import { Icon } from "../components/Common/Icon";
+import { AppContext } from "./App";
+import { DEFAULT_ROOM_TYPE } from "../utils/rooms";
 import "./Splash.scss";
 &nbsp;
 // ------------------------------------------------------------------
 &nbsp;
 export const Splash: FC = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >()</span> =&gt; {</span>
-	const dispatch = <span class="cstat-no" title="statement not covered" >useDispatch();</span>
+	const {
+		onMessagesClear,
+		onModalOpen,
+		onRoomCreateAsk,
+		onUserConnectAsk,
+		onUserCreateAsk,
+		onUserDisconnect
+	} = <span class="cstat-no" title="statement not covered" >useContext(AppContext);</span>
+	const { t } = <span class="cstat-no" title="statement not covered" >useTranslation();</span>
+&nbsp;
 	const fetching = <span class="cstat-no" title="statement not covered" >useSelector&lt;RootState, boolean&gt;(</span>
 <span class="fstat-no" title="function not covered" >		st</span>ate =&gt; <span class="cstat-no" title="statement not covered" >state.user.fetching</span>
 	);
 	const loggedIn = <span class="cstat-no" title="statement not covered" >useSelector&lt;RootState, boolean&gt;(</span>
 <span class="fstat-no" title="function not covered" >		st</span>ate =&gt; <span class="cstat-no" title="statement not covered" >!!state.user.access.dbId &amp;&amp; !!state.user.access.userId</span>
 	);
-	const { t } = <span class="cstat-no" title="statement not covered" >useTranslation();</span>
-&nbsp;
-	const onCreateRoom = <span class="cstat-no" title="statement not covered" >useCallback(</span>
-<span class="fstat-no" title="function not covered" >		()</span> =&gt; <span class="cstat-no" title="statement not covered" >dispatch(openModal({ type: "Room/Create", props: {} })),</span>
-		[dispatch]
-	);
-&nbsp;
-	const onCreateUser = <span class="cstat-no" title="statement not covered" >useCallback(</span>
-<span class="fstat-no" title="function not covered" >		()</span> =&gt; <span class="cstat-no" title="statement not covered" >dispatch(openModal({ type: "User/Create", props: {} })),</span>
-		[dispatch]
-	);
-&nbsp;
-	const onConnectUser = <span class="cstat-no" title="statement not covered" >useCallback(</span>
-<span class="fstat-no" title="function not covered" >		()</span> =&gt; <span class="cstat-no" title="statement not covered" >dispatch(openModal({ type: "User/Connect", props: {} })),</span>
-		[dispatch]
-	);
-&nbsp;
-	const onDisconnect = <span class="cstat-no" title="statement not covered" >useCallback(<span class="fstat-no" title="function not covered" >()</span> =&gt; <span class="cstat-no" title="statement not covered" >dispatch(disconnectUser()),</span> [</span>
-		dispatch
-	]);
 &nbsp;
 	const onShowHelp = <span class="cstat-no" title="statement not covered" >useCallback(</span>
-<span class="fstat-no" title="function not covered" >		()</span> =&gt; <span class="cstat-no" title="statement not covered" >dispatch(openModal({ type: "General/Help", props: null })),</span>
-		[dispatch]
+<span class="fstat-no" title="function not covered" >		()</span> =&gt; <span class="cstat-no" title="statement not covered" >onModalOpen({ type: "General/Help", props: null }),</span>
+		[onModalOpen]
 	);
 &nbsp;
 <span class="cstat-no" title="statement not covered" >	useEffect(<span class="fstat-no" title="function not covered" >()</span> =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >		dispatch(clearMessages());</span>
-	}, [dispatch]);
+<span class="cstat-no" title="statement not covered" >		onMessagesClear();</span>
+	}, [onMessagesClear]);
 &nbsp;
 	/*
 	&lt;div className="PoweredWith"&gt;
@@ -465,7 +433,9 @@ export const Splash: FC = <span class="cstat-no" title="statement not covered" >
 						) : loggedIn ? (
 							&lt;div className="MenuItem"&gt;
 								&lt;IconButton
-									onClick={onCreateRoom}
+									onClick={<span class="fstat-no" title="function not covered" >()</span> =&gt;
+<span class="cstat-no" title="statement not covered" >										onRoomCreateAsk(DEFAULT_ROOM_TYPE)</span>
+									}
 									icon="play"
 									size="XL"
 									title={t("rooms.create")}
@@ -475,7 +445,7 @@ export const Splash: FC = <span class="cstat-no" title="statement not covered" >
 							&lt;&gt;
 								&lt;div className="MenuItem"&gt;
 									&lt;IconButton
-										onClick={onCreateUser}
+										onClick={onUserCreateAsk}
 										icon="user-plus"
 										size="XL"
 										title={t("user.create")}
@@ -483,7 +453,7 @@ export const Splash: FC = <span class="cstat-no" title="statement not covered" >
 								&lt;/div&gt;
 								&lt;div className="MenuItem"&gt;
 									&lt;IconButton
-										onClick={onConnectUser}
+										onClick={onUserConnectAsk}
 										icon="sign-in"
 										size="XL"
 										title={t("user.connect")}
@@ -499,7 +469,7 @@ export const Splash: FC = <span class="cstat-no" title="statement not covered" >
 							&lt;div className="MenuItem"&gt;
 								&lt;IconButton
 									icon="sign-out"
-									onClick={onDisconnect}
+									onClick={onUserDisconnect}
 									size="M"
 									title={t("user.disconnect")}
 								/&gt;
@@ -528,7 +498,7 @@ export const Splash: FC = <span class="cstat-no" title="statement not covered" >
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue May 05 2020 18:55:33 GMT+0000 (Coordinated Universal Time)
+                at Wed May 06 2020 21:27:07 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../prettify.js"></script>

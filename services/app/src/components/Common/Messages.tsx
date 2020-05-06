@@ -1,5 +1,5 @@
-import React, { FC } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import React, { FC, useContext } from "react";
+import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
@@ -8,8 +8,7 @@ import { Message } from "../../utils/messages";
 import { selectMessages } from "../../selectors/messages";
 import { RootState } from "../../reducers";
 import { IconButton } from "../Common/IconButton";
-import { Dispatch } from "../../actions";
-import { removeMessage } from "../../reducers/messages";
+import { AppContext } from "../../pages/App";
 import "./Messages.scss";
 
 // ------------------------------------------------------------------
@@ -18,8 +17,8 @@ export const Messages: FC<{
 	className?: string;
 	bottomPosition?: string;
 }> = ({ className, bottomPosition }) => {
+	const { onMessagesRemove } = useContext(AppContext);
 	const { t } = useTranslation();
-	const dispatch = useDispatch<Dispatch>();
 	const messages = useSelector<RootState, Message[]>(selectMessages);
 	return (
 		<div
@@ -45,9 +44,7 @@ export const Messages: FC<{
 									<IconButton
 										icon="close"
 										title={t("clear")}
-										onClick={() =>
-											dispatch(removeMessage(id))
-										}
+										onClick={() => onMessagesRemove([id])}
 									/>
 								</div>
 							) : null}

@@ -1,6 +1,5 @@
 import { AsyncAction, trySomething } from ".";
 import { lockRoom } from "./room";
-import { displayError } from "./messages";
 import { setRoom } from "../reducers/room";
 import { generateRandomPosition } from "../utils/player";
 
@@ -12,13 +11,12 @@ export const startPlayer = ({
 	propagate: boolean;
 }): AsyncAction => (dispatch, getState) =>
 	dispatch(
-		trySomething({
-			onAction: async () => {
+		trySomething(
+			async () => {
 				const {
 					room: { _fbRoom, queue, tracks }
 				} = getState();
 				if (!_fbRoom || _fbRoom.isLocked() || !queue) {
-					dispatch(displayError("rooms.errors.locked"));
 					return "unlock-and-retry";
 				}
 				if (queue.playing) {
@@ -47,8 +45,10 @@ export const startPlayer = ({
 				});
 				return true;
 			},
-			onFailure: () => dispatch(lockRoom())
-		})
+			{
+				onFailure: () => dispatch(lockRoom())
+			}
+		)
 	);
 
 // ------------------------------------------------------------------
@@ -59,13 +59,12 @@ export const stopPlayer = ({
 	propagate: boolean;
 }): AsyncAction => (dispatch, getState) =>
 	dispatch(
-		trySomething({
-			onAction: async () => {
+		trySomething(
+			async () => {
 				const {
 					room: { _fbRoom, queue }
 				} = getState();
 				if (!_fbRoom || _fbRoom.isLocked() || !queue) {
-					dispatch(displayError("rooms.errors.locked"));
 					return "unlock-and-retry";
 				}
 				if (!queue.playing) {
@@ -89,6 +88,8 @@ export const stopPlayer = ({
 				});
 				return true;
 			},
-			onFailure: () => dispatch(lockRoom())
-		})
+			{
+				onFailure: () => dispatch(lockRoom())
+			}
+		)
 	);

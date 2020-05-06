@@ -2,6 +2,9 @@ import { RootState } from "../reducers";
 
 // ------------------------------------------------------------------
 
+export const selectExtraDecoded = (state: RootState): any =>
+	state.room.extraDecoded;
+
 export const selectRoomName = (state: RootState): string =>
 	state.room.info?.name || "";
 

@@ -1,5 +1,4 @@
 import { AsyncAction, trySomething } from ".";
-import { displayError } from "./messages";
 import { lockRoom } from "./room";
 import { MediaAccess, findContextFromTrackIndex } from "../utils/medias";
 import { createQueueMerging, createQueueRemoving } from "../utils/rooms";
@@ -14,13 +13,12 @@ export const clearQueue = ({
 	propagate: boolean;
 }): AsyncAction => (dispatch, getState) =>
 	dispatch(
-		trySomething({
-			onAction: async () => {
+		trySomething(
+			async () => {
 				const {
 					room: { _fbRoom, queue }
 				} = getState();
 				if (!_fbRoom || _fbRoom.isLocked() || !queue) {
-					dispatch(displayError("rooms.errors.locked"));
 					return "unlock-and-retry";
 				}
 				console.debug("[Queue] Clearing...");
@@ -45,24 +43,28 @@ export const clearQueue = ({
 				});
 				return true;
 			},
-			onFailure: () => dispatch(lockRoom())
-		})
+			{
+				onFailure: () => dispatch(lockRoom())
+			}
+		)
 	);
 
 // ------------------------------------------------------------------
 
-export const appendToQueue = (newMedias: MediaAccess[]): AsyncAction => (
-	dispatch,
-	getState
-) =>
+export const appendToQueue = ({
+	medias: newMedias,
+	propagate
+}: {
+	medias: MediaAccess[];
+	propagate: boolean;
+}): AsyncAction => (dispatch, getState) =>
 	dispatch(
-		trySomething({
-			onAction: async () => {
+		trySomething(
+			async () => {
 				const {
 					room: { _fbRoom, queue, medias: oldMedias }
 				} = getState();
 				if (!_fbRoom || _fbRoom.isLocked() || !queue) {
-					dispatch(displayError("rooms.errors.locked"));
 					return "unlock-and-retry";
 				}
 				if (newMedias.length === 0) {
@@ -71,33 +73,40 @@ export const appendToQueue = (newMedias: MediaAccess[]): AsyncAction => (
 				console.debug("[Queue] Appending...", {
 					newMedias
 				});
+				if (!propagate) {
+					console.debug("TODO: appendToQueue without propagation");
+					return true;
+				}
 				await _fbRoom.updateQueue({
 					...queue,
 					medias: createQueueMerging(oldMedias, newMedias)
 				});
 				return true;
 			},
-			onFailure: () => dispatch(lockRoom())
-		})
+			{
+				onFailure: () => dispatch(lockRoom())
+			}
+		)
 	);
 
 // ------------------------------------------------------------------
 
 // TODO: DECOMPLEXIFY removeFromQueue
 export const removeFromQueue = ({
-	position: removedTrackIndex
+	position: removedTrackIndex,
+	propagate
 }: {
 	position: number;
+	propagate: boolean;
 }): AsyncAction => (dispatch, getState) =>
 	dispatch(
-		trySomething({
-			onAction: async () => {
+		trySomething(
+			async () => {
 				const {
 					medias: { medias: allMedias },
 					room: { _fbRoom, queue, medias: oldMedias, tracks }
 				} = getState();
 				if (!_fbRoom || _fbRoom.isLocked() || !queue) {
-					dispatch(displayError("rooms.errors.locked"));
 					return "unlock-and-retry";
 				}
 				const {
@@ -125,6 +134,10 @@ export const removeFromQueue = ({
 					removedMediaIndex,
 					1
 				);
+				if (!propagate) {
+					console.debug("TODO: removeFromQueue without propagation");
+					return true;
+				}
 				if (Object.keys(newMedias).length === 0) {
 					console.debug("[Queue] Removing last...");
 					await _fbRoom.updateQueue({
@@ -161,8 +174,10 @@ export const removeFromQueue = ({
 				}
 				return true;
 			},
-			onFailure: () => dispatch(lockRoom())
-		})
+			{
+				onFailure: () => dispatch(lockRoom())
+			}
+		)
 	);
 
 // ------------------------------------------------------------------
@@ -175,13 +190,12 @@ export const setQueuePosition = ({
 	propagate: boolean;
 }): AsyncAction => (dispatch, getState) =>
 	dispatch(
-		trySomething({
-			onAction: async () => {
+		trySomething(
+			async () => {
 				const {
 					room: { _fbRoom, queue }
 				} = getState();
 				if (!_fbRoom || _fbRoom.isLocked() || !queue) {
-					dispatch(displayError("rooms.errors.locked"));
 					return "unlock-and-retry";
 				}
 				const oldPosition = queue.position;
@@ -212,8 +226,10 @@ export const setQueuePosition = ({
 				});
 				return true;
 			},
-			onFailure: () => dispatch(lockRoom())
-		})
+			{
+				onFailure: () => dispatch(lockRoom())
+			}
+		)
 	);
 
 // ------------------------------------------------------------------
@@ -224,25 +240,23 @@ export const moveToPreviousTrack = ({
 	propagate: boolean;
 }): AsyncAction => (dispatch, getState) =>
 	dispatch(
-		trySomething({
-			onAction: async () => {
-				const {
-					room: { queue, tracks }
-				} = getState();
-				if (!queue || tracks.length === 0) {
-					return true; // Nothing to do
-				}
-				dispatch(
-					setQueuePosition({
-						position:
-							queue.position > 0
-								? queue.position - 1
-								: tracks.length - 1,
-						propagate
-					})
-				);
-				return true;
+		trySomething(async () => {
+			const {
+				room: { queue, tracks }
+			} = getState();
+			if (!queue || tracks.length === 0) {
+				return true; // Nothing to do
 			}
+			dispatch(
+				setQueuePosition({
+					position:
+						queue.position > 0
+							? queue.position - 1
+							: tracks.length - 1,
+					propagate
+				})
+			);
+			return true;
 		})
 	);
 
@@ -254,24 +268,22 @@ export const moveToNextTrack = ({
 	propagate: boolean;
 }): AsyncAction => (dispatch, getState) =>
 	dispatch(
-		trySomething({
-			onAction: async () => {
-				const {
-					room: { queue, tracks }
-				} = getState();
-				if (!queue || tracks.length === 0) {
-					return true; // Nothing to do
-				}
-				dispatch(
-					setQueuePosition({
-						position:
-							queue.playmode === "shuffle"
-								? generateRandomPosition() % tracks.length
-								: (queue.position + 1) % tracks.length,
-						propagate
-					})
-				);
-				return true;
+		trySomething(async () => {
+			const {
+				room: { queue, tracks }
+			} = getState();
+			if (!queue || tracks.length === 0) {
+				return true; // Nothing to do
 			}
+			dispatch(
+				setQueuePosition({
+					position:
+						queue.playmode === "shuffle"
+							? generateRandomPosition() % tracks.length
+							: (queue.position + 1) % tracks.length,
+					propagate
+				})
+			);
+			return true;
 		})
 	);

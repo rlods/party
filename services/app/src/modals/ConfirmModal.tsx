@@ -1,12 +1,10 @@
-import React, { FC, useCallback } from "react";
-import { useDispatch } from "react-redux";
+import React, { FC, useCallback, useContext } from "react";
 import { useTranslation } from "react-i18next";
 //
 import { FormModal } from "./FormModal";
 import { IconButton } from "../components/Common/IconButton";
 import { CancelButton } from "../components/Common/CancelButton";
-import { Dispatch } from "../actions";
-import { popModal } from "../reducers/modals";
+import { AppContext } from "../pages/App";
 
 // ------------------------------------------------------------------
 
@@ -21,15 +19,15 @@ export const ConfirmModal: FC<ConfirmModalProps> = ({
 	onCanceled,
 	onConfirmed
 }) => {
-	const dispatch = useDispatch<Dispatch>();
+	const { onModalPop } = useContext(AppContext);
 	const { t } = useTranslation();
 
 	const onCancel = useCallback(() => {
-		dispatch(popModal());
+		onModalPop();
 		if (onCanceled) {
 			onCanceled();
 		}
-	}, [dispatch, onCanceled]);
+	}, [onCanceled, onModalPop]);
 
 	return (
 		<FormModal

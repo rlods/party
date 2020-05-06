@@ -217,7 +217,8 @@ export const extractTracks = (
 
 		const container = findMedia(access, oldMedias, newMedias);
 		if (!container) {
-			throw new Error("Media is unknown");
+			console.error("[Medias] Unknown media", { access });
+			continue;
 		}
 
 		if (
@@ -251,7 +252,7 @@ export const findContextFromTrackIndex = (
 	mediaSize: number;
 } => {
 	if (trackIndex < 0) {
-		throw new Error("Track index is out of range");
+		throw new Error("Index is out of range");
 	}
 	let index = 0;
 	for (let mediaIndex = 0; mediaIndex < medias.length; ++mediaIndex) {
@@ -290,5 +291,5 @@ export const findContextFromTrackIndex = (
 			}
 		}
 	}
-	throw new Error("Track index is out of range");
+	throw new Error("Index is out of range");
 };

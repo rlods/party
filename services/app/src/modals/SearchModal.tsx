@@ -1,5 +1,12 @@
-import React, { FC, useRef, useState, useEffect, useCallback } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, {
+	FC,
+	useRef,
+	useState,
+	useEffect,
+	useCallback,
+	useContext
+} from "react";
+import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 //
 import { FormModal } from "./FormModal";
@@ -9,14 +16,10 @@ import { searchMedias } from "../utils/providers";
 import { Media } from "../components/Room/Medias";
 import { SearchResults } from "../utils/providers";
 import { SearchResultCategory } from "./SearchResultCategory";
-import { Dispatch } from "../actions";
-import { popModal } from "../reducers/modals";
-import { previewMedia } from "../actions/medias";
 import { isRoomLocked } from "../selectors/room";
 import { RootState } from "../reducers";
 import { ModalField } from "./ModalFields";
-import { PREVIEW_PLAYER } from "../utils/player";
-import { appendToQueue } from "../actions/queue";
+import { AppContext } from "../pages/App";
 import {
 	MEDIA_TYPE_DEFINITIONS,
 	MediaType,
@@ -32,7 +35,12 @@ const VIEW_MORE_RESULTS_COUNT = 50;
 // ------------------------------------------------------------------
 
 export const SearchModal: FC = () => {
-	const dispatch = useDispatch<Dispatch>();
+	const {
+		onQueueAppend,
+		onModalClose,
+		onPreviewStart,
+		onPreviewStop
+	} = useContext(AppContext);
 	const { t } = useTranslation();
 	const queryRef = useRef<HTMLInputElement>(null);
 	const locked = useSelector<RootState, boolean>(isRoomLocked);
@@ -57,8 +65,6 @@ export const SearchModal: FC = () => {
 		}
 	});
 
-	const onClose = useCallback(() => dispatch(popModal()), [dispatch]);
-
 	const onSearch = useCallback(async () => {
 		if (query.trim().length > 0) {
 			setResults(
@@ -68,30 +74,6 @@ export const SearchModal: FC = () => {
 			);
 		}
 	}, [query]);
-
-	const onSelect = useCallback(
-		(provider: ProviderType, type: MediaType, id: string) =>
-			dispatch(appendToQueue([{ provider, type, id }])),
-		[dispatch]
-	);
-
-	const onStartPreview = useCallback(
-		(provider: ProviderType, type: MediaType, id: string) => {
-			dispatch(previewMedia({ provider, type, id }));
-			setPlayingMediaId(id);
-			setPlayingMediaProvider(provider);
-			setPlayingMediaType(type);
-		},
-		[dispatch]
-	);
-
-	const onStopPreview = useCallback(async () => {
-		console.debug("Stop previewing...");
-		await PREVIEW_PLAYER.stop();
-		setPlayingMediaId("");
-		setPlayingMediaProvider("deezer");
-		setPlayingMediaType("track");
-	}, []);
 
 	const onViewMore = useCallback(
 		async (providerType: ProviderType, mediaType: MediaType) => {
@@ -114,10 +96,9 @@ export const SearchModal: FC = () => {
 			queryRef.current.focus();
 		}
 		return () => {
-			console.debug("Stop previewing...");
-			/*await*/ PREVIEW_PLAYER.stop();
+			onPreviewStop();
 		};
-	}, [dispatch]);
+	}, [onPreviewStop]);
 
 	return (
 		<FormModal
@@ -133,7 +114,7 @@ export const SearchModal: FC = () => {
 						icon="search"
 						type="submit"
 					/>
-					<CancelButton onClick={onClose} />
+					<CancelButton onClick={onModalClose} />
 				</>
 			)}>
 			<ModalField>
@@ -163,7 +144,11 @@ export const SearchModal: FC = () => {
 									title={t("medias.add")}
 									icon="plus"
 									onClick={() =>
-										onSelect(provider, type, media.id)
+										onQueueAppend(true, {
+											provider,
+											type,
+											id: media.id
+										})
 									}
 								/>
 							}
@@ -174,10 +159,22 @@ export const SearchModal: FC = () => {
 								playingMediaType === type &&
 								playingMediaId === media.id
 							}
-							onPlay={() =>
-								onStartPreview(provider, type, media.id)
-							}
-							onStop={onStopPreview}
+							onPlay={() => {
+								onPreviewStart({
+									provider,
+									type,
+									id: media.id
+								});
+								setPlayingMediaId(media.id);
+								setPlayingMediaProvider(provider);
+								setPlayingMediaType(type);
+							}}
+							onStop={() => {
+								onPreviewStop();
+								setPlayingMediaId("");
+								setPlayingMediaProvider("deezer");
+								setPlayingMediaType("track");
+							}}
 						/>
 					)}
 				/>

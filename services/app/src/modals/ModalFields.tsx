@@ -1,10 +1,9 @@
-import React, { FC, forwardRef, useCallback } from "react";
-import { useDispatch } from "react-redux";
+import React, { FC, forwardRef, useCallback, useContext } from "react";
 import { useTranslation } from "react-i18next";
 //
 import { copyToClipboard } from "../utils/clipboard";
 import { IconButton } from "../components/Common/IconButton";
-import { displaySuccess } from "../actions/messages";
+import { AppContext } from "../pages/App";
 
 // ------------------------------------------------------------------
 
@@ -42,13 +41,13 @@ export const SecretField: FC<{
 	placeholder: string;
 	value: string;
 }> = ({ id, label, onChange, placeholder, value }) => {
-	const dispatch = useDispatch();
+	const { onDisplayInfo } = useContext(AppContext);
 	const { t } = useTranslation();
 
 	const onCopyToClipboard = useCallback(async () => {
 		await copyToClipboard(value);
-		dispatch(displaySuccess("secret_copied_to_clipboard"));
-	}, [dispatch, value]);
+		onDisplayInfo("secret_copied_to_clipboard");
+	}, [onDisplayInfo, value]);
 
 	return (
 		<ModalField>

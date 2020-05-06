@@ -22,9 +22,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">9.52% </span>
+                <span class="strong">8.7% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>2/21</span>
+                <span class='fraction'>2/23</span>
             </div>
         
             
@@ -43,9 +43,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">9.52% </span>
+                <span class="strong">8.7% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>2/21</span>
+                <span class='fraction'>2/23</span>
             </div>
         
             
@@ -158,7 +158,9 @@
 <a name='L100'></a><a href='#L100'>100</a>
 <a name='L101'></a><a href='#L101'>101</a>
 <a name='L102'></a><a href='#L102'>102</a>
-<a name='L103'></a><a href='#L103'>103</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L103'></a><a href='#L103'>103</a>
+<a name='L104'></a><a href='#L104'>104</a>
+<a name='L105'></a><a href='#L105'>105</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -210,11 +212,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -226,15 +227,18 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -299,9 +303,12 @@ export function createAction&lt;T extends string, P&gt;(type: T, payload?: P) {
 	return payload === void 0 ? <span class="branch-0 cbranch-no" title="branch not covered" >{ type } </span>: { type, payload };
 }
 &nbsp;
-export type ActionOptions = { onFailure?: () =&gt; void; onSuccess?: () =&gt; void };
-&nbsp;
 // ------------------------------------------------------------------
+&nbsp;
+export type TrySomethingOptions = {
+	onFailure?: () =&gt; void;
+	onSuccess?: () =&gt; void;
+};
 &nbsp;
 export type TrySomethingStatus =
 	| true
@@ -309,56 +316,55 @@ export type TrySomethingStatus =
 	| "connect-and-retry"
 	| "unlock-and-retry";
 &nbsp;
-export type TrySomethingOptions = {
-	onAction: () =&gt; Promise&lt;TrySomethingStatus&gt;;
-	onFailure?: () =&gt; void;
-	onSuccess?: () =&gt; void;
-};
-&nbsp;
 export const trySomething = <span class="fstat-no" title="function not covered" >(</span>
-	options: TrySomethingOptions
+	onAction: () =&gt; Promise&lt;TrySomethingStatus&gt;,
+	options?: TrySomethingOptions
 ): AsyncAction =&gt; <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >as</span>ync dispatch =&gt; {</span>
 	let res: TrySomethingStatus = <span class="cstat-no" title="statement not covered" >false;</span>
 <span class="cstat-no" title="statement not covered" >	try {</span>
-<span class="cstat-no" title="statement not covered" >		res = await options.onAction();</span>
+<span class="cstat-no" title="statement not covered" >		res = await onAction();</span>
 <span class="cstat-no" title="statement not covered" >		if (res === "unlock-and-retry") {</span>
+<span class="cstat-no" title="statement not covered" >			dispatch(displayError("rooms.errors.locked"));</span>
 <span class="cstat-no" title="statement not covered" >			dispatch(</span>
 				openModal({
 					type: "Room/Unlock",
 					props: {
 						options: {
-							onFailure: options.onFailure,
-							onSuccess: <span class="fstat-no" title="function not covered" >()</span> =&gt; <span class="cstat-no" title="statement not covered" >dispatch(trySomething(options))</span>
+							onFailure: options?.onFailure,
+							onSuccess: <span class="fstat-no" title="function not covered" >()</span> =&gt;
+<span class="cstat-no" title="statement not covered" >								dispatch(trySomething(onAction, options))</span>
 						}
 					}
 				})
 			);
-<span class="cstat-no" title="statement not covered" >			return; </span>// Delegated to UnlockRoom
+<span class="cstat-no" title="statement not covered" >			return; </span>// Delegated to UnlockRoomModal
 		}
 <span class="cstat-no" title="statement not covered" >		if (res === "connect-and-retry") {</span>
+<span class="cstat-no" title="statement not covered" >			dispatch(displayError("user.not_connected"));</span>
 <span class="cstat-no" title="statement not covered" >			dispatch(</span>
 				openModal({
 					type: "User/Create",
 					props: {
 						options: {
-							onFailure: options.onFailure,
-							onSuccess: <span class="fstat-no" title="function not covered" >()</span> =&gt; <span class="cstat-no" title="statement not covered" >dispatch(trySomething(options))</span>
+							onFailure: options?.onFailure,
+							onSuccess: <span class="fstat-no" title="function not covered" >()</span> =&gt;
+<span class="cstat-no" title="statement not covered" >								dispatch(trySomething(onAction, options))</span>
 						}
 					}
 				})
 			);
-<span class="cstat-no" title="statement not covered" >			return; </span>// Delegated to CreateUser
+<span class="cstat-no" title="statement not covered" >			return; </span>// Delegated to CreateUserModal
 		}
 	} catch (err) {
 <span class="cstat-no" title="statement not covered" >		dispatch(displayError(extractErrorMessage(err)));</span>
 	}
 <span class="cstat-no" title="statement not covered" >	if (!res) {</span>
-<span class="cstat-no" title="statement not covered" >		if (options.onFailure) {</span>
+<span class="cstat-no" title="statement not covered" >		if (options?.onFailure) {</span>
 <span class="cstat-no" title="statement not covered" >			options.onFailure();</span>
 <span class="cstat-no" title="statement not covered" >			return;</span>
 		}
 	}
-<span class="cstat-no" title="statement not covered" >	if (options.onSuccess) {</span>
+<span class="cstat-no" title="statement not covered" >	if (options?.onSuccess) {</span>
 <span class="cstat-no" title="statement not covered" >		options.onSuccess();</span>
 	}
 };
@@ -369,7 +375,7 @@ export const trySomething = <span class="fstat-no" title="function not covered" 
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue May 05 2020 18:55:33 GMT+0000 (Coordinated Universal Time)
+                at Wed May 06 2020 21:27:07 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../prettify.js"></script>

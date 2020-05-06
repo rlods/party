@@ -37,9 +37,12 @@ export function createAction<T extends string, P>(type: T, payload?: P) {
 	return payload === void 0 ? { type } : { type, payload };
 }
 
-export type ActionOptions = { onFailure?: () => void; onSuccess?: () => void };
-
 // ------------------------------------------------------------------
+
+export type TrySomethingOptions = {
+	onFailure?: () => void;
+	onSuccess?: () => void;
+};
 
 export type TrySomethingStatus =
 	| true
@@ -47,56 +50,55 @@ export type TrySomethingStatus =
 	| "connect-and-retry"
 	| "unlock-and-retry";
 
-export type TrySomethingOptions = {
-	onAction: () => Promise<TrySomethingStatus>;
-	onFailure?: () => void;
-	onSuccess?: () => void;
-};
-
 export const trySomething = (
-	options: TrySomethingOptions
+	onAction: () => Promise<TrySomethingStatus>,
+	options?: TrySomethingOptions
 ): AsyncAction => async dispatch => {
 	let res: TrySomethingStatus = false;
 	try {
-		res = await options.onAction();
+		res = await onAction();
 		if (res === "unlock-and-retry") {
+			dispatch(displayError("rooms.errors.locked"));
 			dispatch(
 				openModal({
 					type: "Room/Unlock",
 					props: {
 						options: {
-							onFailure: options.onFailure,
-							onSuccess: () => dispatch(trySomething(options))
+							onFailure: options?.onFailure,
+							onSuccess: () =>
+								dispatch(trySomething(onAction, options))
 						}
 					}
 				})
 			);
-			return; // Delegated to UnlockRoom
+			return; // Delegated to UnlockRoomModal
 		}
 		if (res === "connect-and-retry") {
+			dispatch(displayError("user.not_connected"));
 			dispatch(
 				openModal({
 					type: "User/Create",
 					props: {
 						options: {
-							onFailure: options.onFailure,
-							onSuccess: () => dispatch(trySomething(options))
+							onFailure: options?.onFailure,
+							onSuccess: () =>
+								dispatch(trySomething(onAction, options))
 						}
 					}
 				})
 			);
-			return; // Delegated to CreateUser
+			return; // Delegated to CreateUserModal
 		}
 	} catch (err) {
 		dispatch(displayError(extractErrorMessage(err)));
 	}
 	if (!res) {
-		if (options.onFailure) {
+		if (options?.onFailure) {
 			options.onFailure();
 			return;
 		}
 	}
-	if (options.onSuccess) {
+	if (options?.onSuccess) {
 		options.onSuccess();
 	}
 };

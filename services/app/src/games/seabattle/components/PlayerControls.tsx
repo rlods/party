@@ -10,15 +10,15 @@ import { SeaBattleMovementIconMappings } from "../utils/mappings";
 export const SeaBattlePlayerControls: FC<{
 	boat?: SeaBattleBoatData;
 	disabled?: boolean;
-	onMoveBackward: () => void;
-	onMoveForward: () => void;
+	onQueueMoveBackward: () => void;
+	onQueueMoveForward: () => void;
 	onRotateLeft: () => void;
 	onRotateRight: () => void;
 }> = ({
 	boat,
 	disabled = false,
-	onMoveBackward,
-	onMoveForward,
+	onQueueMoveBackward,
+	onQueueMoveForward,
 	onRotateLeft,
 	onRotateRight
 }) => {
@@ -42,7 +42,7 @@ export const SeaBattlePlayerControls: FC<{
 						: "arrow-down"
 				}
 				title={t("games.seabattle.move_backward")}
-				onClick={onMoveBackward}
+				onClick={onQueueMoveBackward}
 			/>
 			<IconButton
 				disabled={disabled}
@@ -54,7 +54,7 @@ export const SeaBattlePlayerControls: FC<{
 						: "arrow-up"
 				}
 				title={t("games.seabattle.move_forward")}
-				onClick={onMoveForward}
+				onClick={onQueueMoveForward}
 			/>
 			<IconButton
 				disabled={disabled}

@@ -1,10 +1,9 @@
-import React, { FC, MouseEvent, useState, useEffect, useCallback } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { FC, MouseEvent, useState, useEffect, useContext } from "react";
+import { useSelector } from "react-redux";
 import { CSSTransition } from "react-transition-group";
 //
-import { Dispatch } from "../actions";
 import { RootState } from "../reducers";
-import { ModalPrereq, popModal } from "../reducers/modals";
+import { ModalPrereq } from "../reducers/modals";
 import { ConfirmModal } from "./ConfirmModal";
 import { ConnectUserModal } from "./ConnectUserModal";
 import { CreateRoomModal } from "./CreateRoomModal";
@@ -15,6 +14,7 @@ import { SeaBattleHelpModal } from "./SeaBattleHelpModal";
 import { SearchModal } from "./SearchModal";
 import { JoinRoomModal } from "./JoinRoomModal";
 import { UnlockRoomModal } from "./UnlockRoomModal";
+import { AppContext } from "../pages/App";
 import "./index.scss";
 
 // ------------------------------------------------------------------
@@ -58,7 +58,7 @@ export const getModal = (prereq?: ModalPrereq) => {
 // ------------------------------------------------------------------
 
 export const Modals: FC = () => {
-	const dispatch = useDispatch<Dispatch>();
+	const { onModalPop } = useContext(AppContext);
 	const prereq = useSelector<RootState, ModalPrereq | undefined>(state =>
 		state.modals.stack.length > 0
 			? state.modals.stack[state.modals.stack.length - 1]
@@ -72,12 +72,10 @@ export const Modals: FC = () => {
 		void 0
 	);
 
-	const onPopModal = useCallback(() => dispatch(popModal()), [dispatch]);
-
 	useEffect(() => {
 		const keyDown = (e: KeyboardEvent) => {
 			if (e.keyCode === 27) {
-				onPopModal();
+				onModalPop();
 			}
 		};
 
@@ -86,7 +84,7 @@ export const Modals: FC = () => {
 		return () => {
 			document.removeEventListener("keydown", keyDown);
 		};
-	}, [onPopModal]);
+	}, [onModalPop]);
 
 	useEffect(() => {
 		// Hide current modal before showing new one (if there is a new one)
@@ -113,7 +111,7 @@ export const Modals: FC = () => {
 				onClick={e => {
 					// Clicking overlay will close current modal
 					e.stopPropagation();
-					onPopModal();
+					onModalPop();
 				}}>
 				{modal && (
 					<div

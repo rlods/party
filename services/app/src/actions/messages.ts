@@ -1,12 +1,12 @@
 import { AsyncAction } from ".";
 import { MessageType } from "../utils/messages";
-import { addMessage, removeMessage } from "../reducers/messages";
+import { addMessage, removeMessages } from "../reducers/messages";
 
 // ------------------------------------------------------------------
 
 let MESSAGE_ID_GENERATOR: number = 0;
 
-type MessageCreationData = {
+export type MessageOptions = {
 	autoclear?: boolean;
 	closable?: boolean;
 	duration?: number;
@@ -26,7 +26,7 @@ export const displayMessage = (
 		tag,
 		text,
 		weight = 0
-	}: MessageCreationData
+	}: MessageOptions
 ): AsyncAction => (dispatch, getState) => {
 	const { messages } = getState();
 
@@ -58,7 +58,7 @@ export const displayMessage = (
 				weight
 			},
 			autoclear
-				? setTimeout(() => dispatch(removeMessage(id)), duration)
+				? setTimeout(() => dispatch(removeMessages([id])), duration)
 				: void 0
 		)
 	);
@@ -66,20 +66,20 @@ export const displayMessage = (
 
 // ------------------------------------------------------------------
 
-export const displayError = (text: string, data?: MessageCreationData) =>
+export const displayError = (text: string, options?: MessageOptions) =>
 	displayMessage("error", {
 		text,
-		...data
+		...options
 	});
 
-export const displayInfo = (text: string, data?: MessageCreationData) =>
+export const displayInfo = (text: string, options?: MessageOptions) =>
 	displayMessage("info", {
 		text,
-		...data
+		...options
 	});
 
-export const displaySuccess = (text: string, data?: MessageCreationData) =>
+export const displaySuccess = (text: string, options?: MessageOptions) =>
 	displayMessage("success", {
 		text,
-		...data
+		...options
 	});

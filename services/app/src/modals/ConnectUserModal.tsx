@@ -1,23 +1,19 @@
-import React, { FC, useRef, useState, useEffect, useCallback } from "react";
-import { useDispatch } from "react-redux";
+import React, { FC, useRef, useState, useEffect, useContext } from "react";
 import { useTranslation } from "react-i18next";
 //
 import { FormModal } from "./FormModal";
 import { IconButton } from "../components/Common/IconButton";
 import { CancelButton } from "../components/Common/CancelButton";
-import { popModal } from "../reducers/modals";
-import { displayError } from "../actions/messages";
-import { connectUser } from "../actions/user";
-import { Dispatch, ActionOptions } from "../actions";
+import { TrySomethingOptions } from "../actions";
 import { SECRET_FIELD_SIZE, InputField } from "./ModalFields";
-import { selectUserDatabaseId } from "../config/firebase";
+import { AppContext } from "../pages/App";
 
 // ------------------------------------------------------------------
 
-export type ConnectUserModalProps = { options?: ActionOptions };
+export type ConnectUserModalProps = { options?: TrySomethingOptions };
 
 export const ConnectUserModal: FC<ConnectUserModalProps> = ({ options }) => {
-	const dispatch = useDispatch<Dispatch>();
+	const { onModalClose, onUserConnect } = useContext(AppContext);
 	const [userId, setUserId] = useState("");
 	const [secret, setSecret] = useState("");
 	const userIdRef = useRef<HTMLInputElement>(null);
@@ -29,38 +25,19 @@ export const ConnectUserModal: FC<ConnectUserModalProps> = ({ options }) => {
 		}
 	}, [userIdRef]);
 
-	const onClose = useCallback(() => dispatch(popModal()), [dispatch]);
-
-	const onConnect = useCallback(() => {
-		if (userId.trim().length === 0) {
-			dispatch(displayError("user.id_is_invalid"));
-			return;
-		}
-		if (secret.trim().length === 0) {
-			dispatch(displayError("user.secret_is_invalid"));
-			return;
-		}
-		dispatch(
-			connectUser({
-				dbId: selectUserDatabaseId(),
-				userId,
-				secret,
-				options: {
-					onSuccess: () => {
-						if (options && options.onSuccess) {
-							options.onSuccess();
-						}
-						dispatch(popModal());
-					}
-				}
-			})
-		);
-	}, [dispatch, userId, secret, options]);
-
 	return (
 		<FormModal
 			title={t("user.connection")}
-			onSubmit={onConnect}
+			onSubmit={() => {
+				onUserConnect(userId, secret, {
+					onSuccess: () => {
+						if (options?.onSuccess) {
+							options.onSuccess();
+						}
+						onModalClose();
+					}
+				});
+			}}
 			renderButtons={() => (
 				<>
 					<IconButton
@@ -74,7 +51,7 @@ export const ConnectUserModal: FC<ConnectUserModalProps> = ({ options }) => {
 						icon="check"
 						type="submit"
 					/>
-					<CancelButton onClick={onClose} />
+					<CancelButton onClick={onModalClose} />
 				</>
 			)}>
 			<InputField

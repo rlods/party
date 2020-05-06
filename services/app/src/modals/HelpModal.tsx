@@ -1,38 +1,22 @@
-import React, { FC, useCallback } from "react";
+import React, { FC, useContext } from "react";
 import { useTranslation } from "react-i18next";
-import { useDispatch } from "react-redux";
 //
 import { Modal } from "./Modal";
-import { openModal } from "../reducers/modals";
-import { Dispatch } from "../actions";
 import { IconButton } from "../components/Common/IconButton";
+import { AppContext } from "../pages/App";
+import { DEFAULT_ROOM_TYPE } from "../utils/rooms";
 import "./HelpModal.scss";
 
 // ------------------------------------------------------------------
 
 export const HelpModal: FC = () => {
+	const {
+		onRoomCreateAsk,
+		onRoomJoinAsk,
+		onUserConnectAsk,
+		onUserCreateAsk
+	} = useContext(AppContext);
 	const { t } = useTranslation();
-	const dispatch = useDispatch<Dispatch>();
-
-	const onCreateRoom = useCallback(
-		() => dispatch(openModal({ type: "Room/Create", props: {} })),
-		[dispatch]
-	);
-
-	const onJoinRoom = useCallback(
-		() => dispatch(openModal({ type: "Room/Join", props: null })),
-		[dispatch]
-	);
-
-	const onCreateUser = useCallback(
-		() => dispatch(openModal({ type: "User/Create", props: {} })),
-		[dispatch]
-	);
-
-	const onConnectUser = useCallback(
-		() => dispatch(openModal({ type: "User/Connect", props: {} })),
-		[dispatch]
-	);
 
 	return (
 		<Modal className="HelpModal" title={t("help.help")}>
@@ -45,7 +29,7 @@ export const HelpModal: FC = () => {
 							icon="user-plus"
 							size="S"
 							title={t("user.create")}
-							onClick={onCreateUser}
+							onClick={onUserCreateAsk}
 						/>
 					</li>
 					<li>
@@ -54,7 +38,7 @@ export const HelpModal: FC = () => {
 							icon="sign-in"
 							size="S"
 							title={t("user.connect")}
-							onClick={onConnectUser}
+							onClick={onUserConnectAsk}
 						/>
 					</li>
 					<li>
@@ -63,7 +47,7 @@ export const HelpModal: FC = () => {
 							icon="play"
 							size="S"
 							title={t("rooms.create")}
-							onClick={onCreateRoom}
+							onClick={() => onRoomCreateAsk(DEFAULT_ROOM_TYPE)}
 						/>
 					</li>
 					<li>
@@ -72,7 +56,7 @@ export const HelpModal: FC = () => {
 							icon="sign-in"
 							size="S"
 							title={t("rooms.join")}
-							onClick={onJoinRoom}
+							onClick={onRoomJoinAsk}
 						/>
 					</li>
 				</ul>

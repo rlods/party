@@ -2,8 +2,8 @@ import {
 	AngleToDirection,
 	SeaBattleDirection,
 	extractBattleInfo,
-	checkUserHasBatton,
-	passBatonToNextPlayer,
+	checkUserTurn,
+	passUserTurn,
 	SeaBattleData
 } from "..";
 
@@ -165,18 +165,15 @@ describe("SeaBattle Utilities", () => {
 		});
 	});
 
-	it("checkUserHasBatton - valid", () => {
+	it("checkUserTurn - valid", () => {
 		const battle = generateFakeBattle();
 
 		expect(
-			checkUserHasBatton(
-				battle,
-				battle.maps[battle.currentMapIndex].userId
-			)
+			checkUserTurn(battle, battle.maps[battle.currentMapIndex].userId)
 		).toEqual(true);
 
 		expect(
-			checkUserHasBatton(
+			checkUserTurn(
 				battle,
 				battle.maps[(battle.currentMapIndex + 1) % battle.maps.length]
 					.userId
@@ -184,12 +181,12 @@ describe("SeaBattle Utilities", () => {
 		).toEqual(false);
 	});
 
-	it("passBatonToNextPlayer - valid", () => {
+	it("passUserTurn - valid", () => {
 		const battle = generateFakeBattle();
 
 		const currentIndex = battle.currentMapIndex;
 
-		passBatonToNextPlayer(battle);
+		passUserTurn(battle);
 
 		expect(
 			battle.currentMapIndex === (currentIndex + 1) % battle.maps.length

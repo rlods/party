@@ -1,12 +1,11 @@
-import React, { FC, FormEvent, ReactNode, useCallback } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import React, { FC, FormEvent, ReactNode, useContext } from "react";
+import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 //
 import { IconButton } from "../components/Common/IconButton";
 import { RootState } from "../reducers";
-import { Dispatch } from "../actions";
-import { popModal, closeModal } from "../reducers/modals";
+import { AppContext } from "../pages/App";
 
 // ------------------------------------------------------------------
 
@@ -17,15 +16,11 @@ export const Modal: FC<{
 	renderFoot?: () => React.ReactNode;
 	onSubmit?: () => void;
 }> = ({ children, className, title, renderFoot, onSubmit }) => {
-	const dispatch = useDispatch<Dispatch>();
+	const { onModalClose, onModalPop } = useContext(AppContext);
 	const { t } = useTranslation();
 	const has_prev_modal = useSelector<RootState, boolean>(
 		state => state.modals.stack.length > 1
 	);
-
-	const onClose = useCallback(() => dispatch(closeModal()), [dispatch]);
-
-	const onPop = useCallback(() => dispatch(popModal()), [dispatch]);
 
 	return (
 		<form
@@ -44,13 +39,13 @@ export const Modal: FC<{
 					})}
 					icon="angle-left"
 					title="Back"
-					onClick={onPop}
+					onClick={onModalPop}
 				/>
 				<div className="ModalTitle">{title}</div>
 				<IconButton
 					kind="special"
 					className="ModalHeadClose"
-					onClick={onClose}
+					onClick={onModalClose}
 					title={t("cancel")}
 					icon="times"
 				/>

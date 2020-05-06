@@ -1,10 +1,11 @@
-import React, { memo } from "react";
+import React, { memo, useContext } from "react";
 import { useTranslation } from "react-i18next";
 //
 import { IconButton } from "../Common/IconButton";
 import { LoadingIcon } from "../Common/LoadingIcon";
 import { QueueItem } from "./QueueItem";
 import { Track } from "../../utils/medias";
+import { AppContext } from "../../pages/App";
 
 // ------------------------------------------------------------------
 
@@ -45,15 +46,8 @@ export const QueueList = memo(
 // ------------------------------------------------------------------
 
 export const EmptyQueueList = React.memo(
-	({
-		loaded,
-		locked,
-		onSearch
-	}: {
-		loaded: boolean;
-		locked: boolean;
-		onSearch: () => void;
-	}) => {
+	({ loaded, locked }: { loaded: boolean; locked: boolean }) => {
+		const { onQueueSearch } = useContext(AppContext);
 		const { t } = useTranslation();
 		return (
 			<div className="QueueEmpty">
@@ -62,10 +56,10 @@ export const EmptyQueueList = React.memo(
 						<IconButton
 							title="..."
 							icon="shower"
-							onClick={onSearch}
+							onClick={onQueueSearch}
 							size="L"
 						/>
-						<span onClick={onSearch}>
+						<span onClick={onQueueSearch}>
 							{t(locked ? "rooms.empty_for_now" : "rooms.empty")}
 						</span>
 					</>

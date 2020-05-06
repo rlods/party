@@ -9,17 +9,13 @@ import {
 
 export type PlayMode = "default" | "shuffle"; // TODO: Implement Shuffle mode
 
-export type RoomType = "blind" | "dj" | "seabattle";
+export type RoomType = "dj" | "seabattle";
 
 export const DEFAULT_PLAY_MODE: PlayMode = "default";
 
 export const DEFAULT_ROOM_TYPE: RoomType = "seabattle";
 
-export const RoomTypes = [
-	// "blind",
-	"dj",
-	"seabattle"
-];
+export const RoomTypes = ["dj", "seabattle"];
 
 export type RoomInfo = {
 	name: string;
@@ -63,12 +59,13 @@ export const createQueueRemoving = (
 	index: number,
 	count: number
 ): RoomQueueMedias => {
-	if (index < 0 || index >= accesses.length) {
-		throw new Error("Media index is out of range");
-	}
 	const medias: RoomQueueMedias = {};
 	const copy = [...accesses];
-	copy.splice(index, count);
+	if (index < 0 || index >= accesses.length) {
+		console.error("[Queue] Index is out of range");
+	} else {
+		copy.splice(index, count);
+	}
 	copy.forEach(({ id, provider, type }, index) => {
 		medias[index] = { id, provider, type };
 	});
@@ -85,16 +82,6 @@ export const initializeRoom = ({
 	userId: string;
 }): { extra: string; queue: RoomQueue } => {
 	switch (type) {
-		case "blind":
-			return {
-				extra: "",
-				queue: {
-					medias: {},
-					playing: false,
-					playmode: "default",
-					position: 0
-				}
-			};
 		case "dj":
 			return {
 				extra: "",

@@ -1,17 +1,15 @@
-import React, { FC, useCallback } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { FC, useContext } from "react";
+import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 //
 import { IconButton } from "../Common/IconButton";
-import { Dispatch } from "../../actions";
 import { RootState } from "../../reducers";
 import { isRoomLocked } from "../../selectors/room";
 import { isRoomPlaying, selectRoomPlaymode } from "../../selectors/queue";
-import { stopPlayer, startPlayer } from "../../actions/player";
-import { moveToPreviousTrack, moveToNextTrack } from "../../actions/queue";
 import { PlayMode } from "../../utils/rooms";
 import { selectTracksCount } from "../../selectors/medias";
+import { AppContext } from "../../pages/App";
 import "./AudioPlayerControls.scss";
 
 // ------------------------------------------------------------------
@@ -21,7 +19,12 @@ export const AudioPlayerControls: FC<{
 	className?: string;
 	propagate: boolean;
 }> = ({ bigPlayer, className, propagate }) => {
-	const dispatch = useDispatch<Dispatch>();
+	const {
+		onQueueMoveBackward,
+		onQueueMoveForward,
+		onPlayerStart,
+		onPlayerStop
+	} = useContext(AppContext);
 
 	const { t } = useTranslation();
 
@@ -33,26 +36,6 @@ export const AudioPlayerControls: FC<{
 
 	const playmode = useSelector<RootState, PlayMode>(selectRoomPlaymode);
 
-	const onMoveBackward = useCallback(
-		() => dispatch(moveToPreviousTrack({ propagate })),
-		[dispatch, propagate]
-	);
-
-	const onMoveForward = useCallback(
-		() => dispatch(moveToNextTrack({ propagate })),
-		[dispatch, propagate]
-	);
-
-	const onPlay = useCallback(() => dispatch(startPlayer({ propagate })), [
-		dispatch,
-		propagate
-	]);
-
-	const onStop = useCallback(() => dispatch(stopPlayer({ propagate })), [
-		dispatch,
-		propagate
-	]);
-
 	return (
 		<div className={classNames("AudioPlayerControls", className)}>
 			<div className="Control">
@@ -61,7 +44,7 @@ export const AudioPlayerControls: FC<{
 						locked || tracksCount === 0 || playmode === "shuffle"
 					}
 					icon="step-backward"
-					onClick={onMoveBackward}
+					onClick={() => onQueueMoveBackward(propagate)}
 					size={"M"}
 					title={t("player.backward")}
 				/>
@@ -71,7 +54,7 @@ export const AudioPlayerControls: FC<{
 					<IconButton
 						disabled={locked || tracksCount === 0}
 						icon="play"
-						onClick={onPlay}
+						onClick={() => onPlayerStart(propagate)}
 						size={bigPlayer ? "L" : "M"}
 						title={t("player.play")}
 					/>
@@ -79,7 +62,7 @@ export const AudioPlayerControls: FC<{
 					<IconButton
 						disabled={locked || tracksCount === 0}
 						icon="pause"
-						onClick={onStop}
+						onClick={() => onPlayerStop(propagate)}
 						size={bigPlayer ? "L" : "M"}
 						title={t("player.stop")}
 					/>
@@ -89,7 +72,7 @@ export const AudioPlayerControls: FC<{
 				<IconButton
 					disabled={locked || tracksCount === 0}
 					icon="step-forward"
-					onClick={onMoveForward}
+					onClick={() => onQueueMoveForward(propagate)}
 					size={"M"}
 					title={t("player.forward")}
 				/>

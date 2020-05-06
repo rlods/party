@@ -1,28 +1,24 @@
-import React, { FC, useCallback } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { FC, useCallback, useContext } from "react";
+import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
 //
 import { IconButton } from "../Common/IconButton";
 import { copyToClipboard } from "../../utils/clipboard";
-import { Dispatch } from "../../actions";
 import { RootState } from "../../reducers";
 import { isRoomLoaded, selectRoomName } from "../../selectors/room";
-import { displaySuccess } from "../../actions/messages";
-import { confirmModal } from "../../actions/modals";
 import { selectTracksCount } from "../../selectors/medias";
 import { Icon } from "../Common/Icon";
+import { AppContext } from "../../pages/App";
 import "./Head.scss";
 
 // ------------------------------------------------------------------
 
 export const Head: FC = () => {
-	const dispatch = useDispatch<Dispatch>();
+	const { onDisplayInfo, onExit } = useContext(AppContext);
 	const fetching = useSelector<RootState, boolean>(
 		state => state.room.fetching
 	);
 	const { t } = useTranslation();
-	const history = useHistory();
 	const name = useSelector<RootState, string>(selectRoomName);
 	const loaded = useSelector<RootState, boolean>(isRoomLoaded);
 	const mediasCount = useSelector<RootState, number>(
@@ -32,16 +28,8 @@ export const Head: FC = () => {
 
 	const onCopy = useCallback(async () => {
 		await copyToClipboard(document.location.href.split("?")[0]);
-		dispatch(displaySuccess("rooms.link_copied_to_clipboard"));
-	}, [dispatch]);
-
-	const onExit = useCallback(() => {
-		dispatch(
-			confirmModal(t("rooms.confirm_exit"), () => {
-				history.push("/");
-			})
-		);
-	}, [t, dispatch, history]);
+		onDisplayInfo("rooms.link_copied_to_clipboard");
+	}, [onDisplayInfo]);
 
 	return (
 		<div className="Head">

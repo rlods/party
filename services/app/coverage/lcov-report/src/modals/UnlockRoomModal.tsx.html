@@ -24,28 +24,28 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/18</span>
+                <span class='fraction'>0/15</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/6</span>
+                <span class='fraction'>0/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/7</span>
+                <span class='fraction'>0/6</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/17</span>
+                <span class='fraction'>0/15</span>
             </div>
         
             
@@ -123,20 +123,7 @@
 <a name='L65'></a><a href='#L65'>65</a>
 <a name='L66'></a><a href='#L66'>66</a>
 <a name='L67'></a><a href='#L67'>67</a>
-<a name='L68'></a><a href='#L68'>68</a>
-<a name='L69'></a><a href='#L69'>69</a>
-<a name='L70'></a><a href='#L70'>70</a>
-<a name='L71'></a><a href='#L71'>71</a>
-<a name='L72'></a><a href='#L72'>72</a>
-<a name='L73'></a><a href='#L73'>73</a>
-<a name='L74'></a><a href='#L74'>74</a>
-<a name='L75'></a><a href='#L75'>75</a>
-<a name='L76'></a><a href='#L76'>76</a>
-<a name='L77'></a><a href='#L77'>77</a>
-<a name='L78'></a><a href='#L78'>78</a>
-<a name='L79'></a><a href='#L79'>79</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L68'></a><a href='#L68'>68</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -164,21 +151,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -212,24 +190,22 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React, { FC, useRef, useState, useEffect, useCallback } from "react";
-import { useDispatch } from "react-redux";
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React, { FC, useRef, useState, useEffect, useContext } from "react";
 import { useTranslation } from "react-i18next";
 //
 import { FormModal } from "./FormModal";
 import { IconButton } from "../components/Common/IconButton";
 import { CancelButton } from "../components/Common/CancelButton";
-import { Dispatch, ActionOptions } from "../actions";
-import { popModal } from "../reducers/modals";
-import { unlockRoom } from "../actions/room";
+import { TrySomethingOptions } from "../actions";
 import { SECRET_FIELD_SIZE, InputField } from "./ModalFields";
+import { AppContext } from "../pages/App";
 &nbsp;
 // ------------------------------------------------------------------
 &nbsp;
-export type UnlockRoomModalProps = { options?: ActionOptions };
+export type UnlockRoomModalProps = { options?: TrySomethingOptions };
 &nbsp;
 export const UnlockRoomModal: FC&lt;UnlockRoomModalProps&gt; = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >({</span> options }) =&gt; {</span>
-	const dispatch = <span class="cstat-no" title="statement not covered" >useDispatch&lt;Dispatch&gt;();</span>
+	const { onModalClose, onRoomUnlock } = <span class="cstat-no" title="statement not covered" >useContext(AppContext);</span>
 	const [secret, setSecret] = <span class="cstat-no" title="statement not covered" >useState("");</span>
 	const secretRef = <span class="cstat-no" title="statement not covered" >useRef&lt;HTMLInputElement&gt;(null);</span>
 	const { t } = <span class="cstat-no" title="statement not covered" >useTranslation();</span>
@@ -240,28 +216,19 @@ export const UnlockRoomModal: FC&lt;UnlockRoomModalProps&gt; = <span class="csta
 		}
 	}, [secretRef]);
 &nbsp;
-	const onClose = <span class="cstat-no" title="statement not covered" >useCallback(<span class="fstat-no" title="function not covered" >()</span> =&gt; <span class="cstat-no" title="statement not covered" >dispatch(popModal()),</span> [dispatch]);</span>
-&nbsp;
-	const onUnlock = <span class="cstat-no" title="statement not covered" >useCallback(<span class="fstat-no" title="function not covered" >()</span> =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >		dispatch(</span>
-			unlockRoom({
-				secret,
-				options: {
-					onSuccess: <span class="fstat-no" title="function not covered" >()</span> =&gt; {
-<span class="cstat-no" title="statement not covered" >						if (options &amp;&amp; options.onSuccess) {</span>
-<span class="cstat-no" title="statement not covered" >							options.onSuccess();</span>
-						}
-<span class="cstat-no" title="statement not covered" >						dispatch(popModal());</span>
-					}
-				}
-			})
-		);
-	}, [dispatch, secret, options]);
-&nbsp;
 <span class="cstat-no" title="statement not covered" >	return (</span>
 		&lt;FormModal
 			title={t("rooms.room_unlocking")}
-			onSubmit={onUnlock}
+			onSubmit={<span class="fstat-no" title="function not covered" >()</span> =&gt;
+<span class="cstat-no" title="statement not covered" >				onRoomUnlock(secret, {</span>
+					onSuccess: <span class="fstat-no" title="function not covered" >()</span> =&gt; {
+<span class="cstat-no" title="statement not covered" >						if (options?.onSuccess) {</span>
+<span class="cstat-no" title="statement not covered" >							options.onSuccess();</span>
+						}
+<span class="cstat-no" title="statement not covered" >						onModalClose();</span>
+					}
+				})
+			}
 			renderButtons={<span class="fstat-no" title="function not covered" >()</span> =&gt; (
 <span class="cstat-no" title="statement not covered" >				&lt;&gt;</span>
 					&lt;IconButton
@@ -271,7 +238,7 @@ export const UnlockRoomModal: FC&lt;UnlockRoomModalProps&gt; = <span class="csta
 						icon="unlock"
 						type="submit"
 					/&gt;
-					&lt;CancelButton onClick={onClose} /&gt;
+					&lt;CancelButton onClick={onModalClose} /&gt;
 				&lt;/&gt;
 			)}&gt;
 			&lt;InputField
@@ -297,7 +264,7 @@ export const UnlockRoomModal: FC&lt;UnlockRoomModalProps&gt; = <span class="csta
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue May 05 2020 18:55:33 GMT+0000 (Coordinated Universal Time)
+                at Wed May 06 2020 21:27:07 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../prettify.js"></script>

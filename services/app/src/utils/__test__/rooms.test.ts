@@ -61,8 +61,9 @@ describe("Rooms Utilities", () => {
 	it("createQueueRemoving - invalid", () => {
 		const album1 = extractAccess(createFakeAlbum());
 
-		expect(() => createQueueRemoving([album1], 1, 1)).toThrowError(
-			"Media index is out of range"
-		);
+		// Testing out of range index
+		expect(createQueueRemoving([album1], 2, 1)).toEqual<RoomQueueMedias>({
+			0: album1
+		});
 	});
 });

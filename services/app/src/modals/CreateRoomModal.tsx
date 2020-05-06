@@ -1,22 +1,17 @@
-import React, { FC, useState, useRef, useEffect, useCallback } from "react";
-import { useDispatch } from "react-redux";
+import React, { FC, useState, useRef, useEffect, useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { v4 } from "uuid";
 //
 import { FormModal } from "./FormModal";
 import { IconButton } from "../components/Common/IconButton";
 import { CancelButton } from "../components/Common/CancelButton";
-import { Dispatch } from "../actions";
-import { popModal } from "../reducers/modals";
-import { createRoom } from "../actions/room";
-import { displayError } from "../actions/messages";
-import { RoomType, RoomTypes, DEFAULT_ROOM_TYPE } from "../utils/rooms";
-import { selectRoomDatabaseId } from "../config/firebase";
+import { RoomType, RoomTypes } from "../utils/rooms";
+import { AppContext } from "../pages/App";
 import {
 	InputField,
 	SecretField,
-	SECRET_FIELD_SIZE,
-	SelectField
+	SelectField,
+	SECRET_FIELD_SIZE
 } from "./ModalFields";
 
 // ------------------------------------------------------------------
@@ -26,15 +21,16 @@ let ROOM_COUNTER = 1;
 // ------------------------------------------------------------------
 
 export type CreateRoomModalProps = {
-	type?: RoomType;
+	type: RoomType;
 };
 
 export const CreateRoomModal: FC<CreateRoomModalProps> = ({
-	type: defaultType = DEFAULT_ROOM_TYPE
+	type: defaultType
 }) => {
-	const dispatch = useDispatch<Dispatch>();
+	const { onModalClose, onRoomCreate } = useContext(AppContext);
 	const [name, setName] = useState("");
 	const [secret, setSecret] = useState(v4());
+
 	const [type, setType] = useState<RoomType>(defaultType);
 	const nameRef = useRef<HTMLInputElement>(null);
 	const { t } = useTranslation();
@@ -46,37 +42,17 @@ export const CreateRoomModal: FC<CreateRoomModalProps> = ({
 		}
 	}, [t, nameRef]);
 
-	const onClose = useCallback(() => dispatch(popModal()), [dispatch]);
-
-	const onCreate = useCallback(() => {
-		if (name.trim().length === 0) {
-			dispatch(displayError("rooms.name_is_invalid"));
-			return;
-		}
-		if (secret.trim().length === 0) {
-			dispatch(displayError("rooms.secret_is_invalid"));
-			return;
-		}
-		dispatch(
-			createRoom({
-				dbId: selectRoomDatabaseId(),
-				name,
-				secret,
-				type,
-				options: {
-					onSuccess: () => {
-						dispatch(popModal());
-					}
-				}
-			})
-		);
-		ROOM_COUNTER++;
-	}, [dispatch, name, secret, type]);
-
 	return (
 		<FormModal
 			title={t("rooms.room_creation")}
-			onSubmit={onCreate}
+			onSubmit={() =>
+				onRoomCreate(name, secret, type, {
+					onSuccess: () => {
+						onModalClose();
+						ROOM_COUNTER++;
+					}
+				})
+			}
 			renderButtons={() => (
 				<>
 					<IconButton
@@ -89,7 +65,7 @@ export const CreateRoomModal: FC<CreateRoomModalProps> = ({
 						icon="check"
 						type="submit"
 					/>
-					<CancelButton onClick={onClose} />
+					<CancelButton onClick={onModalClose} />
 				</>
 			)}>
 			<InputField
