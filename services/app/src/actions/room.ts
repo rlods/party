@@ -13,7 +13,7 @@ import {
 	extractTracks,
 	ContextualizedTrackAccess
 } from "../utils/medias";
-import { adjustPlay } from "./player";
+import { adjustPlayer } from "./player";
 
 // ------------------------------------------------------------------
 
@@ -284,7 +284,7 @@ const _watchRoom = (
 				tracks
 			})
 		);
-		dispatch(adjustPlay());
+		dispatch(adjustPlayer());
 	});
 };
 

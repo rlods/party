@@ -3,7 +3,7 @@ import { MediaAccess, findContextFromTrackIndex } from "../utils/medias";
 import { createQueueMerging, createQueueRemoving } from "../utils/rooms";
 import { generateRandomPosition } from "../utils/player";
 import { setRoom } from "../reducers/room";
-import { adjustPlay } from "./player";
+import { adjustPlayer } from "./player";
 
 // ------------------------------------------------------------------
 
@@ -37,7 +37,7 @@ export const clearQueue = (
 						}
 					})
 				);
-				dispatch(adjustPlay());
+				dispatch(adjustPlayer());
 				return true;
 			}
 			await firebaseRoom.updateQueue({
@@ -222,7 +222,7 @@ export const setQueuePosition = (
 						}
 					})
 				);
-				dispatch(adjustPlay());
+				dispatch(adjustPlayer());
 				return true;
 			}
 			await firebaseRoom.updateQueue({

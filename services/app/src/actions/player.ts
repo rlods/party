@@ -46,7 +46,7 @@ export const startPlayer = (
 						}
 					})
 				);
-				dispatch(adjustPlay());
+				dispatch(adjustPlayer());
 				return true;
 			}
 			await firebaseRoom.updateQueue({
@@ -90,7 +90,7 @@ export const stopPlayer = (
 						}
 					})
 				);
-				dispatch(adjustPlay());
+				dispatch(adjustPlayer());
 				return true;
 			}
 			await firebaseRoom.updateQueue({
@@ -103,7 +103,7 @@ export const stopPlayer = (
 
 // ------------------------------------------------------------------
 
-export const adjustPlay = (): AsyncAction => async (
+export const adjustPlayer = (): AsyncAction => async (
 	dispatch,
 	getState,
 	{ player }
@@ -145,7 +145,7 @@ export const adjustPlay = (): AsyncAction => async (
 						nextTrack.preview,
 						0,
 						{
-							onEnded: () => dispatch(adjustPlay()),
+							onEnded: () => dispatch(adjustPlayer()),
 							playmode: playmode
 						}
 					)
