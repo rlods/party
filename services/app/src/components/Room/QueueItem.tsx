@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, memo } from "react";
 import { useTranslation } from "react-i18next";
 //
 import { Media } from "./Medias";
@@ -14,7 +14,7 @@ export const QueueItem: FC<{
 	onPlay: () => void;
 	onRemove: () => void;
 	onStop: () => void;
-}> = React.memo(({ locked, track, playing, onPlay, onRemove, onStop }) => {
+}> = memo(({ locked, track, playing, onPlay, onRemove, onStop }) => {
 	const { t } = useTranslation();
 	return (
 		<div className="QueueItem">

@@ -20,7 +20,7 @@ export const QueueList = memo(
 		onStop
 	}: {
 		locked: boolean;
-		tracks: Array<Track | null>;
+		tracks: ReadonlyArray<Track | null>;
 		playing: boolean;
 		playingIndex: number;
 		onPlay: (index: number) => void;

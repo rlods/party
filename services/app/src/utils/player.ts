@@ -26,6 +26,7 @@ export type Player = {
 		trackUrl: string,
 		offset: number,
 		options?: {
+			onEnded: () => void;
 			playmode: PlayMode;
 		}
 	) => Promise<void>;
@@ -83,12 +84,14 @@ const PlayerImpl = (): Player => {
 		trackUrl: string,
 		offset: number,
 		options?: {
+			onEnded: () => void;
 			playmode: PlayMode;
 		}
 	) => {
 		await stop();
 		const buffer = await getOrLoadAudioBuffer(trackUrl); // TODO: warning if loadBuffer takes long for some reason and user clicks stop before end, next part of this function will continue after stop have been requested
 		console.debug("[Player] Starting audio...", {
+			duration: buffer.duration,
 			trackPosition,
 			trackId,
 			trackUrl
@@ -111,6 +114,9 @@ const PlayerImpl = (): Player => {
 				_trackPosition += generateRandomPosition();
 			} else {
 				_trackPosition++;
+			}
+			if (options?.onEnded) {
+				options.onEnded();
 			}
 		};
 		_sourceNode.playbackRate.value = 1.0;

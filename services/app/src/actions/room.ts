@@ -1,18 +1,11 @@
 import { v4 } from "uuid";
 //
-import { AsyncAction, Dispatch, TrySomethingOptions, trySomething } from ".";
-import { displayError } from "./messages";
+import { AsyncAction, TrySomethingOptions, trySomething } from ".";
 import { RoomInfo, RoomType, initializeRoom, RoomQueue } from "../utils/rooms";
 import { FirebaseRoom } from "../utils/firebase/room";
-import { extractErrorMessage } from "../utils/messages";
-import { pickColor } from "../utils/colorpicker";
-import { Player } from "../utils/player";
-import { computePlayerNextPosition } from "../utils/player";
 import { loadNewMedias } from "../utils/providers";
-import { RootState } from "../reducers";
 import { setMedias } from "../reducers/medias";
 import { setRoom, resetRoom, fetching, error } from "../reducers/room";
-import { displayMediaInfo } from "./medias";
 import history from "../utils/history";
 import { decode } from "../utils/encoder";
 import {
@@ -20,6 +13,7 @@ import {
 	extractTracks,
 	ContextualizedTrackAccess
 } from "../utils/medias";
+import { adjustPlay } from "./player";
 
 // ------------------------------------------------------------------
 
@@ -133,7 +127,6 @@ export const enterRoom = (
 					})
 				);
 				dispatch(_watchRoom(newFbRoom));
-				dispatch(_watchPlayer());
 				history.push(`/room/${dbId}/${roomId}?secret=${secret}`); // TODO: should push only if we're not already in it
 				return true;
 			},
@@ -162,7 +155,6 @@ export const exitRoom = (): AsyncAction => (dispatch, getState) =>
 				return true; // Nothing to do
 			}
 			console.debug("[Room] Exiting...");
-			dispatch(_unwatchPlayer());
 			dispatch(_unwatchRoom(firebaseRoom));
 			dispatch(resetRoom());
 			return true;
@@ -264,14 +256,14 @@ const _watchRoom = (
 			})
 		);
 	});
-	QUEUE_SUBSCRIPTION = fbRoom.subscribeQueue(async (newQueue: RoomQueue) => {
-		console.debug("[Room] Received room queue update...", { newQueue });
+	QUEUE_SUBSCRIPTION = fbRoom.subscribeQueue(async (queue: RoomQueue) => {
+		console.debug("[Room] Received room queue update...", { queue });
 		const {
 			medias: { data: oldMedias }
 		} = getState();
-		const medias: ReadonlyArray<MediaAccess> = !newQueue.medias
+		const medias: ReadonlyArray<MediaAccess> = !queue.medias
 			? []
-			: Object.entries(newQueue.medias)
+			: Object.entries(queue.medias)
 					.sort((m1, m2) => Number(m1[0]) - Number(m2[0]))
 					.map(m => m[1]);
 		let tracks: ContextualizedTrackAccess[] = [];
@@ -287,11 +279,12 @@ const _watchRoom = (
 		}
 		dispatch(
 			setRoom({
-				queue: newQueue,
 				medias,
+				queue,
 				tracks
 			})
 		);
+		dispatch(adjustPlay());
 	});
 };
 
@@ -313,107 +306,4 @@ const _unwatchRoom = (
 		room.unsubscribeQueue(QUEUE_SUBSCRIPTION);
 		QUEUE_SUBSCRIPTION = null;
 	}
-};
-
-// ------------------------------------------------------------------
-// ------------------------------------------------------------------
-// ------------------------------------------------------------------
-
-let PLAYER_TIMER: NodeJS.Timeout | null = null;
-
-const _watchPlayer = (): AsyncAction => async (
-	dispatch,
-	getState,
-	{ player }
-) => {
-	if (!PLAYER_TIMER) {
-		console.debug("[Room] Watching player...");
-		_scheduleTimer(dispatch, getState, player, 250);
-	}
-};
-
-const _unwatchPlayer = (): AsyncAction => async (
-	dispatch,
-	getState,
-	{ player }
-) => {
-	if (PLAYER_TIMER) {
-		console.debug("[Room] Unwatching player...");
-		clearTimeout(PLAYER_TIMER);
-		PLAYER_TIMER = null;
-	}
-	await player.stop();
-};
-
-// Don't use setInterval because a step could be triggered before previous one terminated
-const _scheduleTimer = (
-	dispatch: Dispatch,
-	getState: () => RootState,
-	player: Player,
-	ms: number
-) => {
-	PLAYER_TIMER = setTimeout(async () => {
-		const {
-			room: {
-				data: { queue, tracks }
-			},
-			medias: { data: medias }
-		} = getState();
-		if (queue) {
-			const { playing, playmode, position } = queue;
-
-			// Detect and apply change to queue and player
-			const nextTrackIndex = computePlayerNextPosition(
-				playing,
-				player.isPlaying(),
-				player.getPlayingTrackID(),
-				player.getPlayingTrackPosition() % tracks.length,
-				tracks,
-				position
-			);
-
-			if (nextTrackIndex >= 0) {
-				const nextAccess = tracks[nextTrackIndex];
-				const nextTrack =
-					medias[nextAccess.provider][nextAccess.type][nextAccess.id];
-				console.debug("Detected play change...", {
-					nextTrack,
-					nextTrackIndex
-				});
-
-				try {
-					const [color] = await Promise.all([
-						pickColor(nextTrack.album.picture_small),
-						player.play(
-							nextTrackIndex,
-							nextTrack.id,
-							nextTrack.preview,
-							0,
-							{
-								playmode: playmode
-							}
-						)
-					]);
-					dispatch(displayMediaInfo(nextTrack));
-					dispatch(
-						setRoom({
-							color,
-							queue: {
-								...queue,
-								position: nextTrackIndex
-							}
-						})
-					);
-				} catch (err) {
-					dispatch(displayError(extractErrorMessage(err)));
-				}
-			} else if (!playing) {
-				player.stop();
-			}
-		}
-
-		// Reschedule time
-		// console.debug("[Room] Rescheduling");
-		_scheduleTimer(dispatch, getState, player, ms);
-	}, ms);
 };

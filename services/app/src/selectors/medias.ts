@@ -16,7 +16,7 @@ export const selectTracks = (state: RootState): Array<Track | null> => {
 		if (!!track) {
 			res.push(track);
 		} else {
-			res.push(null); // Stiil loading or cannot be loaded or to reload later because of rate limit
+			res.push(null); // Still loading or cannot be loaded or to reload later because of rate limit
 		}
 	}
 	return res;

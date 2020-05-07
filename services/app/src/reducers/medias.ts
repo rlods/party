@@ -70,9 +70,9 @@ export const mediasReducer: Reducer<State, MediasAction> = (
 						track: { ...state.data.deezer.track }
 					},
 					spotify: {
-						album: { ...state.data.deezer.album },
-						playlist: { ...state.data.deezer.playlist },
-						track: { ...state.data.deezer.track }
+						album: { ...state.data.spotify.album },
+						playlist: { ...state.data.spotify.playlist },
+						track: { ...state.data.spotify.track }
 					}
 				},
 				error: null,
