@@ -22,30 +22,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">70.59% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/17</span>
+                <span class='fraction'>12/17</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">28.57% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/7</span>
+                <span class='fraction'>2/7</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">57.14% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/7</span>
+                <span class='fraction'>4/7</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">70.59% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/17</span>
+                <span class='fraction'>12/17</span>
             </div>
         
             
@@ -54,7 +54,7 @@
             Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
         </p>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line medium'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -153,34 +153,34 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -236,24 +236,24 @@ import { AppContext } from "../pages/AppContext";
 &nbsp;
 export type ConnectUserModalProps = { options?: TrySomethingOptions };
 &nbsp;
-export const ConnectUserModal: FC&lt;ConnectUserModalProps&gt; = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >({</span> options }) =&gt; {</span>
-	const { onModalClose, onUserConnect } = <span class="cstat-no" title="statement not covered" >useContext(AppContext);</span>
-	const [userId, setUserId] = <span class="cstat-no" title="statement not covered" >useState("");</span>
-	const [secret, setSecret] = <span class="cstat-no" title="statement not covered" >useState("");</span>
-	const userIdRef = <span class="cstat-no" title="statement not covered" >useRef&lt;HTMLInputElement&gt;(null);</span>
-	const { t } = <span class="cstat-no" title="statement not covered" >useTranslation();</span>
+export const ConnectUserModal: FC&lt;ConnectUserModalProps&gt; = ({ options }) =&gt; {
+	const { onModalClose, onUserConnect } = useContext(AppContext);
+	const [userId, setUserId] = useState("");
+	const [secret, setSecret] = useState("");
+	const userIdRef = useRef&lt;HTMLInputElement&gt;(null);
+	const { t } = useTranslation();
 &nbsp;
-<span class="cstat-no" title="statement not covered" >	useEffect(<span class="fstat-no" title="function not covered" >()</span> =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >		if (userIdRef.current) {</span>
-<span class="cstat-no" title="statement not covered" >			userIdRef.current.focus();</span>
+	useEffect(() =&gt; {
+		<span class="missing-if-branch" title="else path not taken" >E</span>if (userIdRef.current) {
+			userIdRef.current.focus();
 		}
 	}, [userIdRef]);
 &nbsp;
-<span class="cstat-no" title="statement not covered" >	return (</span>
+	return (
 		&lt;FormModal
 			title={t("user.connection")}
-			onSubmit={<span class="fstat-no" title="function not covered" >()</span> =&gt; {
-<span class="cstat-no" title="statement not covered" >				onUserConnect(userId, secret, {</span>
+			onSubmit={() =&gt; {
+				onUserConnect(userId, secret, {
 					onSuccess: <span class="fstat-no" title="function not covered" >()</span> =&gt; {
 <span class="cstat-no" title="statement not covered" >						if (options?.onSuccess) {</span>
 <span class="cstat-no" title="statement not covered" >							options.onSuccess();</span>
@@ -262,13 +262,13 @@ export const ConnectUserModal: FC&lt;ConnectUserModalProps&gt; = <span class="cs
 					}
 				});
 			}}
-			renderButtons={<span class="fstat-no" title="function not covered" >()</span> =&gt; (
-<span class="cstat-no" title="statement not covered" >				&lt;&gt;</span>
+			renderButtons={() =&gt; (
+				&lt;&gt;
 					&lt;IconButton
 						disabled={
 							userId.trim().length === 0 ||
-							userId.length !== 36 ||
-							secret.length !== SECRET_FIELD_SIZE
+<span class="branch-1 cbranch-no" title="branch not covered" >							userId.length !== 36 </span>||
+<span class="branch-2 cbranch-no" title="branch not covered" >							secret.length !== SECRET_FIELD_SIZE</span>
 						}
 						title={t("user.connect")}
 						kind="primary"
@@ -312,7 +312,7 @@ export const ConnectUserModal: FC&lt;ConnectUserModalProps&gt; = <span class="cs
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu May 07 2020 14:07:35 GMT+0000 (Coordinated Universal Time)
+                at Thu May 07 2020 15:17:49 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../prettify.js"></script>

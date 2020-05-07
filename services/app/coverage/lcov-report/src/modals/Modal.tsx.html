@@ -22,30 +22,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/9</span>
+                <span class='fraction'>9/9</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">75% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/4</span>
+                <span class='fraction'>3/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/3</span>
+                <span class='fraction'>3/3</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/9</span>
+                <span class='fraction'>9/9</span>
             </div>
         
             
@@ -54,7 +54,7 @@
             Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
         </p>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -130,20 +130,20 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -187,20 +187,20 @@ export const Modal: FC&lt;{
 	title: string;
 	renderFoot?: () =&gt; React.ReactNode;
 	onSubmit?: () =&gt; void;
-}&gt; = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >({</span> children, className, title, renderFoot, onSubmit }) =&gt; {</span>
-	const { onModalClose, onModalPop } = <span class="cstat-no" title="statement not covered" >useContext(AppContext);</span>
-	const { t } = <span class="cstat-no" title="statement not covered" >useTranslation();</span>
-	const has_prev_modal = <span class="cstat-no" title="statement not covered" >useSelector&lt;RootState, boolean&gt;(</span>
-<span class="fstat-no" title="function not covered" >		st</span>ate =&gt; <span class="cstat-no" title="statement not covered" >state.modals.stack.length &gt; 1</span>
+}&gt; = ({ children, className, title, renderFoot, onSubmit }) =&gt; {
+	const { onModalClose, onModalPop } = useContext(AppContext);
+	const { t } = useTranslation();
+	const has_prev_modal = useSelector&lt;RootState, boolean&gt;(
+		state =&gt; state.modals.stack.length &gt; 1
 	);
 &nbsp;
-<span class="cstat-no" title="statement not covered" >	return (</span>
+	return (
 		&lt;form
 			className={classNames("Modal", className)}
-			onSubmit={<span class="fstat-no" title="function not covered" >(e</span>vent: FormEvent&lt;HTMLFormElement&gt;) =&gt; {
-<span class="cstat-no" title="statement not covered" >				event.preventDefault();</span>
-<span class="cstat-no" title="statement not covered" >				if (onSubmit) {</span>
-<span class="cstat-no" title="statement not covered" >					onSubmit();</span>
+			onSubmit={(event: FormEvent&lt;HTMLFormElement&gt;) =&gt; {
+				event.preventDefault();
+				<span class="missing-if-branch" title="else path not taken" >E</span>if (onSubmit) {
+					onSubmit();
 				}
 			}}&gt;
 			&lt;div className="ModalHead"&gt;
@@ -234,7 +234,7 @@ export const Modal: FC&lt;{
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu May 07 2020 14:07:35 GMT+0000 (Coordinated Universal Time)
+                at Thu May 07 2020 15:17:49 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../prettify.js"></script>

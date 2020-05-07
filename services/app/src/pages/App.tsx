@@ -47,6 +47,7 @@ import {
 } from "../actions/queue";
 import { AppContext } from "./AppContext";
 import "./App.scss";
+import { copyToClipboard } from "../utils/clipboard";
 
 // ------------------------------------------------------------------
 
@@ -292,6 +293,14 @@ export const App: FC = () => {
 		[onModalOpen]
 	);
 
+	const onCopyToClipboard = useCallback(
+		async (value: string) => {
+			await copyToClipboard(value);
+			onDisplayInfo("secret_copied_to_clipboard");
+		},
+		[onDisplayInfo]
+	);
+
 	useEffect(() => {
 		window.addEventListener("online", onOnlineStatusChange);
 		window.addEventListener("offline", onOnlineStatusChange);
@@ -307,6 +316,7 @@ export const App: FC = () => {
 	return (
 		<AppContext.Provider
 			value={{
+				onCopyToClipboard,
 				onDisplayError,
 				onDisplayInfo,
 				onExit,

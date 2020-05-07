@@ -8,6 +8,7 @@ import { RoomType, RoomAccess } from "../utils/rooms";
 // ------------------------------------------------------------------
 
 export type AppContextProps = {
+	onCopyToClipboard: (value: string) => void;
 	onDisplayError: (text: string, options?: MessageOptions) => void;
 	onDisplayInfo: (text: string, options?: MessageOptions) => void;
 	onExit: () => void;
@@ -68,7 +69,10 @@ export type AppContextProps = {
 	onUserDisconnect: () => void;
 };
 
+// ------------------------------------------------------------------
+
 export const AppContext = createContext<AppContextProps>({
+	onCopyToClipboard: () => {},
 	onDisplayError: () => {},
 	onDisplayInfo: () => {},
 	onExit: () => {},

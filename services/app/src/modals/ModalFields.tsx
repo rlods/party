@@ -1,7 +1,6 @@
-import React, { FC, forwardRef, useCallback, useContext } from "react";
+import React, { FC, forwardRef, useContext } from "react";
 import { useTranslation } from "react-i18next";
 //
-import { copyToClipboard } from "../utils/clipboard";
 import { IconButton } from "../components/Common/IconButton";
 import { AppContext } from "../pages/AppContext";
 
@@ -41,13 +40,8 @@ export const SecretField: FC<{
 	placeholder: string;
 	value: string;
 }> = ({ id, label, onChange, placeholder, value }) => {
-	const { onDisplayInfo } = useContext(AppContext);
+	const { onCopyToClipboard } = useContext(AppContext);
 	const { t } = useTranslation();
-
-	const onCopyToClipboard = useCallback(async () => {
-		await copyToClipboard(value);
-		onDisplayInfo("secret_copied_to_clipboard");
-	}, [onDisplayInfo, value]);
 
 	return (
 		<ModalField>
@@ -76,7 +70,7 @@ export const SecretField: FC<{
 					/>
 					<IconButton
 						icon="clipboard"
-						onClick={onCopyToClipboard}
+						onClick={() => onCopyToClipboard(value)}
 						size="M"
 						title={t("copy_to_clipboard")}
 					/>

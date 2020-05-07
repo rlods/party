@@ -1,11 +1,4 @@
-import React, {
-	FC,
-	useState,
-	useRef,
-	useEffect,
-	useCallback,
-	useContext
-} from "react";
+import React, { FC, useState, useRef, useEffect, useContext } from "react";
 import { useTranslation } from "react-i18next";
 //
 import { FormModal } from "./FormModal";
@@ -18,9 +11,7 @@ import { AppContext } from "../pages/AppContext";
 // ------------------------------------------------------------------
 
 export const JoinRoomModal: FC = () => {
-	const { onModalClose, onDisplayError, onRoomEnter } = useContext(
-		AppContext
-	);
+	const { onModalClose, onRoomEnter } = useContext(AppContext);
 	const [dbId, setDbId] = useState(selectRoomDatabaseId());
 	const [roomId, setRoomId] = useState("");
 	const roomIdRef = useRef<HTMLInputElement>(null);
@@ -32,31 +23,21 @@ export const JoinRoomModal: FC = () => {
 		}
 	}, [roomIdRef]);
 
-	const onJoin = useCallback(() => {
-		if (dbId.trim().length === 0) {
-			onDisplayError("rooms.id_is_invalid");
-			return;
-		}
-		if (roomId.trim().length === 0) {
-			onDisplayError("rooms.id_is_invalid");
-			return;
-		}
-		onRoomEnter(
-			{
-				dbId,
-				roomId,
-				secret: ""
-			},
-			{
-				onSuccess: onModalClose
-			}
-		);
-	}, [roomId, dbId, onModalClose, onDisplayError, onRoomEnter]);
-
 	return (
 		<FormModal
 			title={t("rooms.room_join")}
-			onSubmit={onJoin}
+			onSubmit={() =>
+				onRoomEnter(
+					{
+						dbId,
+						roomId,
+						secret: ""
+					},
+					{
+						onSuccess: onModalClose
+					}
+				)
+			}
 			renderButtons={() => (
 				<>
 					<IconButton
