@@ -65,14 +65,14 @@ export type ModalsState = {
 
 // ------------------------------------------------------------------
 
-export const initialState: ModalsState = {
+export const INITIAL_STATE: ModalsState = {
 	stack: []
 };
 
 // ------------------------------------------------------------------
 
 export const modalsReducer: Reducer<ModalsState, ModalsAction> = (
-	state = initialState,
+	state = INITIAL_STATE,
 	action
 ): ModalsState => {
 	switch (action.type) {

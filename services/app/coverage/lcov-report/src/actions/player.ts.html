@@ -24,7 +24,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/30</span>
+                <span class='fraction'>0/28</span>
             </div>
         
             
@@ -38,14 +38,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/8</span>
+                <span class='fraction'>0/6</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/30</span>
+                <span class='fraction'>0/28</span>
             </div>
         
             
@@ -145,14 +145,7 @@
 <a name='L87'></a><a href='#L87'>87</a>
 <a name='L88'></a><a href='#L88'>88</a>
 <a name='L89'></a><a href='#L89'>89</a>
-<a name='L90'></a><a href='#L90'>90</a>
-<a name='L91'></a><a href='#L91'>91</a>
-<a name='L92'></a><a href='#L92'>92</a>
-<a name='L93'></a><a href='#L93'>93</a>
-<a name='L94'></a><a href='#L94'>94</a>
-<a name='L95'></a><a href='#L95'>95</a>
-<a name='L96'></a><a href='#L96'>96</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L90'></a><a href='#L90'>90</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -162,9 +155,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -189,7 +184,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -199,10 +193,6 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -210,9 +200,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -242,104 +234,94 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { AsyncAction, trySomething } from ".";
-import { lockRoom } from "./room";
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { AsyncAction, trySomething, TrySomethingOptions } from ".";
 import { setRoom } from "../reducers/room";
 import { generateRandomPosition } from "../utils/player";
 &nbsp;
 // ------------------------------------------------------------------
 &nbsp;
-export const startPlayer = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >({</span></span>
-	propagate
-}: {
-	propagate: boolean;
-}): AsyncAction =&gt; <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(d</span>ispatch, getState) =&gt;</span>
+export const startPlayer = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(</span></span>
+	{
+		propagate
+	}: {
+		propagate: boolean;
+	},
+	options?: TrySomethingOptions
+): AsyncAction =&gt; <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(d</span>ispatch, getState) =&gt;</span>
 <span class="cstat-no" title="statement not covered" >	dispatch(</span>
-		trySomething(
-<span class="fstat-no" title="function not covered" >			as</span>ync () =&gt; {
-				const {
-					room: { _fbRoom, queue, tracks }
-				} = <span class="cstat-no" title="statement not covered" >getState();</span>
-<span class="cstat-no" title="statement not covered" >				if (!_fbRoom || _fbRoom.isLocked() || !queue) {</span>
-<span class="cstat-no" title="statement not covered" >					return "unlock-and-retry";</span>
-				}
-<span class="cstat-no" title="statement not covered" >				if (queue.playing) {</span>
-<span class="cstat-no" title="statement not covered" >					return true; </span>// Nothing to do
-				}
-<span class="cstat-no" title="statement not covered" >				console.debug("[Player] Starting...", { propagate });</span>
-<span class="cstat-no" title="statement not covered" >				if (!propagate) {</span>
-<span class="cstat-no" title="statement not covered" >					dispatch(</span>
-						setRoom({
-							queue: {
-								...queue,
-								playing: true,
-								position:
-									queue.playmode === "shuffle"
-										? generateRandomPosition() %
-										  tracks.length
-										: queue.position
-							}
-						})
-					);
-<span class="cstat-no" title="statement not covered" >					return true;</span>
-				}
-<span class="cstat-no" title="statement not covered" >				await _fbRoom.updateQueue({</span>
-					...queue,
-					playing: true
-				});
-<span class="cstat-no" title="statement not covered" >				return true;</span>
-			},
-			{
-				onFailure: <span class="fstat-no" title="function not covered" >()</span> =&gt; <span class="cstat-no" title="statement not covered" >dispatch(lockRoom())</span>
+		trySomething(<span class="fstat-no" title="function not covered" >as</span>ync () =&gt; {
+			const {
+				room: { _fbRoom, queue, tracks }
+			} = <span class="cstat-no" title="statement not covered" >getState();</span>
+<span class="cstat-no" title="statement not covered" >			if (!_fbRoom || _fbRoom.isLocked() || !queue) {</span>
+<span class="cstat-no" title="statement not covered" >				return "unlock-and-retry";</span>
 			}
-		)
+<span class="cstat-no" title="statement not covered" >			if (queue.playing) {</span>
+<span class="cstat-no" title="statement not covered" >				return true; </span>// Nothing to do
+			}
+<span class="cstat-no" title="statement not covered" >			console.debug("[Player] Starting...", { propagate });</span>
+<span class="cstat-no" title="statement not covered" >			if (!propagate) {</span>
+<span class="cstat-no" title="statement not covered" >				dispatch(</span>
+					setRoom({
+						queue: {
+							...queue,
+							playing: true,
+							position:
+								queue.playmode === "shuffle"
+									? generateRandomPosition() % tracks.length
+									: queue.position
+						}
+					})
+				);
+<span class="cstat-no" title="statement not covered" >				return true;</span>
+			}
+<span class="cstat-no" title="statement not covered" >			await _fbRoom.updateQueue({</span>
+				...queue,
+				playing: true
+			});
+<span class="cstat-no" title="statement not covered" >			return true;</span>
+		}, options)
 	);
 &nbsp;
 // ------------------------------------------------------------------
 &nbsp;
-export const stopPlayer = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >({</span></span>
-	propagate
-}: {
-	propagate: boolean;
-}): AsyncAction =&gt; <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(d</span>ispatch, getState) =&gt;</span>
+export const stopPlayer = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(</span></span>
+	{
+		propagate
+	}: {
+		propagate: boolean;
+	},
+	options?: TrySomethingOptions
+): AsyncAction =&gt; <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(d</span>ispatch, getState) =&gt;</span>
 <span class="cstat-no" title="statement not covered" >	dispatch(</span>
-		trySomething(
-<span class="fstat-no" title="function not covered" >			as</span>ync () =&gt; {
-				const {
-					room: { _fbRoom, queue }
-				} = <span class="cstat-no" title="statement not covered" >getState();</span>
-<span class="cstat-no" title="statement not covered" >				if (!_fbRoom || _fbRoom.isLocked() || !queue) {</span>
-<span class="cstat-no" title="statement not covered" >					return "unlock-and-retry";</span>
-				}
-<span class="cstat-no" title="statement not covered" >				if (!queue.playing) {</span>
-<span class="cstat-no" title="statement not covered" >					return true; </span>// Nothing to do
-				}
-<span class="cstat-no" title="statement not covered" >				console.debug("[Player] Stopping...", { propagate });</span>
-<span class="cstat-no" title="statement not covered" >				if (!propagate) {</span>
-<span class="cstat-no" title="statement not covered" >					dispatch(</span>
-						setRoom({
-							queue: {
-								...queue,
-								playing: false
-							}
-						})
-					);
-<span class="cstat-no" title="statement not covered" >					return true;</span>
-				}
-<span class="cstat-no" title="statement not covered" >				await _fbRoom.updateQueue({</span>
-					...queue,
-					playing: false
-				});
-<span class="cstat-no" title="statement not covered" >				return true;</span>
-			},
-			{
-				onFailure: <span class="fstat-no" title="function not covered" >()</span> =&gt; <span class="cstat-no" title="statement not covered" >dispatch(lockRoom())</span>
+		trySomething(<span class="fstat-no" title="function not covered" >as</span>ync () =&gt; {
+			const {
+				room: { _fbRoom, queue }
+			} = <span class="cstat-no" title="statement not covered" >getState();</span>
+<span class="cstat-no" title="statement not covered" >			if (!_fbRoom || _fbRoom.isLocked() || !queue) {</span>
+<span class="cstat-no" title="statement not covered" >				return "unlock-and-retry";</span>
 			}
-		)
+<span class="cstat-no" title="statement not covered" >			if (!queue.playing) {</span>
+<span class="cstat-no" title="statement not covered" >				return true; </span>// Nothing to do
+			}
+<span class="cstat-no" title="statement not covered" >			console.debug("[Player] Stopping...", { propagate });</span>
+<span class="cstat-no" title="statement not covered" >			if (!propagate) {</span>
+<span class="cstat-no" title="statement not covered" >				dispatch(</span>
+					setRoom({
+						queue: {
+							...queue,
+							playing: false
+						}
+					})
+				);
+<span class="cstat-no" title="statement not covered" >				return true;</span>
+			}
+<span class="cstat-no" title="statement not covered" >			await _fbRoom.updateQueue({</span>
+				...queue,
+				playing: false
+			});
+<span class="cstat-no" title="statement not covered" >			return true;</span>
+		}, options)
 	);
 &nbsp;</pre></td></tr></table></pre>
 
@@ -348,7 +330,7 @@ export const stopPlayer = <span class="cstat-no" title="statement not covered" >
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Wed May 06 2020 21:27:07 GMT+0000 (Coordinated Universal Time)
+                at Thu May 07 2020 14:07:35 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../prettify.js"></script>

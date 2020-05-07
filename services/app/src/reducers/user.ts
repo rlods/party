@@ -36,7 +36,7 @@ export type State = UserData & {
 	error: null | string;
 };
 
-const INITIAL_STATE: State = {
+export const INITIAL_STATE: State = {
 	_fbUser: null,
 	access: { dbId: "", userId: "", secret: "" },
 	error: null,

@@ -15,7 +15,7 @@ export type State = {
 	online: boolean;
 };
 
-const INITIAL_STATE: State = {
+export const INITIAL_STATE: State = {
 	online: navigator.onLine
 };
 

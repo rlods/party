@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useEffect, useContext } from "react";
+import React, { FC, useEffect, useContext } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -15,8 +15,8 @@ import "./Splash.scss";
 
 export const Splash: FC = () => {
 	const {
+		onHelp,
 		onMessagesClear,
-		onModalOpen,
 		onRoomCreateAsk,
 		onUserConnectAsk,
 		onUserCreateAsk,
@@ -28,12 +28,10 @@ export const Splash: FC = () => {
 		state => state.user.fetching
 	);
 	const loggedIn = useSelector<RootState, boolean>(
-		state => !!state.user.access.dbId && !!state.user.access.userId
-	);
-
-	const onShowHelp = useCallback(
-		() => onModalOpen({ type: "General/Help", props: null }),
-		[onModalOpen]
+		state =>
+			!!state.user.access.dbId &&
+			!!state.user.access.secret &&
+			!!state.user.access.userId
 	);
 
 	useEffect(() => {
@@ -130,7 +128,7 @@ export const Splash: FC = () => {
 							<div className="MenuItem">
 								<IconButton
 									icon="question-circle"
-									onClick={onShowHelp}
+									onClick={onHelp}
 									size="L"
 									title={t("help.help")}
 								/>

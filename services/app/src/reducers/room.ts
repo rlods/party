@@ -38,7 +38,7 @@ export type State = RoomData & {
 	error: null | string;
 };
 
-const INITIAL_STATE: State = {
+export const INITIAL_STATE: State = {
 	_fbRoom: null,
 	access: { dbId: "", roomId: "", secret: "" },
 	color: { fg: "dark", bg: { r: 255, g: 255, b: 255 } },

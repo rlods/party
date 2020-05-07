@@ -24,7 +24,7 @@ export type State = {
 	medias: StructuredMedias;
 };
 
-const INITIAL_STATE: State = {
+export const INITIAL_STATE: State = {
 	error: null,
 	fetching: false,
 	medias: {

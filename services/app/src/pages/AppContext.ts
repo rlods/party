@@ -7,10 +7,11 @@ import { RoomType, RoomAccess } from "../utils/rooms";
 
 // ------------------------------------------------------------------
 
-export const AppContext = createContext<{
+export type AppContextProps = {
 	onDisplayError: (text: string, options?: MessageOptions) => void;
 	onDisplayInfo: (text: string, options?: MessageOptions) => void;
 	onExit: () => void;
+	onHelp: () => void;
 	onMessagesClear: (tag?: string) => void;
 	onMessagesRemove: (ids: number[]) => void;
 	onModalClose: () => void;
@@ -65,10 +66,13 @@ export const AppContext = createContext<{
 	) => void;
 	onUserCreateAsk: () => void;
 	onUserDisconnect: () => void;
-}>({
+};
+
+export const AppContext = createContext<AppContextProps>({
 	onDisplayError: () => {},
 	onDisplayInfo: () => {},
 	onExit: () => {},
+	onHelp: () => {},
 	onMessagesClear: () => {},
 	onMessagesRemove: () => {},
 	onModalClose: () => {},

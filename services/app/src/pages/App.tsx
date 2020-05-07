@@ -287,6 +287,11 @@ export const App: FC = () => {
 		[d]
 	);
 
+	const onHelp = useCallback(
+		() => onModalOpen({ type: "General/Help", props: null }),
+		[onModalOpen]
+	);
+
 	useEffect(() => {
 		window.addEventListener("online", onOnlineStatusChange);
 		window.addEventListener("offline", onOnlineStatusChange);
@@ -305,6 +310,7 @@ export const App: FC = () => {
 				onDisplayError,
 				onDisplayInfo,
 				onExit,
+				onHelp,
 				onMessagesClear,
 				onMessagesRemove,
 				onModalClose,
