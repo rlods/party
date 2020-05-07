@@ -46,6 +46,7 @@ export const startPlayer = (
 						}
 					})
 				);
+				dispatch(adjustPlay());
 				return true;
 			}
 			await firebaseRoom.updateQueue({
@@ -89,6 +90,7 @@ export const stopPlayer = (
 						}
 					})
 				);
+				dispatch(adjustPlay());
 				return true;
 			}
 			await firebaseRoom.updateQueue({
