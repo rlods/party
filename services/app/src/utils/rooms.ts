@@ -42,8 +42,8 @@ export type RoomQueueMedias = {
 // ------------------------------------------------------------------
 
 export const createQueueMerging = (
-	accesses1: MediaAccess[],
-	accesses2: MediaAccess[]
+	accesses1: ReadonlyArray<MediaAccess>,
+	accesses2: ReadonlyArray<MediaAccess>
 ): RoomQueueMedias => {
 	const medias: RoomQueueMedias = {};
 	[...accesses1, ...accesses2].forEach(({ id, provider, type }, index) => {
@@ -55,7 +55,7 @@ export const createQueueMerging = (
 // ------------------------------------------------------------------
 
 export const createQueueRemoving = (
-	accesses: MediaAccess[],
+	accesses: ReadonlyArray<MediaAccess>,
 	index: number,
 	count: number
 ): RoomQueueMedias => {

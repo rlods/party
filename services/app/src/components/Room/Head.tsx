@@ -22,7 +22,7 @@ export const Head: FC = () => {
 	const name = useSelector<RootState, string>(selectRoomName);
 	const loaded = useSelector<RootState, boolean>(isRoomLoaded);
 	const mediasCount = useSelector<RootState, number>(
-		state => state.room.medias.length
+		state => state.room.data.medias.length
 	);
 	const tracksCount = useSelector<RootState, number>(selectTracksCount);
 

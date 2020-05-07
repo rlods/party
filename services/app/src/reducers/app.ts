@@ -11,9 +11,9 @@ export const setApp = (values: Partial<State>) =>
 
 // ------------------------------------------------------------------
 
-export type State = {
+export type State = Readonly<{
 	online: boolean;
-};
+}>;
 
 export const INITIAL_STATE: State = {
 	online: navigator.onLine

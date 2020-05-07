@@ -20,10 +20,10 @@ export const Room: FC = () => {
 	const { onRoomEnter, onRoomExit } = useContext(AppContext);
 	const dispatch = useDispatch<Dispatch>();
 	const { fg, bg } = useSelector<RootState, CombinedColor>(
-		state => state.room.color
+		state => state.room.data.color
 	);
 	const info = useSelector<RootState, RoomInfo | null>(
-		state => state.room.info
+		state => state.room.data.info
 	);
 
 	const { search } = useLocation();

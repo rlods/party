@@ -7,7 +7,7 @@ import { IconButton } from "../components/Common/IconButton";
 // ------------------------------------------------------------------
 
 export const SearchResultCategory: FC<{
-	items: Media[];
+	items: ReadonlyArray<Media>;
 	label: string;
 	onViewMore: () => void;
 	cb: (item: Media) => ReactNode;

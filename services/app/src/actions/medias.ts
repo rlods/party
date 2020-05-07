@@ -24,7 +24,7 @@ export const previewMedia = (access: MediaAccess): AsyncAction => (
 	dispatch(
 		trySomething(async () => {
 			const {
-				medias: { medias: oldMedias }
+				medias: { data: oldMedias }
 			} = getState();
 			const { newMedias } = await loadNewMedias([access], oldMedias);
 			const track = findPreview(access, oldMedias, newMedias);

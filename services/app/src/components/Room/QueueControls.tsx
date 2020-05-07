@@ -22,7 +22,7 @@ export const QueueControls: FC<{
 	} = useContext(AppContext);
 	const { t } = useTranslation();
 	const tracksCount = useSelector<RootState, number>(
-		state => state.room.medias.length
+		state => state.room.data.medias.length
 	);
 	const locked = useSelector<RootState, boolean>(isRoomLocked);
 

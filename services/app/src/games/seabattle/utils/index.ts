@@ -178,8 +178,10 @@ export type SeaBattleData = {
 
 // ------------------------------------------------------------------
 
-export const extractOpponentMaps = (maps: SeaBattleMapData[], userId: string) =>
-	Object.values(maps).filter(other => other.userId !== userId);
+export const extractOpponentMaps = (
+	maps: ReadonlyArray<SeaBattleMapData>,
+	userId: string
+) => Object.values(maps).filter(other => other.userId !== userId);
 
 // ------------------------------------------------------------------
 
@@ -194,7 +196,7 @@ export const extractBattleInfo = ({
 }): {
 	boat?: SeaBattleBoatData;
 	currentMapIndex: number;
-	opponentMaps?: SeaBattleMapData[];
+	opponentMaps?: ReadonlyArray<SeaBattleMapData>;
 	playerMap?: SeaBattleMapData;
 	playerMapIndex: number;
 } => {

@@ -59,9 +59,9 @@ export const popModal = () => createAction("modals/POP");
 
 // ------------------------------------------------------------------
 
-export type ModalsState = {
-	stack: ModalPrereq[];
-};
+export type ModalsState = Readonly<{
+	stack: ReadonlyArray<ModalPrereq>;
+}>;
 
 // ------------------------------------------------------------------
 

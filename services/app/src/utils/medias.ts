@@ -157,7 +157,7 @@ const findMediaInDict = (
 
 const findMediaInList = (
 	access: MediaAccess,
-	medias: Media[]
+	medias: ReadonlyArray<Media>
 ): Media | undefined =>
 	medias.find(
 		item =>
@@ -171,7 +171,7 @@ const findMediaInList = (
 export const findMedia = (
 	access: MediaAccess,
 	dist: StructuredMedias,
-	list: Media[]
+	list: ReadonlyArray<Media>
 ): Media | undefined =>
 	findMediaInDict(access, dist) || findMediaInList(access, list);
 
@@ -180,7 +180,7 @@ export const findMedia = (
 export const findPreview = (
 	access: MediaAccess,
 	oldMedias: StructuredMedias,
-	newMedias: Media[]
+	newMedias: ReadonlyArray<Media>
 ): Track | null => {
 	const media = findMedia(access, oldMedias, newMedias);
 	if (!media) {
@@ -198,9 +198,9 @@ export const findPreview = (
 // ------------------------------------------------------------------
 
 export const extractTracks = (
-	accesses: MediaAccess[],
+	accesses: ReadonlyArray<MediaAccess>,
 	oldMedias: StructuredMedias,
-	newMedias: Media[]
+	newMedias: ReadonlyArray<Media>
 ): ContextualizedTrackAccess[] => {
 	const tracks: ContextualizedTrackAccess[] = [];
 	for (const access of accesses) {
@@ -243,7 +243,7 @@ export const extractTracks = (
 // ------------------------------------------------------------------
 
 export const findContextFromTrackIndex = (
-	medias: MediaAccess[],
+	medias: ReadonlyArray<MediaAccess>,
 	trackIndex: number,
 	allMedias: StructuredMedias
 ): {

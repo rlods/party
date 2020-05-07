@@ -72,7 +72,7 @@ export const App: FC = () => {
 	);
 
 	const onMessagesRemove = useCallback(
-		(ids: number[]) => d(removeMessages(ids)),
+		(ids: ReadonlyArray<number>) => d(removeMessages(ids)),
 		[d]
 	);
 

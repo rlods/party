@@ -25,29 +25,35 @@ export const setUser = (values: Partial<UserData>) =>
 
 // ------------------------------------------------------------------
 
-export type UserData = {
-	_fbUser: ReturnType<typeof FirebaseUser> | null;
+type UserData = {
 	access: UserAccess;
+	firebaseUser: ReturnType<typeof FirebaseUser> | null;
 	info: UserInfo | null;
 };
 
-export type State = UserData & {
-	fetching: boolean;
+export type State = Readonly<{
+	data: UserData;
 	error: null | string;
-};
+	fetching: boolean;
+}>;
 
 export const INITIAL_STATE: State = {
-	_fbUser: null,
-	access: { dbId: "", userId: "", secret: "" },
+	data: {
+		access: { dbId: "", userId: "", secret: "" },
+		firebaseUser: null,
+		info: null
+	},
 	error: null,
-	fetching: false,
-	info: null
+	fetching: false
 };
 
 // ------------------------------------------------------------------
 
 export const userReducer: Reducer<State, UserAction> = (
-	state = { ...INITIAL_STATE, access: loadUserAccess() },
+	state = {
+		...INITIAL_STATE,
+		data: { access: loadUserAccess(), firebaseUser: null, info: null }
+	},
 	action: UserAction
 ): State => {
 	switch (action.type) {
@@ -66,11 +72,14 @@ export const userReducer: Reducer<State, UserAction> = (
 		case "user/SET": {
 			const copy = {
 				...state,
-				...action.payload,
+				data: {
+					...state.data,
+					...action.payload
+				},
 				fetching: false,
 				error: null
 			};
-			saveUserAccess(copy.access);
+			saveUserAccess(copy.data.access);
 			return copy;
 		}
 		case "user/RESET":

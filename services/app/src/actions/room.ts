@@ -42,7 +42,9 @@ export const createRoom = (
 			async () => {
 				const {
 					user: {
-						access: { userId }
+						data: {
+							access: { userId }
+						}
 					}
 				} = getState();
 				if (!userId) {
@@ -93,15 +95,19 @@ export const enterRoom = (
 		trySomething(
 			async () => {
 				const {
-					room: { _fbRoom },
+					room: {
+						data: { firebaseRoom }
+					},
 					user: {
-						access: { userId }
+						data: {
+							access: { userId }
+						}
 					}
 				} = getState();
 				if (
-					_fbRoom &&
-					_fbRoom.dbId === dbId &&
-					_fbRoom.roomId === roomId
+					firebaseRoom &&
+					firebaseRoom.dbId === dbId &&
+					firebaseRoom.roomId === roomId
 				) {
 					return true; // Nothing to do
 				}
@@ -119,7 +125,7 @@ export const enterRoom = (
 				const { extra, info } = await newFbRoom.wait();
 				dispatch(
 					setRoom({
-						_fbRoom: newFbRoom,
+						firebaseRoom: newFbRoom,
 						access: { dbId, roomId, secret },
 						extra,
 						extraDecoded: extra ? decode(extra) : null,
@@ -148,14 +154,16 @@ export const exitRoom = (): AsyncAction => (dispatch, getState) =>
 	dispatch(
 		trySomething(async () => {
 			const {
-				room: { _fbRoom }
+				room: {
+					data: { firebaseRoom }
+				}
 			} = getState();
-			if (!_fbRoom) {
+			if (!firebaseRoom) {
 				return true; // Nothing to do
 			}
 			console.debug("[Room] Exiting...");
 			dispatch(_unwatchPlayer());
-			dispatch(_unwatchRoom(_fbRoom));
+			dispatch(_unwatchRoom(firebaseRoom));
 			dispatch(resetRoom());
 			return true;
 		})
@@ -168,20 +176,22 @@ export const lockRoom = (): AsyncAction => (dispatch, getState) =>
 		trySomething(async () => {
 			const {
 				room: {
-					_fbRoom,
-					access: { dbId, roomId, secret: oldSecret }
+					data: {
+						firebaseRoom,
+						access: { dbId, roomId, secret: oldSecret }
+					}
 				}
 			} = getState();
 			if (
-				!_fbRoom ||
-				_fbRoom.dbId !== dbId ||
-				_fbRoom.roomId !== roomId ||
+				!firebaseRoom ||
+				firebaseRoom.dbId !== dbId ||
+				firebaseRoom.roomId !== roomId ||
 				!oldSecret
 			) {
 				return true; // Nothing to do
 			}
 			console.debug("[Room] Locking...", { dbId, roomId });
-			_fbRoom.setSecret("");
+			firebaseRoom.setSecret("");
 			// TODO : not history.replace(`/room/${dbId}/${roomId}`); as it would trigger a page refresh
 			dispatch(setRoom({ access: { dbId, roomId, secret: "" } }));
 			return true;
@@ -200,20 +210,22 @@ export const unlockRoom = (
 		trySomething(async () => {
 			const {
 				room: {
-					_fbRoom,
-					access: { dbId, roomId, secret: oldSecret }
+					data: {
+						firebaseRoom,
+						access: { dbId, roomId, secret: oldSecret }
+					}
 				}
 			} = getState();
 			if (
-				!_fbRoom ||
-				_fbRoom.dbId !== dbId ||
-				_fbRoom.roomId !== roomId ||
+				!firebaseRoom ||
+				firebaseRoom.dbId !== dbId ||
+				firebaseRoom.roomId !== roomId ||
 				oldSecret === secret
 			) {
 				return true; // Nothing to do
 			}
 			console.debug("[Room] Unlocking...", { dbId, roomId, secret });
-			_fbRoom.setSecret(secret);
+			firebaseRoom.setSecret(secret);
 			// TODO : not history.replace(`/room/${id}?secret=${secret}`); as it would trigger a page refresh
 			dispatch(setRoom({ access: { dbId, roomId, secret } }));
 			return true;
@@ -255,9 +267,9 @@ const _watchRoom = (
 	QUEUE_SUBSCRIPTION = fbRoom.subscribeQueue(async (newQueue: RoomQueue) => {
 		console.debug("[Room] Received room queue update...", { newQueue });
 		const {
-			medias: { medias: oldMedias }
+			medias: { data: oldMedias }
 		} = getState();
-		const medias: MediaAccess[] = !newQueue.medias
+		const medias: ReadonlyArray<MediaAccess> = !newQueue.medias
 			? []
 			: Object.entries(newQueue.medias)
 					.sort((m1, m2) => Number(m1[0]) - Number(m2[0]))
@@ -342,8 +354,10 @@ const _scheduleTimer = (
 ) => {
 	PLAYER_TIMER = setTimeout(async () => {
 		const {
-			room: { queue, tracks },
-			medias: { medias }
+			room: {
+				data: { queue, tracks }
+			},
+			medias: { data: medias }
 		} = getState();
 		if (queue) {
 			const { playing, playmode, position } = queue;

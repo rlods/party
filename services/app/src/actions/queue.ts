@@ -17,9 +17,11 @@ export const clearQueue = (
 	dispatch(
 		trySomething(async () => {
 			const {
-				room: { _fbRoom, queue }
+				room: {
+					data: { firebaseRoom, queue }
+				}
 			} = getState();
-			if (!_fbRoom || _fbRoom.isLocked() || !queue) {
+			if (!firebaseRoom || firebaseRoom.isLocked() || !queue) {
 				return "unlock-and-retry";
 			}
 			console.debug("[Queue] Clearing...");
@@ -36,7 +38,7 @@ export const clearQueue = (
 				);
 				return true;
 			}
-			await _fbRoom.updateQueue({
+			await firebaseRoom.updateQueue({
 				...queue,
 				medias: {},
 				playing: false,
@@ -53,7 +55,7 @@ export const appendToQueue = (
 		medias: newMedias,
 		propagate
 	}: {
-		medias: MediaAccess[];
+		medias: ReadonlyArray<MediaAccess>;
 		propagate: boolean;
 	},
 	options?: TrySomethingOptions
@@ -61,9 +63,11 @@ export const appendToQueue = (
 	dispatch(
 		trySomething(async () => {
 			const {
-				room: { _fbRoom, queue, medias: oldMedias }
+				room: {
+					data: { firebaseRoom, queue, medias: oldMedias }
+				}
 			} = getState();
-			if (!_fbRoom || _fbRoom.isLocked() || !queue) {
+			if (!firebaseRoom || firebaseRoom.isLocked() || !queue) {
 				return "unlock-and-retry";
 			}
 			if (newMedias.length === 0) {
@@ -76,7 +80,7 @@ export const appendToQueue = (
 				console.debug("TODO: appendToQueue without propagation");
 				return true;
 			}
-			await _fbRoom.updateQueue({
+			await firebaseRoom.updateQueue({
 				...queue,
 				medias: createQueueMerging(oldMedias, newMedias)
 			});
@@ -100,10 +104,12 @@ export const removeFromQueue = (
 	dispatch(
 		trySomething(async () => {
 			const {
-				medias: { medias: allMedias },
-				room: { _fbRoom, queue, medias: oldMedias, tracks }
+				medias: { data: allMedias },
+				room: {
+					data: { firebaseRoom, queue, medias: oldMedias, tracks }
+				}
 			} = getState();
-			if (!_fbRoom || _fbRoom.isLocked() || !queue) {
+			if (!firebaseRoom || firebaseRoom.isLocked() || !queue) {
 				return "unlock-and-retry";
 			}
 			const {
@@ -137,14 +143,14 @@ export const removeFromQueue = (
 			}
 			if (Object.keys(newMedias).length === 0) {
 				console.debug("[Queue] Removing last...");
-				await _fbRoom.updateQueue({
+				await firebaseRoom.updateQueue({
 					...queue,
 					medias: {},
 					playing: false,
 					position: 0
 				});
 			} else if (playingTrackIndex < removedTrackIndex) {
-				await _fbRoom.updateQueue({
+				await firebaseRoom.updateQueue({
 					...queue,
 					medias: newMedias
 				});
@@ -153,7 +159,7 @@ export const removeFromQueue = (
 				playingTrackIndex <
 					removedMediaFirstTrackIndex + removedTrackCount
 			) {
-				await _fbRoom.updateQueue({
+				await firebaseRoom.updateQueue({
 					...queue,
 					medias: newMedias,
 					position:
@@ -163,7 +169,7 @@ export const removeFromQueue = (
 							: removedMediaFirstTrackIndex
 				});
 			} else {
-				await _fbRoom.updateQueue({
+				await firebaseRoom.updateQueue({
 					...queue,
 					medias: newMedias,
 					position: playingTrackIndex - removedTrackCount
@@ -188,9 +194,11 @@ export const setQueuePosition = (
 	dispatch(
 		trySomething(async () => {
 			const {
-				room: { _fbRoom, queue }
+				room: {
+					data: { firebaseRoom, queue }
+				}
 			} = getState();
-			if (!_fbRoom || _fbRoom.isLocked() || !queue) {
+			if (!firebaseRoom || firebaseRoom.isLocked() || !queue) {
 				return "unlock-and-retry";
 			}
 			const oldPosition = queue.position;
@@ -214,7 +222,7 @@ export const setQueuePosition = (
 				);
 				return true;
 			}
-			await _fbRoom.updateQueue({
+			await firebaseRoom.updateQueue({
 				...queue,
 				playing: true, // Important: user setting queue position will start the play
 				position: newPosition
@@ -233,7 +241,9 @@ export const moveToPreviousTrack = ({
 	dispatch(
 		trySomething(async () => {
 			const {
-				room: { queue, tracks }
+				room: {
+					data: { queue, tracks }
+				}
 			} = getState();
 			if (!queue || tracks.length === 0) {
 				return true; // Nothing to do
@@ -261,7 +271,9 @@ export const moveToNextTrack = ({
 	dispatch(
 		trySomething(async () => {
 			const {
-				room: { queue, tracks }
+				room: {
+					data: { queue, tracks }
+				}
 			} = getState();
 			if (!queue || tracks.length === 0) {
 				return true; // Nothing to do

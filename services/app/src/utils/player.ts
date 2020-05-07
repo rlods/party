@@ -155,7 +155,7 @@ export const computePlayerNextPosition = (
 	playing: boolean,
 	playingTrackID: string,
 	playingTrackIndex: number,
-	tracks: TrackAccess[],
+	tracks: ReadonlyArray<TrackAccess>,
 	trackIndex: number
 ) => {
 	if (!playStarted || tracks.length === 0) {

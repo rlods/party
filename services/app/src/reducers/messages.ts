@@ -14,14 +14,14 @@ export const addMessage = (
 	message: Message,
 	timer?: NodeJS.Timeout
 ) => createAction("message/ADD", { timer, id, message });
-export const removeMessages = (ids: number[]) =>
+export const removeMessages = (ids: ReadonlyArray<number>) =>
 	createAction("message/REMOVE", { ids });
 export const clearMessages = (tag?: string) =>
 	createAction("message/RESET", { tag });
 
 // ------------------------------------------------------------------
 
-export type State = { [id: string]: Message };
+export type State = Readonly<{ [id: string]: Message }>;
 
 export const INITIAL_STATE: State = {};
 

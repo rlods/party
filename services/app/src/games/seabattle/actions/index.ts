@@ -37,15 +37,19 @@ export const joinBattle = (options?: TrySomethingOptions): AsyncAction => (
 	dispatch(
 		trySomething(async () => {
 			const {
-				room: { _fbRoom, extraDecoded },
+				room: {
+					data: { firebaseRoom, extraDecoded }
+				},
 				user: {
-					access: { userId }
+					data: {
+						access: { userId }
+					}
 				}
 			} = getState();
 			if (!userId) {
 				return "connect-and-retry";
 			}
-			if (!_fbRoom || _fbRoom.isLocked() || !extraDecoded) {
+			if (!firebaseRoom || firebaseRoom.isLocked() || !extraDecoded) {
 				return "unlock-and-retry";
 			}
 
@@ -64,7 +68,7 @@ export const joinBattle = (options?: TrySomethingOptions): AsyncAction => (
 			// But there is very few chance for that to happen with small number of players
 
 			generateFleet(battle, userId);
-			await _fbRoom.updateExtra(encode(battle));
+			await firebaseRoom.updateExtra(encode(battle));
 			return true;
 		}, options)
 	);
@@ -84,12 +88,16 @@ export const moveBoat = (
 	dispatch(
 		trySomething(async () => {
 			const {
-				room: { _fbRoom, extraDecoded },
+				room: {
+					data: { firebaseRoom, extraDecoded }
+				},
 				user: {
-					access: { userId }
+					data: {
+						access: { userId }
+					}
 				}
 			} = getState();
-			if (!_fbRoom || _fbRoom.isLocked() || !extraDecoded) {
+			if (!firebaseRoom || firebaseRoom.isLocked() || !extraDecoded) {
 				return "unlock-and-retry";
 			}
 			if (!userId) {
@@ -184,7 +192,7 @@ export const moveBoat = (
 			boat.angle = newAngle;
 			boat.position = newPosition;
 			passUserTurn(battle);
-			await _fbRoom.updateExtra(encode(battle));
+			await firebaseRoom.updateExtra(encode(battle));
 
 			return true;
 		}, options)
@@ -207,12 +215,16 @@ export const attackOpponent = (
 	dispatch(
 		trySomething(async () => {
 			const {
-				room: { _fbRoom, extraDecoded },
+				room: {
+					data: { firebaseRoom, extraDecoded }
+				},
 				user: {
-					access: { userId }
+					data: {
+						access: { userId }
+					}
 				}
 			} = getState();
-			if (!_fbRoom || _fbRoom.isLocked() || !extraDecoded) {
+			if (!firebaseRoom || firebaseRoom.isLocked() || !extraDecoded) {
 				return "unlock-and-retry";
 			}
 			if (!userId) {
@@ -324,7 +336,7 @@ export const attackOpponent = (
 			}
 			playerMap.weapons[weaponType]--;
 			passUserTurn(battle);
-			await _fbRoom.updateExtra(encode(battle));
+			await firebaseRoom.updateExtra(encode(battle));
 
 			return true;
 		}, options)

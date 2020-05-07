@@ -159,7 +159,7 @@ export const FirebaseRoom = ({
 	};
 
 	const updateQueue = async (queue: RoomQueue) => {
-		console.debug("[Firebase] Updating room info...", {
+		console.debug("[Firebase] Updating room queue...", {
 			queue
 		});
 		await _room.update({

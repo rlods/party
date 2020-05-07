@@ -13,21 +13,19 @@ type MediasAction =
 export const fetching = () => createAction("medias/FETCHING");
 export const error = (error: string) => createAction("medias/ERROR", error);
 export const resetMedias = () => createAction("medias/RESET");
-export const setMedias = (medias: Media[]) =>
+export const setMedias = (medias: ReadonlyArray<Media>) =>
 	createAction("medias/SET", medias);
 
 // ------------------------------------------------------------------
 
-export type State = {
+export type State = Readonly<{
+	data: StructuredMedias;
 	error: null | string;
 	fetching: boolean;
-	medias: StructuredMedias;
-};
+}>;
 
 export const INITIAL_STATE: State = {
-	error: null,
-	fetching: false,
-	medias: {
+	data: {
 		deezer: {
 			album: {},
 			playlist: {},
@@ -38,7 +36,9 @@ export const INITIAL_STATE: State = {
 			playlist: {},
 			track: {}
 		}
-	}
+	},
+	error: null,
+	fetching: false
 };
 
 // ------------------------------------------------------------------
@@ -63,23 +63,23 @@ export const mediasReducer: Reducer<State, MediasAction> = (
 		case "medias/SET": {
 			const copy: State = {
 				...state,
-				fetching: false,
-				error: null,
-				medias: {
+				data: {
 					deezer: {
-						album: { ...state.medias.deezer.album },
-						playlist: { ...state.medias.deezer.playlist },
-						track: { ...state.medias.deezer.track }
+						album: { ...state.data.deezer.album },
+						playlist: { ...state.data.deezer.playlist },
+						track: { ...state.data.deezer.track }
 					},
 					spotify: {
-						album: { ...state.medias.deezer.album },
-						playlist: { ...state.medias.deezer.playlist },
-						track: { ...state.medias.deezer.track }
+						album: { ...state.data.deezer.album },
+						playlist: { ...state.data.deezer.playlist },
+						track: { ...state.data.deezer.track }
 					}
-				}
+				},
+				error: null,
+				fetching: false
 			};
 			for (const media of action.payload) {
-				copy.medias[media.provider][media.type][media.id] = media;
+				copy.data[media.provider][media.type][media.id] = media;
 			}
 			return copy;
 		}

@@ -58,12 +58,14 @@ export const connectUser = (
 		trySomething(
 			async () => {
 				const {
-					user: { _fbUser }
+					user: {
+						data: { firebaseUser }
+					}
 				} = getState();
 				if (
-					_fbUser &&
-					_fbUser.dbId === dbId &&
-					_fbUser.userId === userId
+					firebaseUser &&
+					firebaseUser.dbId === dbId &&
+					firebaseUser.userId === userId
 				) {
 					return true; // Nothing to do
 				}
@@ -76,7 +78,7 @@ export const connectUser = (
 				const newFbUser = FirebaseUser({ dbId, userId, secret });
 				dispatch(
 					setUser({
-						_fbUser: newFbUser,
+						firebaseUser: newFbUser,
 						access: { dbId, userId, secret },
 						info: await newFbUser.wait()
 					})
@@ -112,11 +114,13 @@ export const disconnectUser = (): AsyncAction => (dispatch, getState) =>
 		trySomething(async () => {
 			const {
 				user: {
-					_fbUser,
-					access: { dbId, userId, secret }
+					data: {
+						firebaseUser,
+						access: { dbId, userId, secret }
+					}
 				}
 			} = getState();
-			if (!dbId && !userId && !secret && !_fbUser) {
+			if (!dbId && !userId && !secret && !firebaseUser) {
 				return true; // Nothing to do
 			}
 			console.debug("[User] Disconnecting...", {
@@ -124,8 +128,8 @@ export const disconnectUser = (): AsyncAction => (dispatch, getState) =>
 				userId,
 				secret
 			});
-			if (_fbUser) {
-				_fbUser.unsubscribeInfo(INFO_SUBSCRIPTION);
+			if (firebaseUser) {
+				firebaseUser.unsubscribeInfo(INFO_SUBSCRIPTION);
 				INFO_SUBSCRIPTION = null;
 			}
 			dispatch(resetUser());
@@ -140,7 +144,9 @@ export const reconnectUser = (): AsyncAction => (dispatch, getState) =>
 		trySomething(async () => {
 			const {
 				user: {
-					access: { dbId, userId, secret }
+					data: {
+						access: { dbId, userId, secret }
+					}
 				}
 			} = getState();
 			if (!dbId || !userId || !secret) {

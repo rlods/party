@@ -21,35 +21,38 @@ export const setRoom = (values: Partial<RoomData>) =>
 
 // ------------------------------------------------------------------
 
-export type RoomData = {
-	_fbRoom: ReturnType<typeof FirebaseRoom> | null;
+type RoomData = {
 	access: RoomAccess;
 	color: CombinedColor;
 	extra: string;
 	extraDecoded: any;
+	firebaseRoom: ReturnType<typeof FirebaseRoom> | null;
 	info: RoomInfo | null;
-	medias: MediaAccess[];
+	medias: ReadonlyArray<MediaAccess>;
 	queue: RoomQueue | null;
-	tracks: Array<ContextualizedTrackAccess>;
+	tracks: ReadonlyArray<ContextualizedTrackAccess>;
 };
 
-export type State = RoomData & {
-	fetching: boolean;
+export type State = Readonly<{
+	data: RoomData;
 	error: null | string;
-};
+	fetching: boolean;
+}>;
 
 export const INITIAL_STATE: State = {
-	_fbRoom: null,
-	access: { dbId: "", roomId: "", secret: "" },
-	color: { fg: "dark", bg: { r: 255, g: 255, b: 255 } },
+	data: {
+		access: { dbId: "", roomId: "", secret: "" },
+		color: { fg: "dark", bg: { r: 255, g: 255, b: 255 } },
+		extra: "",
+		extraDecoded: null,
+		firebaseRoom: null,
+		info: null,
+		medias: [],
+		queue: null,
+		tracks: []
+	},
 	error: null,
-	extra: "",
-	extraDecoded: null,
-	fetching: false,
-	info: null,
-	medias: [],
-	queue: null,
-	tracks: []
+	fetching: false
 };
 
 // ------------------------------------------------------------------
@@ -74,7 +77,10 @@ export const roomReducer: Reducer<State, RoomAction> = (
 		case "room/SET":
 			return {
 				...state,
-				...action.payload,
+				data: {
+					...state.data,
+					...action.payload
+				},
 				fetching: false,
 				error: null
 			};

@@ -6,8 +6,10 @@ import { Track } from "../utils/medias";
 export const selectTracks = (state: RootState): Array<Track | null> => {
 	const res: Array<Track | null> = [];
 	const {
-		medias: { medias },
-		room: { tracks }
+		medias: { data: medias },
+		room: {
+			data: { tracks }
+		}
 	} = state;
 	for (const access of tracks) {
 		const track = medias[access.provider][access.type][access.id];
@@ -20,4 +22,5 @@ export const selectTracks = (state: RootState): Array<Track | null> => {
 	return res;
 };
 
-export const selectTracksCount = (state: RootState) => state.room.tracks.length;
+export const selectTracksCount = (state: RootState) =>
+	state.room.data.tracks.length;

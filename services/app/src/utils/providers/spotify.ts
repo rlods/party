@@ -147,7 +147,7 @@ const SpotifyApiImpl = (): ProviderApi => {
 
 	const _load = async <T>(
 		type: MediaType,
-		ids: string[]
+		ids: ReadonlyArray<string>
 	): Promise<{
 		delayedIds: string[];
 		failedIds: string[];
@@ -189,7 +189,7 @@ const SpotifyApiImpl = (): ProviderApi => {
 
 	const _loadWithRetry = async <T>(
 		type: MediaType,
-		ids: string[]
+		ids: ReadonlyArray<string>
 	): Promise<T[]> => {
 		const res: T[] = [];
 		let first = true;
@@ -267,7 +267,7 @@ const SpotifyApiImpl = (): ProviderApi => {
 			.map(track => ConvertTrack(track, track.album!));
 	};
 
-	const loadAlbums = async (ids: string[]): Promise<Album[]> => {
+	const loadAlbums = async (ids: ReadonlyArray<string>): Promise<Album[]> => {
 		if (ids.length === 0) {
 			return [];
 		}
@@ -276,7 +276,9 @@ const SpotifyApiImpl = (): ProviderApi => {
 		return albums.map(ConvertAlbum);
 	};
 
-	const loadPlaylists = async (ids: string[]): Promise<Playlist[]> => {
+	const loadPlaylists = async (
+		ids: ReadonlyArray<string>
+	): Promise<Playlist[]> => {
 		if (ids.length === 0) {
 			return [];
 		}
@@ -288,7 +290,7 @@ const SpotifyApiImpl = (): ProviderApi => {
 		return playlists.map(ConvertPlaylist);
 	};
 
-	const loadTracks = async (ids: string[]): Promise<Track[]> => {
+	const loadTracks = async (ids: ReadonlyArray<string>): Promise<Track[]> => {
 		if (ids.length === 0) {
 			return [];
 		}

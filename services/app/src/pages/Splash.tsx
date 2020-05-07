@@ -9,6 +9,7 @@ import { Messages } from "../components/Common/Messages";
 import { Icon } from "../components/Common/Icon";
 import { AppContext } from "./AppContext";
 import { DEFAULT_ROOM_TYPE } from "../utils/rooms";
+import { isUserLoggedIn } from "../selectors/user";
 import "./Splash.scss";
 
 // ------------------------------------------------------------------
@@ -27,12 +28,7 @@ export const Splash: FC = () => {
 	const fetching = useSelector<RootState, boolean>(
 		state => state.user.fetching
 	);
-	const loggedIn = useSelector<RootState, boolean>(
-		state =>
-			!!state.user.access.dbId &&
-			!!state.user.access.secret &&
-			!!state.user.access.userId
-	);
+	const loggedIn = useSelector<RootState, boolean>(isUserLoggedIn);
 
 	useEffect(() => {
 		onMessagesClear();

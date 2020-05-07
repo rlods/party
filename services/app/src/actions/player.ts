@@ -15,9 +15,11 @@ export const startPlayer = (
 	dispatch(
 		trySomething(async () => {
 			const {
-				room: { _fbRoom, queue, tracks }
+				room: {
+					data: { firebaseRoom, queue, tracks }
+				}
 			} = getState();
-			if (!_fbRoom || _fbRoom.isLocked() || !queue) {
+			if (!firebaseRoom || firebaseRoom.isLocked() || !queue) {
 				return "unlock-and-retry";
 			}
 			if (queue.playing) {
@@ -39,7 +41,7 @@ export const startPlayer = (
 				);
 				return true;
 			}
-			await _fbRoom.updateQueue({
+			await firebaseRoom.updateQueue({
 				...queue,
 				playing: true
 			});
@@ -60,9 +62,11 @@ export const stopPlayer = (
 	dispatch(
 		trySomething(async () => {
 			const {
-				room: { _fbRoom, queue }
+				room: {
+					data: { firebaseRoom, queue }
+				}
 			} = getState();
-			if (!_fbRoom || _fbRoom.isLocked() || !queue) {
+			if (!firebaseRoom || firebaseRoom.isLocked() || !queue) {
 				return "unlock-and-retry";
 			}
 			if (!queue.playing) {
@@ -80,7 +84,7 @@ export const stopPlayer = (
 				);
 				return true;
 			}
-			await _fbRoom.updateQueue({
+			await firebaseRoom.updateQueue({
 				...queue,
 				playing: false
 			});

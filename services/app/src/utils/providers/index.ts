@@ -26,11 +26,11 @@ export type SearchResults = {
 };
 
 export type ProviderApi = {
-	loadAlbums: (ids: string[]) => Promise<Album[]>;
+	loadAlbums: (ids: ReadonlyArray<string>) => Promise<Album[]>;
 
-	loadPlaylists: (ids: string[]) => Promise<Playlist[]>;
+	loadPlaylists: (ids: ReadonlyArray<string>) => Promise<Playlist[]>;
 
-	loadTracks: (ids: string[]) => Promise<Track[]>;
+	loadTracks: (ids: ReadonlyArray<string>) => Promise<Track[]>;
 
 	searchAlbums: (query: string, options?: SearchOptions) => Promise<Album[]>;
 
@@ -44,7 +44,9 @@ export type ProviderApi = {
 
 // ------------------------------------------------------------------
 
-export const loadMedias = async (accesses: MediaAccess[]): Promise<Media[]> => {
+export const loadMedias = async (
+	accesses: ReadonlyArray<MediaAccess>
+): Promise<Media[]> => {
 	const ids: {
 		[provider in ProviderType]: {
 			[media in MediaType]: string[];
@@ -93,7 +95,7 @@ export const loadMedias = async (accesses: MediaAccess[]): Promise<Media[]> => {
 // ------------------------------------------------------------------
 
 export const loadNewMedias = async (
-	accesses: MediaAccess[],
+	accesses: ReadonlyArray<MediaAccess>,
 	oldMedias: StructuredMedias
 ): Promise<{
 	newMedias: Media[];

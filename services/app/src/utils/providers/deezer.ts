@@ -171,7 +171,7 @@ const DeezerApiImpl = (): ProviderApi => {
 
 	const _load = async <T extends { error?: DeezerApiError }>(
 		type: MediaType,
-		ids: string[]
+		ids: ReadonlyArray<string>
 	): Promise<{
 		delayedIds: string[];
 		failedIds: string[];
@@ -204,7 +204,7 @@ const DeezerApiImpl = (): ProviderApi => {
 
 	const _loadWithRetry = async <T extends { error?: DeezerApiError }>(
 		type: MediaType,
-		ids: string[]
+		ids: ReadonlyArray<string>
 	): Promise<T[]> => {
 		let first = true;
 		const res: T[] = [];
@@ -265,7 +265,7 @@ const DeezerApiImpl = (): ProviderApi => {
 			.map(track => ConvertTrack(track, track.album!));
 	};
 
-	const loadAlbums = async (ids: string[]): Promise<Album[]> => {
+	const loadAlbums = async (ids: ReadonlyArray<string>): Promise<Album[]> => {
 		if (ids.length === 0) {
 			return [];
 		}
@@ -274,7 +274,9 @@ const DeezerApiImpl = (): ProviderApi => {
 		return albums.map(ConvertAlbum);
 	};
 
-	const loadPlaylists = async (ids: string[]): Promise<Playlist[]> => {
+	const loadPlaylists = async (
+		ids: ReadonlyArray<string>
+	): Promise<Playlist[]> => {
 		if (ids.length === 0) {
 			return [];
 		}
@@ -288,7 +290,7 @@ const DeezerApiImpl = (): ProviderApi => {
 		);
 	};
 
-	const loadTracks = async (ids: string[]): Promise<Track[]> => {
+	const loadTracks = async (ids: ReadonlyArray<string>): Promise<Track[]> => {
 		if (ids.length === 0) {
 			return [];
 		}

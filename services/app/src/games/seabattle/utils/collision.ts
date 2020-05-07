@@ -70,7 +70,7 @@ export const checkZone = (
 // ------------------------------------------------------------------
 
 export const generateGrid = (
-	fleet: SeaBattleBoatData[],
+	fleet: ReadonlyArray<SeaBattleBoatData>,
 	movingBoat?: SeaBattleBoatData
 ): SeaBattleGrid => {
 	const grid: SeaBattleGrid = Array<SeaBattleGridCell>(GRID_CELL_COUNT)
@@ -174,7 +174,7 @@ export const generateGrid = (
 // ------------------------------------------------------------------
 
 export const checkCollisions = (
-	fleet: SeaBattleBoatData[],
+	fleet: ReadonlyArray<SeaBattleBoatData>,
 	boat: SeaBattleBoatData,
 	pos: SeaBattlePosition,
 	dir: SeaBattleDirection
@@ -218,7 +218,7 @@ export const checkCollisions = (
 // ------------------------------------------------------------------
 
 export const movementIsPossible = (
-	fleet: SeaBattleBoatData[],
+	fleet: ReadonlyArray<SeaBattleBoatData>,
 	boat: SeaBattleBoatData,
 	newPos: SeaBattlePosition,
 	newDir: SeaBattleDirection

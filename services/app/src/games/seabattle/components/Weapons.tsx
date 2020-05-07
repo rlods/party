@@ -25,7 +25,11 @@ export const Weapon: FC<SeaBattleWeaponData> = ({ type, ...asset }) => (
 );
 // ------------------------------------------------------------------
 
-export const Weapons = ({ weapons }: { weapons: SeaBattleWeaponData[] }) => {
+export const Weapons = ({
+	weapons
+}: {
+	weapons: ReadonlyArray<SeaBattleWeaponData>;
+}) => {
 	return (
 		<>
 			{weapons.map((weapon, index) => (
