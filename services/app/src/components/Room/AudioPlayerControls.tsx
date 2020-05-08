@@ -41,7 +41,10 @@ export const AudioPlayerControls: FC<{
 			<div className="Control">
 				<IconButton
 					disabled={
-						locked || tracksCount === 0 || playmode === "shuffle"
+						!playing ||
+						locked ||
+						tracksCount === 0 ||
+						playmode === "shuffle"
 					}
 					icon="step-backward"
 					onClick={() => onQueueMoveBackward()}
@@ -81,7 +84,7 @@ export const AudioPlayerControls: FC<{
 			</div>
 			<div className="Control">
 				<IconButton
-					disabled={locked || tracksCount === 0}
+					disabled={!playing || locked || tracksCount === 0}
 					icon="step-forward"
 					onClick={() => onQueueMoveForward()}
 					size={"M"}

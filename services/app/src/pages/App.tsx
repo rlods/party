@@ -44,9 +44,9 @@ import {
 	moveToOffset
 } from "../actions/queue";
 import { AppContext } from "./AppContext";
-import "./App.scss";
 import { copyToClipboard } from "../utils/clipboard";
 import { useDebounce } from "../utils/use";
+import "./App.scss";
 
 // ------------------------------------------------------------------
 
@@ -57,26 +57,30 @@ export const App: FC = () => {
 
 	const [propagate, onPlayerSetPropagate] = useState<boolean>(false);
 
-	const [offset, setOffset] = useState<number>(0);
+	const [wantedOffset, setWantedOffset] = useState<number>(0);
 	useDebounce(
 		() => {
-			if (offset !== 0) {
-				console.debug("Apply debounced move offset", { offset });
-				d(moveToOffset({ offset, propagate }));
-				setOffset(0);
+			if (wantedOffset !== 0) {
+				console.debug("Apply debounced wanted offset", {
+					wantedOffset
+				});
+				d(moveToOffset({ offset: wantedOffset, propagate }));
+				setWantedOffset(0);
 			}
 		},
 		250,
-		[offset, propagate]
+		[d, propagate, wantedOffset]
 	);
 
-	const onQueueMoveBackward = useCallback(() => setOffset(offset - 1), [
-		offset
-	]);
+	const onQueueMoveBackward = useCallback(
+		() => setWantedOffset(wantedOffset - 1),
+		[wantedOffset]
+	);
 
-	const onQueueMoveForward = useCallback(() => setOffset(offset + 1), [
-		offset
-	]);
+	const onQueueMoveForward = useCallback(
+		() => setWantedOffset(wantedOffset + 1),
+		[wantedOffset]
+	);
 
 	const onMessagesClear = useCallback(
 		(tag?: string) => d(clearMessages(tag)),
