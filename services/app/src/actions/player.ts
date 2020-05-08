@@ -33,6 +33,7 @@ export const startPlayer = (
 				(queue.playing &&
 					(position === void 0 || position === queue.position))
 			) {
+				console.debug("[Player] Starting ignored");
 				return true; // Nothing to do
 			}
 			console.debug("[Player] Starting...", { position, propagate });
@@ -84,6 +85,7 @@ export const stopPlayer = (
 				}
 			} = getState();
 			if (!queue || !queue.playing) {
+				console.debug("[Player] Stopping ignored");
 				return true; // Nothing to do
 			}
 			console.debug("[Player] Stopping...", { propagate });

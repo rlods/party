@@ -48,7 +48,7 @@ export const AudioPlayerControls: FC<{
 					}
 					icon="step-backward"
 					onClick={() => onQueueMoveBackward()}
-					size={"M"}
+					size="M"
 					title={t("player.backward")}
 				/>
 			</div>
@@ -87,7 +87,7 @@ export const AudioPlayerControls: FC<{
 					disabled={!playing || locked || tracksCount === 0}
 					icon="step-forward"
 					onClick={() => onQueueMoveForward()}
-					size={"M"}
+					size="M"
 					title={t("player.forward")}
 				/>
 			</div>

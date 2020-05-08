@@ -67,6 +67,7 @@ export const connectUser = (
 					firebaseUser.dbId === dbId &&
 					firebaseUser.userId === userId
 				) {
+					console.debug("[User] Connecting ignored");
 					return true; // Nothing to do
 				}
 
@@ -121,6 +122,7 @@ export const disconnectUser = (): AsyncAction => (dispatch, getState) =>
 				}
 			} = getState();
 			if (!dbId && !userId && !secret && !firebaseUser) {
+				console.debug("[User] Disconnecting ignored");
 				return true; // Nothing to do
 			}
 			console.debug("[User] Disconnecting...", {
@@ -150,6 +152,7 @@ export const reconnectUser = (): AsyncAction => (dispatch, getState) =>
 				}
 			} = getState();
 			if (!dbId || !userId || !secret) {
+				console.debug("[User] Reconnecting ignored");
 				return true; // Nothing to do
 			}
 			console.debug("[User] Reconnecting...", {

@@ -24,6 +24,7 @@ export const clearQueue = (
 				}
 			} = getState();
 			if (!queue) {
+				console.debug("[Queue] Clearing ignored");
 				return true; // Nothing to do
 			}
 			console.debug("[Queue] Clearing...");
@@ -74,6 +75,7 @@ export const appendToQueue = (
 				}
 			} = getState();
 			if (!queue || newMedias.length === 0) {
+				console.debug("[Queue] Appending ignored");
 				return true; // Nothing to do
 			}
 			console.debug("[Queue] Appending...", {
@@ -128,6 +130,7 @@ export const removeFromQueue = (
 				allMedias
 			);
 			if (removedMediaIndex < 0) {
+				console.debug("[Queue] Removing ignored");
 				return true; // Nothing to do
 			}
 			const playingTrackIndex = queue.position;
@@ -205,6 +208,7 @@ export const setQueuePosition = (
 				}
 			} = getState();
 			if (!queue || queue.position === newPosition) {
+				console.debug("[Queue] Setting position ignored");
 				return true; // Nothing to do
 			}
 			console.debug("[Queue] Setting position...", {
@@ -253,6 +257,7 @@ export const moveToOffset = ({
 				}
 			} = getState();
 			if (offset === 0 || !queue || tracks.length === 0) {
+				console.debug("[Queue] Offset moving ignored");
 				return true; // Nothing to do
 			}
 			const { position: oldPosition } = queue;
@@ -268,7 +273,7 @@ export const moveToOffset = ({
 					);
 					break;
 			}
-			console.debug("[Queue] Moving to offset...", {
+			console.debug("[Queue] Offset moving...", {
 				offset,
 				oldPosition,
 				newPosition,

@@ -103,6 +103,7 @@ export const enterRoom = (
 					firebaseRoom.dbId === dbId &&
 					firebaseRoom.roomId === roomId
 				) {
+					console.debug("[Room] Entering ignored");
 					return true; // Nothing to do
 				}
 
@@ -152,6 +153,7 @@ export const exitRoom = (): AsyncAction => (dispatch, getState) =>
 				}
 			} = getState();
 			if (!firebaseRoom) {
+				console.debug("[Room] Exiting ignored");
 				return true; // Nothing to do
 			}
 			console.debug("[Room] Exiting...");
@@ -181,6 +183,7 @@ export const lockRoom = (): AsyncAction => (dispatch, getState) =>
 				firebaseRoom.roomId !== roomId ||
 				!oldSecret
 			) {
+				console.debug("[Room] Locking ignored");
 				return true; // Nothing to do
 			}
 			console.debug("[Room] Locking...", { dbId, roomId });
@@ -215,6 +218,7 @@ export const unlockRoom = (
 				firebaseRoom.roomId !== roomId ||
 				oldSecret === secret
 			) {
+				console.debug("[Room] Unlocking ignored");
 				return true; // Nothing to do
 			}
 			console.debug("[Room] Unlocking...", { dbId, roomId, secret });
