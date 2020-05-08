@@ -11,21 +11,17 @@ import "./RoomControls.scss";
 
 export const RoomControls: FC<{
 	extended: boolean;
-	propagate: boolean;
 	onHelp?: () => void;
-}> = ({ extended, propagate, onHelp }) => {
+}> = ({ extended, onHelp }) => {
 	const { t } = useTranslation();
 
 	return (
 		<div className="RoomControls">
 			{extended ? (
 				<div className="ControlsInner extended">
-					<AudioPlayerControls
-						propagate={propagate}
-						bigPlayer={true}
-					/>
+					<AudioPlayerControls bigPlayer={true} />
 					<Progress />
-					<QueueControls propagate={propagate} onHelp={onHelp} />
+					<QueueControls onHelp={onHelp} />
 				</div>
 			) : (
 				<div className="ControlsInner compact">
@@ -38,7 +34,6 @@ export const RoomControls: FC<{
 					</div>
 					<AudioPlayerControls
 						className="ControlsSet"
-						propagate={propagate}
 						bigPlayer={false}
 					/>
 					<div>

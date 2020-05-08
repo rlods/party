@@ -13,8 +13,10 @@ import { displayError } from "./messages";
 
 export const startPlayer = (
 	{
+		position,
 		propagate
 	}: {
+		position?: number;
 		propagate: boolean;
 	},
 	options?: TrySomethingOptions
@@ -26,13 +28,14 @@ export const startPlayer = (
 					data: { firebaseRoom, queue, tracks }
 				}
 			} = getState();
-			if (!firebaseRoom || firebaseRoom.isLocked() || !queue) {
-				return "unlock-and-retry";
-			}
-			if (queue.playing) {
+			if (
+				!queue ||
+				(queue.playing &&
+					(position === void 0 || position === queue.position))
+			) {
 				return true; // Nothing to do
 			}
-			console.debug("[Player] Starting...", { propagate });
+			console.debug("[Player] Starting...", { position, propagate });
 			if (!propagate) {
 				dispatch(
 					setRoom({
@@ -40,8 +43,10 @@ export const startPlayer = (
 							...queue,
 							playing: true,
 							position:
-								queue.playmode === "shuffle"
-									? generateRandomPosition() % tracks.length
+								position !== void 0
+									? position
+									: queue.playmode === "shuffle"
+									? generateRandomPosition(tracks.length)
 									: queue.position
 						}
 					})
@@ -49,9 +54,13 @@ export const startPlayer = (
 				dispatch(adjustPlayer());
 				return true;
 			}
+			if (!firebaseRoom || firebaseRoom.isLocked()) {
+				return "unlock-and-retry";
+			}
 			await firebaseRoom.updateQueue({
 				...queue,
-				playing: true
+				playing: true,
+				position: position !== void 0 ? position : queue.position
 			});
 			return true;
 		}, options)
@@ -74,10 +83,7 @@ export const stopPlayer = (
 					data: { firebaseRoom, queue }
 				}
 			} = getState();
-			if (!firebaseRoom || firebaseRoom.isLocked() || !queue) {
-				return "unlock-and-retry";
-			}
-			if (!queue.playing) {
+			if (!queue || !queue.playing) {
 				return true; // Nothing to do
 			}
 			console.debug("[Player] Stopping...", { propagate });
@@ -92,6 +98,9 @@ export const stopPlayer = (
 				);
 				dispatch(adjustPlayer());
 				return true;
+			}
+			if (!firebaseRoom || firebaseRoom.isLocked()) {
+				return "unlock-and-retry";
 			}
 			await firebaseRoom.updateQueue({
 				...queue,

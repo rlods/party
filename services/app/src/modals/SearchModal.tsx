@@ -146,7 +146,6 @@ export const SearchModal: FC = () => {
 									icon="plus"
 									onClick={() =>
 										onQueueAppend(
-											true,
 											{
 												provider,
 												type,

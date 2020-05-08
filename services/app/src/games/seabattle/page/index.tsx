@@ -41,11 +41,11 @@ export const PLAYER_TURN_MESSAGE_TAG = "seabattle/player_turn";
 
 export const SeaBattle: FC = () => {
 	const {
-		onMessagesClear,
-		onUserCreateAsk,
 		onDisplayInfo,
+		onMessagesClear,
 		onModalOpen,
-		onRoomLock
+		onRoomLock,
+		onUserCreateAsk
 	} = useContext(AppContext);
 	const dispatch = useDispatch<Dispatch>();
 	const { t } = useTranslation();
@@ -302,7 +302,6 @@ export const SeaBattle: FC = () => {
 			</div>
 			<RoomControls
 				extended={false}
-				propagate={false}
 				onHelp={() => {
 					onModalOpen({
 						type: "SeaBattle/Help",

@@ -1,4 +1,5 @@
 import { AsyncAction, trySomething, TrySomethingOptions } from ".";
+import { augmentedIndexProcess } from "../utils";
 import { MediaAccess, findContextFromTrackIndex } from "../utils/medias";
 import { createQueueMerging, createQueueRemoving } from "../utils/rooms";
 import { generateRandomPosition } from "../utils/player";
@@ -22,8 +23,8 @@ export const clearQueue = (
 					data: { firebaseRoom, queue }
 				}
 			} = getState();
-			if (!firebaseRoom || firebaseRoom.isLocked() || !queue) {
-				return "unlock-and-retry";
+			if (!queue) {
+				return true; // Nothing to do
 			}
 			console.debug("[Queue] Clearing...");
 			if (!propagate) {
@@ -39,6 +40,9 @@ export const clearQueue = (
 				);
 				dispatch(adjustPlayer());
 				return true;
+			}
+			if (!firebaseRoom || firebaseRoom.isLocked()) {
+				return "unlock-and-retry";
 			}
 			await firebaseRoom.updateQueue({
 				...queue,
@@ -69,10 +73,7 @@ export const appendToQueue = (
 					data: { firebaseRoom, queue, medias: oldMedias }
 				}
 			} = getState();
-			if (!firebaseRoom || firebaseRoom.isLocked() || !queue) {
-				return "unlock-and-retry";
-			}
-			if (newMedias.length === 0) {
+			if (!queue || newMedias.length === 0) {
 				return true; // Nothing to do
 			}
 			console.debug("[Queue] Appending...", {
@@ -81,6 +82,9 @@ export const appendToQueue = (
 			if (!propagate) {
 				console.debug("TODO: appendToQueue without propagation");
 				return true;
+			}
+			if (!firebaseRoom || firebaseRoom.isLocked()) {
+				return "unlock-and-retry";
 			}
 			await firebaseRoom.updateQueue({
 				...queue,
@@ -200,15 +204,11 @@ export const setQueuePosition = (
 					data: { firebaseRoom, queue }
 				}
 			} = getState();
-			if (!firebaseRoom || firebaseRoom.isLocked() || !queue) {
-				return "unlock-and-retry";
-			}
-			const oldPosition = queue.position;
-			if (oldPosition === newPosition) {
+			if (!queue || queue.position === newPosition) {
 				return true; // Nothing to do
 			}
 			console.debug("[Queue] Setting position...", {
-				oldPosition,
+				oldPosition: queue.position,
 				newPosition,
 				propagate
 			});
@@ -225,9 +225,11 @@ export const setQueuePosition = (
 				dispatch(adjustPlayer());
 				return true;
 			}
+			if (!firebaseRoom || firebaseRoom.isLocked()) {
+				return "unlock-and-retry";
+			}
 			await firebaseRoom.updateQueue({
 				...queue,
-				playing: true, // Important: user setting queue position will start the play
 				position: newPosition
 			});
 			return true;
@@ -236,10 +238,12 @@ export const setQueuePosition = (
 
 // ------------------------------------------------------------------
 
-export const moveToPreviousTrack = ({
-	propagate
+export const moveToOffset = ({
+	propagate,
+	offset
 }: {
 	propagate: boolean;
+	offset: number;
 }): AsyncAction => (dispatch, getState) =>
 	dispatch(
 		trySomething(async () => {
@@ -248,45 +252,31 @@ export const moveToPreviousTrack = ({
 					data: { queue, tracks }
 				}
 			} = getState();
-			if (!queue || tracks.length === 0) {
+			if (offset === 0 || !queue || tracks.length === 0) {
 				return true; // Nothing to do
 			}
-			dispatch(
-				setQueuePosition({
-					position:
-						queue.position > 0
-							? queue.position - 1
-							: tracks.length - 1,
-					propagate
-				})
-			);
-			return true;
-		})
-	);
-
-// ------------------------------------------------------------------
-
-export const moveToNextTrack = ({
-	propagate
-}: {
-	propagate: boolean;
-}): AsyncAction => (dispatch, getState) =>
-	dispatch(
-		trySomething(async () => {
-			const {
-				room: {
-					data: { queue, tracks }
-				}
-			} = getState();
-			if (!queue || tracks.length === 0) {
-				return true; // Nothing to do
+			const { position: oldPosition } = queue;
+			let newPosition = 0;
+			switch (queue.playmode) {
+				case "shuffle":
+					newPosition = generateRandomPosition(tracks.length);
+					break;
+				case "default":
+					newPosition = augmentedIndexProcess(
+						tracks.length,
+						oldPosition + offset
+					);
+					break;
 			}
+			console.debug("[Queue] Moving to offset...", {
+				offset,
+				oldPosition,
+				newPosition,
+				propagate
+			});
 			dispatch(
 				setQueuePosition({
-					position:
-						queue.playmode === "shuffle"
-							? generateRandomPosition() % tracks.length
-							: (queue.position + 1) % tracks.length,
+					position: newPosition,
 					propagate
 				})
 			);

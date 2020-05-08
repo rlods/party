@@ -17,8 +17,7 @@ import "./AudioPlayerControls.scss";
 export const AudioPlayerControls: FC<{
 	bigPlayer: boolean;
 	className?: string;
-	propagate: boolean;
-}> = ({ bigPlayer, className, propagate }) => {
+}> = ({ bigPlayer, className }) => {
 	const {
 		onQueueMoveBackward,
 		onQueueMoveForward,
@@ -45,7 +44,7 @@ export const AudioPlayerControls: FC<{
 						locked || tracksCount === 0 || playmode === "shuffle"
 					}
 					icon="step-backward"
-					onClick={() => onQueueMoveBackward(propagate)}
+					onClick={() => onQueueMoveBackward()}
 					size={"M"}
 					title={t("player.backward")}
 				/>
@@ -56,9 +55,12 @@ export const AudioPlayerControls: FC<{
 						disabled={locked || tracksCount === 0}
 						icon="play"
 						onClick={() =>
-							onPlayerStart(propagate, {
-								onFailure: onRoomLock
-							})
+							onPlayerStart(
+								{},
+								{
+									onFailure: onRoomLock
+								}
+							)
 						}
 						size={bigPlayer ? "L" : "M"}
 						title={t("player.play")}
@@ -68,7 +70,7 @@ export const AudioPlayerControls: FC<{
 						disabled={locked || tracksCount === 0}
 						icon="pause"
 						onClick={() =>
-							onPlayerStop(propagate, {
+							onPlayerStop({
 								onFailure: onRoomLock
 							})
 						}
@@ -81,7 +83,7 @@ export const AudioPlayerControls: FC<{
 				<IconButton
 					disabled={locked || tracksCount === 0}
 					icon="step-forward"
-					onClick={() => onQueueMoveForward(propagate)}
+					onClick={() => onQueueMoveForward()}
 					size={"M"}
 					title={t("player.forward")}
 				/>

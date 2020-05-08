@@ -11,7 +11,8 @@ import { TrackAccess } from "./medias";
 
 // ------------------------------------------------------------------
 
-export const generateRandomPosition = () => Math.floor(Math.random() * 1000000);
+export const generateRandomPosition = (trackCount: number) =>
+	Math.floor(Math.random() * 1000000) % trackCount;
 
 // ------------------------------------------------------------------
 
@@ -111,7 +112,7 @@ const PlayerImpl = (): Player => {
 			_startTime = 0;
 			_trackId = "";
 			if (options?.playmode === "shuffle") {
-				_trackPosition += generateRandomPosition();
+				_trackPosition += generateRandomPosition(10000); // 10000 is arbitrary
 			} else {
 				_trackPosition++;
 			}

@@ -11,9 +11,8 @@ import "./QueueControls.scss";
 // ------------------------------------------------------------------
 
 export const QueueControls: FC<{
-	propagate: boolean;
 	onHelp?: () => void;
-}> = ({ propagate, onHelp }) => {
+}> = ({ onHelp }) => {
 	const {
 		onQueueClear,
 		onQueueSearch,
@@ -65,7 +64,7 @@ export const QueueControls: FC<{
 				<IconButton
 					disabled={locked || tracksCount === 0}
 					onClick={() =>
-						onQueueClear(propagate, {
+						onQueueClear({
 							onFailure: onRoomLock
 						})
 					}

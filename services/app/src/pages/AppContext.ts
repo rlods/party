@@ -18,29 +18,23 @@ export type AppContextProps = {
 	onModalClose: () => void;
 	onModalOpen: (prereq: ModalPrereq) => void;
 	onModalPop: () => void;
-	onPlayerStart: (propagate: boolean, options?: TrySomethingOptions) => void;
-	onPlayerStop: (propagate: boolean, options?: TrySomethingOptions) => void;
-	onPreviewStart: (access: MediaAccess) => void;
-	onPreviewStop: () => void;
-	onQueueAppend: (
-		propagate: boolean,
-		access: MediaAccess,
+	onPlayerSetPropagate: (propagate: boolean) => void;
+	onPlayerStart: (
+		data: { position?: number },
 		options?: TrySomethingOptions
 	) => void;
-	onQueueClear: (propagate: boolean, options?: TrySomethingOptions) => void;
-	onQueueMoveBackward: (propagate: boolean) => void;
-	onQueueMoveForward: (propagate: boolean) => void;
+	onPlayerStop: (options?: TrySomethingOptions) => void;
+	onPreviewStart: (access: MediaAccess) => void;
+	onPreviewStop: () => void;
+	onQueueAppend: (access: MediaAccess, options?: TrySomethingOptions) => void;
+	onQueueClear: (options?: TrySomethingOptions) => void;
+	onQueueMoveBackward: () => void;
+	onQueueMoveForward: () => void;
 	onQueueRemove: (
-		propagate: boolean,
-		position: number,
+		data: { position: number },
 		options?: TrySomethingOptions
 	) => void;
 	onQueueSearch: () => void;
-	onQueueSetPosition: (
-		propagate: boolean,
-		position: number,
-		options?: TrySomethingOptions
-	) => void;
 	onRoomCreate: (
 		name: string,
 		secret: string,
@@ -82,6 +76,7 @@ export const AppContext = createContext<AppContextProps>({
 	onModalClose: () => {},
 	onModalOpen: () => {},
 	onModalPop: () => {},
+	onPlayerSetPropagate: () => {},
 	onPlayerStart: () => {},
 	onPlayerStop: () => {},
 	onPreviewStart: () => {},
@@ -92,7 +87,6 @@ export const AppContext = createContext<AppContextProps>({
 	onQueueMoveForward: () => {},
 	onQueueRemove: () => {},
 	onQueueSearch: () => {},
-	onQueueSetPosition: () => {},
 	onRoomCreate: () => {},
 	onRoomCreateAsk: () => {},
 	onRoomEnter: () => {},

@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useCallback } from "react";
+import React, { FC, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { Redirect, Route, Switch, useHistory } from "react-router-dom";
@@ -41,13 +41,12 @@ import {
 	appendToQueue,
 	clearQueue,
 	removeFromQueue,
-	setQueuePosition,
-	moveToPreviousTrack,
-	moveToNextTrack
+	moveToOffset
 } from "../actions/queue";
 import { AppContext } from "./AppContext";
 import "./App.scss";
 import { copyToClipboard } from "../utils/clipboard";
+import { useDebounce } from "../utils/use";
 
 // ------------------------------------------------------------------
 
@@ -56,15 +55,28 @@ export const App: FC = () => {
 	const h = useHistory();
 	const t = useTranslation().t;
 
-	const onQueueMoveBackward = useCallback(
-		(propagate: boolean) => d(moveToPreviousTrack({ propagate })),
-		[d]
+	const [propagate, onPlayerSetPropagate] = useState<boolean>(false);
+
+	const [offset, setOffset] = useState<number>(0);
+	useDebounce(
+		() => {
+			if (offset !== 0) {
+				console.debug("Apply debounced move offset", { offset });
+				d(moveToOffset({ offset, propagate }));
+				setOffset(0);
+			}
+		},
+		250,
+		[offset, propagate]
 	);
 
-	const onQueueMoveForward = useCallback(
-		(propagate: boolean) => d(moveToNextTrack({ propagate })),
-		[d]
-	);
+	const onQueueMoveBackward = useCallback(() => setOffset(offset - 1), [
+		offset
+	]);
+
+	const onQueueMoveForward = useCallback(() => setOffset(offset + 1), [
+		offset
+	]);
 
 	const onMessagesClear = useCallback(
 		(tag?: string) => d(clearMessages(tag)),
@@ -215,7 +227,47 @@ export const App: FC = () => {
 		[d]
 	);
 
-	const onRoomExit = useCallback(() => d(exitRoom()), [d]);
+	const onPreviewStart = useCallback(
+		(access: MediaAccess) => d(previewMedia(access)),
+		[d]
+	);
+
+	const onPreviewStop = useCallback(() => PREVIEW_PLAYER.stop(), []);
+
+	const onPlayerStart = useCallback(
+		({ position }: { position?: number }, options?: TrySomethingOptions) =>
+			d(startPlayer({ position, propagate }, options)),
+		[d, propagate]
+	);
+
+	const onPlayerStop = useCallback(
+		(options?: TrySomethingOptions) =>
+			d(stopPlayer({ propagate }, options)),
+		[d, propagate]
+	);
+
+	const onQueueAppend = useCallback(
+		(access: MediaAccess, options?: TrySomethingOptions) =>
+			d(appendToQueue({ medias: [access], propagate }, options)),
+		[d, propagate]
+	);
+
+	const onQueueClear = useCallback(
+		(options?: TrySomethingOptions) =>
+			d(
+				confirmModal(t("rooms.confirm_clear"), () => {
+					d(clearQueue({ propagate }, options));
+					d(stopPlayer({ propagate }, options));
+				})
+			),
+		[d, t, propagate]
+	);
+
+	const onQueueRemove = useCallback(
+		({ position }: { position: number }, options?: TrySomethingOptions) =>
+			d(removeFromQueue({ position, propagate }, options)),
+		[d, propagate]
+	);
 
 	const onRoomLock = useCallback(() => d(lockRoom()), [d]);
 
@@ -237,56 +289,7 @@ export const App: FC = () => {
 		[d]
 	);
 
-	const onPreviewStart = useCallback(
-		(access: MediaAccess) => d(previewMedia(access)),
-		[d]
-	);
-
-	const onPreviewStop = useCallback(() => PREVIEW_PLAYER.stop(), []);
-
-	const onPlayerStart = useCallback(
-		(propagate: boolean, options?: TrySomethingOptions) =>
-			d(startPlayer({ propagate }, options)),
-		[d]
-	);
-
-	const onPlayerStop = useCallback(
-		(propagate: boolean, options?: TrySomethingOptions) =>
-			d(stopPlayer({ propagate }, options)),
-		[d]
-	);
-
-	const onQueueAppend = useCallback(
-		(
-			propagate: boolean,
-			access: MediaAccess,
-			options?: TrySomethingOptions
-		) => d(appendToQueue({ medias: [access], propagate }, options)),
-		[d]
-	);
-
-	const onQueueClear = useCallback(
-		(propagate: boolean, options?: TrySomethingOptions) =>
-			d(
-				confirmModal(t("rooms.confirm_clear"), () => {
-					d(clearQueue({ propagate }, options));
-					d(stopPlayer({ propagate }, options));
-				})
-			),
-		[d, t]
-	);
-
-	const onQueueSetPosition = useCallback(
-		(propagate: boolean, position: number, options?: TrySomethingOptions) =>
-			d(setQueuePosition({ position, propagate }, options)),
-		[d]
-	);
-
-	const onQueueRemove = useCallback(
-		(propagate: boolean, position: number, options?: TrySomethingOptions) =>
-			d(removeFromQueue({ position, propagate }, options)),
-		[d]
-	);
+	const onRoomExit = useCallback(() => d(exitRoom()), [d]);
 
 	const onHelp = useCallback(
 		() => onModalOpen({ type: "General/Help", props: null }),
@@ -326,6 +329,7 @@ export const App: FC = () => {
 				onModalClose,
 				onModalOpen,
 				onModalPop,
+				onPlayerSetPropagate,
 				onPlayerStart,
 				onPlayerStop,
 				onPreviewStart,
@@ -336,7 +340,6 @@ export const App: FC = () => {
 				onQueueMoveForward,
 				onQueueRemove,
 				onQueueSearch,
-				onQueueSetPosition,
 				onRoomCreate,
 				onRoomCreateAsk,
 				onRoomEnter,

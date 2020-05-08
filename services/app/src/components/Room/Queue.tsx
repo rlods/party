@@ -18,8 +18,7 @@ export const Queue: FC = () => {
 		onPlayerStart,
 		onPlayerStop,
 		onRoomLock,
-		onQueueRemove,
-		onQueueSetPosition
+		onQueueRemove
 	} = useContext(AppContext);
 
 	const loaded = useSelector<RootState, boolean>(isRoomLoaded);
@@ -36,21 +35,24 @@ export const Queue: FC = () => {
 					tracks={tracks}
 					playing={playing}
 					playingIndex={playingIndex}
-					onPlay={position => {
-						onPlayerStart(true, {
-							onFailure: onRoomLock
-						});
-						onQueueSetPosition(true, position, {
-							onFailure: onRoomLock
-						});
-					}}
+					onPlay={position =>
+						onPlayerStart(
+							{ position },
+							{
+								onFailure: onRoomLock
+							}
+						)
+					}
 					onRemove={position =>
-						onQueueRemove(true, position, {
-							onFailure: onRoomLock
-						})
+						onQueueRemove(
+							{ position },
+							{
+								onFailure: onRoomLock
+							}
+						)
 					}
 					onStop={() =>
-						onPlayerStop(true, {
+						onPlayerStop({
 							onFailure: onRoomLock
 						})
 					}
