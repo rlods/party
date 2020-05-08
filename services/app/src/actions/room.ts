@@ -13,7 +13,7 @@ import {
 	extractTracks,
 	ContextualizedTrackAccess
 } from "../utils/medias";
-import { adjustPlayer } from "./player";
+import { adjustPlayer, stopPlayer } from "./player";
 
 // ------------------------------------------------------------------
 
@@ -155,6 +155,7 @@ export const exitRoom = (): AsyncAction => (dispatch, getState) =>
 				return true; // Nothing to do
 			}
 			console.debug("[Room] Exiting...");
+			dispatch(stopPlayer({ propagate: false }));
 			dispatch(_unwatchRoom(firebaseRoom));
 			dispatch(resetRoom());
 			return true;

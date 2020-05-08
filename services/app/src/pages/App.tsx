@@ -50,6 +50,10 @@ import "./App.scss";
 
 // ------------------------------------------------------------------
 
+const DEBOUNCE_DELAY = 250; // milliseconds
+
+// ------------------------------------------------------------------
+
 export const App: FC = () => {
 	const d = useDispatch<Dispatch>();
 	const h = useHistory();
@@ -58,6 +62,7 @@ export const App: FC = () => {
 	const [propagate, onPlayerSetPropagate] = useState<boolean>(false);
 
 	const [wantedOffset, setWantedOffset] = useState<number>(0);
+
 	useDebounce(
 		() => {
 			if (wantedOffset !== 0) {
@@ -68,7 +73,7 @@ export const App: FC = () => {
 				setWantedOffset(0);
 			}
 		},
-		250,
+		DEBOUNCE_DELAY,
 		[d, propagate, wantedOffset]
 	);
 
