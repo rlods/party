@@ -6,6 +6,7 @@ import { RootState } from "../reducers";
 import { displayError } from "./messages";
 import { extractErrorMessage } from "../utils/messages";
 import { openModal } from "../reducers/modals";
+import { PermissionError } from "../utils/firebase";
 
 // ------------------------------------------------------------------
 
@@ -90,6 +91,9 @@ export const trySomething = (
 			return; // Delegated to CreateUserModal
 		}
 	} catch (err) {
+		if (err instanceof PermissionError) {
+			console.error("Detected a firebase permission error"); // TODO: lock
+		}
 		dispatch(displayError(extractErrorMessage(err)));
 	}
 	if (!res) {

@@ -5,6 +5,8 @@ import firebaseConfig from "../../config/firebase";
 
 // ------------------------------------------------------------------
 
+export class PermissionError extends Error {}
+
 const APPS: {
 	[id: string]: {
 		app: firebase.app.App;

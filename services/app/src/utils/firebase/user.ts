@@ -2,7 +2,7 @@ import * as firebase from "firebase/app";
 import "firebase/database";
 //
 import { UserInfo } from "../users";
-import { createOrGetApp } from ".";
+import { createOrGetApp, PermissionError } from ".";
 
 // ------------------------------------------------------------------
 
@@ -67,14 +67,18 @@ export const FirebaseUser = ({
 		if (name !== void 0) {
 			_values.name = name;
 		}
-		await _user.update({
-			info: {
-				..._values,
-				online: true
-			},
-			secret: _secret,
-			timestamp: firebase.database.ServerValue.TIMESTAMP
-		});
+		try {
+			await _user.update({
+				info: {
+					..._values,
+					online: true
+				},
+				secret: _secret,
+				timestamp: firebase.database.ServerValue.TIMESTAMP
+			});
+		} catch (err) {
+			throw new PermissionError(err.message);
+		}
 		installDisconnect();
 	};
 

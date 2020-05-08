@@ -1,7 +1,7 @@
 import * as firebase from "firebase/app";
 import "firebase/database";
 //
-import { createOrGetApp } from "./";
+import { createOrGetApp, PermissionError } from "./";
 import { RoomInfo, RoomQueue } from "../rooms";
 
 // ------------------------------------------------------------------
@@ -122,22 +122,30 @@ export const FirebaseRoom = ({
 			info,
 			queue
 		});
-		await _room.update({
-			extra,
-			info,
-			queue,
-			secret: _secret,
-			timestamp: firebase.database.ServerValue.TIMESTAMP
-		});
+		try {
+			await _room.update({
+				extra,
+				info,
+				queue,
+				secret: _secret,
+				timestamp: firebase.database.ServerValue.TIMESTAMP
+			});
+		} catch (err) {
+			throw new PermissionError(err.message);
+		}
 	};
 
 	const updateExtra = async (extra: string) => {
 		console.debug("[Firebase] Updating room extra...");
-		await _room.update({
-			extra,
-			secret: _secret,
-			timestamp: firebase.database.ServerValue.TIMESTAMP
-		});
+		try {
+			await _room.update({
+				extra,
+				secret: _secret,
+				timestamp: firebase.database.ServerValue.TIMESTAMP
+			});
+		} catch (err) {
+			throw new PermissionError(err.message);
+		}
 	};
 
 	const updateInfo = async ({
@@ -148,25 +156,33 @@ export const FirebaseRoom = ({
 			name,
 			type
 		});
-		await _room.update({
-			info: {
-				name,
-				type
-			},
-			secret: _secret,
-			timestamp: firebase.database.ServerValue.TIMESTAMP
-		});
+		try {
+			await _room.update({
+				info: {
+					name,
+					type
+				},
+				secret: _secret,
+				timestamp: firebase.database.ServerValue.TIMESTAMP
+			});
+		} catch (err) {
+			throw new PermissionError(err.message);
+		}
 	};
 
 	const updateQueue = async (queue: RoomQueue) => {
 		console.debug("[Firebase] Updating room queue...", {
 			queue
 		});
-		await _room.update({
-			queue,
-			secret: _secret,
-			timestamp: firebase.database.ServerValue.TIMESTAMP
-		});
+		try {
+			await _room.update({
+				queue,
+				secret: _secret,
+				timestamp: firebase.database.ServerValue.TIMESTAMP
+			});
+		} catch (err) {
+			throw new PermissionError(err.message);
+		}
 	};
 
 	return {
