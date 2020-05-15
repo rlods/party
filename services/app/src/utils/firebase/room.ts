@@ -44,10 +44,14 @@ export const FirebaseRoom = ({
 				_info.once("value"),
 				_queue.once("value")
 			]);
+			const q = queue.val();
 			return {
 				extra: extra.val(),
 				info: info.val(),
-				queue: queue.val()
+				queue: {
+					...q,
+					position: Math.floor(q.position) // Removing random decimal part
+				}
 			};
 		} catch (err) {
 			throw new Error("rooms.errors.invalid");
@@ -88,7 +92,10 @@ export const FirebaseRoom = ({
 				if (!queue) {
 					return;
 				}
-				cb(queue);
+				cb({
+					...queue,
+					position: Math.floor(queue.position) // Removing random decimal part
+				});
 			}
 		);
 	};
@@ -176,7 +183,10 @@ export const FirebaseRoom = ({
 		});
 		try {
 			await _room.update({
-				queue,
+				queue: {
+					...queue,
+					position: queue.position + Math.random() // Adding random decimal part to force position update (eg. to handle case where the play continued beyond position and user want to move backward to specified one)
+				},
 				secret: _secret,
 				timestamp: firebase.database.ServerValue.TIMESTAMP
 			});
