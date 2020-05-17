@@ -39,7 +39,7 @@ export const clearQueue = (
 						queue: {}
 					})
 				);
-				dispatch(adjustQueue());
+				dispatch(adjustQueue("x1"));
 				return true;
 			}
 			if (!firebaseRoom || firebaseRoom.isLocked()) {
@@ -87,7 +87,7 @@ export const appendToQueue = (
 						queue: createQueueMerging(oldMedias, newMedias)
 					})
 				);
-				dispatch(adjustQueue());
+				dispatch(adjustQueue("x2"));
 				return true;
 			}
 			if (!firebaseRoom || firebaseRoom.isLocked()) {
@@ -190,13 +190,19 @@ export const removeFromQueue = (
 
 // ------------------------------------------------------------------
 
-export const adjustQueue = (): AsyncAction => async (dispatch, getState) => {
+export const adjustQueue = (context: string): AsyncAction => async (
+	dispatch,
+	getState
+) => {
 	const {
 		medias: { data: oldMedias },
 		room: {
 			data: { queue }
 		}
 	} = getState();
+
+	console.debug("[Queue] Adjusting...", { context });
+
 	const medias: ReadonlyArray<MediaAccess> = Object.entries(queue)
 		.sort((m1, m2) => Number(m1[0]) - Number(m2[0]))
 		.map(m => m[1]);
@@ -217,5 +223,5 @@ export const adjustQueue = (): AsyncAction => async (dispatch, getState) => {
 			tracks
 		})
 	);
-	dispatch(adjustPlayer());
+	dispatch(adjustPlayer("x6"));
 };

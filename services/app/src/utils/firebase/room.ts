@@ -47,15 +47,22 @@ export const FirebaseRoom = ({
 				_player.once("value"),
 				_queue.once("value")
 			]);
-			const p = player.val() as RoomPlayer;
+			const e = extra.val() as string | null;
+			const p = player.val() as RoomPlayer | null;
 			const q = queue.val() as RoomQueue | null;
 			return {
-				extra: extra.val(),
+				extra: !e ? "" : e,
 				info: info.val(),
-				player: {
-					...p,
-					position: Math.floor(p.position) // Removing random decimal part
-				},
+				player: !p
+					? {
+							mode: "default",
+							playing: false,
+							position: 0
+					  }
+					: {
+							...p,
+							position: Math.floor(p.position) // Removing random decimal part
+					  },
 				queue: !q ? {} : q
 			};
 		} catch (err) {
@@ -69,10 +76,9 @@ export const FirebaseRoom = ({
 			"value",
 			(snapshot: firebase.database.DataSnapshot) => {
 				const extra = snapshot.val() as string | null;
-				if (!extra) {
-					return;
+				if (null !== extra) {
+					cb(extra);
 				}
-				cb(extra);
 			}
 		);
 	};
@@ -81,11 +87,9 @@ export const FirebaseRoom = ({
 		console.debug("[Firebase] Subscribing room info...");
 		return _info.on("value", (snapshot: firebase.database.DataSnapshot) => {
 			const info = snapshot.val() as RoomInfo | null;
-			if (!info) {
-				console.debug("********** NULL INFO: WHY?");
-				return;
+			if (null !== info) {
+				cb(info);
 			}
-			cb(info);
 		});
 	};
 
@@ -95,14 +99,12 @@ export const FirebaseRoom = ({
 			"value",
 			(snapshot: firebase.database.DataSnapshot) => {
 				const player = snapshot.val() as RoomPlayer | null;
-				if (!player) {
-					console.debug("********** NULL PLAYER: WHY?");
-					return;
+				if (null !== player) {
+					cb({
+						...player,
+						position: Math.floor(player.position) // Removing random decimal part
+					});
 				}
-				cb({
-					...player,
-					position: Math.floor(player.position) // Removing random decimal part
-				});
 			}
 		);
 	};
@@ -113,7 +115,9 @@ export const FirebaseRoom = ({
 			"value",
 			(snapshot: firebase.database.DataSnapshot) => {
 				const queue = snapshot.val() as RoomQueue | null;
-				cb(!queue ? {} : queue);
+				if (null !== queue) {
+					cb(queue);
+				}
 			}
 		);
 	};
@@ -144,13 +148,13 @@ export const FirebaseRoom = ({
 		player,
 		queue
 	}: {
-		extra: string;
+		extra: string | null;
 		info: RoomInfo;
-		player: RoomPlayer;
-		queue: RoomQueue;
+		player: RoomPlayer | null;
+		queue: RoomQueue | null;
 	}) => {
 		console.debug("[Firebase] Initializing room...", {
-			extraLength: extra.length,
+			extraLength: extra?.length,
 			info,
 			player,
 			queue

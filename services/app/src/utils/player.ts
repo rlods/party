@@ -12,7 +12,7 @@ import { TrackAccess } from "./medias";
 // ------------------------------------------------------------------
 
 export const generateRandomPosition = (trackCount: number) =>
-	Math.floor(Math.random() * 1000000) % trackCount;
+	trackCount > 0 ? Math.floor(Math.random() * 1000000) % trackCount : 0;
 
 // ------------------------------------------------------------------
 

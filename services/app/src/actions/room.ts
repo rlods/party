@@ -133,7 +133,6 @@ export const enterRoom = (
 					})
 				);
 				dispatch(_watchRoom());
-				dispatch(adjustQueue());
 				history.push(`/room/${dbId}/${roomId}?secret=${secret}`); // TODO: should push only if we're not already in it
 				return true;
 			},
@@ -292,7 +291,7 @@ const _watchRoom = (): AsyncAction => async (dispatch, getState) => {
 						player
 					})
 				);
-				dispatch(adjustPlayer());
+				dispatch(adjustPlayer("x7"));
 			}
 		);
 	}
@@ -305,7 +304,7 @@ const _watchRoom = (): AsyncAction => async (dispatch, getState) => {
 					queue
 				})
 			);
-			dispatch(adjustQueue());
+			dispatch(adjustQueue("x3"));
 		});
 	}
 };

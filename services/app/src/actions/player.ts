@@ -56,7 +56,7 @@ export const startPlayer = (
 						}
 					})
 				);
-				dispatch(adjustPlayer());
+				dispatch(adjustPlayer("x1"));
 				return true;
 			}
 			if (!firebaseRoom || firebaseRoom.isLocked()) {
@@ -102,7 +102,7 @@ export const stopPlayer = (
 						}
 					})
 				);
-				dispatch(adjustPlayer());
+				dispatch(adjustPlayer("x2"));
 				return true;
 			}
 			if (!firebaseRoom || firebaseRoom.isLocked()) {
@@ -150,7 +150,7 @@ export const setPlayerMode = ({
 						}
 					})
 				);
-				dispatch(adjustPlayer());
+				dispatch(adjustPlayer("x3"));
 				return true;
 			}
 			if (!firebaseRoom || firebaseRoom.isLocked()) {
@@ -202,7 +202,7 @@ export const setPlayerPosition = (
 						}
 					})
 				);
-				dispatch(adjustPlayer());
+				dispatch(adjustPlayer("x4"));
 				return true;
 			}
 			if (!firebaseRoom || firebaseRoom.isLocked()) {
@@ -267,7 +267,7 @@ export const movePlayerToOffset = ({
 
 // ------------------------------------------------------------------
 
-export const adjustPlayer = (): AsyncAction => async (
+export const adjustPlayer = (context: string): AsyncAction => async (
 	dispatch,
 	getState,
 	{ player: audioPlayer }
@@ -279,9 +279,13 @@ export const adjustPlayer = (): AsyncAction => async (
 		medias: { data: medias }
 	} = getState();
 
+	console.debug("[Player] Adjusting...", { context });
+
 	if (!tracks.length) {
-		console.debug("[Player] Stopping because no more tracks...");
-		audioPlayer.stop();
+		if (audioPlayer.isPlaying()) {
+			console.debug("[Player] Stopping because no more tracks...");
+			audioPlayer.stop();
+		}
 		return;
 	}
 
@@ -315,7 +319,7 @@ export const adjustPlayer = (): AsyncAction => async (
 					nextTrack.preview,
 					0,
 					{
-						onEnded: () => dispatch(adjustPlayer()),
+						onEnded: () => dispatch(adjustPlayer("x5")),
 						playmode: mode
 					}
 				)

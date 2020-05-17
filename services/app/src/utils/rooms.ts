@@ -76,11 +76,15 @@ export const initializeRoom = ({
 }: {
 	type: RoomType;
 	userId: string;
-}): { extra: string; player: RoomPlayer; queue: RoomQueue } => {
+}): {
+	extra: string | null;
+	player: RoomPlayer | null;
+	queue: RoomQueue | null;
+} => {
 	switch (type) {
 		case "dj":
 			return {
-				extra: "",
+				extra: null,
 				player: {
 					mode: "default",
 					playing: false,
@@ -91,12 +95,8 @@ export const initializeRoom = ({
 		case "seabattle":
 			return {
 				extra: encode(generateBattle(userId)),
-				player: {
-					mode: "shuffle",
-					playing: true,
-					position: 0
-				},
-				queue: {}
+				player: null,
+				queue: null
 			};
 	}
 };
