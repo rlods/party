@@ -7,7 +7,6 @@ import { callProxy } from "../proxy";
 
 const WWW_BASE = "https://www.deezer.com";
 const RATE_LIMIT_DELAY = 5000; // ms
-const DEFAULT_LIMIT = 10;
 
 // ------------------------------------------------------------------
 
@@ -161,10 +160,11 @@ const DeezerApiImpl = (): ProviderApi => {
 	const _search = <T>(
 		type: MediaType,
 		query: string,
-		options?: SearchOptions
+		options: SearchOptions
 	) =>
 		_call<DeezerApiSearchResult<T>>("search", {
-			limit: (options?.limit || DEFAULT_LIMIT).toString(),
+			limit: options.limit.toString(),
+			offset: options.offset.toString(),
 			q: encodeURIComponent(query),
 			type: type
 		});
@@ -229,7 +229,7 @@ const DeezerApiImpl = (): ProviderApi => {
 
 	const searchAlbums = async (
 		query: string,
-		options?: SearchOptions
+		options: SearchOptions
 	): Promise<Album[]> => {
 		if (query.trim().length === 0) {
 			return [];
@@ -241,7 +241,7 @@ const DeezerApiImpl = (): ProviderApi => {
 
 	const searchPlaylists = async (
 		query: string,
-		options?: SearchOptions
+		options: SearchOptions
 	): Promise<Playlist[]> => {
 		if (query.trim().length === 0) {
 			return [];
@@ -255,7 +255,7 @@ const DeezerApiImpl = (): ProviderApi => {
 
 	const searchTracks = async (
 		query: string,
-		options?: SearchOptions
+		options: SearchOptions
 	): Promise<Track[]> => {
 		if (query.trim().length === 0) {
 			return [];

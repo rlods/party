@@ -14,7 +14,8 @@ import { getSpotifyApi } from "./spotify";
 // ------------------------------------------------------------------
 
 export type SearchOptions = {
-	limit?: number;
+	limit: number;
+	offset: number;
 };
 
 export type SearchResults = {
@@ -32,14 +33,14 @@ export type ProviderApi = {
 
 	loadTracks: (ids: ReadonlyArray<string>) => Promise<Track[]>;
 
-	searchAlbums: (query: string, options?: SearchOptions) => Promise<Album[]>;
+	searchAlbums: (query: string, options: SearchOptions) => Promise<Album[]>;
 
 	searchPlaylists: (
 		query: string,
-		options?: SearchOptions
+		options: SearchOptions
 	) => Promise<Playlist[]>;
 
-	searchTracks: (query: string, options?: SearchOptions) => Promise<Track[]>;
+	searchTracks: (query: string, options: SearchOptions) => Promise<Track[]>;
 };
 
 // ------------------------------------------------------------------
@@ -129,7 +130,7 @@ export const loadNewMedias = async (
 
 export const searchMedias = async (
 	q: string,
-	options?: SearchOptions,
+	options: SearchOptions,
 	providerType?: ProviderType,
 	mediaType?: MediaType
 ): Promise<SearchResults> => {

@@ -26,6 +26,7 @@ import {
 	ProviderType
 } from "../utils/medias";
 import "./SearchModal.scss";
+import { unifyArrayPreserveOrderPred } from "../utils";
 
 // ------------------------------------------------------------------
 
@@ -45,6 +46,7 @@ export const SearchModal: FC = () => {
 	const { t } = useTranslation();
 	const queryRef = useRef<HTMLInputElement>(null);
 	const locked = useSelector<RootState, boolean>(isRoomLocked);
+	const [offset, setOffset] = useState(0);
 	const [playingMediaId, setPlayingMediaId] = useState("");
 	const [playingMediaProvider, setPlayingMediaProvider] = useState<
 		ProviderType
@@ -66,30 +68,76 @@ export const SearchModal: FC = () => {
 		}
 	});
 
+	const appendResults = useCallback(
+		async (newResults: SearchResults) => {
+			setResults({
+				deezer: {
+					album: unifyArrayPreserveOrderPred(
+						[...results.deezer.album, ...newResults.deezer.album],
+						(i1, i2) => i1.id === i2.id
+					),
+					playlist: unifyArrayPreserveOrderPred(
+						[
+							...results.deezer.playlist,
+							...newResults.deezer.playlist
+						],
+						(i1, i2) => i1.id === i2.id
+					),
+					track: unifyArrayPreserveOrderPred(
+						[...results.deezer.track, ...newResults.deezer.track],
+						(i1, i2) => i1.id === i2.id
+					)
+				},
+				spotify: {
+					album: unifyArrayPreserveOrderPred(
+						[...results.spotify.album, ...newResults.spotify.album],
+						(i1, i2) => i1.id === i2.id
+					),
+					playlist: unifyArrayPreserveOrderPred(
+						[
+							...results.spotify.playlist,
+							...newResults.spotify.playlist
+						],
+						(i1, i2) => i1.id === i2.id
+					),
+					track: unifyArrayPreserveOrderPred(
+						[...results.spotify.track, ...newResults.spotify.track],
+						(i1, i2) => i1.id === i2.id
+					)
+				}
+			});
+		},
+		[results]
+	);
+
 	const onSearch = useCallback(async () => {
 		if (query.trim().length > 0) {
 			setResults(
 				await searchMedias(query, {
+					offset: 0,
 					limit: SEARCH_RESULTS_COUNT
 				})
 			);
+			setOffset(SEARCH_RESULTS_COUNT);
 		}
 	}, [query]);
 
 	const onViewMore = useCallback(
 		async (providerType: ProviderType, mediaType: MediaType) => {
-			setResults(
+			appendResults(
 				await searchMedias(
 					query,
 					{
+						offset,
 						limit: VIEW_MORE_RESULTS_COUNT
 					},
 					providerType,
 					mediaType
 				)
 			);
+			setOffset(offset + VIEW_MORE_RESULTS_COUNT);
 		},
-		[query, setResults]
+		[offset, query, appendResults]
 	);
 
 	useEffect(() => {

@@ -8,7 +8,6 @@ import { callProxy } from "../proxy";
 const WWW_BASE = "https://open.spotify.com";
 const RATE_LIMIT_DELAY = 5000; // ms
 const BATCH_CHUNK_SIZE = 50;
-const DEFAULT_LIMIT = 10;
 
 // ------------------------------------------------------------------
 
@@ -137,10 +136,11 @@ const SpotifyApiImpl = (): ProviderApi => {
 	const _call = (path: string, params: { [key: string]: string }) =>
 		callProxy(`/spotify/${path}`, params);
 
-	const _search = (type: MediaType, query: string, options?: SearchOptions) =>
+	const _search = (type: MediaType, query: string, options: SearchOptions) =>
 		_call("search", {
-			limit: (options?.limit || DEFAULT_LIMIT).toString(),
+			limit: options.limit.toString(),
 			market: "US",
+			offset: options.offset.toString(),
 			q: encodeURIComponent(query),
 			type: type
 		});
@@ -217,7 +217,7 @@ const SpotifyApiImpl = (): ProviderApi => {
 
 	const searchAlbums = async (
 		query: string,
-		options?: SearchOptions
+		options: SearchOptions
 	): Promise<Album[]> => {
 		if (query.trim().length === 0) {
 			return [];
@@ -233,7 +233,7 @@ const SpotifyApiImpl = (): ProviderApi => {
 
 	const searchPlaylists = async (
 		query: string,
-		options?: SearchOptions
+		options: SearchOptions
 	): Promise<Playlist[]> => {
 		if (query.trim().length === 0) {
 			return [];
@@ -251,7 +251,7 @@ const SpotifyApiImpl = (): ProviderApi => {
 
 	const searchTracks = async (
 		query: string,
-		options?: SearchOptions
+		options: SearchOptions
 	): Promise<Track[]> => {
 		if (query.trim().length === 0) {
 			return [];
