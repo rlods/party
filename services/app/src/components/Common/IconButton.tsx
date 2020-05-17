@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { forwardRef } from "react";
 import classNames from "classnames";
 //
 import { Icon, IconSize } from "./Icon";
@@ -8,7 +8,7 @@ import "./IconButton.scss";
 
 type ButtonType = "button" | "submit";
 
-export const IconButton: FC<{
+type IconButtonProps = {
 	className?: string;
 	color?: string;
 	disabled?: boolean;
@@ -19,20 +19,26 @@ export const IconButton: FC<{
 	size?: IconSize;
 	title: string;
 	type?: ButtonType;
-}> = React.memo(
-	({
-		className,
-		color,
-		disabled = false,
-		displayTitle = false,
-		icon,
-		kind = "default",
-		onClick,
-		size,
-		title,
-		type = "button"
-	}) => (
+};
+
+export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
+	(
+		{
+			className,
+			color,
+			disabled = false,
+			displayTitle = false,
+			icon,
+			kind = "default",
+			onClick,
+			size,
+			title,
+			type = "button"
+		},
+		ref
+	) => (
 		<button
+			ref={ref}
 			type={type}
 			aria-label={title}
 			className={classNames("IconButton", className, kind, {

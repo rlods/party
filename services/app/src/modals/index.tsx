@@ -10,6 +10,7 @@ import { CreateRoomModal } from "./CreateRoomModal";
 import { CreateUserModal } from "./CreateUserModal";
 import { HelpModal } from "./HelpModal";
 import { GameOverModal } from "./GameOverModal";
+import { ReadyModal } from "./ReadyModal";
 import { SeaBattleHelpModal } from "./SeaBattleHelpModal";
 import { SearchModal } from "./SearchModal";
 import { JoinRoomModal } from "./JoinRoomModal";
@@ -23,7 +24,7 @@ const TRANSITION_TIMEOUT = 300;
 
 // ------------------------------------------------------------------
 
-export const getModal = (prereq?: ModalPrereq) => {
+const getModal = (prereq?: ModalPrereq) => {
 	if (prereq) {
 		switch (prereq.type) {
 			// General
@@ -31,6 +32,8 @@ export const getModal = (prereq?: ModalPrereq) => {
 				return <ConfirmModal {...prereq.props} />;
 			case "General/Help":
 				return <HelpModal />;
+			case "General/Ready":
+				return <ReadyModal {...prereq.props} />;
 			// User
 			case "User/Connect":
 				return <ConnectUserModal {...prereq.props} />;
@@ -57,7 +60,7 @@ export const getModal = (prereq?: ModalPrereq) => {
 
 // ------------------------------------------------------------------
 
-export const Modals: FC = () => {
+export const ModalManager: FC = () => {
 	const { onModalPop } = useContext(AppContext);
 	const prereq = useSelector<RootState, ModalPrereq | undefined>(state =>
 		state.modals.stack.length > 0

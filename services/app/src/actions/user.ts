@@ -3,7 +3,13 @@ import { v4 } from "uuid";
 import { AsyncAction, TrySomethingOptions, trySomething } from ".";
 import { UserInfo } from "../utils/users";
 import { FirebaseUser } from "../utils/firebase/user";
-import { setUser, resetUser, fetching, error } from "../reducers/user";
+import {
+	setUserAccess,
+	setUserData,
+	resetUser,
+	fetchingUser,
+	setUserError
+} from "../reducers/user";
 
 // ------------------------------------------------------------------
 
@@ -73,14 +79,14 @@ export const connectUser = (
 
 				dispatch(disconnectUser());
 
-				dispatch(fetching());
+				dispatch(fetchingUser());
 
 				console.debug("[User] Connecting...", { dbId, userId, secret });
 				const newFbUser = FirebaseUser({ dbId, userId, secret });
+				dispatch(setUserAccess({ dbId, userId, secret }));
 				dispatch(
-					setUser({
+					setUserData({
 						firebaseUser: newFbUser,
-						access: { dbId, userId, secret },
 						info: await newFbUser.wait()
 					})
 				);
@@ -90,7 +96,7 @@ export const connectUser = (
 							"[User] Received user update...",
 							newInfo
 						);
-						dispatch(setUser({ info: newInfo }));
+						dispatch(setUserData({ info: newInfo }));
 					}
 				);
 				return true;
@@ -98,7 +104,7 @@ export const connectUser = (
 			{
 				...options,
 				onFailure: () => {
-					dispatch(error("Cannot connect")); // TODO: wording
+					dispatch(setUserError("Cannot connect")); // TODO: wording
 					dispatch(disconnectUser());
 					if (options?.onFailure) {
 						options.onFailure();
@@ -115,10 +121,8 @@ export const disconnectUser = (): AsyncAction => (dispatch, getState) =>
 		trySomething(async () => {
 			const {
 				user: {
-					data: {
-						firebaseUser,
-						access: { dbId, userId, secret }
-					}
+					access: { dbId, userId, secret },
+					data: { firebaseUser }
 				}
 			} = getState();
 			if (!dbId && !userId && !secret && !firebaseUser) {
@@ -146,9 +150,7 @@ export const reconnectUser = (): AsyncAction => (dispatch, getState) =>
 		trySomething(async () => {
 			const {
 				user: {
-					data: {
-						access: { dbId, userId, secret }
-					}
+					access: { dbId, userId, secret }
 				}
 			} = getState();
 			if (!dbId || !userId || !secret) {

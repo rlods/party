@@ -1,4 +1,4 @@
-import React, { FC, FormEvent, ReactNode, useContext } from "react";
+import React, { FC, FormEvent, ReactNode, useContext, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
@@ -14,13 +14,23 @@ export const Modal: FC<{
 	className?: string;
 	title: string;
 	renderFoot?: () => React.ReactNode;
+	onClose?: () => void;
 	onSubmit?: () => void;
-}> = ({ children, className, title, renderFoot, onSubmit }) => {
+}> = ({ children, className, title, renderFoot, onClose, onSubmit }) => {
 	const { onModalClose, onModalPop } = useContext(AppContext);
 	const { t } = useTranslation();
 	const has_prev_modal = useSelector<RootState, boolean>(
 		state => state.modals.stack.length > 1
 	);
+
+	useEffect(() => {
+		// on unmount...
+		return () => {
+			if (onClose) {
+				onClose();
+			}
+		};
+	}, [onClose]);
 
 	return (
 		<form

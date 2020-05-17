@@ -5,18 +5,27 @@ import { Redirect, Route, Switch, useHistory } from "react-router-dom";
 //
 import { Room } from "./Room";
 import { Splash } from "./Splash";
-import { Modals } from "../modals";
+import { ModalManager } from "../modals";
 import { Dispatch, TrySomethingOptions } from "../actions";
 import { setApp } from "../reducers/app";
-import { RoomType } from "../utils/rooms";
+import { RoomType, PlayMode } from "../utils/rooms";
 import { MessageOptions, displayInfo, displayError } from "../actions/messages";
 import { clearMessages, removeMessages } from "../reducers/messages";
 import { MediaAccess } from "../utils/medias";
 import { previewMedia } from "../actions/medias";
 import { PREVIEW_PLAYER } from "../utils/player";
 import { confirmModal } from "../actions/modals";
-import { stopPlayer, startPlayer } from "../actions/player";
+import {
+	movePlayerToOffset,
+	stopPlayer,
+	startPlayer,
+	setPlayerMode
+} from "../actions/player";
 import { selectUserDatabaseId, selectRoomDatabaseId } from "../config/firebase";
+import { appendToQueue, clearQueue, removeFromQueue } from "../actions/queue";
+import { AppContext } from "./AppContext";
+import { copyToClipboard } from "../utils/clipboard";
+import { useDebounce } from "../utils/use";
 import {
 	reconnectUser,
 	disconnectUser,
@@ -37,16 +46,8 @@ import {
 	popModal,
 	ModalPrereq
 } from "../reducers/modals";
-import {
-	appendToQueue,
-	clearQueue,
-	removeFromQueue,
-	moveToOffset
-} from "../actions/queue";
-import { AppContext } from "./AppContext";
-import { copyToClipboard } from "../utils/clipboard";
-import { useDebounce } from "../utils/use";
 import "./App.scss";
+import { isAudioReady } from "../utils/audio";
 
 // ------------------------------------------------------------------
 
@@ -69,7 +70,7 @@ export const App: FC = () => {
 				console.debug("Apply debounced wanted offset", {
 					wantedOffset
 				});
-				d(moveToOffset({ offset: wantedOffset, propagate }));
+				d(movePlayerToOffset({ offset: wantedOffset, propagate }));
 				setWantedOffset(0);
 			}
 		},
@@ -231,9 +232,18 @@ export const App: FC = () => {
 	);
 
 	const onRoomEnter = useCallback(
-		(access: RoomAccess, options?: TrySomethingOptions) =>
-			d(enterRoom(access, options)),
-		[d]
+		(access: RoomAccess, options?: TrySomethingOptions) => {
+			if (!isAudioReady()) {
+				// Modal is opened just to force initialization of audio context before entering room
+				onModalOpen({
+					type: "General/Ready",
+					props: { onReady: () => d(enterRoom(access, options)) }
+				});
+			} else {
+				d(enterRoom(access, options));
+			}
+		},
+		[d, onModalOpen]
 	);
 
 	const onPreviewStart = useCallback(
@@ -244,8 +254,8 @@ export const App: FC = () => {
 	const onPreviewStop = useCallback(() => PREVIEW_PLAYER.stop(), []);
 
 	const onPlayerStart = useCallback(
-		({ position }: { position?: number }, options?: TrySomethingOptions) =>
-			d(startPlayer({ position, propagate }, options)),
+		(data: { position?: number } = {}, options?: TrySomethingOptions) =>
+			d(startPlayer({ position: data.position, propagate }, options)),
 		[d, propagate]
 	);
 
@@ -255,9 +265,14 @@ export const App: FC = () => {
 		[d, propagate]
 	);
 
+	const onPlayerSetMode = useCallback(
+		(mode: PlayMode) => d(setPlayerMode({ mode, propagate })),
+		[d, propagate]
+	);
+
 	const onQueueAppend = useCallback(
-		(access: MediaAccess, options?: TrySomethingOptions) =>
-			d(appendToQueue({ medias: [access], propagate }, options)),
+		(accesses: MediaAccess[], options?: TrySomethingOptions) =>
+			d(appendToQueue({ medias: accesses, propagate }, options)),
 		[d, propagate]
 	);
 
@@ -338,6 +353,7 @@ export const App: FC = () => {
 				onModalClose,
 				onModalOpen,
 				onModalPop,
+				onPlayerSetMode,
 				onPlayerSetPropagate,
 				onPlayerStart,
 				onPlayerStop,
@@ -364,7 +380,7 @@ export const App: FC = () => {
 				onUserDisconnect
 			}}>
 			<div className="App">
-				<Modals />
+				<ModalManager />
 				<Switch>
 					<Route
 						exact={true}

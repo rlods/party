@@ -1,19 +1,25 @@
 import { v4 } from "uuid";
 //
+import { history } from "../utils/history";
 import { AsyncAction, TrySomethingOptions, trySomething } from ".";
-import { RoomInfo, RoomType, initializeRoom, RoomQueue } from "../utils/rooms";
 import { FirebaseRoom } from "../utils/firebase/room";
-import { loadNewMedias } from "../utils/providers";
-import { setMedias } from "../reducers/medias";
-import { setRoom, resetRoom, fetching, error } from "../reducers/room";
-import history from "../utils/history";
-import { decode } from "../utils/encoder";
 import {
-	MediaAccess,
-	extractTracks,
-	ContextualizedTrackAccess
-} from "../utils/medias";
-import { adjustPlayer, stopPlayer } from "./player";
+	setRoomAccess,
+	setRoomData,
+	resetRoom,
+	fetchingRoom,
+	setRoomError
+} from "../reducers/room";
+import { decode } from "../utils/encoder";
+import { stopPlayer, adjustPlayer } from "./player";
+import { adjustQueue } from "./queue";
+import {
+	RoomInfo,
+	RoomType,
+	initializeRoom,
+	RoomQueue,
+	RoomPlayer
+} from "../utils/rooms";
 
 // ------------------------------------------------------------------
 
@@ -36,29 +42,28 @@ export const createRoom = (
 			async () => {
 				const {
 					user: {
-						data: {
-							access: { userId }
-						}
+						access: { userId }
 					}
 				} = getState();
 				if (!userId) {
 					return "connect-and-retry";
 				}
 				const roomId = v4();
+
 				console.debug("[Room] Creating...", {
 					dbId,
 					roomId,
 					secret
 				});
-
-				const { extra, queue } = initializeRoom({ type, userId });
 				await FirebaseRoom({ dbId, roomId, secret }).init({
-					extra,
 					info: {
 						name,
 						type
 					},
-					queue
+					...initializeRoom({
+						type,
+						userId
+					})
 				});
 				dispatch(enterRoom({ dbId, roomId, secret }, options));
 				return true;
@@ -93,9 +98,7 @@ export const enterRoom = (
 						data: { firebaseRoom }
 					},
 					user: {
-						data: {
-							access: { userId }
-						}
+						access: { userId }
 					}
 				} = getState();
 				if (
@@ -113,28 +116,31 @@ export const enterRoom = (
 					return "connect-and-retry";
 				}
 
-				dispatch(fetching());
+				dispatch(fetchingRoom());
 
 				console.debug("[Room] Entering...", { dbId, roomId, secret });
 				const newFbRoom = FirebaseRoom({ dbId, roomId, secret });
-				const { extra, info } = await newFbRoom.wait();
+				const { extra, info, player, queue } = await newFbRoom.wait();
+				dispatch(setRoomAccess({ dbId, roomId, secret }));
 				dispatch(
-					setRoom({
+					setRoomData({
 						firebaseRoom: newFbRoom,
-						access: { dbId, roomId, secret },
 						extra,
 						extraDecoded: extra ? decode(extra) : null,
-						info
+						info,
+						player,
+						queue
 					})
 				);
-				dispatch(_watchRoom(newFbRoom));
+				dispatch(_watchRoom());
+				dispatch(adjustQueue());
 				history.push(`/room/${dbId}/${roomId}?secret=${secret}`); // TODO: should push only if we're not already in it
 				return true;
 			},
 			{
 				...options,
 				onFailure: () => {
-					dispatch(error("Cannot enter")); // TODO: wording
+					dispatch(setRoomError("Cannot enter")); // TODO: wording
 					dispatch(exitRoom());
 					if (options?.onFailure) {
 						options.onFailure();
@@ -143,6 +149,8 @@ export const enterRoom = (
 			}
 		)
 	);
+
+// ------------------------------------------------------------------
 
 export const exitRoom = (): AsyncAction => (dispatch, getState) =>
 	dispatch(
@@ -157,8 +165,8 @@ export const exitRoom = (): AsyncAction => (dispatch, getState) =>
 				return true; // Nothing to do
 			}
 			console.debug("[Room] Exiting...");
+			dispatch(_unwatchRoom());
 			dispatch(stopPlayer({ propagate: false }));
-			dispatch(_unwatchRoom(firebaseRoom));
 			dispatch(resetRoom());
 			return true;
 		})
@@ -171,10 +179,8 @@ export const lockRoom = (): AsyncAction => (dispatch, getState) =>
 		trySomething(async () => {
 			const {
 				room: {
-					data: {
-						firebaseRoom,
-						access: { dbId, roomId, secret: oldSecret }
-					}
+					access: { dbId, roomId, secret: oldSecret },
+					data: { firebaseRoom }
 				}
 			} = getState();
 			if (
@@ -189,10 +195,12 @@ export const lockRoom = (): AsyncAction => (dispatch, getState) =>
 			console.debug("[Room] Locking...", { dbId, roomId });
 			firebaseRoom.setSecret("");
 			// TODO : not history.replace(`/room/${dbId}/${roomId}`); as it would trigger a page refresh
-			dispatch(setRoom({ access: { dbId, roomId, secret: "" } }));
+			dispatch(setRoomAccess({ dbId, roomId, secret: "" }));
 			return true;
 		})
 	);
+
+// ------------------------------------------------------------------
 
 export const unlockRoom = (
 	{
@@ -206,10 +214,8 @@ export const unlockRoom = (
 		trySomething(async () => {
 			const {
 				room: {
-					data: {
-						firebaseRoom,
-						access: { dbId, roomId, secret: oldSecret }
-					}
+					access: { dbId, roomId, secret: oldSecret },
+					data: { firebaseRoom }
 				}
 			} = getState();
 			if (
@@ -224,7 +230,7 @@ export const unlockRoom = (
 			console.debug("[Room] Unlocking...", { dbId, roomId, secret });
 			firebaseRoom.setSecret(secret);
 			// TODO : not history.replace(`/room/${id}?secret=${secret}`); as it would trigger a page refresh
-			dispatch(setRoom({ access: { dbId, roomId, secret } }));
+			dispatch(setRoomAccess({ dbId, roomId, secret }));
 			return true;
 		}, options)
 	);
@@ -235,80 +241,103 @@ export const unlockRoom = (
 
 let EXTRA_SUBSCRIPTION: any = null;
 let INFO_SUBSCRIPTION: any = null;
+let PLAYER_SUBSCRIPTION: any = null;
 let QUEUE_SUBSCRIPTION: any = null;
 
-const _watchRoom = (
-	fbRoom: ReturnType<typeof FirebaseRoom>
-): AsyncAction => async (dispatch, getState) => {
-	console.debug("[Room] Watching...");
-	if (!!EXTRA_SUBSCRIPTION || !!INFO_SUBSCRIPTION || !!QUEUE_SUBSCRIPTION) {
+const _watchRoom = (): AsyncAction => async (dispatch, getState) => {
+	const {
+		room: {
+			data: { firebaseRoom }
+		}
+	} = getState();
+
+	if (!firebaseRoom) {
+		console.debug("[Room] Watching ignored");
 		return; // Nothing to do
 	}
-	EXTRA_SUBSCRIPTION = fbRoom.subscribeExtra(async (newExtra: string) => {
-		console.debug("[Room] Received room extra update...", { newExtra });
-		dispatch(
-			setRoom({
-				extra: newExtra,
-				extraDecoded: newExtra ? decode(newExtra) : null
-			})
-		);
-	});
-	INFO_SUBSCRIPTION = fbRoom.subscribeInfo(async (newInfo: RoomInfo) => {
-		console.debug("[Room] Received room info update...", { newInfo });
-		dispatch(
-			setRoom({
-				info: newInfo
-			})
-		);
-	});
-	QUEUE_SUBSCRIPTION = fbRoom.subscribeQueue(async (queue: RoomQueue) => {
-		console.debug("[Room] Received room queue update...", { queue });
-		const {
-			medias: { data: oldMedias }
-		} = getState();
-		const medias: ReadonlyArray<MediaAccess> = !queue.medias
-			? []
-			: Object.entries(queue.medias)
-					.sort((m1, m2) => Number(m1[0]) - Number(m2[0]))
-					.map(m => m[1]);
-		let tracks: ContextualizedTrackAccess[] = [];
-		if (medias.length > 0) {
-			const { newMedias, newMediasAndTracks } = await loadNewMedias(
-				medias,
-				oldMedias
+
+	console.debug("[Room] Watching...");
+
+	if (!EXTRA_SUBSCRIPTION) {
+		EXTRA_SUBSCRIPTION = firebaseRoom.subscribeExtra((extra: string) => {
+			console.debug("[Room] Received extra update...", {
+				extraLength: extra.length
+			});
+			dispatch(
+				setRoomData({
+					extra,
+					extraDecoded: extra ? decode(extra) : null
+				})
 			);
-			if (newMediasAndTracks.length > 0) {
-				dispatch(setMedias(newMediasAndTracks));
+		});
+	}
+
+	if (!INFO_SUBSCRIPTION) {
+		INFO_SUBSCRIPTION = firebaseRoom.subscribeInfo((info: RoomInfo) => {
+			console.debug("[Room] Received info update...", { info });
+			dispatch(
+				setRoomData({
+					info
+				})
+			);
+		});
+	}
+
+	if (!PLAYER_SUBSCRIPTION) {
+		PLAYER_SUBSCRIPTION = firebaseRoom.subscribePlayer(
+			(player: RoomPlayer) => {
+				console.debug("[Room] Received player update...", { player });
+				dispatch(
+					setRoomData({
+						player
+					})
+				);
+				dispatch(adjustPlayer());
 			}
-			tracks = extractTracks(medias, oldMedias, newMedias);
-		}
-		dispatch(
-			setRoom({
-				medias,
-				queue,
-				tracks
-			})
 		);
-		dispatch(adjustPlayer());
-	});
+	}
+
+	if (!QUEUE_SUBSCRIPTION) {
+		QUEUE_SUBSCRIPTION = firebaseRoom.subscribeQueue((queue: RoomQueue) => {
+			console.debug("[Room] Received queue update...", { queue });
+			dispatch(
+				setRoomData({
+					queue
+				})
+			);
+			dispatch(adjustQueue());
+		});
+	}
 };
 
-const _unwatchRoom = (
-	room: ReturnType<typeof FirebaseRoom>
-): AsyncAction => async () => {
+const _unwatchRoom = (): AsyncAction => async (dispatch, getState) => {
+	const {
+		room: {
+			data: { firebaseRoom }
+		}
+	} = getState();
+
+	if (!firebaseRoom) {
+		console.debug("[Room] Unwatching ignored");
+		return; // Nothing to do
+	}
+
+	console.debug("[Room] Unwatching...");
+
 	if (!!EXTRA_SUBSCRIPTION) {
-		console.debug("Unwatching room extra...");
-		room.unsubscribeExtra(EXTRA_SUBSCRIPTION);
+		firebaseRoom.unsubscribeExtra(EXTRA_SUBSCRIPTION);
 		EXTRA_SUBSCRIPTION = null;
 	}
 	if (!!INFO_SUBSCRIPTION) {
-		console.debug("Unwatching room info...");
-		room.unsubscribeInfo(INFO_SUBSCRIPTION);
+		firebaseRoom.unsubscribeInfo(INFO_SUBSCRIPTION);
 		INFO_SUBSCRIPTION = null;
 	}
+	if (!!PLAYER_SUBSCRIPTION) {
+		firebaseRoom.unsubscribePlayer(PLAYER_SUBSCRIPTION);
+		PLAYER_SUBSCRIPTION = null;
+	}
 	if (!!QUEUE_SUBSCRIPTION) {
-		console.debug("Unwatching room queue...");
-		room.unsubscribeQueue(QUEUE_SUBSCRIPTION);
+		firebaseRoom.unsubscribeQueue(QUEUE_SUBSCRIPTION);
 		QUEUE_SUBSCRIPTION = null;
 	}
 };

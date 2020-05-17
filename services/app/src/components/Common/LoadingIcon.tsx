@@ -1,13 +1,20 @@
-import React, { FC } from "react";
+import React, { forwardRef } from "react";
+import FontAwesome from "react-fontawesome";
+//
 import { Icon, IconSize } from "./Icon";
 
 // ------------------------------------------------------------------
 
-export const LoadingIcon: FC<{ size?: IconSize }> = React.memo(({ size }) => (
-	<Icon
-		className="rotating"
-		icon="circle-o-notch"
-		size={size}
-		title="Loading"
-	/>
-));
+type LoadingIconProps = { size?: IconSize };
+
+export const LoadingIcon = forwardRef<FontAwesome, LoadingIconProps>(
+	({ size }, ref) => (
+		<Icon
+			ref={ref}
+			className="rotating"
+			icon="circle-o-notch"
+			size={size}
+			title="Loading"
+		/>
+	)
+);

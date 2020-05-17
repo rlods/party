@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { forwardRef } from "react";
 import FontAwesome from "react-fontawesome";
 import classNames from "classnames";
 //
@@ -10,17 +10,22 @@ export type IconSize = "S" | "M" | "L" | "XL";
 
 // ------------------------------------------------------------------
 
-export const Icon: FC<{
+type IconProps = {
 	className?: string;
 	color?: string;
 	icon: string;
 	size?: IconSize;
 	title?: string;
-}> = React.memo(({ className, color, icon, size = "M", title }) => (
-	<FontAwesome
-		className={classNames("Icon", className, size)}
-		name={icon}
-		style={{ color }}
-		title={title}
-	/>
-));
+};
+
+export const Icon = forwardRef<FontAwesome, IconProps>(
+	({ className, color, icon, size = "M", title }, ref) => (
+		<FontAwesome
+			ref={ref}
+			className={classNames("Icon", className, size)}
+			name={icon}
+			style={{ color }}
+			title={title}
+		/>
+	)
+);

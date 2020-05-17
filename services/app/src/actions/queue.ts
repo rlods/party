@@ -1,10 +1,15 @@
 import { AsyncAction, trySomething, TrySomethingOptions } from ".";
-import { augmentedIndexProcess } from "../utils";
-import { MediaAccess, findContextFromTrackIndex } from "../utils/medias";
+import {
+	MediaAccess,
+	findContextFromTrackIndex,
+	ContextualizedTrackAccess,
+	extractTracks
+} from "../utils/medias";
 import { createQueueMerging, createQueueRemoving } from "../utils/rooms";
-import { generateRandomPosition } from "../utils/player";
-import { setRoom } from "../reducers/room";
+import { setRoomData } from "../reducers/room";
 import { adjustPlayer } from "./player";
+import { loadNewMedias } from "../utils/providers";
+import { setMedias } from "../reducers/medias";
 
 // ------------------------------------------------------------------
 
@@ -20,35 +25,29 @@ export const clearQueue = (
 		trySomething(async () => {
 			const {
 				room: {
-					data: { firebaseRoom, queue }
+					data: { firebaseRoom, player }
 				}
 			} = getState();
-			if (!queue) {
-				console.debug("[Queue] Clearing ignored");
-				return true; // Nothing to do
-			}
 			console.debug("[Queue] Clearing...");
 			if (!propagate) {
 				dispatch(
-					setRoom({
-						queue: {
-							...queue,
-							playing: false,
-							medias: {},
+					setRoomData({
+						player: {
+							...player,
 							position: 0
-						}
+						},
+						queue: {}
 					})
 				);
-				dispatch(adjustPlayer());
+				dispatch(adjustQueue());
 				return true;
 			}
 			if (!firebaseRoom || firebaseRoom.isLocked()) {
 				return "unlock-and-retry";
 			}
-			await firebaseRoom.updateQueue({
-				...queue,
-				medias: {},
-				playing: false,
+			await firebaseRoom.updateQueue({});
+			await firebaseRoom.updatePlayer({
+				...player,
 				position: 0
 			});
 			return true;
@@ -71,27 +70,32 @@ export const appendToQueue = (
 		trySomething(async () => {
 			const {
 				room: {
-					data: { firebaseRoom, queue, medias: oldMedias }
+					data: { firebaseRoom, medias: oldMedias }
 				}
 			} = getState();
-			if (!queue || newMedias.length === 0) {
+			if (newMedias.length === 0) {
 				console.debug("[Queue] Appending ignored");
 				return true; // Nothing to do
 			}
 			console.debug("[Queue] Appending...", {
-				newMedias
+				newMedias,
+				propagate
 			});
 			if (!propagate) {
-				console.debug("TODO: appendToQueue without propagation");
+				dispatch(
+					setRoomData({
+						queue: createQueueMerging(oldMedias, newMedias)
+					})
+				);
+				dispatch(adjustQueue());
 				return true;
 			}
 			if (!firebaseRoom || firebaseRoom.isLocked()) {
 				return "unlock-and-retry";
 			}
-			await firebaseRoom.updateQueue({
-				...queue,
-				medias: createQueueMerging(oldMedias, newMedias)
-			});
+			await firebaseRoom.updateQueue(
+				createQueueMerging(oldMedias, newMedias)
+			);
 			return true;
 		}, options)
 	);
@@ -114,10 +118,10 @@ export const removeFromQueue = (
 			const {
 				medias: { data: allMedias },
 				room: {
-					data: { firebaseRoom, queue, medias: oldMedias, tracks }
+					data: { firebaseRoom, player, medias: oldMedias, tracks }
 				}
 			} = getState();
-			if (!firebaseRoom || firebaseRoom.isLocked() || !queue) {
+			if (!firebaseRoom || firebaseRoom.isLocked()) {
 				return "unlock-and-retry";
 			}
 			const {
@@ -133,7 +137,7 @@ export const removeFromQueue = (
 				console.debug("[Queue] Removing ignored");
 				return true; // Nothing to do
 			}
-			const playingTrackIndex = queue.position;
+			const playingTrackIndex = player.position;
 			console.debug("[Queue] Removing...", {
 				playingTrackIndex,
 				removedMediaIndex,
@@ -152,25 +156,21 @@ export const removeFromQueue = (
 			}
 			if (Object.keys(newMedias).length === 0) {
 				console.debug("[Queue] Removing last...");
-				await firebaseRoom.updateQueue({
-					...queue,
-					medias: {},
-					playing: false,
+				await firebaseRoom.updateQueue({});
+				await firebaseRoom.updatePlayer({
+					...player,
 					position: 0
 				});
 			} else if (playingTrackIndex < removedTrackIndex) {
-				await firebaseRoom.updateQueue({
-					...queue,
-					medias: newMedias
-				});
+				await firebaseRoom.updateQueue(newMedias);
 			} else if (
 				playingTrackIndex >= removedMediaFirstTrackIndex &&
 				playingTrackIndex <
 					removedMediaFirstTrackIndex + removedTrackCount
 			) {
-				await firebaseRoom.updateQueue({
-					...queue,
-					medias: newMedias,
+				await firebaseRoom.updateQueue(newMedias);
+				await firebaseRoom.updatePlayer({
+					...player,
 					position:
 						removedMediaFirstTrackIndex + removedTrackCount ===
 						tracks.length
@@ -178,9 +178,9 @@ export const removeFromQueue = (
 							: removedMediaFirstTrackIndex
 				});
 			} else {
-				await firebaseRoom.updateQueue({
-					...queue,
-					medias: newMedias,
+				await firebaseRoom.updateQueue(newMedias);
+				await firebaseRoom.updatePlayer({
+					...player,
 					position: playingTrackIndex - removedTrackCount
 				});
 			}
@@ -190,101 +190,32 @@ export const removeFromQueue = (
 
 // ------------------------------------------------------------------
 
-export const setQueuePosition = (
-	{
-		position: newPosition,
-		propagate
-	}: {
-		position: number;
-		propagate: boolean;
-	},
-	options?: TrySomethingOptions
-): AsyncAction => (dispatch, getState) =>
+export const adjustQueue = (): AsyncAction => async (dispatch, getState) => {
+	const {
+		medias: { data: oldMedias },
+		room: {
+			data: { queue }
+		}
+	} = getState();
+	const medias: ReadonlyArray<MediaAccess> = Object.entries(queue)
+		.sort((m1, m2) => Number(m1[0]) - Number(m2[0]))
+		.map(m => m[1]);
+	let tracks: ContextualizedTrackAccess[] = [];
+	if (medias.length > 0) {
+		const { newMedias, newMediasAndTracks } = await loadNewMedias(
+			medias,
+			oldMedias
+		);
+		if (newMediasAndTracks.length > 0) {
+			dispatch(setMedias(newMediasAndTracks));
+		}
+		tracks = extractTracks(medias, oldMedias, newMedias);
+	}
 	dispatch(
-		trySomething(async () => {
-			const {
-				room: {
-					data: { firebaseRoom, queue }
-				}
-			} = getState();
-			if (!queue || queue.position === newPosition) {
-				console.debug("[Queue] Setting position ignored");
-				return true; // Nothing to do
-			}
-			console.debug("[Queue] Setting position...", {
-				oldPosition: queue.position,
-				newPosition,
-				propagate
-			});
-			if (!propagate) {
-				dispatch(
-					setRoom({
-						queue: {
-							...queue,
-							playing: true,
-							position: newPosition
-						}
-					})
-				);
-				dispatch(adjustPlayer());
-				return true;
-			}
-			if (!firebaseRoom || firebaseRoom.isLocked()) {
-				return "unlock-and-retry";
-			}
-			await firebaseRoom.updateQueue({
-				...queue,
-				position: newPosition
-			});
-			return true;
-		}, options)
-	);
-
-// ------------------------------------------------------------------
-
-export const moveToOffset = ({
-	propagate,
-	offset
-}: {
-	propagate: boolean;
-	offset: number;
-}): AsyncAction => (dispatch, getState) =>
-	dispatch(
-		trySomething(async () => {
-			const {
-				room: {
-					data: { queue, tracks }
-				}
-			} = getState();
-			if (offset === 0 || !queue || tracks.length === 0) {
-				console.debug("[Queue] Offset moving ignored");
-				return true; // Nothing to do
-			}
-			const { position: oldPosition } = queue;
-			let newPosition = 0;
-			switch (queue.playmode) {
-				case "shuffle":
-					newPosition = generateRandomPosition(tracks.length);
-					break;
-				case "default":
-					newPosition = augmentedIndexProcess(
-						tracks.length,
-						oldPosition + offset
-					);
-					break;
-			}
-			console.debug("[Queue] Offset moving...", {
-				offset,
-				oldPosition,
-				newPosition,
-				propagate
-			});
-			dispatch(
-				setQueuePosition({
-					position: newPosition,
-					propagate
-				})
-			);
-			return true;
+		setRoomData({
+			medias,
+			tracks
 		})
 	);
+	dispatch(adjustPlayer());
+};

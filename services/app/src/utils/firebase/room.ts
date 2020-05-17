@@ -2,7 +2,7 @@ import * as firebase from "firebase/app";
 import "firebase/database";
 //
 import { createOrGetApp, PermissionError } from "./";
-import { RoomInfo, RoomQueue } from "../rooms";
+import { RoomInfo, RoomQueue, RoomPlayer } from "../rooms";
 
 // ------------------------------------------------------------------
 
@@ -19,6 +19,7 @@ export const FirebaseRoom = ({
 	const _room = app.rooms.child(roomId);
 	const _extra = _room.child("extra");
 	const _info = _room.child("info");
+	const _player = _room.child("player");
 	const _queue = _room.child("queue");
 	let _secret = secret || "";
 
@@ -35,23 +36,27 @@ export const FirebaseRoom = ({
 	const wait = async (): Promise<{
 		extra: string;
 		info: RoomInfo;
+		player: RoomPlayer;
 		queue: RoomQueue;
 	}> => {
 		try {
 			console.debug("[Firebase] Waiting room...");
-			const [extra, info, queue] = await Promise.all([
+			const [extra, info, player, queue] = await Promise.all([
 				_extra.once("value"),
 				_info.once("value"),
+				_player.once("value"),
 				_queue.once("value")
 			]);
-			const q = queue.val();
+			const p = player.val() as RoomPlayer;
+			const q = queue.val() as RoomQueue | null;
 			return {
 				extra: extra.val(),
 				info: info.val(),
-				queue: {
-					...q,
-					position: Math.floor(q.position) // Removing random decimal part
-				}
+				player: {
+					...p,
+					position: Math.floor(p.position) // Removing random decimal part
+				},
+				queue: !q ? {} : q
 			};
 		} catch (err) {
 			throw new Error("rooms.errors.invalid");
@@ -77,25 +82,38 @@ export const FirebaseRoom = ({
 		return _info.on("value", (snapshot: firebase.database.DataSnapshot) => {
 			const info = snapshot.val() as RoomInfo | null;
 			if (!info) {
+				console.debug("********** NULL INFO: WHY?");
 				return;
 			}
 			cb(info);
 		});
 	};
 
-	const subscribeQueue = (cb: (info: RoomQueue) => void) => {
+	const subscribePlayer = (cb: (player: RoomPlayer) => void) => {
+		console.debug("[Firebase] Subscribing room player...");
+		return _player.on(
+			"value",
+			(snapshot: firebase.database.DataSnapshot) => {
+				const player = snapshot.val() as RoomPlayer | null;
+				if (!player) {
+					console.debug("********** NULL PLAYER: WHY?");
+					return;
+				}
+				cb({
+					...player,
+					position: Math.floor(player.position) // Removing random decimal part
+				});
+			}
+		);
+	};
+
+	const subscribeQueue = (cb: (queue: RoomQueue) => void) => {
 		console.debug("[Firebase] Subscribing room queue...");
 		return _queue.on(
 			"value",
 			(snapshot: firebase.database.DataSnapshot) => {
 				const queue = snapshot.val() as RoomQueue | null;
-				if (!queue) {
-					return;
-				}
-				cb({
-					...queue,
-					position: Math.floor(queue.position) // Removing random decimal part
-				});
+				cb(!queue ? {} : queue);
 			}
 		);
 	};
@@ -110,6 +128,11 @@ export const FirebaseRoom = ({
 		_info.off("value", handler);
 	};
 
+	const unsubscribePlayer = (handler: any) => {
+		console.debug("[Firebase] Unsubscribing room player...");
+		_player.off("value", handler);
+	};
+
 	const unsubscribeQueue = (handler: any) => {
 		console.debug("[Firebase] Unsubscribing room queue...");
 		_queue.off("value", handler);
@@ -118,21 +141,25 @@ export const FirebaseRoom = ({
 	const init = async ({
 		extra,
 		info,
+		player,
 		queue
 	}: {
 		extra: string;
 		info: RoomInfo;
+		player: RoomPlayer;
 		queue: RoomQueue;
 	}) => {
 		console.debug("[Firebase] Initializing room...", {
-			extra: !!extra,
+			extraLength: extra.length,
 			info,
+			player,
 			queue
 		});
 		try {
 			await _room.update({
 				extra,
 				info,
+				player,
 				queue,
 				secret: _secret,
 				timestamp: firebase.database.ServerValue.TIMESTAMP
@@ -177,16 +204,31 @@ export const FirebaseRoom = ({
 		}
 	};
 
+	const updatePlayer = async (player: RoomPlayer) => {
+		console.debug("[Firebase] Updating room player...", {
+			player
+		});
+		try {
+			await _room.update({
+				player: {
+					...player,
+					position: player.position + Math.random() // Adding random decimal part to force position update (eg. to handle case where the play continued beyond position and user want to move backward to specified one)
+				},
+				secret: _secret,
+				timestamp: firebase.database.ServerValue.TIMESTAMP
+			});
+		} catch (err) {
+			throw new PermissionError(err.message);
+		}
+	};
+
 	const updateQueue = async (queue: RoomQueue) => {
 		console.debug("[Firebase] Updating room queue...", {
 			queue
 		});
 		try {
 			await _room.update({
-				queue: {
-					...queue,
-					position: queue.position + Math.random() // Adding random decimal part to force position update (eg. to handle case where the play continued beyond position and user want to move backward to specified one)
-				},
+				queue,
 				secret: _secret,
 				timestamp: firebase.database.ServerValue.TIMESTAMP
 			});
@@ -204,12 +246,15 @@ export const FirebaseRoom = ({
 		wait,
 		subscribeExtra,
 		subscribeInfo,
+		subscribePlayer,
 		subscribeQueue,
 		unsubscribeExtra,
 		unsubscribeInfo,
+		unsubscribePlayer,
 		unsubscribeQueue,
 		updateExtra,
 		updateInfo,
+		updatePlayer,
 		updateQueue
 	};
 };

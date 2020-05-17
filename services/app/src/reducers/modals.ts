@@ -7,6 +7,7 @@ import { ConfirmModalProps } from "../modals/ConfirmModal";
 import { UnlockRoomModalProps } from "../modals/UnlockRoomModal";
 import { GameOverModalProps } from "../modals/GameOverModal";
 import { SeaBattleHelpModalProps } from "../modals/SeaBattleHelpModal";
+import { ReadyModalProps } from "../modals/ReadyModal";
 
 // ------------------------------------------------------------------
 
@@ -18,6 +19,7 @@ export type ModalPrereqT<T extends string, P> = {
 export type ModalPrereq =
 	| ModalPrereqT<"General/Confirm", ConfirmModalProps>
 	| ModalPrereqT<"General/Help", null>
+	| ModalPrereqT<"General/Ready", ReadyModalProps>
 	| ModalPrereqT<"Room/Create", CreateRoomModalProps>
 	| ModalPrereqT<"Room/Join", null>
 	| ModalPrereqT<"Room/Search", null>

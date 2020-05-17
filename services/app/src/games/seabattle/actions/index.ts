@@ -41,9 +41,7 @@ export const joinBattle = (options?: TrySomethingOptions): AsyncAction => (
 					data: { firebaseRoom, extraDecoded }
 				},
 				user: {
-					data: {
-						access: { userId }
-					}
+					access: { userId }
 				}
 			} = getState();
 			if (!userId) {
@@ -92,9 +90,7 @@ export const moveBoat = (
 					data: { firebaseRoom, extraDecoded }
 				},
 				user: {
-					data: {
-						access: { userId }
-					}
+					access: { userId }
 				}
 			} = getState();
 			if (!firebaseRoom || firebaseRoom.isLocked() || !extraDecoded) {
@@ -219,9 +215,7 @@ export const attackOpponent = (
 					data: { firebaseRoom, extraDecoded }
 				},
 				user: {
-					data: {
-						access: { userId }
-					}
+					access: { userId }
 				}
 			} = getState();
 			if (!firebaseRoom || firebaseRoom.isLocked() || !extraDecoded) {

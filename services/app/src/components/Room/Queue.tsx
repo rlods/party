@@ -5,7 +5,7 @@ import { QueueList, EmptyQueueList } from "./QueueList";
 import { RootState } from "../../reducers";
 import { selectTracks } from "../../selectors/medias";
 import { Track } from "../../utils/medias";
-import { selectQueuePosition } from "../../selectors/queue";
+import { selectRoomPlayerPosition } from "../../selectors/queue";
 import { isRoomLoaded, isRoomLocked } from "../../selectors/room";
 import { isRoomPlaying } from "../../selectors/queue";
 import { AppContext } from "../../pages/AppContext";
@@ -24,7 +24,9 @@ export const Queue: FC = () => {
 	const loaded = useSelector<RootState, boolean>(isRoomLoaded);
 	const locked = useSelector<RootState, boolean>(isRoomLocked);
 	const playing = useSelector<RootState, boolean>(isRoomPlaying);
-	const playingIndex = useSelector<RootState, number>(selectQueuePosition);
+	const playingIndex = useSelector<RootState, number>(
+		selectRoomPlayerPosition
+	);
 	const tracks = useSelector<RootState, Array<Track | null>>(selectTracks);
 
 	return (

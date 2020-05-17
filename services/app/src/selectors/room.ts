@@ -12,4 +12,4 @@ export const isRoomLoaded = (state: RootState): boolean =>
 	!!state.room.data.firebaseRoom;
 
 export const isRoomLocked = (state: RootState): boolean =>
-	!state.room.data.access.secret;
+	!state.room.access.secret;

@@ -12,34 +12,38 @@ import {
 // ------------------------------------------------------------------
 
 type UserAction =
-	| ReturnType<typeof fetching>
-	| ReturnType<typeof error>
+	| ReturnType<typeof fetchingUser>
 	| ReturnType<typeof resetUser>
-	| ReturnType<typeof setUser>;
+	| ReturnType<typeof setUserAccess>
+	| ReturnType<typeof setUserData>
+	| ReturnType<typeof setUserError>;
 
-export const fetching = () => createAction("user/FETCHING");
-export const error = (error: string) => createAction("user/ERROR", error);
+export const fetchingUser = () => createAction("user/FETCHING");
 export const resetUser = () => createAction("user/RESET");
-export const setUser = (values: Partial<UserData>) =>
-	createAction("user/SET", values);
+export const setUserAccess = (access: UserAccess) =>
+	createAction("user/SET_ACCESS", access);
+export const setUserData = (values: Partial<UserData>) =>
+	createAction("user/SET_DATA", values);
+export const setUserError = (error: string) =>
+	createAction("user/ERROR", error);
 
 // ------------------------------------------------------------------
 
 type UserData = {
-	access: UserAccess;
 	firebaseUser: ReturnType<typeof FirebaseUser> | null;
 	info: UserInfo | null;
 };
 
 export type State = Readonly<{
+	access: UserAccess;
 	data: UserData;
 	error: null | string;
 	fetching: boolean;
 }>;
 
 export const INITIAL_STATE: State = {
+	access: { dbId: "", userId: "", secret: "" },
 	data: {
-		access: { dbId: "", userId: "", secret: "" },
 		firebaseUser: null,
 		info: null
 	},
@@ -52,7 +56,8 @@ export const INITIAL_STATE: State = {
 export const userReducer: Reducer<State, UserAction> = (
 	state = {
 		...INITIAL_STATE,
-		data: { access: loadUserAccess(), firebaseUser: null, info: null }
+		access: loadUserAccess(),
+		data: { firebaseUser: null, info: null }
 	},
 	action: UserAction
 ): State => {
@@ -69,8 +74,17 @@ export const userReducer: Reducer<State, UserAction> = (
 				fetching: false,
 				error: action.payload
 			};
-		case "user/SET": {
-			const copy = {
+		case "user/SET_ACCESS": {
+			saveUserAccess(action.payload);
+			return {
+				...state,
+				access: action.payload,
+				fetching: false,
+				error: null
+			};
+		}
+		case "user/SET_DATA": {
+			return {
 				...state,
 				data: {
 					...state.data,
@@ -79,8 +93,6 @@ export const userReducer: Reducer<State, UserAction> = (
 				fetching: false,
 				error: null
 			};
-			saveUserAccess(copy.data.access);
-			return copy;
 		}
 		case "user/RESET":
 			deleteUserAccess();

@@ -3,11 +3,11 @@ import { PlayMode } from "../utils/rooms";
 
 // ------------------------------------------------------------------
 
-export const selectQueuePosition = (state: RootState): number =>
-	state.room.data.queue?.position || 0;
+export const selectRoomPlayerMode = (state: RootState): PlayMode =>
+	state.room.data.player?.mode || "default";
 
-export const selectRoomPlaymode = (state: RootState): PlayMode =>
-	state.room.data.queue?.playmode || "default";
+export const selectRoomPlayerPosition = (state: RootState): number =>
+	state.room.data.player?.position || 0;
 
 export const isRoomPlaying = (state: RootState): boolean =>
-	state.room.data.queue?.playing || false;
+	state.room.data.player?.playing || false;

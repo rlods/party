@@ -5,12 +5,12 @@ import { createAction } from "../actions";
 // ------------------------------------------------------------------
 
 type MediasAction =
-	| ReturnType<typeof fetching>
+	| ReturnType<typeof fetchingMedias>
 	| ReturnType<typeof error>
 	| ReturnType<typeof resetMedias>
 	| ReturnType<typeof setMedias>;
 
-export const fetching = () => createAction("medias/FETCHING");
+export const fetchingMedias = () => createAction("medias/FETCHING");
 export const error = (error: string) => createAction("medias/ERROR", error);
 export const resetMedias = () => createAction("medias/RESET");
 export const setMedias = (medias: ReadonlyArray<Media>) =>

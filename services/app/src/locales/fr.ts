@@ -8,7 +8,9 @@ export default {
 	splash: {
 		CGU: "CGU",
 		powered_with: "Utilise",
-		description: "Expérimentations collaboratives et musicales"
+		description: "Expérimentations collaboratives et musicales",
+		direct_welcome: "Bienvenue",
+		direct_lets_go: "C'est parti"
 	},
 	help: {
 		help: "Aide",

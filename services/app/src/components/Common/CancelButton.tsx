@@ -1,18 +1,23 @@
-import React, { FC } from "react";
+import React, { forwardRef } from "react";
 import { useTranslation } from "react-i18next";
 //
 import { IconButton } from "./IconButton";
 
 // ------------------------------------------------------------------
 
-export const CancelButton: FC<{ onClick: () => void }> = ({ onClick }) => {
-	const { t } = useTranslation();
-	return (
-		<IconButton
-			onClick={onClick}
-			title={t("cancel")}
-			kind="default"
-			icon="ban"
-		/>
-	);
-};
+type CancelButtonProps = { onClick: () => void };
+
+export const CancelButton = forwardRef<HTMLButtonElement, CancelButtonProps>(
+	({ onClick }, ref) => {
+		const { t } = useTranslation();
+		return (
+			<IconButton
+				ref={ref}
+				onClick={onClick}
+				title={t("cancel")}
+				kind="default"
+				icon="ban"
+			/>
+		);
+	}
+);

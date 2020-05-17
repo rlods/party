@@ -146,11 +146,13 @@ export const SearchModal: FC = () => {
 									icon="plus"
 									onClick={() =>
 										onQueueAppend(
-											{
-												provider,
-												type,
-												id: media.id
-											},
+											[
+												{
+													provider,
+													type,
+													id: media.id
+												}
+											],
 											{
 												onFailure: onRoomLock
 											}

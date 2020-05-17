@@ -1,9 +1,6 @@
 import { encode } from "./encoder";
 import { MediaAccess } from "./medias";
-import {
-	generateBattle,
-	generateBattleQueue
-} from "../games/seabattle/utils/generator";
+import { generateBattle } from "../games/seabattle/utils/generator";
 
 // ------------------------------------------------------------------
 
@@ -28,14 +25,13 @@ export type RoomAccess = {
 	secret: string;
 };
 
-export type RoomQueue = {
-	medias?: RoomQueueMedias;
-	position: number;
+export type RoomPlayer = {
+	mode: PlayMode;
 	playing: boolean;
-	playmode: PlayMode;
+	position: number;
 };
 
-export type RoomQueueMedias = {
+export type RoomQueue = {
 	[index: string]: MediaAccess;
 };
 
@@ -44,8 +40,8 @@ export type RoomQueueMedias = {
 export const createQueueMerging = (
 	accesses1: ReadonlyArray<MediaAccess>,
 	accesses2: ReadonlyArray<MediaAccess>
-): RoomQueueMedias => {
-	const medias: RoomQueueMedias = {};
+): RoomQueue => {
+	const medias: RoomQueue = {};
 	[...accesses1, ...accesses2].forEach(({ id, provider, type }, index) => {
 		medias[index] = { id, provider, type };
 	});
@@ -58,8 +54,8 @@ export const createQueueRemoving = (
 	accesses: ReadonlyArray<MediaAccess>,
 	index: number,
 	count: number
-): RoomQueueMedias => {
-	const medias: RoomQueueMedias = {};
+): RoomQueue => {
+	const medias: RoomQueue = {};
 	const copy = [...accesses];
 	if (index < 0 || index >= accesses.length) {
 		console.error("[Queue] Index is out of range");
@@ -80,22 +76,27 @@ export const initializeRoom = ({
 }: {
 	type: RoomType;
 	userId: string;
-}): { extra: string; queue: RoomQueue } => {
+}): { extra: string; player: RoomPlayer; queue: RoomQueue } => {
 	switch (type) {
 		case "dj":
 			return {
 				extra: "",
-				queue: {
-					medias: {},
+				player: {
+					mode: "default",
 					playing: false,
-					playmode: "default",
 					position: 0
-				}
+				},
+				queue: {}
 			};
 		case "seabattle":
 			return {
 				extra: encode(generateBattle(userId)),
-				queue: generateBattleQueue()
+				player: {
+					mode: "shuffle",
+					playing: true,
+					position: 0
+				},
+				queue: {}
 			};
 	}
 };

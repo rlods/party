@@ -1,5 +1,5 @@
 import { Reducer } from "redux";
-import { RoomAccess, RoomInfo, RoomQueue } from "../utils/rooms";
+import { RoomAccess, RoomInfo, RoomQueue, RoomPlayer } from "../utils/rooms";
 import { CombinedColor } from "../utils/colorpicker";
 import { FirebaseRoom } from "../utils/firebase/room";
 import { ContextualizedTrackAccess, MediaAccess } from "../utils/medias";
@@ -8,47 +8,57 @@ import { createAction } from "../actions";
 // ------------------------------------------------------------------
 
 type RoomAction =
-	| ReturnType<typeof fetching>
-	| ReturnType<typeof error>
+	| ReturnType<typeof fetchingRoom>
 	| ReturnType<typeof resetRoom>
-	| ReturnType<typeof setRoom>;
+	| ReturnType<typeof setRoomAccess>
+	| ReturnType<typeof setRoomData>
+	| ReturnType<typeof setRoomError>;
 
-export const fetching = () => createAction("room/FETCHING");
-export const error = (error: string) => createAction("room/ERROR", error);
+export const fetchingRoom = () => createAction("room/FETCHING");
 export const resetRoom = () => createAction("room/RESET");
-export const setRoom = (values: Partial<RoomData>) =>
-	createAction("room/SET", values);
+export const setRoomAccess = (access: RoomAccess) =>
+	createAction("room/SET_ACCESS", access);
+export const setRoomData = (values: Partial<RoomData>) =>
+	createAction("room/SET_DATA", values);
+export const setRoomError = (error: string) =>
+	createAction("room/ERROR", error);
 
 // ------------------------------------------------------------------
 
 type RoomData = {
-	access: RoomAccess;
 	color: CombinedColor;
 	extra: string;
 	extraDecoded: any;
 	firebaseRoom: ReturnType<typeof FirebaseRoom> | null;
 	info: RoomInfo | null;
 	medias: ReadonlyArray<MediaAccess>;
-	queue: RoomQueue | null;
+	player: RoomPlayer;
+	queue: RoomQueue;
 	tracks: ReadonlyArray<ContextualizedTrackAccess>;
 };
 
 export type State = Readonly<{
+	access: RoomAccess;
 	data: RoomData;
 	error: null | string;
 	fetching: boolean;
 }>;
 
 export const INITIAL_STATE: State = {
+	access: { dbId: "", roomId: "", secret: "" },
 	data: {
-		access: { dbId: "", roomId: "", secret: "" },
 		color: { fg: "dark", bg: { r: 255, g: 255, b: 255 } },
 		extra: "",
 		extraDecoded: null,
 		firebaseRoom: null,
 		info: null,
 		medias: [],
-		queue: null,
+		player: {
+			mode: "default",
+			playing: false,
+			position: 0
+		},
+		queue: {},
 		tracks: []
 	},
 	error: null,
@@ -74,7 +84,14 @@ export const roomReducer: Reducer<State, RoomAction> = (
 				fetching: false,
 				error: action.payload
 			};
-		case "room/SET":
+		case "room/SET_ACCESS":
+			return {
+				...state,
+				access: action.payload,
+				fetching: false,
+				error: null
+			};
+		case "room/SET_DATA":
 			return {
 				...state,
 				data: {

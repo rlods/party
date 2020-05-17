@@ -44,6 +44,9 @@ export const SeaBattle: FC = () => {
 		onDisplayInfo,
 		onMessagesClear,
 		onModalOpen,
+		onQueueAppend,
+		onPlayerSetMode,
+		onPlayerStart,
 		onRoomLock,
 		onUserCreateAsk
 	} = useContext(AppContext);
@@ -156,10 +159,36 @@ export const SeaBattle: FC = () => {
 	useEffect(() => {
 		document.addEventListener("keydown", onKeyDown);
 
+		onQueueAppend([
+			{
+				id: "301013", // Pirates Of The Caribbean OST
+				provider: "deezer",
+				type: "album"
+			},
+			{
+				id: "7358507", // Stalingrad OST
+				provider: "deezer",
+				type: "album"
+			},
+			{
+				id: "558976", // Master & Commander OST
+				provider: "deezer",
+				type: "album"
+			},
+			{
+				id: "87375582", // Le chant du loup OST
+				provider: "deezer",
+				type: "album"
+			}
+		]);
+
+		onPlayerSetMode("shuffle");
+		onPlayerStart();
+
 		return () => {
 			document.removeEventListener("keydown", onKeyDown);
 		};
-	}, [onKeyDown]);
+	}, [onKeyDown, onPlayerSetMode, onPlayerStart, onQueueAppend]);
 
 	useEffect(() => {
 		if (previousMapIndex !== currentMapIndex) {

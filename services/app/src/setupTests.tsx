@@ -31,6 +31,7 @@ export function createFakeContext(
 		onModalClose: overrides.onModalClose || DummyCB,
 		onModalOpen: overrides.onModalOpen || DummyCB,
 		onModalPop: overrides.onModalPop || DummyCB,
+		onPlayerSetMode: overrides.onPlayerSetMode || DummyCB,
 		onPlayerSetPropagate: overrides.onPlayerSetPropagate || DummyCB,
 		onPlayerStart: overrides.onPlayerStart || DummyCB,
 		onPlayerStop: overrides.onPlayerStop || DummyCB,

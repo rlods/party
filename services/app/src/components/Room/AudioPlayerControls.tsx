@@ -6,7 +6,7 @@ import classNames from "classnames";
 import { IconButton } from "../Common/IconButton";
 import { RootState } from "../../reducers";
 import { isRoomLocked } from "../../selectors/room";
-import { isRoomPlaying, selectRoomPlaymode } from "../../selectors/queue";
+import { isRoomPlaying, selectRoomPlayerMode } from "../../selectors/queue";
 import { PlayMode } from "../../utils/rooms";
 import { selectTracksCount } from "../../selectors/medias";
 import { AppContext } from "../../pages/AppContext";
@@ -34,7 +34,7 @@ export const AudioPlayerControls: FC<{
 
 	const tracksCount = useSelector<RootState, number>(selectTracksCount);
 
-	const playmode = useSelector<RootState, PlayMode>(selectRoomPlaymode);
+	const playmode = useSelector<RootState, PlayMode>(selectRoomPlayerMode);
 
 	return (
 		<div className={classNames("AudioPlayerControls", className)}>
@@ -55,22 +55,19 @@ export const AudioPlayerControls: FC<{
 			<div className="Control">
 				{!playing ? (
 					<IconButton
-						disabled={locked || tracksCount === 0}
+						disabled={locked}
 						icon="play"
 						onClick={() =>
-							onPlayerStart(
-								{},
-								{
-									onFailure: onRoomLock
-								}
-							)
+							onPlayerStart(void 0, {
+								onFailure: onRoomLock
+							})
 						}
 						size={bigPlayer ? "L" : "M"}
 						title={t("player.play")}
 					/>
 				) : (
 					<IconButton
-						disabled={locked || tracksCount === 0}
+						disabled={locked}
 						icon="pause"
 						onClick={() =>
 							onPlayerStop({

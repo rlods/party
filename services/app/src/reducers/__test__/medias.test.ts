@@ -17,7 +17,7 @@ describe("Medias Reducer", () => {
 		const playlist1 = createFakePlaylist();
 		const track1 = createFakeTrack();
 
-		expect(getState().medias.medias).toEqual<StructuredMedias>({
+		expect(getState().medias.data).toEqual<StructuredMedias>({
 			deezer: {
 				album: {},
 				playlist: {},
@@ -32,7 +32,7 @@ describe("Medias Reducer", () => {
 
 		dispatch(setMedias([album1, playlist1, track1]));
 
-		expect(getState().medias.medias).toEqual<StructuredMedias>({
+		expect(getState().medias.data).toEqual<StructuredMedias>({
 			deezer: {
 				album: { [album1.id]: album1 },
 				playlist: { [playlist1.id]: playlist1 },

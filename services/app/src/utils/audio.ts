@@ -1,8 +1,11 @@
 const AUDIO_BUFFER_CACHES: Array<{ buffer: AudioBuffer; url: string }> = [];
 const AUDIO_BUFFER_CACHES_MAX_SIZE = 10;
 let AUDIO_CONTEXT: AudioContext | null = null;
+let AUDIO_READY = false;
 
 // ------------------------------------------------------------------
+
+export const isAudioReady = () => AUDIO_READY;
 
 const getContext = (): AudioContext => {
 	if (!AUDIO_CONTEXT) {
@@ -101,20 +104,25 @@ export const getOrLoadAudioBuffer = async (
 
 // ------------------------------------------------------------------
 
+// ------------------------------------------------------------------
+
 // Fix Safari and iOS Audio Context
 (() => {
 	const fixAudioContext = () => {
 		document.removeEventListener("click", fixAudioContext);
+		document.removeEventListener("keydown", fixAudioContext);
 		document.removeEventListener("touchstart", fixAudioContext);
 		console.debug("[Audio] Fixing context...");
 		const context = getContext();
 		// Create empty buffer, connect to output, play sound
-		var buffer = context.createBuffer(1, 1, 22050);
-		var source = context.createBufferSource();
+		const buffer = context.createBuffer(1, 1, 22050);
+		const source = context.createBufferSource();
 		source.buffer = buffer;
 		source.connect(context.destination);
 		source.start(0);
+		AUDIO_READY = true;
 	};
 	document.addEventListener("click", fixAudioContext);
+	document.addEventListener("keydown", fixAudioContext);
 	document.addEventListener("touchstart", fixAudioContext);
 })();

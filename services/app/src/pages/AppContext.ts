@@ -3,7 +3,7 @@ import { MessageOptions } from "../actions/messages";
 import { ModalPrereq } from "../reducers/modals";
 import { MediaAccess } from "../utils/medias";
 import { TrySomethingOptions } from "../actions";
-import { RoomType, RoomAccess } from "../utils/rooms";
+import { RoomType, RoomAccess, PlayMode } from "../utils/rooms";
 
 // ------------------------------------------------------------------
 
@@ -18,15 +18,19 @@ export type AppContextProps = {
 	onModalClose: () => void;
 	onModalOpen: (prereq: ModalPrereq) => void;
 	onModalPop: () => void;
+	onPlayerSetMode: (mode: PlayMode) => void;
 	onPlayerSetPropagate: (propagate: boolean) => void;
 	onPlayerStart: (
-		data: { position?: number },
+		data?: { position?: number },
 		options?: TrySomethingOptions
 	) => void;
 	onPlayerStop: (options?: TrySomethingOptions) => void;
 	onPreviewStart: (access: MediaAccess) => void;
 	onPreviewStop: () => void;
-	onQueueAppend: (access: MediaAccess, options?: TrySomethingOptions) => void;
+	onQueueAppend: (
+		accesses: MediaAccess[],
+		options?: TrySomethingOptions
+	) => void;
 	onQueueClear: (options?: TrySomethingOptions) => void;
 	onQueueMoveBackward: () => void;
 	onQueueMoveForward: () => void;
@@ -76,6 +80,7 @@ export const AppContext = createContext<AppContextProps>({
 	onModalClose: () => {},
 	onModalOpen: () => {},
 	onModalPop: () => {},
+	onPlayerSetMode: () => {},
 	onPlayerSetPropagate: () => {},
 	onPlayerStart: () => {},
 	onPlayerStop: () => {},

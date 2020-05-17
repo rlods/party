@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { forwardRef } from "react";
 import classNames from "classnames";
 //
 import { IconSize } from "./Icon";
@@ -6,7 +6,7 @@ import "./SwitchButton.scss";
 
 // ------------------------------------------------------------------
 
-export const SwitchButton: FC<{
+type SwitchButtonProps = {
 	className?: string;
 	checked: boolean;
 	disabled?: boolean;
@@ -16,19 +16,25 @@ export const SwitchButton: FC<{
 	labelOff: string;
 	labelOn: string;
 	title: string;
-}> = React.memo(
-	({
-		className,
-		checked,
-		disabled = false,
-		displayLabel = false,
-		onClick,
-		size = "M",
-		labelOff,
-		labelOn,
-		title
-	}) => (
+};
+
+export const SwitchButton = forwardRef<HTMLButtonElement, SwitchButtonProps>(
+	(
+		{
+			className,
+			checked,
+			disabled = false,
+			displayLabel = false,
+			onClick,
+			size = "M",
+			labelOff,
+			labelOn,
+			title
+		},
+		ref
+	) => (
 		<button
+			ref={ref}
 			type="button"
 			role="switch"
 			aria-checked={checked}
