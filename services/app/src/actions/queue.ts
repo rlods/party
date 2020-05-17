@@ -3,7 +3,8 @@ import {
 	MediaAccess,
 	findContextFromTrackIndex,
 	ContextualizedTrackAccess,
-	extractTracks
+	extractTracks,
+	Media
 } from "../utils/medias";
 import { createQueueMerging, createQueueRemoving } from "../utils/rooms";
 import { setRoomData } from "../reducers/room";
@@ -203,24 +204,28 @@ export const adjustQueue = (context: string): AsyncAction => async (
 
 	console.debug("[Queue] Adjusting...", { context });
 
-	const medias: ReadonlyArray<MediaAccess> = Object.entries(queue)
+	const queueMedias: ReadonlyArray<MediaAccess> = Object.entries(queue)
 		.sort((m1, m2) => Number(m1[0]) - Number(m2[0]))
 		.map(m => m[1]);
-	let tracks: ContextualizedTrackAccess[] = [];
-	if (medias.length > 0) {
-		const { newMedias, newMediasAndTracks } = await loadNewMedias(
-			medias,
-			oldMedias
-		);
-		if (newMediasAndTracks.length > 0) {
+	let queueTracks: ContextualizedTrackAccess[] = [];
+	if (queueMedias.length > 0) {
+		const newMedias = await loadNewMedias(queueMedias, oldMedias);
+		if (newMedias.length > 0) {
+			const newMediasAndTracks: Media[] = [];
+			for (const media of newMedias) {
+				newMediasAndTracks.push(media);
+				if (media.type !== "track") {
+					newMediasAndTracks.push(...media.tracks);
+				}
+			}
 			dispatch(setMedias(newMediasAndTracks));
 		}
-		tracks = extractTracks(medias, oldMedias, newMedias);
+		queueTracks = extractTracks(queueMedias, oldMedias, newMedias);
 	}
 	dispatch(
 		setRoomData({
-			medias,
-			tracks
+			medias: queueMedias,
+			tracks: queueTracks
 		})
 	);
 	dispatch(adjustPlayer("x6"));

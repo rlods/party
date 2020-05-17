@@ -24,10 +24,13 @@ export const previewMedia = (access: MediaAccess): AsyncAction => (
 	dispatch(
 		trySomething(async () => {
 			const {
-				medias: { data: oldMedias }
+				medias: { data: medias }
 			} = getState();
-			const { newMedias } = await loadNewMedias([access], oldMedias);
-			const track = findPreview(access, oldMedias, newMedias);
+			const track = findPreview(
+				access,
+				medias,
+				await loadNewMedias([access], medias)
+			);
 			if (!track) {
 				throw new Error("medias.errors.no_preview");
 			}

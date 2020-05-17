@@ -317,7 +317,7 @@ describe("Providers Utilities", () => {
 			})
 		);
 		await expect(
-			getDeezerApi().searchAlbums("dummy", { limit: 10 })
+			getDeezerApi().searchAlbums("dummy", { limit: 10, offset: 0 })
 		).resolves.toEqual<Album[]>([
 			{
 				artist: {
@@ -368,7 +368,7 @@ describe("Providers Utilities", () => {
 
 	it("searchAlbums - edge", async () => {
 		await expect(
-			getDeezerApi().searchAlbums("", { limit: 10 })
+			getDeezerApi().searchAlbums("", { limit: 10, offset: 0 })
 		).resolves.toEqual<Album[]>([]);
 	});
 
@@ -384,7 +384,7 @@ describe("Providers Utilities", () => {
 			})
 		);
 		await expect(
-			getDeezerApi().searchPlaylists("dummy", { limit: 10 })
+			getDeezerApi().searchPlaylists("dummy", { limit: 10, offset: 0 })
 		).resolves.toEqual<Playlist[]>([
 			{
 				id: `${playlist1.id}`,
@@ -437,7 +437,7 @@ describe("Providers Utilities", () => {
 
 	it("searchPlaylists - edge", async () => {
 		await expect(
-			getDeezerApi().searchPlaylists("", { limit: 10 })
+			getDeezerApi().searchPlaylists("", { limit: 10, offset: 0 })
 		).resolves.toEqual<Playlist[]>([]);
 	});
 
@@ -453,7 +453,7 @@ describe("Providers Utilities", () => {
 			})
 		);
 		await expect(
-			getDeezerApi().searchTracks("dummy", { limit: 10 })
+			getDeezerApi().searchTracks("dummy", { limit: 10, offset: 0 })
 		).resolves.toEqual<Track[]>([
 			{
 				album: {
@@ -482,7 +482,7 @@ describe("Providers Utilities", () => {
 
 	it("searchTracks - edge", async () => {
 		await expect(
-			getDeezerApi().searchTracks("", { limit: 10 })
+			getDeezerApi().searchTracks("", { limit: 10, offset: 0 })
 		).resolves.toEqual<Track[]>([]);
 	});
 });

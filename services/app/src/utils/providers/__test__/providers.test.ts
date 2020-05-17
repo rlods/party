@@ -16,21 +16,15 @@ describe("Providers Utilities", () => {
 				deezer: { album: {}, playlist: {}, track: {} },
 				spotify: { album: {}, playlist: {}, track: {} }
 			})
-		).resolves.toEqual<{
-			newMedias: Media[];
-			newMediasAndTracks: Media[];
-		}>({
-			newMedias: [],
-			newMediasAndTracks: []
-		});
+		).resolves.toEqual<Media[]>([]);
 	});
 
 	// --------------------------------------------------------------
 
 	it("search - edge", async () => {
-		await expect(searchMedias("", { limit: 10 })).resolves.toEqual<
-			SearchResults
-		>({
+		await expect(
+			searchMedias("", { limit: 10, offset: 0 })
+		).resolves.toEqual<SearchResults>({
 			deezer: { album: [], playlist: [], track: [] },
 			spotify: { album: [], playlist: [], track: [] }
 		});
