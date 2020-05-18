@@ -2,7 +2,7 @@ import React, { FC, forwardRef, useContext } from "react";
 import { useTranslation } from "react-i18next";
 //
 import { IconButton } from "../components/Common/IconButton";
-import { AppContext } from "../pages/AppContext";
+import { CommonContext } from "../components/Common/CommonContext";
 
 // ------------------------------------------------------------------
 
@@ -40,7 +40,7 @@ export const SecretField: FC<{
 	placeholder: string;
 	value: string;
 }> = ({ id, label, onChange, placeholder, value }) => {
-	const { onCopyToClipboard } = useContext(AppContext);
+	const { onCopyToClipboard } = useContext(CommonContext);
 	const { t } = useTranslation();
 
 	return (

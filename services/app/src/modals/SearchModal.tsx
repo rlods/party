@@ -27,6 +27,7 @@ import {
 } from "../utils/medias";
 import "./SearchModal.scss";
 import { unifyArrayPreserveOrderPred } from "../utils";
+import { CommonContext } from "../components/Common/CommonContext";
 
 // ------------------------------------------------------------------
 
@@ -37,12 +38,12 @@ const VIEW_MORE_RESULTS_COUNT = 50;
 
 export const SearchModal: FC = () => {
 	const {
-		onModalClose,
 		onPreviewStart,
 		onPreviewStop,
 		onQueueAppend,
 		onRoomLock
 	} = useContext(AppContext);
+	const { onModalClose } = useContext(CommonContext);
 	const { t } = useTranslation();
 	const queryRef = useRef<HTMLInputElement>(null);
 	const locked = useSelector<RootState, boolean>(isRoomLocked);

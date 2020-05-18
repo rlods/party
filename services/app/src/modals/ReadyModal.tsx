@@ -3,15 +3,15 @@ import { useTranslation } from "react-i18next";
 //
 import { FormModal } from "./FormModal";
 import { IconButton } from "../components/Common/IconButton";
-import { AppContext } from "../pages/AppContext";
+import { CommonContext } from "../components/Common/CommonContext";
 
 // ------------------------------------------------------------------
 
-export type ReadyModalProps = { onReady: () => void };
+type ReadyModalProps = { onReady: () => void };
 
 export const ReadyModal: FC<ReadyModalProps> = ({ onReady }) => {
 	const buttonRef = useRef<HTMLButtonElement>(null);
-	const { onModalClose } = useContext(AppContext);
+	const { onModalClose } = useContext(CommonContext);
 	const { t } = useTranslation();
 
 	useEffect(() => {

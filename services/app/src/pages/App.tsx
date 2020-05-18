@@ -1,11 +1,11 @@
-import React, { FC, useCallback, useEffect, useState } from "react";
+import React, { FC, useCallback, useEffect, useState, ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { Redirect, Route, Switch, useHistory } from "react-router-dom";
 //
 import { Room } from "./Room";
 import { Splash } from "./Splash";
-import { ModalManager } from "../modals";
+import { Overlay } from "../components/Common/Overlay";
 import { Dispatch, TrySomethingOptions } from "../actions";
 import { setApp } from "../reducers/app";
 import { RoomType, PlayMode } from "../utils/rooms";
@@ -26,6 +26,16 @@ import { appendToQueue, clearQueue, removeFromQueue } from "../actions/queue";
 import { AppContext } from "./AppContext";
 import { copyToClipboard } from "../utils/clipboard";
 import { useDebounce } from "../utils/use";
+import { closeModal, openModal, popModal } from "../reducers/modals";
+import { isAudioReady } from "../utils/audio";
+import { ConnectUserModal } from "../modals/ConnectUserModal";
+import { JoinRoomModal } from "../modals/JoinRoomModal";
+import { CreateRoomModal } from "../modals/CreateRoomModal";
+import { CreateUserModal } from "../modals/CreateUserModal";
+import { SearchModal } from "../modals/SearchModal";
+import { ReadyModal } from "../modals/ReadyModal";
+import { UnlockRoomModal } from "../modals/UnlockRoomModal";
+import { HelpModal } from "../modals/HelpModal";
 import {
 	reconnectUser,
 	disconnectUser,
@@ -40,14 +50,8 @@ import {
 	RoomAccess,
 	createRoom
 } from "../actions/room";
-import {
-	closeModal,
-	openModal,
-	popModal,
-	ModalPrereq
-} from "../reducers/modals";
+import { CommonContext } from "../components/Common/CommonContext";
 import "./App.scss";
-import { isAudioReady } from "../utils/audio";
 
 // ------------------------------------------------------------------
 
@@ -123,7 +127,7 @@ export const App: FC = () => {
 	);
 
 	const onModalOpen = useCallback(
-		(prereq: ModalPrereq) => d(openModal(prereq)),
+		(render: () => ReactNode) => d(openModal(render)),
 		[d]
 	);
 
@@ -133,18 +137,17 @@ export const App: FC = () => {
 	);
 
 	const onUserConnectAsk = useCallback(
-		() => onModalOpen({ type: "User/Connect", props: {} }),
+		() => onModalOpen(() => <ConnectUserModal />),
 		[onModalOpen]
 	);
 
 	const onRoomCreateAsk = useCallback(
-		(type: RoomType) =>
-			onModalOpen({ type: "Room/Create", props: { type } }),
+		(type: RoomType) => onModalOpen(() => <CreateRoomModal type={type} />),
 		[onModalOpen]
 	);
 
 	const onRoomJoinAsk = useCallback(
-		() => onModalOpen({ type: "Room/Join", props: null }),
+		() => onModalOpen(() => <JoinRoomModal />),
 		[onModalOpen]
 	);
 
@@ -218,7 +221,7 @@ export const App: FC = () => {
 	);
 
 	const onUserCreateAsk = useCallback(
-		() => onModalOpen({ type: "User/Create", props: {} }),
+		() => onModalOpen(() => <CreateUserModal />),
 		[onModalOpen]
 	);
 
@@ -227,7 +230,7 @@ export const App: FC = () => {
 	const onReconnectUser = useCallback(() => d(reconnectUser()), [d]);
 
 	const onQueueSearch = useCallback(
-		() => onModalOpen({ type: "Room/Search", props: null }),
+		() => onModalOpen(() => <SearchModal />),
 		[onModalOpen]
 	);
 
@@ -235,10 +238,9 @@ export const App: FC = () => {
 		(access: RoomAccess, options?: TrySomethingOptions) => {
 			if (!isAudioReady()) {
 				// Modal is opened just to force initialization of audio context before entering room
-				onModalOpen({
-					type: "General/Ready",
-					props: { onReady: () => d(enterRoom(access, options)) }
-				});
+				onModalOpen(() => (
+					<ReadyModal onReady={() => d(enterRoom(access, options))} />
+				));
 			} else {
 				d(enterRoom(access, options));
 			}
@@ -296,7 +298,7 @@ export const App: FC = () => {
 	const onRoomLock = useCallback(() => d(lockRoom()), [d]);
 
 	const onRoomUnlockAsk = useCallback(
-		() => onModalOpen({ type: "Room/Unlock", props: {} }),
+		() => onModalOpen(() => <UnlockRoomModal />),
 		[onModalOpen]
 	);
 
@@ -315,10 +317,9 @@ export const App: FC = () => {
 
 	const onRoomExit = useCallback(() => d(exitRoom()), [d]);
 
-	const onHelp = useCallback(
-		() => onModalOpen({ type: "General/Help", props: null }),
-		[onModalOpen]
-	);
+	const onHelp = useCallback(() => onModalOpen(() => <HelpModal />), [
+		onModalOpen
+	]);
 
 	const onCopyToClipboard = useCallback(
 		async (value: string) => {
@@ -341,56 +342,60 @@ export const App: FC = () => {
 	}, [onOnlineStatusChange, onReconnectUser]);
 
 	return (
-		<AppContext.Provider
+		<CommonContext.Provider
 			value={{
 				onCopyToClipboard,
 				onDisplayError,
 				onDisplayInfo,
-				onExit,
-				onHelp,
 				onMessagesClear,
 				onMessagesRemove,
 				onModalClose,
 				onModalOpen,
-				onModalPop,
-				onPlayerSetMode,
-				onPlayerSetPropagate,
-				onPlayerStart,
-				onPlayerStop,
-				onPreviewStart,
-				onPreviewStop,
-				onQueueAppend,
-				onQueueClear,
-				onQueueMoveBackward,
-				onQueueMoveForward,
-				onQueueRemove,
-				onQueueSearch,
-				onRoomCreate,
-				onRoomCreateAsk,
-				onRoomEnter,
-				onRoomExit,
-				onRoomJoinAsk,
-				onRoomLock,
-				onRoomUnlock,
-				onRoomUnlockAsk,
-				onUserConnect,
-				onUserConnectAsk,
-				onUserCreate,
-				onUserCreateAsk,
-				onUserDisconnect
+				onModalPop
 			}}>
-			<div className="App">
-				<ModalManager />
-				<Switch>
-					<Route
-						exact={true}
-						path="/room/:dbId/:roomId"
-						component={Room}
-					/>
-					<Route exact={true} path="/" component={Splash} />
-					<Redirect to="/" />
-				</Switch>
-			</div>
-		</AppContext.Provider>
+			<AppContext.Provider
+				value={{
+					onExit,
+					onHelp,
+					onPlayerSetMode,
+					onPlayerSetPropagate,
+					onPlayerStart,
+					onPlayerStop,
+					onPreviewStart,
+					onPreviewStop,
+					onQueueAppend,
+					onQueueClear,
+					onQueueMoveBackward,
+					onQueueMoveForward,
+					onQueueRemove,
+					onQueueSearch,
+					onRoomCreate,
+					onRoomCreateAsk,
+					onRoomEnter,
+					onRoomExit,
+					onRoomJoinAsk,
+					onRoomLock,
+					onRoomUnlock,
+					onRoomUnlockAsk,
+					onUserConnect,
+					onUserConnectAsk,
+					onUserCreate,
+					onUserCreateAsk,
+					onUserDisconnect
+				}}>
+				<div className="App">
+					<Overlay />
+					<Switch>
+						<Route
+							exact={true}
+							path="/room/:dbId/:roomId"
+							component={Room}
+						/>
+						<Route exact={true} path="/" component={Splash} />
+						<Redirect to="/" />
+					</Switch>
+				</div>
+			</AppContext.Provider>
+		</CommonContext.Provider>
 	);
 };

@@ -8,6 +8,7 @@ import { CancelButton } from "../components/Common/CancelButton";
 import { TrySomethingOptions } from "../actions";
 import { SecretField, SECRET_FIELD_SIZE, InputField } from "./ModalFields";
 import { AppContext } from "../pages/AppContext";
+import { CommonContext } from "../components/Common/CommonContext";
 
 // ------------------------------------------------------------------
 
@@ -15,10 +16,15 @@ let USER_COUNTER = 1;
 
 // ------------------------------------------------------------------
 
-export type CreateUserModalProps = { options?: TrySomethingOptions };
+type CreateUserModalProps = { options?: TrySomethingOptions };
+
+export const renderUserCreateModal = (props: CreateUserModalProps) => (
+	<CreateUserModal {...props} />
+);
 
 export const CreateUserModal: FC<CreateUserModalProps> = ({ options }) => {
-	const { onModalClose, onUserCreate } = useContext(AppContext);
+	const { onUserCreate } = useContext(AppContext);
+	const { onModalClose } = useContext(CommonContext);
 	const [name, setName] = useState("");
 	const [secret, setSecret] = useState(v4());
 	const nameRef = useRef<HTMLInputElement>(null);

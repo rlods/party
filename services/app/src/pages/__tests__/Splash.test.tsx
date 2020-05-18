@@ -3,7 +3,7 @@ import React from "react";
 import { Splash } from "../Splash";
 import { initLocales } from "../../utils/i18n";
 import { INITIAL_STATE } from "../../reducers";
-import { wrapAndMount, createFakeContext } from "../../setupTests";
+import { wrapAndMount } from "../../setupTests";
 
 // ------------------------------------------------------------------
 
@@ -15,7 +15,6 @@ describe("Splash Page", () => {
 	it("test not fetched", async () => {
 		const wrapper = await wrapAndMount({
 			children: <Splash />,
-			context: createFakeContext(),
 			state: {
 				...INITIAL_STATE,
 				user: { ...INITIAL_STATE.user, fetching: true }
@@ -31,12 +30,12 @@ describe("Splash Page", () => {
 		const onUserConnectAsk = jest.fn();
 		const onUserCreateAsk = jest.fn();
 		const wrapper = await wrapAndMount({
-			children: <Splash />,
-			context: createFakeContext({
+			appContext: {
 				onHelp,
 				onUserConnectAsk,
 				onUserCreateAsk
-			}),
+			},
+			children: <Splash />,
 			state: {
 				...INITIAL_STATE,
 				user: { ...INITIAL_STATE.user, fetching: false }
@@ -57,11 +56,11 @@ describe("Splash Page", () => {
 		const onRoomCreateAsk = jest.fn();
 		const onUserDisconnect = jest.fn();
 		const wrapper = await wrapAndMount({
-			children: <Splash />,
-			context: createFakeContext({
+			appContext: {
 				onRoomCreateAsk,
 				onUserDisconnect
-			}),
+			},
+			children: <Splash />,
 			state: {
 				...INITIAL_STATE,
 				user: {

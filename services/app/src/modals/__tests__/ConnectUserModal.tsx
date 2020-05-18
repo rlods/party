@@ -3,7 +3,7 @@ import React from "react";
 import { ConnectUserModal } from "../ConnectUserModal";
 import { initLocales } from "../../utils/i18n";
 import { INITIAL_STATE } from "../../reducers";
-import { createFakeContext, wrapAndMount } from "../../setupTests";
+import { wrapAndMount } from "../../setupTests";
 
 // ------------------------------------------------------------------
 
@@ -17,12 +17,14 @@ describe("ConnectUserModal", () => {
 		const onModalPop = jest.fn();
 		const onUserConnect = jest.fn();
 		const wrapper = await wrapAndMount({
-			children: <ConnectUserModal />,
-			context: createFakeContext({
-				onModalClose,
-				onModalPop,
+			appContext: {
 				onUserConnect
-			}),
+			},
+			commonContext: {
+				onModalClose,
+				onModalPop
+			},
+			children: <ConnectUserModal />,
 			state: INITIAL_STATE
 		});
 

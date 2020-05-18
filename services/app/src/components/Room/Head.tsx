@@ -9,12 +9,14 @@ import { isRoomLoaded, selectRoomName } from "../../selectors/room";
 import { selectTracksCount } from "../../selectors/medias";
 import { Icon } from "../Common/Icon";
 import { AppContext } from "../../pages/AppContext";
+import { CommonContext } from "../Common/CommonContext";
 import "./Head.scss";
 
 // ------------------------------------------------------------------
 
 export const Head: FC = () => {
-	const { onDisplayInfo, onExit } = useContext(AppContext);
+	const { onExit } = useContext(AppContext);
+	const { onDisplayInfo } = useContext(CommonContext);
 	const fetching = useSelector<RootState, boolean>(
 		state => state.room.fetching
 	);

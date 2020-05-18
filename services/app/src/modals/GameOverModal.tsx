@@ -7,19 +7,19 @@ import { Icon } from "../components/Common/Icon";
 import { IconButton } from "../components/Common/IconButton";
 import { RoomType } from "../utils/rooms";
 import { AppContext } from "../pages/AppContext";
+import { CommonContext } from "../components/Common/CommonContext";
 import "./GameOverModal.scss";
 
 // ------------------------------------------------------------------
 
-export type GameOverModalProps = {
+type GameOverModalProps = {
 	roomType: RoomType;
 	status: "looser" | "winner";
 };
 
-// ------------------------------------------------------------------
-
 export const GameOverModal: FC<GameOverModalProps> = ({ roomType, status }) => {
-	const { onModalClose, onRoomCreateAsk } = useContext(AppContext);
+	const { onRoomCreateAsk } = useContext(AppContext);
+	const { onModalClose } = useContext(CommonContext);
 	const history = useHistory();
 	const { t } = useTranslation();
 

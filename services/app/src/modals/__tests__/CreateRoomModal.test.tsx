@@ -3,7 +3,7 @@ import React from "react";
 import { CreateRoomModal } from "../CreateRoomModal";
 import { initLocales } from "../../utils/i18n";
 import { INITIAL_STATE } from "../../reducers";
-import { createFakeContext, wrapAndMount } from "../../setupTests";
+import { wrapAndMount } from "../../setupTests";
 
 // ------------------------------------------------------------------
 
@@ -18,13 +18,15 @@ describe("CreateRoomModal", () => {
 		const onModalPop = jest.fn();
 		const onRoomCreate = jest.fn();
 		const wrapper = await wrapAndMount({
-			children: <CreateRoomModal type="seabattle" />,
-			context: createFakeContext({
+			appContext: {
+				onRoomCreate
+			},
+			commonContext: {
 				onCopyToClipboard,
 				onModalClose,
-				onModalPop,
-				onRoomCreate
-			}),
+				onModalPop
+			},
+			children: <CreateRoomModal type="seabattle" />,
 			state: INITIAL_STATE
 		});
 

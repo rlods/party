@@ -7,6 +7,8 @@ import { displayError } from "./messages";
 import { extractErrorMessage } from "../utils/messages";
 import { openModal } from "../reducers/modals";
 import { PermissionError } from "../utils/firebase";
+import { renderUserCreateModal } from "../modals/CreateUserModal";
+import { renderUnlockRoomModal } from "../modals/UnlockRoomModal";
 
 // ------------------------------------------------------------------
 
@@ -61,32 +63,30 @@ export const trySomething = (
 		if (res === "unlock-and-retry") {
 			dispatch(displayError("rooms.errors.locked"));
 			dispatch(
-				openModal({
-					type: "Room/Unlock",
-					props: {
+				openModal(() =>
+					renderUnlockRoomModal({
 						options: {
 							onFailure: options?.onFailure,
 							onSuccess: () =>
 								dispatch(trySomething(onAction, options))
 						}
-					}
-				})
+					})
+				)
 			);
 			return; // Delegated to UnlockRoomModal
 		}
 		if (res === "connect-and-retry") {
 			dispatch(displayError("user.not_connected"));
 			dispatch(
-				openModal({
-					type: "User/Create",
-					props: {
+				openModal(() =>
+					renderUserCreateModal({
 						options: {
 							onFailure: options?.onFailure,
 							onSuccess: () =>
 								dispatch(trySomething(onAction, options))
 						}
-					}
-				})
+					})
+				)
 			);
 			return; // Delegated to CreateUserModal
 		}

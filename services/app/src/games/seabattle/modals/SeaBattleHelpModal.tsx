@@ -1,17 +1,15 @@
 import React, { FC, ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 //
-import { Modal } from "./Modal";
-import { Icon } from "../components/Common/Icon";
+import { Modal } from "../../../modals/Modal";
+import { Icon } from "../../../components/Common/Icon";
 import "./SeaBattleHelpModal.scss";
 
 // ------------------------------------------------------------------
 
-export type SeaBattleHelpModalProps = {
+type SeaBattleHelpModalProps = {
 	renderWeapons: () => ReactNode;
 };
-
-// ------------------------------------------------------------------
 
 export const SeaBattleHelpModal: FC<SeaBattleHelpModalProps> = ({
 	renderWeapons

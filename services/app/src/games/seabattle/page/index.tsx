@@ -31,6 +31,9 @@ import {
 	KEY_LEFT,
 	KEY_RIGHT
 } from "../../../utils/keyboards";
+import { GameOverModal } from "../../../modals/GameOverModal";
+import { CommonContext } from "../../../components/Common/CommonContext";
+import { SeaBattleHelpModal } from "../modals/SeaBattleHelpModal";
 import "./index.scss";
 
 // ------------------------------------------------------------------
@@ -41,15 +44,15 @@ export const PLAYER_TURN_MESSAGE_TAG = "seabattle/player_turn";
 
 export const SeaBattle: FC = () => {
 	const {
-		onDisplayInfo,
-		onMessagesClear,
-		onModalOpen,
 		onQueueAppend,
 		onPlayerSetMode,
 		onPlayerStart,
 		onRoomLock,
 		onUserCreateAsk
 	} = useContext(AppContext);
+	const { onDisplayInfo, onMessagesClear, onModalOpen } = useContext(
+		CommonContext
+	);
 	const dispatch = useDispatch<Dispatch>();
 	const { t } = useTranslation();
 	const [previousMapIndex, setPreviousMapIndex] = useState<number>(-1);
@@ -194,26 +197,18 @@ export const SeaBattle: FC = () => {
 		if (previousMapIndex !== currentMapIndex) {
 			onMessagesClear(PLAYER_TURN_MESSAGE_TAG);
 			if (playerMap?.status === "ko") {
-				onModalOpen({
-					type: "SeaBattle/GameOver",
-					props: {
-						roomType: "seabattle",
-						status: "looser"
-					}
-				});
+				onModalOpen(() => (
+					<GameOverModal roomType="seabattle" status="looser" />
+				));
 			} else if (opponentMaps && opponentMaps.length > 0) {
 				if (
 					!opponentMaps.find(
 						opponentMap => opponentMap.status !== "ko"
 					)
 				) {
-					onModalOpen({
-						type: "SeaBattle/GameOver",
-						props: {
-							roomType: "seabattle",
-							status: "winner"
-						}
-					});
+					onModalOpen(() => (
+						<GameOverModal roomType="seabattle" status="winner" />
+					));
 				} else if (currentMapIndex === playerMapIndex) {
 					onDisplayInfo("games.seabattle.player_turn", {
 						autoclear: false,
@@ -332,10 +327,9 @@ export const SeaBattle: FC = () => {
 			<RoomControls
 				extended={false}
 				onHelp={() => {
-					onModalOpen({
-						type: "SeaBattle/Help",
-						props: {
-							renderWeapons: () => (
+					onModalOpen(() => (
+						<SeaBattleHelpModal
+							renderWeapons={() => (
 								<WeaponSelection
 									weapons={{
 										bullet1: 1,
@@ -345,9 +339,9 @@ export const SeaBattle: FC = () => {
 									}}
 									weaponType={"bullet1"}
 								/>
-							)
-						}
-					});
+							)}
+						/>
+					));
 				}}
 			/>
 			<Messages bottomPosition="50px" />

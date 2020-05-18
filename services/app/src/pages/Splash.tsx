@@ -10,6 +10,7 @@ import { Icon } from "../components/Common/Icon";
 import { AppContext } from "./AppContext";
 import { DEFAULT_ROOM_TYPE } from "../utils/rooms";
 import { isUserLoggedIn } from "../selectors/user";
+import { CommonContext } from "../components/Common/CommonContext";
 import "./Splash.scss";
 
 // ------------------------------------------------------------------
@@ -17,12 +18,12 @@ import "./Splash.scss";
 export const Splash: FC = () => {
 	const {
 		onHelp,
-		onMessagesClear,
 		onRoomCreateAsk,
 		onUserConnectAsk,
 		onUserCreateAsk,
 		onUserDisconnect
 	} = useContext(AppContext);
+	const { onMessagesClear } = useContext(CommonContext);
 	const { t } = useTranslation();
 
 	const fetching = useSelector<RootState, boolean>(

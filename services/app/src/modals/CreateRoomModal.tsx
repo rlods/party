@@ -13,6 +13,7 @@ import {
 	SelectField,
 	SECRET_FIELD_SIZE
 } from "./ModalFields";
+import { CommonContext } from "../components/Common/CommonContext";
 
 // ------------------------------------------------------------------
 
@@ -20,14 +21,15 @@ let ROOM_COUNTER = 1;
 
 // ------------------------------------------------------------------
 
-export type CreateRoomModalProps = {
+type CreateRoomModalProps = {
 	type: RoomType;
 };
 
 export const CreateRoomModal: FC<CreateRoomModalProps> = ({
 	type: defaultType
 }) => {
-	const { onModalClose, onRoomCreate } = useContext(AppContext);
+	const { onRoomCreate } = useContext(AppContext);
+	const { onModalClose } = useContext(CommonContext);
 	const [name, setName] = useState("");
 	const [secret, setSecret] = useState(v4());
 

@@ -4,11 +4,11 @@ import { useTranslation } from "react-i18next";
 import { FormModal } from "./FormModal";
 import { IconButton } from "../components/Common/IconButton";
 import { CancelButton } from "../components/Common/CancelButton";
-import { AppContext } from "../pages/AppContext";
+import { CommonContext } from "../components/Common/CommonContext";
 
 // ------------------------------------------------------------------
 
-export type ConfirmModalProps = {
+type ConfirmModalProps = {
 	question: string;
 	onCanceled?: () => void;
 	onConfirmed: () => void;
@@ -19,7 +19,7 @@ export const ConfirmModal: FC<ConfirmModalProps> = ({
 	onCanceled,
 	onConfirmed
 }) => {
-	const { onModalPop } = useContext(AppContext);
+	const { onModalPop } = useContext(CommonContext);
 	const { t } = useTranslation();
 
 	const onCancel = useCallback(() => {

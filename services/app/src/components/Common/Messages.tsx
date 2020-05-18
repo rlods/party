@@ -8,7 +8,7 @@ import { Message } from "../../utils/messages";
 import { selectMessages } from "../../selectors/messages";
 import { RootState } from "../../reducers";
 import { IconButton } from "../Common/IconButton";
-import { AppContext } from "../../pages/AppContext";
+import { CommonContext } from "./CommonContext";
 import "./Messages.scss";
 
 // ------------------------------------------------------------------
@@ -17,7 +17,7 @@ export const Messages: FC<{
 	className?: string;
 	bottomPosition?: string;
 }> = ({ className, bottomPosition }) => {
-	const { onMessagesRemove } = useContext(AppContext);
+	const { onMessagesRemove } = useContext(CommonContext);
 	const { t } = useTranslation();
 	const messages = useSelector<RootState, Message[]>(selectMessages);
 	return (

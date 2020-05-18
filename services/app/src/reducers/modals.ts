@@ -1,41 +1,7 @@
+import { ReactNode } from "react";
 import { Reducer } from "redux";
+//
 import { createAction } from "../actions";
-import { ConnectUserModalProps } from "../modals/ConnectUserModal";
-import { CreateRoomModalProps } from "../modals/CreateRoomModal";
-import { CreateUserModalProps } from "../modals/CreateUserModal";
-import { ConfirmModalProps } from "../modals/ConfirmModal";
-import { UnlockRoomModalProps } from "../modals/UnlockRoomModal";
-import { GameOverModalProps } from "../modals/GameOverModal";
-import { SeaBattleHelpModalProps } from "../modals/SeaBattleHelpModal";
-import { ReadyModalProps } from "../modals/ReadyModal";
-
-// ------------------------------------------------------------------
-
-export type ModalPrereqT<T extends string, P> = {
-	type: T;
-	props: P;
-};
-
-export type ModalPrereq =
-	| ModalPrereqT<"General/Confirm", ConfirmModalProps>
-	| ModalPrereqT<"General/Help", null>
-	| ModalPrereqT<"General/Ready", ReadyModalProps>
-	| ModalPrereqT<"Room/Create", CreateRoomModalProps>
-	| ModalPrereqT<"Room/Join", null>
-	| ModalPrereqT<"Room/Search", null>
-	| ModalPrereqT<"Room/Unlock", UnlockRoomModalProps>
-	| ModalPrereqT<"SeaBattle/GameOver", GameOverModalProps>
-	| ModalPrereqT<"SeaBattle/Help", SeaBattleHelpModalProps>
-	| ModalPrereqT<"User/Connect", ConnectUserModalProps>
-	| ModalPrereqT<"User/Create", CreateUserModalProps>;
-
-type PropType<TObj, TProp extends keyof TObj> = TObj[TProp];
-
-type Filter<T, U> = T extends U ? T : never;
-
-export type ModalType = PropType<ModalPrereq, "type">;
-
-export type ModalProps<TYPE> = Filter<ModalPrereq, { type: TYPE }>["props"];
 
 // ------------------------------------------------------------------
 
@@ -47,28 +13,28 @@ type ModalsAction =
 
 // ------------------------------------------------------------------
 
-export const openModal = (prereq: ModalPrereq) =>
-	createAction("modals/OPEN", prereq);
+export const openModal = (render: () => ReactNode) =>
+	createAction("modals/OPEN", render);
 
 export const closeModal = () => createAction("modals/CLOSE");
 
 // ------------------------------------------------------------------
 
-export const pushModal = (prereq: ModalPrereq) =>
-	createAction("modals/PUSH", prereq);
+export const pushModal = (render: () => ReactNode) =>
+	createAction("modals/PUSH", render);
 
 export const popModal = () => createAction("modals/POP");
 
 // ------------------------------------------------------------------
 
 export type ModalsState = Readonly<{
-	stack: ReadonlyArray<ModalPrereq>;
+	renderers: ReadonlyArray<() => ReactNode>;
 }>;
 
 // ------------------------------------------------------------------
 
 export const INITIAL_STATE: ModalsState = {
-	stack: []
+	renderers: []
 };
 
 // ------------------------------------------------------------------
@@ -81,24 +47,24 @@ export const modalsReducer: Reducer<ModalsState, ModalsAction> = (
 		case "modals/OPEN":
 			return {
 				...state,
-				stack: [action.payload]
+				renderers: [action.payload]
 			};
 		case "modals/CLOSE":
 			return {
 				...state,
-				stack: []
+				renderers: []
 			};
 		case "modals/PUSH":
 			return {
 				...state,
-				stack: [...state.stack, action.payload]
+				renderers: [...state.renderers, action.payload]
 			};
 		case "modals/POP":
-			const copy = [...state.stack];
+			const copy = [...state.renderers];
 			copy.pop();
 			return {
 				...state,
-				stack: copy
+				renderers: copy
 			};
 		default:
 			return state;

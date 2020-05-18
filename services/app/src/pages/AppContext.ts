@@ -1,6 +1,5 @@
 import { createContext } from "react";
-import { MessageOptions } from "../actions/messages";
-import { ModalPrereq } from "../reducers/modals";
+//
 import { MediaAccess } from "../utils/medias";
 import { TrySomethingOptions } from "../actions";
 import { RoomType, RoomAccess, PlayMode } from "../utils/rooms";
@@ -8,16 +7,8 @@ import { RoomType, RoomAccess, PlayMode } from "../utils/rooms";
 // ------------------------------------------------------------------
 
 export type AppContextProps = {
-	onCopyToClipboard: (value: string) => void;
-	onDisplayError: (text: string, options?: MessageOptions) => void;
-	onDisplayInfo: (text: string, options?: MessageOptions) => void;
 	onExit: () => void;
 	onHelp: () => void;
-	onMessagesClear: (tag?: string) => void;
-	onMessagesRemove: (ids: ReadonlyArray<number>) => void;
-	onModalClose: () => void;
-	onModalOpen: (prereq: ModalPrereq) => void;
-	onModalPop: () => void;
 	onPlayerSetMode: (mode: PlayMode) => void;
 	onPlayerSetPropagate: (propagate: boolean) => void;
 	onPlayerStart: (
@@ -70,16 +61,8 @@ export type AppContextProps = {
 // ------------------------------------------------------------------
 
 export const AppContext = createContext<AppContextProps>({
-	onCopyToClipboard: () => {},
-	onDisplayError: () => {},
-	onDisplayInfo: () => {},
 	onExit: () => {},
 	onHelp: () => {},
-	onMessagesClear: () => {},
-	onMessagesRemove: () => {},
-	onModalClose: () => {},
-	onModalOpen: () => {},
-	onModalPop: () => {},
 	onPlayerSetMode: () => {},
 	onPlayerSetPropagate: () => {},
 	onPlayerStart: () => {},

@@ -7,11 +7,13 @@ import { CancelButton } from "../components/Common/CancelButton";
 import { InputField, SelectField } from "./ModalFields";
 import firebaseConfig, { selectRoomDatabaseId } from "../config/firebase";
 import { AppContext } from "../pages/AppContext";
+import { CommonContext } from "../components/Common/CommonContext";
 
 // ------------------------------------------------------------------
 
 export const JoinRoomModal: FC = () => {
-	const { onModalClose, onRoomEnter } = useContext(AppContext);
+	const { onRoomEnter } = useContext(AppContext);
+	const { onModalClose } = useContext(CommonContext);
 	const [dbId, setDbId] = useState(selectRoomDatabaseId());
 	const [roomId, setRoomId] = useState("");
 	const roomIdRef = useRef<HTMLInputElement>(null);

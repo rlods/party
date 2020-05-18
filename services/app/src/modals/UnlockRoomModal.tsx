@@ -7,13 +7,19 @@ import { CancelButton } from "../components/Common/CancelButton";
 import { TrySomethingOptions } from "../actions";
 import { SECRET_FIELD_SIZE, InputField } from "./ModalFields";
 import { AppContext } from "../pages/AppContext";
+import { CommonContext } from "../components/Common/CommonContext";
 
 // ------------------------------------------------------------------
 
-export type UnlockRoomModalProps = { options?: TrySomethingOptions };
+type UnlockRoomModalProps = { options?: TrySomethingOptions };
+
+export const renderUnlockRoomModal = (props: UnlockRoomModalProps) => (
+	<UnlockRoomModal {...props} />
+);
 
 export const UnlockRoomModal: FC<UnlockRoomModalProps> = ({ options }) => {
-	const { onModalClose, onRoomUnlock } = useContext(AppContext);
+	const { onRoomUnlock } = useContext(AppContext);
+	const { onModalClose } = useContext(CommonContext);
 	const [secret, setSecret] = useState("");
 	const secretRef = useRef<HTMLInputElement>(null);
 	const { t } = useTranslation();

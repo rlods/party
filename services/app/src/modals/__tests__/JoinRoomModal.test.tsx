@@ -3,7 +3,7 @@ import React from "react";
 import { JoinRoomModal } from "../JoinRoomModal";
 import { initLocales } from "../../utils/i18n";
 import { INITIAL_STATE } from "../../reducers";
-import { createFakeContext, wrapAndMount } from "../../setupTests";
+import { wrapAndMount } from "../../setupTests";
 
 // ------------------------------------------------------------------
 
@@ -17,12 +17,14 @@ describe("JoinRoomModal", () => {
 		const onModalPop = jest.fn();
 		const onRoomEnter = jest.fn();
 		const wrapper = await wrapAndMount({
-			children: <JoinRoomModal />,
-			context: createFakeContext({
-				onModalClose,
-				onModalPop,
+			appContext: {
 				onRoomEnter
-			}),
+			},
+			commonContext: {
+				onModalClose,
+				onModalPop
+			},
+			children: <JoinRoomModal />,
 			state: INITIAL_STATE
 		});
 

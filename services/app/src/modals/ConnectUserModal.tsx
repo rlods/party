@@ -7,13 +7,15 @@ import { CancelButton } from "../components/Common/CancelButton";
 import { TrySomethingOptions } from "../actions";
 import { SECRET_FIELD_SIZE, InputField } from "./ModalFields";
 import { AppContext } from "../pages/AppContext";
+import { CommonContext } from "../components/Common/CommonContext";
 
 // ------------------------------------------------------------------
 
-export type ConnectUserModalProps = { options?: TrySomethingOptions };
+type ConnectUserModalProps = { options?: TrySomethingOptions };
 
 export const ConnectUserModal: FC<ConnectUserModalProps> = ({ options }) => {
-	const { onModalClose, onUserConnect } = useContext(AppContext);
+	const { onUserConnect } = useContext(AppContext);
+	const { onModalClose } = useContext(CommonContext);
 	const [userId, setUserId] = useState("");
 	const [secret, setSecret] = useState("");
 	const userIdRef = useRef<HTMLInputElement>(null);

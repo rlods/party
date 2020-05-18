@@ -5,7 +5,7 @@ import classNames from "classnames";
 //
 import { IconButton } from "../components/Common/IconButton";
 import { RootState } from "../reducers";
-import { AppContext } from "../pages/AppContext";
+import { CommonContext } from "../components/Common/CommonContext";
 
 // ------------------------------------------------------------------
 
@@ -17,10 +17,10 @@ export const Modal: FC<{
 	onClose?: () => void;
 	onSubmit?: () => void;
 }> = ({ children, className, title, renderFoot, onClose, onSubmit }) => {
-	const { onModalClose, onModalPop } = useContext(AppContext);
+	const { onModalClose, onModalPop } = useContext(CommonContext);
 	const { t } = useTranslation();
 	const has_prev_modal = useSelector<RootState, boolean>(
-		state => state.modals.stack.length > 1
+		state => state.modals.renderers.length > 1
 	);
 
 	useEffect(() => {
